@@ -1,0 +1,7 @@
+#include "jmaths_N.cpp"
+#include "jmaths_Z.cpp"
+#include "jmaths_Q.cpp"
+#include "jmaths_calc.cpp"
+#include "jmaths_misc.cpp"
+#include "jmaths_error.cpp"
+#include "jmaths_literals.cpp"
