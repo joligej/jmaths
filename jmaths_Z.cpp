@@ -221,7 +221,9 @@ size_t Z::dynamic_size_() const {
 
 Z::Z() = default;
 
-Z::Z (std::string_view num_str, unsigned base) : sign_type(num_str), N(num_str, base) {}
+Z::Z (std::string_view num_str, unsigned base) : sign_type(num_str), N(num_str, base) {
+	if (is_zero()) set_sign_(positive);
+}
 
 Z::Z (const N & n) : N(n) {}
 
@@ -439,6 +441,7 @@ Z & Z::operator >>= (BIT_TYPE pos) {
 Z & Z::operator = (std::string_view num_str) {
 	set_sign_(sign_type::handle_string_(num_str));
 	N::opr_assign_(num_str);
+	if (is_zero()) set_sign_(positive);
 	return *this;
 }
 

@@ -17,6 +17,13 @@ sign_type::sign_bool sign_type::handle_string_ (std::string_view & num_str) {
 	}
 }
 
+std::string_view sign_type::handle_fraction_string_ (std::string_view & num_str) {
+	const auto fraction_bar = num_str.find('/');
+	std::string_view numerator = num_str.substr(0, fraction_bar);
+	num_str.remove_prefix(fraction_bar + 1);
+	return numerator;
+}
+
 bool sign_type::is_positive() const {
 	return (sign_ == positive);
 }

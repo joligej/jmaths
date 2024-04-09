@@ -106,6 +106,8 @@ class N {
 	friend struct detail;
 	friend struct calc;
 	
+	friend class Q;
+	
 	private:
 		void remove_leading_zeroes_();
 		BASE_INT front_() const;
@@ -259,6 +261,7 @@ class sign_type {
 		template <typename INT> requires std::is_integral_v<INT> sign_type (INT & num);
 		
 		static sign_bool handle_string_ (std::string_view & num_str);
+		static std::string_view handle_fraction_string_ (std::string_view & num_str);
 		template <typename INT> requires std::is_integral_v<INT> static sign_bool handle_int_ (INT & num);
 		
 		template <typename BOOL> requires std::is_convertible_v<BOOL, std::underlying_type_t<sign_bool>> void set_sign_ (BOOL val);
@@ -303,6 +306,8 @@ class Z : public sign_type, private N {
 	
 	friend struct detail;
 	friend struct calc;
+	
+	friend class Q;
 
 	private:
 		Z (N && n, sign_bool sign);
@@ -363,7 +368,79 @@ class Z : public sign_type, private N {
 } // /namespace jmaths
 
 // declarations of Q and associated functions and types
-namespace jmaths {} // /namespace jmaths
+namespace jmaths {
+
+class Q : public sign_type {
+    
+    friend struct detail;
+    friend struct calc;
+    
+    private:
+        N num_, denom_;
+    
+        Q (const N & num, const N & denom, sign_bool sign);
+		
+        void canonicalise();
+		
+		size_t dynamic_size_() const;
+    
+    public:
+        Q();
+        Q (std::string_view num_str, unsigned base = DEFAULT_BASE);
+		template <typename INT> requires std::is_integral_v<INT> Q (INT num);
+        Q (const N & n);
+        Q (N && n);
+        Q (const Z & z);
+        Q (Z && z);
+		Q (const N & num, const N & denom);
+		Q (const Z & num, const Z & denom);
+    
+        virtual bool is_zero() const;
+        bool is_one() const;
+        bool is_neg_one() const;
+		
+		const Q & abs() const &;
+		Q && abs() &&;
+		
+		Q inverse() const &;
+		Q && inverse() &&;
+		
+		size_t size() const; // size of this object in bytes
+		
+		std::string to_str (unsigned base) const; // convert to string in any base >= 2 and <= 64
+		operator std::string() const; // convert to string in default base
+		std::string to_base16() const; // convert to string in base 16 (assumes BASE is a power of 2)
+		explicit operator bool() const;
+		template <typename INT> requires std::is_integral_v<INT> std::optional<INT> fits_into() const;
+		
+		Q & operator ++ ();
+		Q & operator -- ();
+
+		Q & operator += (const Q & rhs);
+		Q & operator -= (const Q & rhs);
+		Q & operator *= (const Q & rhs);
+		
+		Q & operator &= (const Q & rhs);
+		Q & operator |= (const Q & rhs);
+		Q & operator ^= (const Q & rhs);
+		
+		Q operator - () const &;
+		Q && operator - () &&;
+		Q operator ~ () const;
+		Q operator << (BIT_TYPE pos) const;
+		Q operator >> (BIT_TYPE pos) const;
+		
+		Q & operator <<= (BIT_TYPE pos);
+		Q & operator >>= (BIT_TYPE pos);
+		
+		Q & operator = (std::string_view num_str);
+		template <typename INT> requires std::is_integral_v<INT> Q & operator = (INT rhs);
+		
+		
+        
+};
+
+} // /namespace jmaths
 
 // declarations of error and associated types
 namespace jmaths {
