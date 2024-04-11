@@ -9,6 +9,12 @@ N calc::gcd (N a, N b) {
 	if (b.is_zero()) return a;
 	
 	BIT_TYPE shift = 0;
+	
+	for (; (a.front_() | b.front_()) == 0; shift += BASE_INT_SIZE) {
+		a.digits_.erase(a.digits_.begin());
+		b.digits_.erase(b.digits_.begin());
+	}
+	
 	for (; ((a.front_() | b.front_()) & 1) == 0; ++shift) {
 		a.opr_bitshift_r_assign_(1);
 		b.opr_bitshift_r_assign_(1);
@@ -22,7 +28,7 @@ N calc::gcd (N a, N b) {
 		if (detail::opr_comp(a, b) > 0) a.digits_.swap(b.digits_);
 		
 		b.opr_subtr_assign_(a);
-	} while (b != 0);
+	} while (!b.is_zero());
 	
 	return a.opr_bitshift_l_(shift);
 }
@@ -72,7 +78,7 @@ N calc::pow (N base, N exponent) {
 }
 
 Z calc::pow (Z base, N exponent) {
-	const auto sign = static_cast<sign_type::sign_bool>(base.sign_ && (exponent.front_() & 1));
+	const auto sign = static_cast<sign_type::sign_bool>(base.is_negative() && (exponent.front_() & 1));
 	
 	return Z(pow(std::move(std::move(base).abs()), std::move(exponent)), sign);
 }
