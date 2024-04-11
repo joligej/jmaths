@@ -310,23 +310,28 @@ Z & Z::operator += (const Z & rhs) {
 		} else {
 			const auto difference = detail::opr_comp(this->abs(), rhs.abs());
 			
-			if (difference == 0) digits_.clear();
-			else if (difference > 0) N::opr_subtr_assign_(rhs.abs());
-			else N::operator=(detail::opr_subtr(rhs.abs(), this->abs()));
-			
-			if (difference < 0) set_sign_(negative);
-			
+			if (difference == 0) {
+				digits_.clear();
+			} else if (difference > 0) {
+				N::opr_subtr_assign_(rhs.abs());
+			} else {
+				N::operator=(detail::opr_subtr(rhs.abs(), this->abs()));
+				set_sign_(negative);
+			}
 		}
 	} else {
 		if (rhs.is_positive()) {
 			const auto difference = detail::opr_comp(this->abs(), rhs.abs());
 			
-			if (difference == 0) digits_.clear();
-			else if (difference > 0) N::opr_subtr_assign_(rhs.abs());
-			else N::operator=(detail::opr_subtr(rhs.abs(), this->abs()));
-			
-			if (difference <= 0) set_sign_(positive);
-			
+			if (difference == 0) {
+				digits_.clear();
+				set_sign_(positive);
+			} else if (difference > 0) {
+				N::opr_subtr_assign_(rhs.abs());
+			} else {
+				N::operator=(detail::opr_subtr(rhs.abs(), this->abs()));
+				set_sign_(positive);
+			}
 		} else {
 			N::opr_add_assign_(rhs);
 		}
@@ -340,11 +345,14 @@ Z & Z::operator -= (const Z & rhs) {
 		if (rhs.is_positive()) {
 			const auto difference = detail::opr_comp(this->abs(), rhs.abs());
 			
-			if (difference == 0) digits_.clear();
-			else if (difference > 0) N::opr_subtr_assign_(rhs.abs());
-			else N::operator=(detail::opr_subtr(rhs.abs(), this->abs()));
-			
-			if (difference < 0) set_sign_(negative);
+			if (difference == 0) {
+				digits_.clear();
+			} else if (difference > 0) {
+				N::opr_subtr_assign_(rhs.abs());
+			} else {
+				N::operator=(detail::opr_subtr(rhs.abs(), this->abs()));
+				set_sign_(negative);
+			}
 		} else {
 			N::opr_add_assign_(rhs);
 		}
@@ -354,11 +362,15 @@ Z & Z::operator -= (const Z & rhs) {
 		} else {
 			const auto difference = detail::opr_comp(this->abs(), rhs.abs());
 			
-			if (difference == 0) digits_.clear();
-			else if (difference > 0) N::opr_subtr_assign_(rhs.abs());
-			else N::operator=(detail::opr_subtr(rhs.abs(), this->abs()));
-			
-			if (difference <= 0) set_sign_(positive);
+			if (difference == 0) {
+				digits_.clear();
+				set_sign_(positive);
+			} else if (difference > 0) {
+				N::opr_subtr_assign_(rhs.abs());
+			} else {
+				N::operator=(detail::opr_subtr(rhs.abs(), this->abs()));
+				set_sign_(positive);
+			}
 		}
 	}
 	

@@ -4,7 +4,7 @@
 #include <string> // for std::string
 #include <string_view> //for std::string_view
 #include <vector> // for std::vector
-#include <utility> // for std::pair
+#include <utility> // for std::pair and std::swap
 #include <compare> // for std::strong_ordering
 #include <exception> // for std::exception
 #include <type_traits> // for std::is_integral_v and std::is_(un)signed_v and std::is_convertible_v and std::underlying_type_t
@@ -388,18 +388,28 @@ class Q : public sign_type {
         Q();
         Q (std::string_view num_str, unsigned base = DEFAULT_BASE);
 		template <typename INT> requires std::is_integral_v<INT> Q (INT num);
+		
         Q (const N & n);
         Q (N && n);
-        Q (const Z & z);
+        
+		Q (const Z & z);
         Q (Z && z);
+		
 		Q (const N & num, const N & denom);
+		Q (const N & num, N && denom);
+		Q (N && num, const N & denom);
+		Q (N && num, N && denom);
+		
 		Q (const Z & num, const Z & denom);
+		Q (const Z & num, Z && denom);
+		Q (Z && num, const Z & denom);
+		Q (Z && num, Z && denom);
     
         virtual bool is_zero() const;
         bool is_one() const;
         bool is_neg_one() const;
 		
-		const Q & abs() const &;
+		Q abs() const &;
 		Q && abs() &&;
 		
 		Q inverse() const &;
@@ -436,7 +446,11 @@ class Q : public sign_type {
 		Q & operator = (std::string_view num_str);
 		template <typename INT> requires std::is_integral_v<INT> Q & operator = (INT rhs);
 		
-		
+        Q & operator = (const N & n);
+        Q & operator = (N && n);
+        
+		Q & operator = (const Z & z);
+        Q & operator = (Z && z);
         
 };
 
