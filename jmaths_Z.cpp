@@ -457,4 +457,16 @@ Z & Z::operator = (std::string_view num_str) {
 	return *this;
 }
 
+Z & Z::operator = (const N & n) {
+	N::operator=(n);
+	set_sign_(positive);
+	return *this;
+}
+
+Z & Z::operator = (N && n) {
+	N::operator=(std::move(n));
+	set_sign_(positive);
+	return *this;
+}
+
 } // /namespace jmaths

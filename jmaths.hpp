@@ -363,6 +363,9 @@ class Z : public sign_type, private N {
 		
 		Z & operator = (std::string_view num_str);
 		template <typename INT> requires std::is_integral_v<INT> Z & operator = (INT rhs);
+		
+		Z & operator = (const N & n);
+		Z & operator = (N && n);
 };
 
 } // /namespace jmaths
@@ -505,8 +508,6 @@ Z operator ""_Z (const char * num_str);
 }
 
 } // /namespace jmaths
-
-using namespace jmaths::literals;
 
 #include "jmaths_undef.cfg"
 
