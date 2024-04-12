@@ -12,7 +12,7 @@ jmaths.o: $(ImplObjs) $(HeaderObjs)
 	$(CC) $(CompileParms) jmaths.cpp -c
 
 clean:
-	rm -f *.o jmaths
+	rm -i *.o
 
 library: jmaths.o
 	ar rcs $(LibName) jmaths.o
