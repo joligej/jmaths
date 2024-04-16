@@ -78,7 +78,7 @@ N calc::pow (N base, N exponent) {
 }
 
 Z calc::pow (Z base, N exponent) {
-	const auto sign = static_cast<sign_type::sign_bool>(base.is_negative() && (exponent.front_() & 1));
+	const auto sign = base.is_negative() && exponent.is_odd() ? sign_type::negative : sign_type::positive;
 	
 	return Z(pow(std::move(std::move(base).abs()), std::move(exponent)), sign);
 }

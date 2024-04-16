@@ -7,7 +7,7 @@
 #include <utility> // for std::pair and std::swap
 #include <compare> // for std::strong_ordering
 #include <exception> // for std::exception
-#include <type_traits> // for std::is_integral_v and std::is_(un)signed_v and std::is_convertible_v and std::underlying_type_t
+#include <type_traits> // for std::is_integral_v and std::is_floating_point_v and std::is_(un)signed_v and std::is_convertible_v and std::underlying_type_t
 #include <optional> // for std::optional
 #include <limits> // for std::numeric_limits<T>::max
 
@@ -65,6 +65,24 @@ template <typename INT> requires std::is_integral_v<INT> static bool opr_eq (con
 
 static std::strong_ordering opr_comp (const Z & lhs, const Z & rhs);
 template <typename INT> requires std::is_integral_v<INT> static std::strong_ordering opr_comp (const Z & lhs, INT rhs);
+
+static std::ostream & opr_ins (std::ostream & os, const Q & q);
+static std::istream & opr_extr (std::istream & is, Q & q);
+
+static Q opr_add (const Q & lhs, const Q & rhs);
+static Q opr_subtr (const Q & lhs, const Q & rhs);
+static Q opr_mult (const Q & lhs, const Q & rhs);
+static Q opr_div (const Q & lhs, const Q & rhs);
+
+static Q opr_and (const Q & lhs, const Q & rhs);
+static Q opr_or (const Q & lhs, const Q & rhs);
+static Q opr_xor (const Q & lhs, const Q & rhs);
+
+static bool opr_eq (const Q & lhs, const Q & rhs);
+template <typename FLOAT> requires std::is_floating_point_v<FLOAT> static bool opr_eq (const Q & lhs, FLOAT rhs);
+
+static std::strong_ordering opr_comp (const Q & lhs, const Q & rhs);
+template <typename FLOAT> requires std::is_floating_point_v<FLOAT> static std::strong_ordering opr_comp (const Q & lhs, FLOAT rhs);
 
 }; // /namespace struct detail
 
@@ -373,6 +391,26 @@ class Z : public sign_type, private N {
 // declarations of Q and associated functions and types
 namespace jmaths {
 
+std::ostream & operator << (std::ostream & os, const Q & q);
+std::istream & operator >> (std::istream & is, Q & q);
+
+Q operator + (const Q & lhs, const Q & rhs);
+Q operator - (const Q & lhs, const Q & rhs);
+Q operator * (const Q & lhs, const Q & rhs);
+Q operator / (const Q & lhs, const Q & rhs);
+
+Q operator & (const Q & lhs, const Q & rhs);
+Q operator | (const Q & lhs, const Q & rhs);
+Q operator ^ (const Q & lhs, const Q & rhs);
+
+bool operator == (const Q & lhs, const Q & rhs);
+template <typename FLOAT> requires std::is_floating_point_v<FLOAT> bool operator == (const Q & lhs, FLOAT rhs);
+template <typename FLOAT> requires std::is_floating_point_v<FLOAT> bool operator == (FLOAT lhs, const Q & rhs);
+
+std::strong_ordering operator <=> (const Q & lhs, const Q & rhs);
+template <typename FLOAT> requires std::is_floating_point_v<FLOAT> std::strong_ordering operator <=> (const Q & lhs, FLOAT rhs);
+template <typename FLOAT> requires std::is_floating_point_v<FLOAT> std::strong_ordering operator <=> (FLOAT lhs, const Q & rhs);
+
 class Q : public sign_type {
     
     friend struct detail;
@@ -381,6 +419,7 @@ class Q : public sign_type {
     private:
         N num_, denom_;
     
+		Q (N && num, N && denom, sign_bool sign);
         Q (const N & num, const N & denom, sign_bool sign);
 		
         void canonicalise();
@@ -424,7 +463,7 @@ class Q : public sign_type {
 		operator std::string() const; // convert to string in default base
 		std::string to_base16() const; // convert to string in base 16 (assumes BASE is a power of 2)
 		explicit operator bool() const;
-		template <typename INT> requires std::is_integral_v<INT> std::optional<INT> fits_into() const;
+		template <typename FLOAT> requires std::is_floating_point_v<FLOAT> std::optional<FLOAT> fits_into() const;
 		
 		Q & operator ++ ();
 		Q & operator -- ();
@@ -432,6 +471,7 @@ class Q : public sign_type {
 		Q & operator += (const Q & rhs);
 		Q & operator -= (const Q & rhs);
 		Q & operator *= (const Q & rhs);
+		Q & operator /= (const Q & rhs);
 		
 		Q & operator &= (const Q & rhs);
 		Q & operator |= (const Q & rhs);

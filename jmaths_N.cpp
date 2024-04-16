@@ -94,15 +94,13 @@ N detail::opr_subtr (N lhs, const N & rhs) {
 	size_t i = 0;
 	
 	for (; i < rhs.digits_.size(); ++i) {
-		if (lhs.digits_[i] >= rhs.digits_[i]) {
-			difference.digits_.emplace_back(lhs.digits_[i] - rhs.digits_[i]);
-		} else {
+		if (lhs.digits_[i] < rhs.digits_[i]) {
 			for (size_t j = i + 1; j < lhs.digits_.size(); ++j) {
 				if ((lhs.digits_[j])-- > 0) break;
 			}
-			
-			difference.digits_.emplace_back((((BASE_INT_BIG)1 << (BASE_INT_BITS)) + lhs.digits_[i]) - rhs.digits_[i]);
 		}
+		
+		difference.digits_.emplace_back(lhs.digits_[i] - rhs.digits_[i]);
 	}
 	
 	for (; i < lhs.digits_.size(); ++i) {
@@ -461,15 +459,13 @@ void N::opr_subtr_assign_ (const N & rhs) {
 	size_t i = 0;
 	
 	for (; i < rhs.digits_.size(); ++i) {
-		if (this->digits_[i] >= rhs.digits_[i]) {
-			this->digits_[i] -= rhs.digits_[i];
-		} else {
+		if (this->digits_[i] < rhs.digits_[i]) {
 			for (size_t j = i + 1; j < digits_.size(); ++j) {
 				if ((digits_[j])-- > 0) break;
 			}
-			
-			this->digits_[i] = (((BASE_INT_BIG)1 << BASE_INT_BITS) + this->digits_[i]) - rhs.digits_[i];
 		}
+		
+		this->digits_[i] -= rhs.digits_[i];
 	}
 	
 	remove_leading_zeroes_();

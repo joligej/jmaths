@@ -4,8 +4,187 @@
 
 namespace jmaths {
 
+/* ******************************************************** */
+// implementation functions
+
+std::ostream & detail::opr_ins (std::ostream & os, const Q & q) {
+	return os << (std::string)q;
+}
+
+std::istream & detail::opr_extr (std::istream & is, Q & q) {
+	std::string num_str;
+	is >> num_str;
+	q = num_str;
+	return is;
+}
+
+Q detail::opr_add (const Q & lhs, const Q & rhs) {
+	using sign_type::positive, sign_type::negative;
+	
+	if (lhs.is_positive()) {
+		if (rhs.is_positive()) {
+			N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+			first_product.opr_add_assign_(detail::opr_mult(lhs.denom_, rhs.num_));
+			return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
+		} else {
+			N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+			N && second_product = detail::opr_mult(lhs.denom_, rhs.num_);
+			
+			const auto difference = detail::opr_comp(first_product, second_product);
+			
+			if (difference == 0) {
+				return Q();
+			} else if (difference > 0) {
+				first_product.opr_subtr_assign_(second_product);
+				return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
+			} else {
+				second_product.opr_subtr_assign_(first_product);
+				return Q(std::move(second_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
+			}
+		}
+	} else {
+		if (rhs.is_positive()) {
+			N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+			N && second_product = detail::opr_mult(lhs.denom_, rhs.num_);
+			
+			const auto difference = detail::opr_comp(first_product, second_product);
+			
+			if (difference == 0) {
+				return Q();
+			} else if (difference > 0) {
+				first_product.opr_subtr_assign_(second_product);
+				return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
+			} else {
+				second_product.opr_subtr_assign_(first_product);
+				return Q(std::move(second_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
+			}
+		} else {			
+			N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+			first_product.opr_add_assign_(detail::opr_mult(lhs.denom_, rhs.num_));
+			return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
+		}
+	}
+}
+
+Q detail::opr_subtr (const Q & lhs, const Q & rhs) {
+	using sign_type::positive, sign_type::negative;
+	
+	if (lhs.is_positive()) {
+		if (rhs.is_positive()) {
+			N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+			N && second_product = detail::opr_mult(lhs.denom_, rhs.num_);
+			
+			const auto difference = detail::opr_comp(first_product, second_product);
+			
+			if (difference == 0) {
+				return Q();
+			} else if (difference > 0) {
+				first_product.opr_subtr_assign_(second_product);
+				return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
+			} else {
+				second_product.opr_subtr_assign_(first_product);
+				return Q(std::move(second_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
+			}
+		} else {
+			N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+			first_product.opr_add_assign_(detail::opr_mult(lhs.denom_, rhs.num_));
+			return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
+		}
+	} else {
+		if (rhs.is_positive()) {
+			N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+			first_product.opr_add_assign_(detail::opr_mult(lhs.denom_, rhs.num_));
+			return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
+		} else {			
+			N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+			N && second_product = detail::opr_mult(lhs.denom_, rhs.num_);
+			
+			const auto difference = detail::opr_comp(first_product, second_product);
+			
+			if (difference == 0) {
+				return Q();
+			} else if (difference > 0) {
+				first_product.opr_subtr_assign_(second_product);
+				return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
+			} else {
+				second_product.opr_subtr_assign_(first_product);
+				return Q(std::move(second_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
+			}
+		}
+	}
+}
+
+/*Q detail::opr_mult (const Q & lhs, const Q & rhs);
+
+Q detail::opr_div (const Q & lhs, const Q & rhs);
+
+Q detail::opr_and (const Q & lhs, const Q & rhs);
+
+Q detail::opr_or (const Q & lhs, const Q & rhs);
+
+Q detail::opr_xor (const Q & lhs, const Q & rhs);
+
+bool detail::opr_eq (const Q & lhs, const Q & rhs);
+
+std::strong_ordering detail::opr_comp (const Q & lhs, const Q & rhs);*/
+
+/* ******************************************************** */
+// forwarding functions
+
+std::ostream & operator << (std::ostream & os, const Q & q) {
+	return detail::opr_ins(os, q);
+}
+
+std::istream & operator >> (std::istream & is, Q & q) {
+	return detail::opr_extr(is, q);
+}
+
+Q operator + (const Q & lhs, const Q & rhs) {
+	return detail::opr_add(lhs, rhs);
+}
+
+Q operator - (const Q & lhs, const Q & rhs) {
+	return detail::opr_subtr(lhs, rhs);
+}
+
+Q operator * (const Q & lhs, const Q & rhs) {
+	return detail::opr_mult(lhs, rhs);
+}
+
+Q operator / (const Q & lhs, const Q & rhs) {
+	if (rhs.is_zero()) throw error::division_by_zero();
+	return detail::opr_div(lhs, rhs);
+}
+
+Q operator & (const Q & lhs, const Q & rhs) {
+	return detail::opr_and(lhs, rhs);
+}
+
+Q operator | (const Q & lhs, const Q & rhs) {
+	return detail::opr_or(lhs, rhs);
+}
+
+Q operator ^ (const Q & lhs, const Q & rhs) {
+	return detail::opr_xor(lhs, rhs);
+}
+
+bool operator == (const Q & lhs, const Q & rhs) {
+	return detail::opr_eq(lhs, rhs);
+}
+
+std::strong_ordering operator <=> (const Q & lhs, const Q & rhs) {
+	return detail::opr_comp(lhs, rhs);
+}
+
+} // /namespace jmaths
+
+namespace jmaths {
+
+Q::Q (N && num, N && denom, sign_bool sign) : sign_type(sign), num_(std::move(num)), denom_(std::move(denom)) {
+	canonicalise();
+}
+
 Q::Q (const N & num, const N & denom, sign_bool sign) : sign_type(sign), num_(num), denom_(denom) {
-	if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
 	canonicalise();
 }
 
@@ -97,6 +276,7 @@ Q && Q::abs() && {
 }
 
 Q Q::inverse() const & {
+	if (num_.is_zero()) throw error::division_by_zero("Cannot take the inverse of zero!");
 	return Q(denom_, num_, sign_);
 }
 
@@ -302,6 +482,16 @@ Q & Q::operator *= (const Q & rhs) {
 	return *this;
 }
 
+Q & Q::operator /= (const Q & rhs) {
+	if (rhs.is_zero()) throw error::division_by_zero();
+	
+	num_.opr_mult_assign_(rhs.denom_);
+	denom_.opr_mult_assign_(rhs.num_);
+	set_sign_(is_zero() ? positive : this->sign_ ^ rhs.sign_);
+	canonicalise();
+	return *this;
+}
+
 Q & Q::operator &= (const Q & rhs) {
 	num_.opr_and_assign_(rhs.num_);
 	denom_.opr_and_assign_(rhs.denom_);
@@ -342,7 +532,9 @@ Q Q::operator ~ () const {
 	if (num_complemented.is_zero()) {
 		return Q();
 	} else {
-		return Q(std::move(num_complemented), denom_.opr_compl_(), static_cast<sign_bool>(!sign_));
+		N && denom_complemented = denom_.opr_compl_();
+		if (denom_complemented.is_zero()) throw error::division_by_zero("Denominator of complemented fraction cannot be zero!");
+		return Q(std::move(num_complemented), std::move(denom_complemented), static_cast<sign_bool>(!sign_));
 	}
 }
 
