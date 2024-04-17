@@ -9,7 +9,7 @@
 int main (int argc, char * argv[]) {
     const bool DEFAULT_STATE = argc > 1 && strcmp(argv[1], "DEFAULT") == 0;
     
-    if (DEFAULT_STATE) REPEAT(7) std::cin.putback('\n');
+    std::filesystem::remove(USER_SETTINGS);
     
     if (DEFAULT_STATE) {
         std::filesystem::copy(DEFAULT_USER_SETTINGS, USER_SETTINGS);
