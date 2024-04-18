@@ -4,34 +4,37 @@
 #include <cstring>
 #include <filesystem>
 
-#include DEFAULTS_LIST
+#define TO_STRING_HELPER(x) #x
+#define TO_STRING(x) TO_STRING_HELPER(x)
+
+#include TO_STRING(DEFAULTS_LIST)
 
 #define REPEAT(x) for (decltype(x) i = 0; i < x; ++i)
 
 int main (int argc, char * argv[]) {
     const bool DEFAULT_STATE = argc > 1 && strcmp(argv[1], "DEFAULT") == 0;
     
-    std::filesystem::remove(USER_SETTINGS);
+    std::filesystem::remove(TO_STRING(USER_SETTINGS));
     
     if (DEFAULT_STATE) {
-        std::filesystem::copy(DEFAULT_USER_SETTINGS, USER_SETTINGS);
+        std::filesystem::copy(TO_STRING(DEFAULT_USER_SETTINGS), TO_STRING(USER_SETTINGS));
     } else {
         
-        std::ofstream config_file (USER_SETTINGS);
+        std::ofstream config_file (TO_STRING(USER_SETTINGS));
         
-        std::cout << "\nCurrently writing to: " << USER_SETTINGS << '\n';
+        std::cout << "\nCurrently writing to: " << TO_STRING(USER_SETTINGS) << '\n';
         
         config_file << "#include <cstdint> // for uint*_t\n\n";
         
     DEFAULT_BASE:
         
-        std::cout << "\nWhat would you like your default base to be?\nIf you don't enter anything, it will default to 10.\nEnter base: ";
+        std::cout << "\nWhat would you like your default base to be?\nIf you don't enter anything, it will default to " TO_STRING(D_DEFAULT_BASE) ".\nEnter base: ";
         
         std::string default_base;
         std::getline(std::cin, default_base);
         
         config_file << "#define DEFAULT_BASE (unsigned)";
-        if (default_base.empty()) config_file << 10;
+        if (default_base.empty()) config_file << TO_STRING(D_DEFAULT_BASE);
         else {
             try {
                 std::stoull(default_base);
@@ -44,37 +47,37 @@ int main (int argc, char * argv[]) {
         
         config_file << '\n';
         
-        std::cout << "\nWhat would you like your base type to be?\nIf you don't enter anything, it will default to uint16_t.\nEnter type: ";
+        std::cout << "\nWhat would you like your base type to be?\nIf you don't enter anything, it will default to " TO_STRING(D_BASE_INT) ".\nEnter type: ";
         
         std::string base_int;
         std::getline(std::cin, base_int);
         
         config_file << "#define BASE_INT ";
-        if (base_int.empty()) config_file << "uint16_t";
+        if (base_int.empty()) config_file << TO_STRING(D_BASE_INT);
         else config_file << base_int;
         
         config_file << '\n';
         
-        std::cout << "\nWhat would you like your bigger-than-base-type type to be?\nIf you don't enter anything, it will default to uint32_t.\nEnter type: ";
+        std::cout << "\nWhat would you like your bigger-than-base-type type to be?\nIf you don't enter anything, it will default to " TO_STRING(D_BASE_INT_BIG) ".\nEnter type: ";
         
         std::string base_int_big;
         std::getline(std::cin, base_int_big);
         
         config_file << "#define BASE_INT_BIG ";
-        if (base_int_big.empty()) config_file << "uint32_t";
+        if (base_int_big.empty()) config_file << TO_STRING(D_BASE_INT_BIG);
         else config_file << base_int_big;
         
         config_file << '\n';
         
     BASE:
         
-        std::cout << "\nWhat is the base corresponding to your base type?\nIf you don't enter anything, it will default to 65,536.\nEnter base: ";
+        std::cout << "\nWhat is the base corresponding to your base type?\nIf you don't enter anything, it will default to " TO_STRING(D_BASE) ".\nEnter base: ";
         
         std::string base;
         std::getline(std::cin, base);
         
         config_file << "#define BASE (BASE_INT_BIG)";
-        if (base.empty()) config_file << "65'536";
+        if (base.empty()) config_file << TO_STRING(D_BASE);
         else {
             try {
                 std::stoull(base);
@@ -89,13 +92,13 @@ int main (int argc, char * argv[]) {
         
     MAX_RATIO:
         
-        std::cout << "\nWhat is the ratio between your smallest type and your base type?\nIf you don't enter anything, it will default to 0.000125.\nMake sure to enter a ratio a little smaller.\nEnter ratio: ";
+        std::cout << "\nWhat is the ratio between your smallest type and your base type?\nIf you don't enter anything, it will default to " TO_STRING(D_MAX_RATIO) ".\nMake sure to enter a ratio a little smaller.\nEnter ratio: ";
         
         std::string max_ratio;
         std::getline(std::cin, max_ratio);
         
         config_file << "#define MAX_RATIO (double)";
-        if (max_ratio.empty()) config_file << "0.000125";
+        if (max_ratio.empty()) config_file << TO_STRING(D_MAX_RATIO);
         else {
             try {
                 std::stold(max_ratio);
@@ -108,26 +111,26 @@ int main (int argc, char * argv[]) {
         
         config_file << '\n';
         
-        std::cout << "\nWhat is the type you would like to use to count bits?\nIf you don't enter anything, it will default to unsigned long long.\nEnter type: ";
+        std::cout << "\nWhat is the type you would like to use to count bits?\nIf you don't enter anything, it will default to " TO_STRING(D_BIT_TYPE) ".\nEnter type: ";
         
         std::string bit_type;
         std::getline(std::cin, bit_type);
         
         config_file << "#define BIT_TYPE ";
-        if (bit_type.empty()) config_file << "unsigned long long";
+        if (bit_type.empty()) config_file << TO_STRING(D_BIT_TYPE);
         else config_file << bit_type;
         
         config_file << '\n';
         
     BITS_IN_BYTE:
         
-        std::cout << "\nWhat is the amount of bits in a byte on this particular system?\nIf you don't enter anything, it will default to 8.\nEnter number: ";
+        std::cout << "\nWhat is the amount of bits in a byte on this particular system?\nIf you don't enter anything, it will default to " TO_STRING(BITS_IN_BYTE) ".\nEnter number: ";
         
         std::string bits_in_byte;
         std::getline(std::cin, bits_in_byte);
         
         config_file << "#define BITS_IN_BYTE (BIT_TYPE)";
-        if (bits_in_byte.empty()) config_file << "8";
+        if (bits_in_byte.empty()) config_file << TO_STRING(BITS_IN_BYTE);
         else {
             try {
                 std::stoull(bits_in_byte);
