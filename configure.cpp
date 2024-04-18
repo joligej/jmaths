@@ -4,6 +4,8 @@
 #include <cstring>
 #include <filesystem>
 
+#include DEFAULTS_LIST
+
 #define REPEAT(x) for (decltype(x) i = 0; i < x; ++i)
 
 int main (int argc, char * argv[]) {

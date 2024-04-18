@@ -114,19 +114,73 @@ Q detail::opr_subtr (const Q & lhs, const Q & rhs) {
 	}
 }
 
-/*Q detail::opr_mult (const Q & lhs, const Q & rhs);
+Q detail::opr_mult (const Q & lhs, const Q & rhs) {
+	N && numerator = lhs.num_ * rhs.num_;
+	
+	if (numerator.is_zero()) return Q();
 
-Q detail::opr_div (const Q & lhs, const Q & rhs);
+	return Q(std::move(numerator), lhs.denom_ * rhs.denom_, static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
+}
 
-Q detail::opr_and (const Q & lhs, const Q & rhs);
+Q detail::opr_div (const Q & lhs, const Q & rhs) {
+	N && numerator = lhs.num_ * rhs.denom_;
+	
+	if (numerator.is_zero()) return Q();
 
-Q detail::opr_or (const Q & lhs, const Q & rhs);
+	return Q(std::move(numerator), lhs.denom_ * rhs.num_, static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
+}
 
-Q detail::opr_xor (const Q & lhs, const Q & rhs);
+Q detail::opr_and (const Q & lhs, const Q & rhs) {
+	N && denominator = lhs.denom_ & rhs.denom_;
+	
+	if (denominator.is_zero()) throw error::division_by_zero();
+	
+	N && numerator = lhs.num_ & rhs.num_;
+	
+	if (numerator.is_zero()) return Q();
 
-bool detail::opr_eq (const Q & lhs, const Q & rhs);
+	return Q(std::move(numerator), std::move(denominator), static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_));
+}
 
-std::strong_ordering detail::opr_comp (const Q & lhs, const Q & rhs);*/
+Q detail::opr_or (const Q & lhs, const Q & rhs) {
+	N && numerator = lhs.num_ | rhs.num_;
+	
+	if (numerator.is_zero()) return Q();
+
+	return Q(std::move(numerator), lhs.denom_ | rhs.denom_, static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_));
+}
+
+Q detail::opr_xor (const Q & lhs, const Q & rhs) {
+	N && denominator = lhs.denom_ ^ rhs.denom_;
+	
+	if (denominator.is_zero()) throw error::division_by_zero();
+	
+	N && numerator = lhs.num_ ^ rhs.num_;
+	
+	if (numerator.is_zero()) return Q();
+
+	return Q(std::move(numerator), std::move(denominator), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
+}
+
+bool detail::opr_eq (const Q & lhs, const Q & rhs) {
+	return (lhs.sign_ == rhs.sign_ && lhs.num_ == rhs.num_ && lhs.denom_ == rhs.denom_);
+}
+
+std::strong_ordering detail::opr_comp (const Q & lhs, const Q & rhs) {
+	if (lhs.is_positive()) {
+		if (rhs.is_positive()) {
+			return detail::opr_comp(lhs.num_ * rhs.denom_, rhs.num_ * lhs.denom_);
+		} else {
+			return std::strong_ordering::greater;
+		}
+	} else {
+		if (rhs.is_positive()) {
+			return std::strong_ordering::less;
+		} else {
+			return detail::opr_comp(rhs.num_ * lhs.denom_, lhs.num_ * rhs.denom_);
+		}
+	}
+}
 
 /* ******************************************************** */
 // forwarding functions
@@ -493,8 +547,9 @@ Q & Q::operator /= (const Q & rhs) {
 }
 
 Q & Q::operator &= (const Q & rhs) {
-	num_.opr_and_assign_(rhs.num_);
 	denom_.opr_and_assign_(rhs.denom_);
+	if (denom_.is_zero()) throw error::division_by_zero();
+	num_.opr_and_assign_(rhs.num_);
 	set_sign_(is_zero() ? positive : this->sign_ & rhs.sign_);
 	canonicalise();
 	return *this;
@@ -509,8 +564,9 @@ Q & Q::operator |= (const Q & rhs) {
 }
 
 Q & Q::operator ^= (const Q & rhs) {
-	num_.opr_xor_assign_(rhs.num_);
 	denom_.opr_xor_assign_(rhs.denom_);
+	if (denom_.is_zero()) throw error::division_by_zero();
+	num_.opr_xor_assign_(rhs.num_);
 	set_sign_(is_zero() ? positive : this->sign_ ^ rhs.sign_);
 	canonicalise();
 	return *this;
