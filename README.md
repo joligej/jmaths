@@ -7,4 +7,4 @@ make configure
 make build
 make install
 ```
-You will guided through the configuration process. To rebuild the library from scratch, type `make fresh`, and use `make clean` to restore the folder to its original state.
+You will be guided through the configuration process. To rebuild the library from scratch, type `make fresh`, or use `make clean` to restore the folder to its original state.
