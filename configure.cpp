@@ -124,13 +124,13 @@ int main (int argc, char * argv[]) {
         
     BITS_IN_BYTE:
         
-        std::cout << "\nWhat is the amount of bits in a byte on this particular system?\nIf you don't enter anything, it will default to " TO_STRING(BITS_IN_BYTE) ".\nEnter number: ";
+        std::cout << "\nWhat is the amount of bits in a byte on this particular system?\nIf you don't enter anything, it will default to " TO_STRING(D_BITS_IN_BYTE) ".\nEnter number: ";
         
         std::string bits_in_byte;
         std::getline(std::cin, bits_in_byte);
         
         config_file << "#define BITS_IN_BYTE (BIT_TYPE)";
-        if (bits_in_byte.empty()) config_file << TO_STRING(BITS_IN_BYTE);
+        if (bits_in_byte.empty()) config_file << TO_STRING(D_BITS_IN_BYTE);
         else {
             try {
                 std::stoull(bits_in_byte);
