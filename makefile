@@ -57,7 +57,7 @@ install:
 
 configure: configure.cpp
 	@echo "Creating a configuration program..."
-	@$(CC) $(CompileVersion) $(CompileOptimisation) -DUSER_SETTINGS=$(UserSettings) -DDEFAULT_USER_SETTINGS=$(DefaultUserSettings) -DDEFAULTS_LIST=$(DefaultsList) $< -o $@
+	@$(CC) $(CompileParms) -DUSER_SETTINGS=$(UserSettings) -DDEFAULT_USER_SETTINGS=$(DefaultUserSettings) -DDEFAULTS_LIST=$(DefaultsList) $< -o $@
 	@echo "Configuration program created"
 	
 $(UserSettings): configure

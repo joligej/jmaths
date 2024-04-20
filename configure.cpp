@@ -9,8 +9,6 @@
 
 #include TO_STRING(DEFAULTS_LIST)
 
-#define REPEAT(x) for (decltype(x) i = 0; i < x; ++i)
-
 int main (int argc, char * argv[]) {
     const bool DEFAULT_STATE = argc > 1 && strcmp(argv[1], "DEFAULT") == 0;
     
