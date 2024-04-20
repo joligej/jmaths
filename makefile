@@ -70,7 +70,7 @@ $(LibFileName): $(UnityBuild)
 	
 $(HeaderName): $(HeaderObjs)
 	@echo "Creating a header..."
-	@$(CC) $(CompileVersion) $< -E > $@
+	@$(CC) $(CompileVersion) $< -E -o $@
 	@echo "Header created succesfully"
 	
 $(UnitySource): $(ImplObjs) $(HeaderObjs)
@@ -81,7 +81,7 @@ $(UnitySource): $(ImplObjs) $(HeaderObjs)
 	
 $(UnityBuild): $(UnitySource)
 	@echo "Compiling the library..."
-	@$(CC) $(CompileParms) $< -c
+	@$(CC) $(CompileParms) $< -c -o $@
 	@echo "Library compiled succesfully"
 	
 unity: $(UnityBuild)
