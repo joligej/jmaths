@@ -6,6 +6,8 @@ SourceDir = src/
 BuildDir = build/
 ConfigDir = config/
 
+$(shell mkdir -p $(BuildDir))
+
 HeaderName = $(BuildDir)$(LibHeader)
 ConfigScript = $(ConfigDir)configure.cpp
 ConfigProgramName = configure
