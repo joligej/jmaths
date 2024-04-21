@@ -6,7 +6,7 @@ SourceDir = src/
 BuildDir = build/
 ConfigDir = config/
 
-$(shell mkdir -p $(BuildDir))
+$(shell mkdir -p "$(BuildDir)")
 
 HeaderName = $(BuildDir)$(LibHeader)
 ConfigScript = $(ConfigDir)configure.cpp
@@ -43,14 +43,14 @@ ImplObjs = $(addprefix $(SourceDir), jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmat
 .PHONY: all fresh clean build install configure unity library header
 
 all:
-	@$(MAKE) configure && cmp -s $(UserSettings) $(DefaultUserSettings) || (cd $(ConfigDir) && ./$(ConfigProgramName) DEFAULT) && $(MAKE) build
+	@$(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && $(MAKE) build
 	
 fresh:
 	@$(MAKE) clean && $(MAKE) all
 
 clean:
 	@echo "Cleaning files..."
-	@rm -f $(ConfigProgram) $(UserSettings) $(LibFileName) $(HeaderName) $(UnitySource) $(UnityBuild)
+	@rm -f "$(ConfigProgram)" "$(UserSettings)" "$(LibFileName)" "$(HeaderName)" "$(UnitySource)" "$(UnityBuild)"
 	@echo "Files cleaned succesfully"
 	
 build:
@@ -67,31 +67,31 @@ install:
 
 $(ConfigProgram): $(ConfigScript)
 	@echo "Creating a configuration program..."
-	@$(CC) $(CompileParms) -DUSER_SETTINGS="../$(UserSettings)" -DDEFAULT_USER_SETTINGS="../$(DefaultUserSettings)" -DDEFAULTS_LIST="../$(DefaultsList)" $< -o $@
+	@$(CC) $(CompileParms) -DUSER_SETTINGS="../$(UserSettings)" -DDEFAULT_USER_SETTINGS="../$(DefaultUserSettings)" -DDEFAULTS_LIST="../$(DefaultsList)" "$<" -o "$@"
 	@echo "Configuration program created"
 	
 $(UserSettings): $(ConfigProgram)
-	@cd $(ConfigDir) && ./$(ConfigProgramName)
+	@cd "$(ConfigDir)" && ./"$(ConfigProgramName)"
 
 $(LibFileName): $(UnityBuild)
 	@echo "Archiving the library..."
-	@ar rcs $@ $^
+	@ar rcs "$@" "$^"
 	@echo "Library archived succesfully"
 	
 $(HeaderName): $(HeaderObjs)
 	@echo "Creating a header..."
-	@$(CC) $(CompileVersion) $< -E -o $@
+	@$(CC) $(CompileVersion) "$<" -E -o "$@"
 	@echo "Header created succesfully"
 	
 $(UnitySource): $(ImplObjs) $(HeaderObjs)
-	@rm -f $@
+	@rm -f "$@"
 	@echo "Creating unity file..."
-	@for SourceFile in $(ImplObjs); do cat $$SourceFile >> $@; done
+	@for SourceFile in $(ImplObjs); do cat "$$SourceFile" >> "$@"; done
 	@echo "Unity file created"
 	
 $(UnityBuild): $(UnitySource)
 	@echo "Compiling the library..."
-	@$(CC) $(CompileParms) $< -c -o $@
+	@$(CC) $(CompileParms) "$<" -c -o "$@"
 	@echo "Library compiled succesfully"
 	
 configure: $(ConfigProgram)
