@@ -11,7 +11,7 @@
 #include <optional> // for std::optional
 #include <limits> // for std::numeric_limits<T>::max
 
-#include "jmaths_def.cfg"
+#include "../config/jmaths_def.cfg"
 
 // all the types
 namespace jmaths {
@@ -549,6 +549,6 @@ Z operator ""_Z (const char * num_str);
 
 } // /namespace jmaths
 
-#include "jmaths_undef.cfg"
+#include "../config/jmaths_undef.cfg"
 
-#include "jmaths_tmpl.cpp"
+#include "../src/jmaths_tmpl.cpp"

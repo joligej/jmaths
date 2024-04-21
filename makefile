@@ -1,16 +1,24 @@
 LibName = jmaths
-HeaderName = header.hpp
+LibHeader = jmaths.hpp
 Architecture = $(shell getconf LONG_BIT)
 
-UserSettings = user_settings.cfg
-UnitySource = unity.cpp
-UnityBuild = unity.o
-DefaultUserSettings64 = default_user_settings.cfg
-DefaultUserSettings32 = default_user_settings32.cfg
-DefaultsList64 = defaults_list.cfg
-DefaultsList32 = defaults_list32.cfg
+SourceDir = src/
+BuildDir = build/
+ConfigDir = config/
 
-LibFileName = lib$(LibName).a
+HeaderName = $(BuildDir)$(LibHeader)
+ConfigScript = $(ConfigDir)configure.cpp
+ConfigProgramName = configure
+ConfigProgram = $(ConfigDir)$(ConfigProgramName)
+UserSettings = $(ConfigDir)user_settings.cfg
+UnitySource = $(BuildDir)unity.cpp
+UnityBuild = $(BuildDir)unity.o
+DefaultUserSettings64 = $(ConfigDir)default_user_settings.cfg
+DefaultUserSettings32 = $(ConfigDir)default_user_settings32.cfg
+DefaultsList64 = $(ConfigDir)defaults_list.cfg
+DefaultsList32 = $(ConfigDir)defaults_list32.cfg
+
+LibFileName = $(BuildDir)lib$(LibName).a
 
 ifeq ($(Architecture), 64)
 	DefaultUserSettings = $(DefaultUserSettings64)
@@ -27,20 +35,20 @@ CompileOptimisation = -O3 -march=native -flto
 
 CompileParms = $(CompileVersion) $(CompileWarnings) $(CompileOptimisation)
 
-HeaderObjs = jmaths.hpp jmaths_tmpl.cpp $(UserSettings) jmaths_def.cfg jmaths_undef.cfg
-ImplObjs = jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp
+HeaderObjs = $(SourceDir)jmaths.hpp $(UserSettings)
+ImplObjs = $(addprefix $(SourceDir), jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp)
 
-.PHONY: all fresh clean build install unity library header
+.PHONY: all fresh clean build install configure unity library header
 
 all:
-	@$(MAKE) configure && cmp -s $(UserSettings) $(DefaultUserSettings) || ./configure DEFAULT && $(MAKE) build
+	@$(MAKE) configure && cmp -s $(UserSettings) $(DefaultUserSettings) || (cd $(ConfigDir) && ./$(ConfigProgramName) DEFAULT) && $(MAKE) build
 	
 fresh:
 	@$(MAKE) clean && $(MAKE) all
 
 clean:
 	@echo "Cleaning files..."
-	@rm -f configure $(UserSettings) *.o $(LibFileName) $(HeaderName) $(UnitySource)
+	@rm -f $(ConfigProgram) $(UserSettings) $(LibFileName) $(HeaderName) $(UnitySource) $(UnityBuild)
 	@echo "Files cleaned succesfully"
 	
 build:
@@ -55,13 +63,13 @@ install:
 	@echo "Installation succesful"
 	@echo "Library ready for use"
 
-configure: configure.cpp
+$(ConfigProgram): $(ConfigScript)
 	@echo "Creating a configuration program..."
-	@$(CC) $(CompileParms) -DUSER_SETTINGS=$(UserSettings) -DDEFAULT_USER_SETTINGS=$(DefaultUserSettings) -DDEFAULTS_LIST=$(DefaultsList) $< -o $@
+	@$(CC) $(CompileParms) -DUSER_SETTINGS="../$(UserSettings)" -DDEFAULT_USER_SETTINGS="../$(DefaultUserSettings)" -DDEFAULTS_LIST="../$(DefaultsList)" $< -o $@
 	@echo "Configuration program created"
 	
-$(UserSettings): configure
-	@./configure
+$(UserSettings): $(ConfigProgram)
+	@cd $(ConfigDir) && ./$(ConfigProgramName)
 
 $(LibFileName): $(UnityBuild)
 	@echo "Archiving the library..."
@@ -84,6 +92,8 @@ $(UnityBuild): $(UnitySource)
 	@$(CC) $(CompileParms) $< -c -o $@
 	@echo "Library compiled succesfully"
 	
+configure: $(ConfigProgram)
+
 unity: $(UnityBuild)
 	
 library: $(LibFileName)

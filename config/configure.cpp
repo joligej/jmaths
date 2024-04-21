@@ -10,17 +10,21 @@
 #include TO_STRING(DEFAULTS_LIST)
 
 int main (int argc, char * argv[]) {
-    const bool DEFAULT_STATE = argc > 1 && strcmp(argv[1], "DEFAULT") == 0;
+    namespace fs = std::filesystem;
+    const bool default_state = argc > 1 && strcmp(argv[1], "DEFAULT") == 0;
     
-    std::filesystem::remove(TO_STRING(USER_SETTINGS));
+    constexpr auto user_settings = TO_STRING(USER_SETTINGS);
+    constexpr auto default_user_settings = TO_STRING(DEFAULT_USER_SETTINGS);
     
-    if (DEFAULT_STATE) {
-        std::filesystem::copy(TO_STRING(DEFAULT_USER_SETTINGS), TO_STRING(USER_SETTINGS));
+    fs::remove(user_settings);
+    
+    if (default_state) {
+        fs::copy(default_user_settings, user_settings);
     } else {
         
-        std::ofstream config_file (TO_STRING(USER_SETTINGS));
+        std::ofstream config_file (user_settings);
         
-        std::cout << "\nCurrently writing to: " << TO_STRING(USER_SETTINGS) << '\n';
+        std::cout << "\nCurrently writing to: " << user_settings << '\n';
         
         config_file << "#include <cstdint> // for uint*_t\n\n";
         

@@ -1,4 +1,4 @@
-#include "jmaths.hpp"
+#include "../src/jmaths.hpp"
 
 namespace jmaths {
 

@@ -1,4 +1,4 @@
-#include "jmaths_def.cfg"
+#include "../config/jmaths_def.cfg"
 
 #define REPEAT(x) for (decltype(x) for_loop_repition_counter_ = 0; for_loop_repition_counter_ < x; ++for_loop_repition_counter_)
 
@@ -294,4 +294,4 @@ Z & Z::operator = (INT rhs) {
 
 #undef REPEAT
 
-#include "jmaths_undef.cfg"
+#include "../config/jmaths_undef.cfg"

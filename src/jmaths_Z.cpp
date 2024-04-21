@@ -1,6 +1,6 @@
-#include "jmaths.hpp"
+#include "../src/jmaths.hpp"
 
-#include "jmaths_def.cfg"
+#include "../config/jmaths_def.cfg"
 
 namespace jmaths {
 	
