@@ -12,3 +12,4 @@
 #include <type_traits> // for std::is_integral_v and std::is_floating_point_v and std::is_(un)signed_v and std::is_convertible_v and std::underlying_type_t
 #include <optional> // for std::optional
 #include <limits> // for std::numeric_limits<T>::max
+#include <memory> // for std::allocator<T>

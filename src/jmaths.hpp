@@ -133,7 +133,7 @@ class N {
 	protected:
 		size_t dynamic_size_() const;
 		
-		std::vector<BASE_INT> digits_;
+		std::vector<BASE_INT, ALLOCATOR<BASE_INT>> digits_;
 		
 		void opr_incr_();
 		void opr_decr_();
