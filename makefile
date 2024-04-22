@@ -33,7 +33,7 @@ else
 	DefaultsList = $(DefaultsList32)
 endif
 
-CC = clang++
+CC = g++
 CompileVersion = -std=c++2b
 CompileWarnings = -Wall -Werror -Wextra -Wpedantic -Wreturn-std-move -Wpessimizing-move -Wdefaulted-function-deleted
 CompileOptimisation = -O3 -march=native -flto
