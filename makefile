@@ -11,7 +11,7 @@ ConfigDir = config/
 
 $(shell mkdir -p "$(BuildDir)")
 
-HeaderIncludes = $(SourceDir)stdincludes.hpp
+HeaderDependencies = $(SourceDir)dependencies.hpp
 HeaderName = $(BuildDir)$(LibHeader)
 ConfigScript = $(ConfigDir)configure.cpp
 ConfigProgramName = configure
@@ -101,7 +101,7 @@ $(LibFileName): $(UnityBuild)
 	
 $(HeaderName): $(HeaderObjs)
 	@echo "Creating a header..."
-	@cat "$(HeaderIncludes)" > "$@"
+	@cat "$(HeaderDependencies)" > "$@"
 	@$(CC) $(CompileVersion) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER "$<" -E -P >> "$@"
 	@echo "Header created succesfully"
 	

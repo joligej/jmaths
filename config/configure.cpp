@@ -21,12 +21,9 @@ int main (int argc, char * argv[]) {
     if (default_state) {
         fs::copy(default_user_settings, user_settings);
     } else {
-        
         std::ofstream config_file (user_settings);
         
         std::cout << "\nCurrently writing to: " << user_settings << '\n';
-        
-        config_file << "#include <cstdint> // for uint*_t\n\n";
         
     DEFAULT_BASE:
         
