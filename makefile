@@ -1,6 +1,9 @@
+BuildSettings = build_settings.mk
+
+-include $(BuildSettings)
+
 LibName = jmaths
 LibHeader = jmaths.hpp
-Architecture = $(shell getconf LONG_BIT)
 
 SourceDir = src/
 BuildDir = build/
@@ -40,17 +43,17 @@ CompileParms = $(CompileVersion) $(CompileWarnings) $(CompileOptimisation)
 HeaderObjs = $(SourceDir)jmaths.hpp $(UserSettings)
 ImplObjs = $(addprefix $(SourceDir), jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp)
 
-.PHONY: all fresh clean build install configure unity library header
+.PHONY: all fresh clean build install uninstall configure unity library header
 
 all:
-	@$(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && $(MAKE) build
+	@./preconfigure DEFAULT && $(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && $(MAKE) build
 	
 fresh:
 	@$(MAKE) clean && $(MAKE) all
 
 clean:
 	@echo "Cleaning files..."
-	@rm -f "$(ConfigProgram)" "$(UserSettings)" "$(LibFileName)" "$(HeaderName)" "$(UnitySource)" "$(UnityBuild)"
+	@rm -f "$(ConfigProgram)" "$(UserSettings)" "$(LibFileName)" "$(HeaderName)" "$(UnitySource)" "$(UnityBuild)" "$(BuildSettings)"
 	@echo "Files cleaned succesfully"
 	
 build:
@@ -61,27 +64,23 @@ build:
 	
 install:
 	@echo "Starting installation..."
-	@:
+	@mkdir -p $(InstallDir) && mv $(LibFileName) $(HeaderName) $(InstallDir)
 	@echo "Installation succesful"
 	@echo "Library ready for use"
+	
+uninstall:
+	@echo "Uninstalling..."
+	@rm -rf $(InstallDir)
+	@echo "Uninstalling succesful"
+	@echo "Library removed from system"
+	
+$(UserSettings): $(ConfigProgram)
+	@cd "$(ConfigDir)" && ./"$(ConfigProgramName)"
 
 $(ConfigProgram): $(ConfigScript)
 	@echo "Creating a configuration program..."
 	@$(CC) $(CompileParms) -DUSER_SETTINGS="../$(UserSettings)" -DDEFAULT_USER_SETTINGS="../$(DefaultUserSettings)" -DDEFAULTS_LIST="../$(DefaultsList)" "$<" -o "$@"
 	@echo "Configuration program created"
-	
-$(UserSettings): $(ConfigProgram)
-	@cd "$(ConfigDir)" && ./"$(ConfigProgramName)"
-
-$(LibFileName): $(UnityBuild)
-	@echo "Archiving the library..."
-	@ar rcs "$@" "$^"
-	@echo "Library archived succesfully"
-	
-$(HeaderName): $(HeaderObjs)
-	@echo "Creating a header..."
-	@$(CC) $(CompileVersion) "$<" -E -o "$@"
-	@echo "Header created succesfully"
 	
 $(UnitySource): $(ImplObjs) $(HeaderObjs)
 	@rm -f "$@"
@@ -93,6 +92,16 @@ $(UnityBuild): $(UnitySource)
 	@echo "Compiling the library..."
 	@$(CC) $(CompileParms) "$<" -c -o "$@"
 	@echo "Library compiled succesfully"
+
+$(LibFileName): $(UnityBuild)
+	@echo "Archiving the library..."
+	@ar rcs "$@" "$^"
+	@echo "Library archived succesfully"
+	
+$(HeaderName): $(HeaderObjs)
+	@echo "Creating a header..."
+	@$(CC) $(CompileVersion) "$<" -E -o "$@"
+	@echo "Header created succesfully"
 	
 configure: $(ConfigProgram)
 
