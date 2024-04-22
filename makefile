@@ -67,6 +67,7 @@ install:
 	@echo "Starting installation..."
 	@mkdir -p $(InstallDir) && mv $(LibFileName) $(HeaderName) $(InstallDir)
 	@echo "Installation succesful"
+	@echo "Library installed to: $(InstallDir)"
 	@echo "Library ready for use"
 	
 uninstall:
