@@ -142,6 +142,17 @@ int main (int argc, char * argv[]) {
         
         config_file << '\n';
         
+        std::cout << "\nWhat would you like your allocator to be?\nIf you don't enter anything, it will default to " TO_STRING(D_ALLOCATOR) ".\nEnter allocator: ";
+        
+        std::string allocator;
+        std::getline(std::cin, allocator);
+        
+        config_file << "#define ALLOCATOR ";
+        if (allocator.empty()) config_file << TO_STRING(D_ALLOCATOR);
+        else config_file << allocator;
+        
+        config_file << '\n';
+        
     }
     
     std::cout << "Configuration succesful\n";

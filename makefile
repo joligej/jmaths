@@ -11,7 +11,7 @@ ConfigDir = config/
 
 $(shell mkdir -p "$(BuildDir)")
 
-HeaderDependencies = $(SourceDir)dependencies.hpp
+HeaderDependencies = $(ConfigDir)custom_dependencies.hpp
 HeaderName = $(BuildDir)$(LibHeader)
 ConfigScript = $(ConfigDir)configure.cpp
 ConfigProgramName = configure
@@ -41,20 +41,20 @@ CompileOptimisation = -O3 -march=native -flto
 
 CompileParms = $(CompileVersion) $(CompileWarnings) $(CompileOptimisation)
 
-HeaderObjs = $(SourceDir)jmaths.hpp $(UserSettings)
+HeaderObjs = $(SourceDir)jmaths.hpp $(UserSettings) $(HeaderDependencies)
 ImplObjs = $(addprefix $(SourceDir), jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp)
 
 .PHONY: all fresh clean build install uninstall configure unity library header
 
 all:
-	@./preconfigure DEFAULT && $(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && $(MAKE) build
+	@./preconfigure DEFAULT && $(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && ./custom_dependencies DEFAULT && $(MAKE) build
 	
 fresh:
 	@$(MAKE) clean && $(MAKE) all
 
 clean:
 	@echo "Cleaning files..."
-	@rm -f "$(ConfigProgram)" "$(UserSettings)" "$(LibFileName)" "$(HeaderName)" "$(UnitySource)" "$(UnityBuild)" "$(BuildSettings)"
+	@rm -f "$(ConfigProgram)" "$(UserSettings)" "$(HeaderDependencies)" "$(LibFileName)" "$(HeaderName)" "$(UnitySource)" "$(UnityBuild)" "$(BuildSettings)"
 	@echo "Files cleaned succesfully"
 	
 build:
@@ -82,6 +82,9 @@ $(ConfigProgram): $(ConfigScript)
 	@echo "Creating a configuration program..."
 	@$(CC) $(CompileParms) -DUSER_SETTINGS="../$(UserSettings)" -DDEFAULT_USER_SETTINGS="../$(DefaultUserSettings)" -DDEFAULTS_LIST="../$(DefaultsList)" "$<" -o "$@"
 	@echo "Configuration program created"
+	
+$(HeaderDependencies):
+	@./custom_dependencies
 	
 $(UnitySource): $(ImplObjs) $(HeaderObjs)
 	@rm -f "$@"
