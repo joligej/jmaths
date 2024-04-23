@@ -25,3 +25,5 @@ sudo make install
 Whilst doing this, you will be guided through the configuration process. To rebuild the library from scratch, type `make fresh`, or use `make clean` to restore the folder to its original state.
 
 To uninstall the library, simply type `sudo make uninstall`, and any traces of the library will be removed from your system.
+
+When linking with `libjmaths.a`, it is important to also link with any libraries that it depends on, for example when providing a custom allocator, and to do so _after_ linking with `libjmaths.a`.
