@@ -9,8 +9,6 @@
 // all the types
 namespace jmaths {
 
-// !!! make N, Z and Q a template with "typename Allocator = DEFAULT_ALLOCATOR", before which #define DEFAULT_ALLOCATOR std::allocator<BASE_INT>
-
 class N;
 class sign_type;
 class Z;
@@ -260,7 +258,7 @@ class sign_type {
 	friend struct detail;
 	friend struct calc;
 		
-	protected: // !!! moet protected zijn
+	protected:
 		enum sign_bool : bool {
 			positive = 0,
 			negative = 1
