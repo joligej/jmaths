@@ -323,7 +323,7 @@ bool detail::opr_eq (const Q & lhs, FLOAT rhs) {
     
     // it is assumed here that exponent is negative at this point
     
-    Q helper ((std::make_unsigned_t<decltype(numerator)>)numerator, (std::make_unsigned_t<decltype(denominator)>)denominator);
+    Q helper ((std::make_unsigned_t<decltype(numerator)>)numerator, (std::make_unsigned_t<decltype(denominator)>)denominator, sign);
     
     return (lhs == helper);
 }
