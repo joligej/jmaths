@@ -12,6 +12,7 @@ ConfigDir = config/
 $(shell mkdir -p "$(BuildDir)")
 
 HeaderDependencies = $(ConfigDir)custom_dependencies.hpp
+DefaultHeaderDependencies = $(SourceDir)dependencies.hpp
 HeaderName = $(BuildDir)$(LibHeader)
 ConfigScript = $(ConfigDir)configure.cpp
 ConfigProgramName = configure
@@ -47,7 +48,7 @@ ImplObjs = $(addprefix $(SourceDir), jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmat
 .PHONY: all fresh clean build install uninstall configure unity library header
 
 all:
-	@./preconfigure DEFAULT && $(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && ./custom_dependencies DEFAULT && $(MAKE) build
+	@./preconfigure DEFAULT && $(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && cmp -s "$(HeaderDependencies)" "$(DefaultHeaderDependencies)" || (./custom_dependencies DEFAULT) && $(MAKE) build
 	
 fresh:
 	@$(MAKE) clean && $(MAKE) all

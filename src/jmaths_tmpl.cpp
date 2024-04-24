@@ -75,43 +75,55 @@ namespace jmaths {
 
 template <typename INT>
 requires std::is_integral_v<INT>
+bool detail::opr_eq (const Z & lhs, INT rhs) {
+    if (rhs < 0) {
+        if (lhs.is_positive()) return false;
+        return (lhs.abs() == -rhs);
+    }
+    
+    return (lhs.abs() == rhs);
+}
+
+template <typename INT>
+requires std::is_integral_v<INT>
+std::strong_ordering detail::opr_comp (const Z & lhs, INT rhs) {
+    if (lhs.is_positive()) {
+        if (rhs >= 0) {
+            return (lhs.abs() <=> rhs);
+        } else {
+            return std::strong_ordering::greater;
+        }
+    } else {
+        if (rhs >= 0) {
+            return std::strong_ordering::less;
+        } else {
+            return (-rhs <=> lhs.abs());
+        }
+    }
+}
+
+template <typename INT>
+requires std::is_integral_v<INT>
 bool operator == (const Z & lhs, INT rhs) {
-	if (rhs < 0) {
-		if (lhs.is_positive()) return false;
-		return (lhs.abs() == -rhs);
-	}
-	
-	return (lhs.abs() == rhs);
+    return detail::opr_eq(lhs, rhs);
 }
 	
 template <typename INT>
 requires std::is_integral_v<INT>
 bool operator == (INT lhs, const Z & rhs) {
-	return (rhs == lhs);
+    return detail::opr_eq(rhs, lhs);
 }
 
 template <typename INT>
 requires std::is_integral_v<INT>
 std::strong_ordering operator <=> (const Z & lhs, INT rhs) {
-	if (lhs.is_positive()) {
-		if (rhs >= 0) {
-			return (lhs.abs() <=> rhs);
-		} else {
-			return std::strong_ordering::greater;
-		}
-	} else {
-		if (rhs >= 0) {
-			return std::strong_ordering::less;
-		} else {
-			return (-rhs <=> lhs.abs());
-		}
-	}
+    return detail::opr_comp(lhs, rhs);
 }
 
 template <typename INT>
 requires std::is_integral_v<INT>
 std::strong_ordering operator <=> (INT lhs, const Z & rhs) {
-	return (0 <=> (rhs <=> lhs));
+    return (0 <=> detail::opr_comp(rhs, lhs));
 }
 
 } // /namespace jmaths
@@ -290,6 +302,78 @@ Z & Z::operator = (INT rhs) {
 	return *this;
 }
 	
+} // /namespace jmaths
+
+namespace jmaths {
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+bool detail::opr_eq (const Q & lhs, FLOAT rhs) {
+    int exponent;
+    FLOAT significant_part = std::frexp(rhs, &exponent);
+    significant_part = std::scalbn(significant_part, std::numeric_limits<FLOAT>::digits);
+    exponent -= std::numeric_limits<FLOAT>::digits;
+    
+    auto numerator = std::llrint(significant_part);
+    auto denominator = std::llrint(std::exp2(-exponent));
+    
+    const auto sign = (numerator < 0) ? sign_type::negative : sign_type::positive;
+    
+    if (sign == sign_type::negative) numerator *= -1;
+    
+    // it is assumed here that exponent is negative at this point
+    
+    Q helper ((std::make_unsigned_t<decltype(numerator)>)numerator, (std::make_unsigned_t<decltype(denominator)>)denominator);
+    
+    return (lhs == helper);
+}
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+std::strong_ordering detail::opr_comp (const Q & lhs, FLOAT rhs) {
+    int exponent;
+    FLOAT significant_part = std::frexp(rhs, &exponent);
+    significant_part = std::scalbn(significant_part, std::numeric_limits<FLOAT>::digits);
+    exponent -= std::numeric_limits<FLOAT>::digits;
+    
+    auto numerator = std::llrint(significant_part);
+    auto denominator = std::llrint(std::exp2(-exponent));
+    
+    const auto sign = (numerator < 0) ? sign_type::negative : sign_type::positive;
+    
+    if (sign == sign_type::negative) numerator *= -1;
+    
+    // it is assumed here that exponent is negative at this point
+    
+    Q helper ((std::make_unsigned_t<decltype(numerator)>)numerator, (std::make_unsigned_t<decltype(denominator)>)denominator);
+    
+    return (lhs <=> helper);
+}
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+bool operator == (const Q & lhs, FLOAT rhs) {
+    return detail::opr_eq(lhs, rhs);
+}
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+bool operator == (FLOAT lhs, const Q & rhs) {
+    return detail::opr_eq(rhs, lhs);
+}
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+std::strong_ordering operator <=> (const Q & lhs, FLOAT rhs) {
+    return detail::opr_comp(lhs, rhs);
+}
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+std::strong_ordering operator <=> (FLOAT lhs, const Q & rhs) {
+    return (0 <=> detail::opr_comp(rhs, lhs));
+}
+
 } // /namespace jmaths
 
 #undef REPEAT
