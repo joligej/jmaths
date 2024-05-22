@@ -56,25 +56,25 @@ fresh:
 clean:
 	@echo "Cleaning files..."
 	@rm -f "$(ConfigProgram)" "$(UserSettings)" "$(HeaderDependencies)" "$(LibFileName)" "$(HeaderName)" "$(UnitySource)" "$(UnityBuild)" "$(BuildSettings)"
-	@echo "Files cleaned succesfully"
+	@echo "Files cleaned successfully"
 	
 build:
 	@echo "Building..."
 	@$(MAKE) library && $(MAKE) header
-	@echo "Build succesful"
+	@echo "Build successful"
 	@echo "Library ready for installation"
 	
 install:
 	@echo "Starting installation..."
 	@mkdir -p $(InstallDir) && mv $(LibFileName) $(HeaderName) $(InstallDir)
-	@echo "Installation succesful"
+	@echo "Installation successful"
 	@echo "Library installed to: $(InstallDir)"
 	@echo "Library ready for use"
 	
 uninstall:
 	@echo "Uninstalling..."
 	@rm -rf $(InstallDir)
-	@echo "Uninstalling succesful"
+	@echo "Uninstalling successful"
 	@echo "Library removed from system"
 	
 $(UserSettings): $(ConfigProgram)
@@ -97,18 +97,18 @@ $(UnitySource): $(ImplObjs) $(HeaderObjs)
 $(UnityBuild): $(UnitySource)
 	@echo "Compiling the library..."
 	@$(CC) $(CompileParms) "$<" -c -o "$@"
-	@echo "Library compiled succesfully"
+	@echo "Library compiled successfully"
 
 $(LibFileName): $(UnityBuild)
 	@echo "Archiving the library..."
 	@ar rcs "$@" "$^"
-	@echo "Library archived succesfully"
+	@echo "Library archived successfully"
 	
 $(HeaderName): $(HeaderObjs)
 	@echo "Creating a header..."
 	@cat "$(HeaderDependencies)" > "$@"
 	@$(CC) $(CompileVersion) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER "$<" -E -P >> "$@"
-	@echo "Header created succesfully"
+	@echo "Header created successfully"
 	
 configure: $(ConfigProgram)
 
