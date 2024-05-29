@@ -7,4 +7,9 @@ echo "Do you have files on which some of your configuration settings depend?"
 echo "For example, if you supplied a custom allocator while configuring, you might want to include the header that declares that allocator here"
 echo "Please include the full path to your dependencies, or press 'q' to quit"
 
-while true; do read && [[ "${REPLY}" == "q" ]] && break || echo "#include \"${REPLY}\"" >> "config/custom_dependencies.hpp"; done
+while true; do
+read &&
+[[ "${REPLY}" == "q" ]] &&
+break ||
+echo "#include \"${REPLY}\"" >> "config/custom_dependencies.hpp";
+done

@@ -1,18 +1,25 @@
 #!/bin/sh
 rm -f build_settings.mk
 
-[[ "$1" == "DEFAULT" ]] && echo "InstallDir = \"/usr/local/jmaths/\"" >> build_settings.mk && echo "Architecture = \$(shell getconf LONG_BIT)" >> build_settings.mk && exit 0
+[[ "$1" == "DEFAULT" ]] &&
+echo "InstallDir = \"/usr/local/jmaths/\"" >> build_settings.mk &&
+echo "Architecture = \$(shell getconf LONG_BIT)" >> build_settings.mk &&
+exit 0
 
 echo "What is your preferred installation directory?"
 echo "By default, the library will be installed to '/usr/local/jmaths/'"
 echo "If you wish to use the default directory, simply press enter"
 read
 
-[[ -z "${REPLY}" ]] && echo "InstallDir = \"/usr/local/jmaths/\"" >> build_settings.mk || echo "InstallDir = \"${REPLY}\"" >> build_settings.mk
+[[ -z "${REPLY}" ]] &&
+echo "InstallDir = \"/usr/local/jmaths/\"" >> build_settings.mk ||
+echo "InstallDir = \"${REPLY}\"" >> build_settings.mk
 
 echo "What is your machine's architecture?"
 echo "For example, most machine's have 64-bit integer support, in which case you should enter '64'"
 echo "If you wish to use the default, simply press enter"
 read
 
-[[ -z "${REPLY}" ]] && echo "Architecture = \$(shell getconf LONG_BIT)" >> build_settings.mk || echo "Architecture = \"${REPLY}\"" >> build_settings.mk
+[[ -z "${REPLY}" ]] &&
+echo "Architecture = \$(shell getconf LONG_BIT)" >> build_settings.mk ||
+echo "Architecture = \"${REPLY}\"" >> build_settings.mk
