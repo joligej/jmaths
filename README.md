@@ -9,10 +9,10 @@ make configure
 ./configure
 ```
 
-The following command allows you to enter your own dependencies, which might be necessary if you've entered your own custom types in the previous step:
+The following command shall be run to configure the library's dependencies, allowing you to enter your own dependencies, which might be necessary if you've entered your own custom types in the previous step:
 
 ```
-./custom_dependencies
+./dependencies
 ```
 
 Regardless of whether you added your own dependencies, type the following to build and install the library:

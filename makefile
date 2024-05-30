@@ -17,6 +17,7 @@ HeaderName = $(BuildDir)$(LibHeader)
 ConfigScript = $(ConfigDir)configure.cpp
 ConfigProgramName = configure
 ConfigProgram = $(ConfigDir)$(ConfigProgramName)
+DependenciesProgram = ./dependencies
 UserSettings = $(ConfigDir)user_settings.cfg
 UnitySource = $(BuildDir)unity.cpp
 UnityBuild = $(BuildDir)unity.o
@@ -48,7 +49,7 @@ ImplObjs = $(addprefix $(SourceDir), jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmat
 .PHONY: all fresh clean build install uninstall configure unity library header
 
 all:
-	@./preconfigure DEFAULT && $(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && cmp -s "$(HeaderDependencies)" "$(DefaultHeaderDependencies)" || (./custom_dependencies DEFAULT) && $(MAKE) build
+	@./preconfigure DEFAULT && $(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && cmp -s "$(HeaderDependencies)" "$(DefaultHeaderDependencies)" || ($(DependenciesProgram) DEFAULT) && $(MAKE) build
 	
 fresh:
 	@$(MAKE) clean && $(MAKE) all
@@ -86,7 +87,7 @@ $(ConfigProgram): $(ConfigScript)
 	@echo "Configuration program created"
 	
 $(HeaderDependencies):
-	@./custom_dependencies
+	@$(DependenciesProgram)
 	
 $(UnitySource): $(ImplObjs) $(HeaderObjs)
 	@rm -f "$@"
