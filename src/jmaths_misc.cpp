@@ -1,5 +1,6 @@
 #include "../src/jmaths.hpp"
 
+// functions for jmaths::sign_type
 namespace jmaths {
 	
 sign_type::sign_type() : sign_(positive) {}

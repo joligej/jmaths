@@ -17,7 +17,17 @@ class error;
 
 } // /namespace jmaths
 
+// declarations of namespace structs calc and detail
 namespace jmaths {
+
+struct calc {
+
+static N gcd (N a, N b);
+static std::pair<N, N> sqrt (const N & num);
+static N pow (N base, N exponent);
+static Z pow (Z base, N exponent);
+
+}; // /namespace struct calc
 
 struct detail {
 	
@@ -101,15 +111,6 @@ template <typename INT> requires std::is_integral_v<INT> bool operator == (INT l
 std::strong_ordering operator <=> (const N & lhs, const N & rhs);
 template <typename INT> requires std::is_integral_v<INT> std::strong_ordering operator <=> (const N & lhs, INT rhs);
 template <typename INT> requires std::is_integral_v<INT> std::strong_ordering operator <=> (INT lhs, const N & rhs);
-
-struct calc {
-
-static N gcd (N a, N b);
-static std::pair<N, N> sqrt (const N & num);
-static N pow (N base, N exponent);
-static Z pow (Z base, N exponent);
-
-}; // /namespace struct calc
 
 class N {
 	friend struct detail;
@@ -412,15 +413,18 @@ class Q : public sign_type {
     
 		Q (N && num, N && denom, sign_bool sign);
         Q (const N & num, const N & denom, sign_bool sign);
+		Q (std::tuple<N, N, sign_bool> && fraction_info);
 		
         void canonicalise();
+
+		template <typename FLOAT> requires std::is_floating_point_v<FLOAT> static std::tuple<N, N, sign_bool> handle_float_ (FLOAT num);
 		
 		size_t dynamic_size_() const;
     
     public:
         Q();
         Q (std::string_view num_str, unsigned base = DEFAULT_BASE);
-		template <typename INT> requires std::is_integral_v<INT> Q (INT num);
+		template <typename FLOAT> requires std::is_floating_point_v<FLOAT> Q (FLOAT num);
 		
         Q (const N & n);
         Q (N && n);
@@ -478,7 +482,7 @@ class Q : public sign_type {
 		Q & operator >>= (BIT_TYPE pos);
 		
 		Q & operator = (std::string_view num_str);
-		template <typename INT> requires std::is_integral_v<INT> Q & operator = (INT rhs);
+		template <typename FLOAT> requires std::is_floating_point_v<FLOAT> Q & operator = (FLOAT rhs);
 		
         Q & operator = (const N & n);
         Q & operator = (N && n);

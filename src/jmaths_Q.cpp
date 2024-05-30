@@ -4,7 +4,7 @@
 
 namespace jmaths {
 
-/* ******************************************************** */
+/**********************************************************/
 // implementation functions
 
 std::ostream & detail::opr_ins (std::ostream & os, const Q & q) {
@@ -182,7 +182,7 @@ std::strong_ordering detail::opr_comp (const Q & lhs, const Q & rhs) {
 	}
 }
 
-/* ******************************************************** */
+/**********************************************************/
 // forwarding functions
 
 std::ostream & operator << (std::ostream & os, const Q & q) {
@@ -241,6 +241,8 @@ Q::Q (N && num, N && denom, sign_bool sign) : sign_type(sign), num_(std::move(nu
 Q::Q (const N & num, const N & denom, sign_bool sign) : sign_type(sign), num_(num), denom_(denom) {
 	canonicalise();
 }
+
+Q::Q (std::tuple<N, N, sign_bool> && fraction_info) : Q(std::move(std::get<0>(fraction_info)), std::move(std::get<1>(fraction_info)), std::move(std::get<2>(fraction_info))) {}
 
 void Q::canonicalise() {
 	N && gcd = calc::gcd(num_, denom_);

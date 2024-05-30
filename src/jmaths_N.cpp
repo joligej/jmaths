@@ -21,7 +21,7 @@ static constexpr BASE_INT base_converter (char c) noexcept {
 
 namespace jmaths {
 	
-/* ******************************************************** */
+/**********************************************************/
 // implementation functions
 	
 std::ostream & detail::opr_ins (std::ostream & os, const N & n) {
@@ -269,7 +269,7 @@ std::strong_ordering detail::opr_comp (const N & lhs, const N & rhs) {
 	return std::strong_ordering::equal;
 }
 
-/* ******************************************************** */
+/**********************************************************/
 // forwarding functions
 
 std::ostream & operator << (std::ostream & os, const N & n) {
@@ -400,6 +400,10 @@ void N::bit_ (BIT_TYPE pos, bool val) {
 			digits_.emplace_back((BASE_INT)val << pos_mod);
 		}
 	}
+}
+
+size_t N::dynamic_size_() const {
+	return (digits_.size() * BASE_INT_SIZE);
 }
 
 void N::opr_incr_() {
@@ -697,10 +701,6 @@ void N::opr_assign_ (std::string_view num_str) {
 	digits_.clear();
 	
 	handle_str_(num_str, DEFAULT_BASE);
-}
-
-size_t N::dynamic_size_() const {
-	return (digits_.size() * BASE_INT_SIZE);
 }
 
 N::N() = default;

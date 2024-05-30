@@ -7,6 +7,7 @@
 #include <string_view> //for std::string_view
 #include <vector> // for std::vector
 #include <utility> // for std::pair and std::swap
+#include <tuple> // for std::tuple and std::gets
 #include <compare> // for std::strong_ordering
 #include <exception> // for std::exception
 #include <type_traits> // for std::is_integral_v and std::is_floating_point_v and std::is_(un)signed_v and std::is_convertible_v and std::underlying_type_t and std::make_unsigned_t

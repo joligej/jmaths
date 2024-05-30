@@ -2,6 +2,7 @@
 
 #define REPEAT(x) for (decltype(x) for_loop_repition_counter_ = 0; for_loop_repition_counter_ < x; ++for_loop_repition_counter_)
 
+// comparison functions for N with integral types
 namespace jmaths {
 
 template <typename INT>
@@ -71,6 +72,7 @@ std::strong_ordering operator <=> (INT lhs, const N & rhs) {
 
 } // /namespace jmaths
 
+// comparison functions for Z with integral types
 namespace jmaths {
 
 template <typename INT>
@@ -128,6 +130,48 @@ std::strong_ordering operator <=> (INT lhs, const Z & rhs) {
 
 } // /namespace jmaths
 
+// comparison functions for Q with floating point types
+namespace jmaths {
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+bool detail::opr_eq (const Q & lhs, FLOAT rhs) {
+    return (lhs == Q(rhs));
+}
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+std::strong_ordering detail::opr_comp (const Q & lhs, FLOAT rhs) {    
+    return (lhs <=> Q(rhs));
+}
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+bool operator == (const Q & lhs, FLOAT rhs) {
+    return detail::opr_eq(lhs, rhs);
+}
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+bool operator == (FLOAT lhs, const Q & rhs) {
+    return detail::opr_eq(rhs, lhs);
+}
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+std::strong_ordering operator <=> (const Q & lhs, FLOAT rhs) {
+    return detail::opr_comp(lhs, rhs);
+}
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+std::strong_ordering operator <=> (FLOAT lhs, const Q & rhs) {
+    return (0 <=> detail::opr_comp(rhs, lhs));
+}
+
+} // /namespace jmaths
+
+// member function templates of N
 namespace jmaths {
 
 template <typename INT>
@@ -208,6 +252,7 @@ N & N::operator = (INT rhs) {
 
 } // /namespace jmaths
 
+// functions for N::bit_reference_base_
 namespace jmaths {
 
 template <typename T>
@@ -228,6 +273,7 @@ N::bit_reference_base_<T>::operator int () const {
 
 } // /namespace jmaths
 
+// member function templates of sign_type
 namespace jmaths {
 
 template <typename INT>
@@ -253,6 +299,7 @@ void sign_type::set_sign_ (BOOL val) {
 	
 } // /namespace jmaths
 
+// member function templates of Z
 namespace jmaths {
 
 template <typename INT>
@@ -304,13 +351,14 @@ Z & Z::operator = (INT rhs) {
 	
 } // /namespace jmaths
 
+// member function templates of Q
 namespace jmaths {
 
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
-bool detail::opr_eq (const Q & lhs, FLOAT rhs) {
-    int exponent;
-    FLOAT significant_part = std::frexp(rhs, &exponent);
+std::tuple<N, N, sign_type::sign_bool> Q::handle_float_ (FLOAT num) {
+	int exponent;
+    FLOAT significant_part = std::frexp(num, &exponent);
     significant_part = std::scalbn(significant_part, std::numeric_limits<FLOAT>::digits);
     exponent -= std::numeric_limits<FLOAT>::digits;
     
@@ -322,56 +370,24 @@ bool detail::opr_eq (const Q & lhs, FLOAT rhs) {
     if (sign == sign_type::negative) numerator *= -1;
     
     // it is assumed here that exponent is negative at this point
-    
-    Q helper ((std::make_unsigned_t<decltype(numerator)>)numerator, (std::make_unsigned_t<decltype(denominator)>)denominator, sign);
-    
-    return (lhs == helper);
+
+	return {(std::make_unsigned_t<decltype(numerator)>)numerator, (std::make_unsigned_t<decltype(denominator)>)denominator, sign};
 }
 
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
-std::strong_ordering detail::opr_comp (const Q & lhs, FLOAT rhs) {
-    int exponent;
-    FLOAT significant_part = std::frexp(rhs, &exponent);
-    significant_part = std::scalbn(significant_part, std::numeric_limits<FLOAT>::digits);
-    exponent -= std::numeric_limits<FLOAT>::digits;
-    
-    auto numerator = std::llrint(significant_part);
-    auto denominator = std::llrint(std::exp2(-exponent));
-    
-    const auto sign = (numerator < 0) ? sign_type::negative : sign_type::positive;
-    
-    if (sign == sign_type::negative) numerator *= -1;
-    
-    // it is assumed here that exponent is negative at this point
-    
-    Q helper ((std::make_unsigned_t<decltype(numerator)>)numerator, (std::make_unsigned_t<decltype(denominator)>)denominator, sign);
-    
-    return (lhs <=> helper);
+Q::Q (FLOAT num) : Q(handle_float_(num)) {}
+
+template <typename FLOAT>
+requires std::is_floating_point_v<FLOAT>
+std::optional<FLOAT> Q::fits_into() const {
+
 }
 
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
-bool operator == (const Q & lhs, FLOAT rhs) {
-    return detail::opr_eq(lhs, rhs);
-}
+Q & Q::operator = (FLOAT rhs) {
 
-template <typename FLOAT>
-requires std::is_floating_point_v<FLOAT>
-bool operator == (FLOAT lhs, const Q & rhs) {
-    return detail::opr_eq(rhs, lhs);
-}
-
-template <typename FLOAT>
-requires std::is_floating_point_v<FLOAT>
-std::strong_ordering operator <=> (const Q & lhs, FLOAT rhs) {
-    return detail::opr_comp(lhs, rhs);
-}
-
-template <typename FLOAT>
-requires std::is_floating_point_v<FLOAT>
-std::strong_ordering operator <=> (FLOAT lhs, const Q & rhs) {
-    return (0 <=> detail::opr_comp(rhs, lhs));
 }
 
 } // /namespace jmaths

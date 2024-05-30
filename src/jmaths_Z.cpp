@@ -4,7 +4,7 @@
 
 namespace jmaths {
 	
-/* ******************************************************** */
+/**********************************************************/
 // implementation functions
 
 std::ostream & detail::opr_ins (std::ostream & os, const Z & z) {
@@ -160,7 +160,7 @@ std::strong_ordering detail::opr_comp (const Z & lhs, const Z & rhs) {
 	}
 }
 	
-/* ******************************************************** */
+/**********************************************************/
 // forwarding functions
 
 std::ostream & operator << (std::ostream & os, const Z & z) {
