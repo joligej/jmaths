@@ -385,6 +385,7 @@ std::optional<FLOAT> Q::fits_into() const {
 
 	constexpr bool is_allowed_type = std::is_same_v<FLOAT, float> || std::is_same_v<FLOAT, double>;
 	static_assert(is_allowed_type, "Template type parameter is not one of the allowed types: float and double.");
+	static_assert(nlf::radix == 2, "The radix of the floating point type is currently not supported. Please make sure it is equal to 2.");
 
 	#if defined (NATIVELY_BIG_ENDIAN) && defined (NATIVELY_LITTLE_ENDIAN)
 			#error "Both little and big endian. Unclear how to implement floating point manipulation."
