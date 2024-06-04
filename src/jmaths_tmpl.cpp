@@ -379,15 +379,147 @@ requires std::is_floating_point_v<FLOAT>
 Q::Q (FLOAT num) : Q(handle_float_(num)) {}
 
 template <typename FLOAT>
-requires std::is_floating_point_v<FLOAT>
+requires std::is_floating_point_v<FLOAT> && std::numeric_limits<FLOAT>::is_iec559
 std::optional<FLOAT> Q::fits_into() const {
+	typedef std::numeric_limits<FLOAT> nlf;
+
+	constexpr bool is_allowed_type = std::is_same_v<FLOAT, float> || std::is_same_v<FLOAT, double>;
+	static_assert(is_allowed_type, "Template type parameter is not one of the allowed types: float and double.");
+
+	#if defined (NATIVELY_BIG_ENDIAN) && defined (NATIVELY_LITTLE_ENDIAN)
+			#error "Both little and big endian. Unclear how to implement floating point manipulation."
+	#endif
+
+	struct float_sizes {
+		enum : BIT_TYPE {
+			sign = 1,
+			exponent = 8,
+			mantissa = 23
+		};
+	};
+
+	struct double_sizes {
+		enum : BIT_TYPE {
+			sign = 1,
+			exponent = 11,
+			mantissa = 52
+		};
+	};
+
+	union float_access {
+		std::uint32_t float_size[1];
+		struct {
+		#ifdef NATIVELY_BIG_ENDIAN
+			std::uint32_t sign : float_sizes::sign;
+			std::uint32_t exponent : float_sizes::exponent;
+			std::uint32_t mantissa : float_sizes::mantissa;
+		#else
+			std::uint32_t mantissa : float_sizes::mantissa;
+			std::uint32_t exponent : float_sizes::exponent;
+			std::uint32_t sign : float_sizes::sign;
+		#endif
+		} fields;
+	};
+
+	union double_access {
+		std::uint64_t double_size[1];
+		struct {
+		#ifdef NATIVELY_BIG_ENDIAN
+			std::uint64_t sign : double_sizes::sign;
+			std::uint64_t exponent : double_sizes::exponent;
+			std::uint64_t mantissa : double_sizes::mantissa;
+		#else
+			std::uint64_t mantissa : double_sizes::mantissa;
+			std::uint64_t exponent : double_sizes::exponent;
+			std::uint64_t sign : double_sizes::sign;
+		#endif
+		} fields;
+	};
+
+	/*union long_double_access {
+		std::uint64_t long_double_size[2];
+		struct {
+		#ifdef NATIVELY_BIG_ENDIAN
+			std::uint64_t sign : 1;
+			std::uint64_t exponent : 15;
+			std::uint64_t mantissa : 112;
+		#else
+			std::uint64_t mantissa : 112;
+			std::uint64_t exponent : 15;
+			std::uint64_t sign : 1;
+		#endif
+		} fields;
+	};*/
+
+	typedef std::conditional_t<std::is_same_v<FLOAT, float>, float_access, std::enable_if_t<std::is_same_v<FLOAT, double>, double_access>> access_type;
+	typedef std::conditional_t<std::is_same_v<FLOAT, float>, float_sizes, std::enable_if_t<std::is_same_v<FLOAT, double>, double_sizes>> sizes_type;
+	
+	static_assert(sizeof(float_access) == sizeof(float) && sizeof(float_access) == sizeof(std::uint32_t[1]), "There seems to be a problem with the padding bits for type: float_acess.");
+	static_assert(sizeof(double_access) == sizeof(double) && sizeof(double_access) == sizeof(std::uint64_t[1]), "There seems to be a problem with the padding bits for type: double_access.");
+	//static_assert(sizeof(long_double_access) == sizeof(long double) && sizeof(long_double_access) == sizeof(std::uint64_t[2]), "There seems to be a problem with the padding bits for type: long_double_access.");
+
+	if (num_.is_zero()) return 0;
+	if (is_one()) return 1;
+	if (is_neg_one()) return -1;
+
+	// check if radix == 2 !!! ...
+
+	if (num_ > denom_) {
+		const auto div_pair = detail::opr_div(num_, denom_);
+
+		if (div_pair.first.bits() > nlf::max_exponent) { // maybe the right checking condition ??? !!!
+			if constexpr (nlf::has_infinity) {
+				return nlf::infinity();
+			} else {
+				return std::nullopt;
+			}
+		} else if (div_pair.first.bits() == nlf::max_exponent) {
+			FLOAT converted{};
+			access_type * const converted_help = &converted;
+
+			if constexpr (sizes_type::mantissa <= BASE_INT_BITS) {
+				converted_help->fields.mantissa = div_pair.first.digits_.back() >> (BASE_INT_BITS - sizes_type::mantissa);
+			} else {
+				const auto & last_digit = div_pair.first.digits_.back();
+				converted_help->fields.mantissa = 0;
+				for (BIT_TYPE i = 0; i < sizes_type::mantjssa; ++i) {
+					const std::size_t j = i / BASE_INT_BITS;
+					const BIT_TYPE k = i % BASE_INT_BITS;
+
+					typedef decltype(converted_help->fields.mantjssa) mantissa_type;
+					static constexpr auto mask = (mantissa_type)1 << (sizes_type::mantissa - 1);
+
+					converted_help->fields.mantissa |= (((mantissa_type)(*(&last_digit - j) << k) & mask) >> i);
+				}
+			}
+
+			converted_help->fields.exponent = div_pair.first.bits() - 1;
+
+			converted_help->fields.sign = is_negative();
+			
+			return converted;
+		} else {
+			
+		}
+
+	} else {
+
+	}
 
 }
+
+template <>
+std::optional<long double> Q::fits_into() const;
 
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
 Q & Q::operator = (FLOAT rhs) {
+	auto fraction_info = handle_float_(rhs);
+	num_ = std::move(std::get<0>(fraction_info));
+	denom_ = std::move(std::get<1>(fraction_info));
+	set_sign_(std::get<2>(fraction_info));
 
+	return *this;
 }
 
 } // /namespace jmaths

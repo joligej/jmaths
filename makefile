@@ -36,7 +36,7 @@ else
 	DefaultsList = $(DefaultsList32)
 endif
 
-CC = g++-14
+CC = clang++
 CompileVersion = -std=c++2b
 CompileWarnings = -Wall -Werror -Wextra -Wpedantic -Wpessimizing-move
 ifeq ($(CC), clang++)
