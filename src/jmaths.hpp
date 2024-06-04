@@ -1,6 +1,5 @@
-#pragma once
-
 #ifndef PREPROCESSING_HEADER
+	#pragma once
     #include "../config/custom_dependencies.hpp"
 #endif
 

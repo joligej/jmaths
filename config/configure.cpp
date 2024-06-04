@@ -3,6 +3,7 @@
 #include <string>
 #include <cstring>
 #include <filesystem>
+#include <bit>
 
 #define TO_STRING_HELPER(x) #x
 #define TO_STRING(x) TO_STRING_HELPER(x)
@@ -153,6 +154,15 @@ int main (int argc, char * argv[]) {
         
         config_file << '\n';
         
+    }
+
+    std::ofstream config_file (user_settings, std::ios_base::app);
+    
+    if constexpr (std::endian::native == std::endian::big) {
+        config_file << "#define NATIVELY_BIG_ENDIAN\n";
+    }
+    if constexpr (std::endian::native == std::endian::little) {
+        config_file << "#define NATIVELY_LITTLE_ENDIAN\n";
     }
     
     std::cout << "Configuration succesful\n";

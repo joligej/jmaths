@@ -36,9 +36,12 @@ else
 	DefaultsList = $(DefaultsList32)
 endif
 
-CC = g++
+CC = g++-14
 CompileVersion = -std=c++2b
-CompileWarnings = -Wall -Werror -Wextra -Wpedantic -Wreturn-std-move -Wpessimizing-move -Wdefaulted-function-deleted
+CompileWarnings = -Wall -Werror -Wextra -Wpedantic -Wpessimizing-move
+ifeq ($(CC), clang++)
+	CompileWarnings += -Wreturn-std-move -Wdefaulted-function-deleted
+endif
 CompileOptimisation = -O3 -march=native -flto
 
 CompileParms = $(CompileVersion) $(CompileWarnings) $(CompileOptimisation)
