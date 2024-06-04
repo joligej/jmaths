@@ -8,6 +8,7 @@ LibHeader = jmaths.hpp
 SourceDir = src/
 BuildDir = build/
 ConfigDir = config/
+TestDir = unit_testing/
 
 $(shell mkdir -p "$(BuildDir)")
 
@@ -21,6 +22,9 @@ DependenciesProgram = ./dependencies
 UserSettings = $(ConfigDir)user_settings.cfg
 UnitySource = $(BuildDir)unity.cpp
 UnityBuild = $(BuildDir)unity.o
+TestSource = $(TestDir)unit_test.cpp
+TestProgramName = unit_test
+TestProgram = $(TestDir)$(TestProgramName)
 DefaultUserSettings64 = $(ConfigDir)default_user_settings.cfg
 DefaultUserSettings32 = $(ConfigDir)default_user_settings32.cfg
 DefaultsList64 = $(ConfigDir)defaults_list.cfg
@@ -43,13 +47,14 @@ ifeq ($(CC), clang++)
 	CompileWarnings += -Wreturn-std-move -Wdefaulted-function-deleted
 endif
 CompileOptimisation = -O3 -march=native -flto
+CompileDebug = -g
 
 CompileParms = $(CompileVersion) $(CompileWarnings) $(CompileOptimisation)
 
 HeaderObjs = $(SourceDir)jmaths.hpp $(UserSettings) $(HeaderDependencies)
 ImplObjs = $(addprefix $(SourceDir), jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp)
 
-.PHONY: all fresh clean build install uninstall configure unity library header
+.PHONY: all fresh clean build install uninstall configure unity library header test
 
 all:
 	@./preconfigure DEFAULT && $(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && cmp -s "$(HeaderDependencies)" "$(DefaultHeaderDependencies)" || ($(DependenciesProgram) DEFAULT) && $(MAKE) build
@@ -59,7 +64,7 @@ fresh:
 
 clean:
 	@echo "Cleaning files..."
-	@rm -f "$(ConfigProgram)" "$(UserSettings)" "$(HeaderDependencies)" "$(LibFileName)" "$(HeaderName)" "$(UnitySource)" "$(UnityBuild)" "$(BuildSettings)"
+	@rm -f "$(ConfigProgram)" "$(UserSettings)" "$(HeaderDependencies)" "$(LibFileName)" "$(HeaderName)" "$(UnitySource)" "$(UnityBuild)" "$(BuildSettings)" "$(TestProgram)"
 	@echo "Files cleaned successfully"
 	
 build:
@@ -81,6 +86,15 @@ uninstall:
 	@echo "Uninstalling successful"
 	@echo "Library removed from system"
 	
+debug: $(UnitySource)
+	@echo "Compiling the library in debug mode..."
+	@$(CC) $(CompileVersion) $(CompileWarnings) $(CompileDebug) "$<" -c -o "$(UnityBuild)"
+	@echo "Library compiled successfully"
+	@echo "Archiving the library..."
+	@ar rcs "$(LibFileName)" "$(UnityBuild)"
+	@echo "Library archived successfully"
+
+	
 $(UserSettings): $(ConfigProgram)
 	@cd "$(ConfigDir)" && ./"$(ConfigProgramName)"
 
@@ -100,7 +114,7 @@ $(UnitySource): $(ImplObjs) $(HeaderObjs)
 	
 $(UnityBuild): $(UnitySource)
 	@echo "Compiling the library..."
-	@$(CC) $(CompileParms) "$<" -c -o "$@"
+	@$(CC) $(CompileParms) -DNDEBUG "$<" -c -o "$@"
 	@echo "Library compiled successfully"
 
 $(LibFileName): $(UnityBuild)
@@ -113,6 +127,12 @@ $(HeaderName): $(HeaderObjs)
 	@cat "$(HeaderDependencies)" > "$@"
 	@$(CC) $(CompileVersion) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER "$<" -E -P >> "$@"
 	@echo "Header created successfully"
+
+$(TestProgram): $(TestSource)
+	@./preconfigure DEFAULT && $(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && cmp -s "$(HeaderDependencies)" "$(DefaultHeaderDependencies)" || ($(DependenciesProgram) DEFAULT) && $(MAKE) header && $(MAKE) debug
+	@echo "Compiling test program..."
+	@$(CC) $(CompileParms) "$<" -o "$@"
+	@echo "Test program compiled successfully"
 	
 configure: $(ConfigProgram)
 
@@ -121,3 +141,5 @@ unity: $(UnityBuild)
 library: $(LibFileName)
 
 header: $(HeaderName)
+
+test: $(TestProgram)
