@@ -84,6 +84,8 @@ template <typename FLOAT> requires std::is_floating_point_v<FLOAT> static bool o
 static std::strong_ordering opr_comp (const Q & lhs, const Q & rhs);
 template <typename FLOAT> requires std::is_floating_point_v<FLOAT> static std::strong_ordering opr_comp (const Q & lhs, FLOAT rhs);
 
+struct unit_testing;
+
 }; // /namespace struct detail
 
 } // /namespace jmaths
@@ -114,6 +116,7 @@ template <typename INT> requires std::is_integral_v<INT> std::strong_ordering op
 class N {
 	friend struct detail;
 	friend struct calc;
+	friend struct detail::unit_testing;
 	
 	friend class Q;
 	
@@ -257,6 +260,7 @@ class sign_type {
 	
 	friend struct detail;
 	friend struct calc;
+	friend struct detail::unit_testing;
 		
 	protected:
 		enum sign_bool : bool {
@@ -315,6 +319,7 @@ class Z : public sign_type, private N {
 	
 	friend struct detail;
 	friend struct calc;
+	friend struct detail::unit_testing;
 	
 	friend class Q;
 
@@ -406,6 +411,7 @@ class Q : public sign_type {
     
     friend struct detail;
     friend struct calc;
+	friend struct detail::unit_testing;
     
     private:
         N num_, denom_;

@@ -1,70 +1,138 @@
-BuildSettings = build_settings.mk
+# this file contains the installation path and bit architecture of the target system
+# it was created by the preconfigure script
+build_settings_file_name = build_settings.mk
+build_settings_file_dir = ./
+build_settings_file = $(build_settings_file_dir)$(build_settings_file_name)
 
--include $(BuildSettings)
+-include $(build_settings_file)
 
-LibName = jmaths
-LibHeader = jmaths.hpp
+# the names of the library and header to be installed
+lib_name = jmaths
+lib_file_name = lib$(lib_name).a
+lib_file_dir = $(build_dir)
+lib_file = $(lib_file_dir)$(lib_file_name)
 
-SourceDir = src/
-BuildDir = build/
-ConfigDir = config/
-TestDir = unit_testing/
+header_file_name = jmaths.hpp
+header_file_dir = $(build_dir)
+header_file = $(header_file_dir)$(header_file_name)
+#LibName = jmaths
+#LibHeader = jmaths.hpp
 
-$(shell mkdir -p "$(BuildDir)")
+source_dir = src/
+build_dir = build/
+config_dir = config/
+test_dir = unit_testing/
 
-HeaderDependencies = $(ConfigDir)custom_dependencies.hpp
-DefaultHeaderDependencies = $(SourceDir)dependencies.hpp
-HeaderName = $(BuildDir)$(LibHeader)
-ConfigScript = $(ConfigDir)configure.cpp
-ConfigProgramName = configure
-ConfigProgram = $(ConfigDir)$(ConfigProgramName)
-DependenciesProgram = ./dependencies
-UserSettings = $(ConfigDir)user_settings.cfg
-UnitySource = $(BuildDir)unity.cpp
-UnityBuild = $(BuildDir)unity.o
-TestSource = $(TestDir)unit_test.cpp
-TestProgramName = unit_test
-TestProgram = $(TestDir)$(TestProgramName)
-DefaultUserSettings64 = $(ConfigDir)default_user_settings.cfg
-DefaultUserSettings32 = $(ConfigDir)default_user_settings32.cfg
-DefaultsList64 = $(ConfigDir)defaults_list.cfg
-DefaultsList32 = $(ConfigDir)defaults_list32.cfg
+$(shell mkdir -p "$(build_dir)")
 
-LibFileName = $(BuildDir)lib$(LibName).a
+#new:
+dependencies_file_name = custom_dependencies.hpp
+dependencies_file_dir = $(config_dir)
+dependencies_file = $(dependencies_file_dir)$(dependencies_file_name)
 
-ifeq ($(Architecture), 64)
-	DefaultUserSettings = $(DefaultUserSettings64)
-	DefaultsList = $(DefaultsList64)
+default_dependencies_file_name = dependencies.hpp
+default_dependencies_file_dir = $(source_dir)
+default_dependencies_file = $(default_dependencies_file_dir)$(default_dependencies_file_name)
+
+config_source_file_name = configure.cpp
+config_source_file_dir = $(config_dir)
+config_source_file = $(config_source_file_dir)$(config_source_file_name)
+
+config_program_name = configure
+config_program_dir = $(config_dir)
+config_program = $(config_program_dir)$(config_program_name)
+
+user_settings_file_name = user_settings.cfg
+user_settings_file_dir = $(config_dir)
+user_settings_file = $(user_settings_file_dir)$(user_settings_file_name)
+
+unity_source_file_name = unity.cpp
+unity_source_file_dir = $(build_dir)
+unity_source_file = $(unity_source_file_dir)$(unity_source_file_name)
+
+unity_obj_file_name = unity.o
+unity_obj_file_dir = $(build_dir)
+unity_obj_file = $(unity_obj_file_dir)$(unity_obj_file_name)
+
+test_source_file_name = unit_test.cpp
+test_source_file_dir = $(test_dir)
+test_source_file = $(test_source_file_dir)$(test_source_file_name)
+
+test_program_name = unit_test
+test_program_dir = $(test_dir)
+test_program = $(test_program_dir)$(test_program_name)
+
+dependencies_script_name = dependencies
+dependencies_script_dir = ./
+dependencies_script = $(dependencies_script_dir)$(dependencies_script_name)
+
+default_values_list_64_file_name = defaults_list.cfg
+default_values_list_64_file_dir = $(config_dir)
+default_values_list_64_file = $(default_values_list_64_file_dir)$(default_values_list_64_file_name)
+
+default_values_list_32_file_name = defaults_list32.cfg
+default_values_list_32_file_dir = $(config_dir)
+default_values_list_32_file = $(default_values_list_32_file_dir)$(default_values_list_32_file_name)
+
+implementation_header_file_name = jmaths.hpp
+implementation_header_file_dir = $(source_dir)
+implementation_header_file = $(implementation_header_file_dir)$(implementation_header_file_name)
+
+header_objs = $(implementation_header_file) $(user_settings_file) $(dependencies_file)
+source_files = jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp
+source_objs = $(addprefix $(source_dir), $(source_files))
+
+ifeq ($(bit_architecture), 64)
+	default_values_list_file = $(default_values_list_64_file)
 else
-	DefaultUserSettings = $(DefaultUserSettings32)
-	DefaultsList = $(DefaultsList32)
+	default_values_list_file = $(default_values_list_32_file)
 endif
 
-CC = clang++
-CompileVersion = -std=c++2b
-CompileWarnings = -Wall -Werror -Wextra -Wpedantic -Wpessimizing-move
-ifeq ($(CC), clang++)
-	CompileWarnings += -Wreturn-std-move -Wdefaulted-function-deleted
+cc = clang++
+compiler_version = -std=c++2b
+compiler_warnings = -Wall -Werror -Wextra -Wpedantic -Wpessimizing-move
+ifeq ($(cc), clang++)
+	compiler_warnings += -Wreturn-std-move -Wdefaulted-function-deleted
 endif
-CompileOptimisation = -O3 -march=native -flto
-CompileDebug = -g
+compiler_release = -O3 -march=native -flto
+compiler_debug = -g
 
-CompileParms = $(CompileVersion) $(CompileWarnings) $(CompileOptimisation)
+compile_parms_release = $(compiler_version) $(compiler_warnings) $(compiler_release)
+compile_parms_debug = $(compiler_version) $(compiler_warnings) $(compiler_debug)
 
-HeaderObjs = $(SourceDir)jmaths.hpp $(UserSettings) $(HeaderDependencies)
-ImplObjs = $(addprefix $(SourceDir), jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp)
+define compile
+	echo "Compiling $(5) in $(4) mode..."
+	$(cc) $(3) "$(1)" -c -o "$(2)"
+	echo "Successfully compiled $(5)"
+endef
+
+define compile_to_exec
+	echo "Creating $(4) program..."
+	$(cc) $(3) "$(1)" -o "$(2)"
+	echo "Successfully created $(4) program"
+endef
+
+define archive
+	echo "Archiving the library..."
+	ar rcs "$(2)" "$(1)"
+	echo "Library archived successfully"
+endef
 
 .PHONY: all fresh clean build install uninstall configure unity library header test
 
 all:
-	@./preconfigure DEFAULT && $(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && cmp -s "$(HeaderDependencies)" "$(DefaultHeaderDependencies)" || ($(DependenciesProgram) DEFAULT) && $(MAKE) build
+	@./preconfigure DEFAULT
+	@$(MAKE) $(config_program)
+	@$(config_program) DEFAULT
+	@$(dependencies_script) DEFAULT
+	@$(MAKE) build
 	
 fresh:
 	@$(MAKE) clean && $(MAKE) all
 
 clean:
 	@echo "Cleaning files..."
-	@rm -f "$(ConfigProgram)" "$(UserSettings)" "$(HeaderDependencies)" "$(LibFileName)" "$(HeaderName)" "$(UnitySource)" "$(UnityBuild)" "$(BuildSettings)" "$(TestProgram)"
+	@rm -rf "$(config_program)" "$(user_settings_file)" "$(dependencies_file)" "$(lib_file)" "$(header_file)" "$(unity_source_file)" "$(unity_obj_file)" "$(build_settings_file)" "$(test_program)" "$(test_program).dSYM"
 	@echo "Files cleaned successfully"
 	
 build:
@@ -75,71 +143,59 @@ build:
 	
 install:
 	@echo "Starting installation..."
-	@mkdir -p $(InstallDir) && mv $(LibFileName) $(HeaderName) $(InstallDir)
+	@mkdir -p $(install_dir) && mv $(lib_file) $(header_file) $(install_dir)
 	@echo "Installation successful"
-	@echo "Library installed to: $(InstallDir)"
+	@echo "Library installed to: $(install_dir)"
 	@echo "Library ready for use"
 	
 uninstall:
 	@echo "Uninstalling..."
-	@rm -rf $(InstallDir)
+	@rm -rf $(install_dir)
 	@echo "Uninstalling successful"
 	@echo "Library removed from system"
 	
-debug: $(UnitySource)
-	@echo "Compiling the library in debug mode..."
-	@$(CC) $(CompileVersion) $(CompileWarnings) $(CompileDebug) "$<" -c -o "$(UnityBuild)"
-	@echo "Library compiled successfully"
-	@echo "Archiving the library..."
-	@ar rcs "$(LibFileName)" "$(UnityBuild)"
-	@echo "Library archived successfully"
+debug: $(unity_source_file)
+	@$(call compile,$<,$(unity_obj_file),$(compile_parms_debug),"debug","unity file")
+	@$(call archive,$(unity_obj_file),$(lib_file))
+	
+$(user_settings_file): $(config_program)
+	@cd "$(config_program_dir)" && ./"$(config_program_name)"
 
+$(config_program): $(config_source_file)
+	@$(call compile_to_exec,$<,$@,$(compile_parms_release) -DUSER_SETTINGS="$(user_settings_file)" -DDEFAULTS_LIST="../$(default_values_list_file)","configuration")
 	
-$(UserSettings): $(ConfigProgram)
-	@cd "$(ConfigDir)" && ./"$(ConfigProgramName)"
-
-$(ConfigProgram): $(ConfigScript)
-	@echo "Creating a configuration program..."
-	@$(CC) $(CompileParms) -DUSER_SETTINGS="../$(UserSettings)" -DDEFAULT_USER_SETTINGS="../$(DefaultUserSettings)" -DDEFAULTS_LIST="../$(DefaultsList)" "$<" -o "$@"
-	@echo "Configuration program created"
+$(dependencies_file): $(dependencies_script)
+	@$(dependencies_script)
 	
-$(HeaderDependencies):
-	@$(DependenciesProgram)
-	
-$(UnitySource): $(ImplObjs) $(HeaderObjs)
+$(unity_source_file): $(source_objs)
 	@rm -f "$@"
-	@echo "Creating unity file..."
-	@for SourceFile in $(ImplObjs); do cat "$$SourceFile" >> "$@"; done
-	@echo "Unity file created"
+	@echo "Creating $@..."
+	@for source_file in $^; do cat "$$source_file" >> "$@"; done
+	@echo "Successfully created $@"
 	
-$(UnityBuild): $(UnitySource)
-	@echo "Compiling the library..."
-	@$(CC) $(CompileParms) -DNDEBUG "$<" -c -o "$@"
-	@echo "Library compiled successfully"
+$(unity_obj_file): $(unity_source_file)
+	@$(call compile,$<,$@,$(compile_parms_release) -DNDEBUG,"release")
 
-$(LibFileName): $(UnityBuild)
-	@echo "Archiving the library..."
-	@ar rcs "$@" "$^"
-	@echo "Library archived successfully"
+$(lib_file): $(unity_obj_file)
+	@$(call archive,$^,$@)
 	
-$(HeaderName): $(HeaderObjs)
-	@echo "Creating a header..."
-	@cat "$(HeaderDependencies)" > "$@"
-	@$(CC) $(CompileVersion) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER "$<" -E -P >> "$@"
-	@echo "Header created successfully"
+$(header_file): $(header_objs)
+	@echo "Creating $@..."
+	@cat "$(dependencies_file)" > "$@"
+	@echo "Preprocessing $<..."
+	@$(cc) $(compiler_version) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER "$<" -E -P >> "$@"
+	@echo "Successfully created $@"
 
-$(TestProgram): $(TestSource)
-	@./preconfigure DEFAULT && $(MAKE) configure && cmp -s "$(UserSettings)" "$(DefaultUserSettings)" || (cd "$(ConfigDir)" && ./"$(ConfigProgramName)" DEFAULT) && cmp -s "$(HeaderDependencies)" "$(DefaultHeaderDependencies)" || ($(DependenciesProgram) DEFAULT) && $(MAKE) header && $(MAKE) debug
-	@echo "Compiling test program..."
-	@$(CC) $(CompileParms) "$<" -o "$@"
-	@echo "Test program compiled successfully"
+$(test_program): $(test_source_file)
+	@./preconfigure DEFAULT && $(MAKE) configure && (cd "$(config_program_dir)" && ./"$(config_program_name)" DEFAULT) && ($(dependencies_script) DEFAULT) && $(MAKE) header && $(MAKE) debug
+	@$(call compile_to_exec,$<,$@,$(compile_parms_debug),"test")
 	
-configure: $(ConfigProgram)
+configure: $(config_program)
 
-unity: $(UnityBuild)
+unity: $(unity_obj_file)
 	
-library: $(LibFileName)
+library: $(lib_file)
 
-header: $(HeaderName)
+header: $(header_file)
 
-test: $(TestProgram)
+test: $(test_program)
