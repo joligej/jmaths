@@ -1,2 +1,2 @@
 #!/bin/sh
-cd unit_testing/ && ./unit_test "$@"
+unit_testing/unit_test "$@"
