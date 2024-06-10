@@ -223,9 +223,8 @@ $(debug_header_file): $(header_objs)
 	@$(cc) $(compiler_version) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER "$<" -E -P >> "$@"
 	@echo "Successfully created $@"
 
-$(test_program): $(test_source_file)
-	@$(MAKE) debug
-	@$(call compile_to_exec,$<,$@,$(compiler_version) $(compiler_warnings) -O3 -march=native -flto $(debug_lib_file),"unit test")
+$(test_program): $(test_source_file) $(debug_lib_file) $(debug_header_file)
+	@$(call compile_to_exec,$<,$@,$(compile_parms_debug) $(debug_lib_file),"unit test")
 	
 configure: $(config_program)
 

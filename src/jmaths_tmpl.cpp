@@ -195,17 +195,22 @@ void N::opr_assign_ (INT rhs) {
 template <typename INT>
 requires std::is_integral_v<INT>
 N::N (INT num) {
-	digits_.reserve((size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO + 1));
-	
-	// this assumes that sizeof(smallest type)/BASE_INT_SIZE >= MAX_RATIO
-	REPEAT((size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO)) {
-		digits_.emplace_back((BASE_INT)num);
-		REPEAT(BASE_INT_SIZE) num >>= BITS_IN_BYTE;
-	}
-	
+	if constexpr (sizeof(INT) > 1) {
+		digits_.reserve((size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO + 1));
+		
+		// this assumes that sizeof(smallest type)/BASE_INT_SIZE >= MAX_RATIO
+		REPEAT((size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO)) {
+			digits_.emplace_back((BASE_INT)num);
+			REPEAT(BASE_INT_SIZE) num >>= BITS_IN_BYTE;
+		}
+
+	} else {}
+		
 	digits_.emplace_back((BASE_INT)num);
 	
 	remove_leading_zeroes_();
+
+	assert(digits_.empty() || digits_.back() != 0);
 }
 
 template <typename INT>

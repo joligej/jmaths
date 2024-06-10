@@ -22,4 +22,4 @@ read
 
 [[ -z "${REPLY}" ]] &&
 echo "bit_architecture = \$(shell getconf LONG_BIT)" >> build_settings.mk ||
-echo "bit_architecture = \"${REPLY}\"" >> build_settings.mk
+echo "bit_architecture = ${REPLY}" >> build_settings.mk
