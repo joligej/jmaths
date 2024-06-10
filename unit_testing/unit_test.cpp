@@ -1,22 +1,58 @@
 #include <iostream>
+#include <cstdint>
 #include <cassert>
+#include <string>
+#include <limits>
+#include <optional>
 
-#include "../build/jmaths.hpp"
+#include "../build/debug_jmaths.hpp"
+
+typedef std::uint16_t check_type;
+typedef std::numeric_limits<check_type> nlim;
 
 typedef struct jmaths::detail::unit_testing {
-    static int check_add (int a, int b);
+    typedef jmaths::N testing_type;
+
+    static void check_add();
 } test;
 
-int test::check_add (int a, int b) {
-    return a + b;
+void test::check_add() {
+    for (check_type a = 0; a < nlim::max(); ++a) {
+        std::cerr << "a: " << a << '\n';
+        for (check_type b = 0; b < nlim::max(); ++b) {
+            std::cerr << "b: " << b << '\n';
+
+            if (a + b < a) {
+                std::cerr << "Skipping the rest due to overflow\n";
+                goto next_a;
+            }
+
+            {
+            const auto result = testing_type(a) + testing_type(b);
+            const auto expected = a + b;
+            const auto fits = result.fits_into<check_type>();
+
+            assert(fits.has_value());
+
+            assert(result == expected);
+            assert(result.to_str(10) == std::to_string(expected));
+            assert(*fits == expected);
+            }
+        }
+
+        next_a:;
+    }
 }
 
 int main (int argc, char * argv[]) {
     (void)argc;
     (void)argv;
 
+
+    test::check_add();
+
+
     assert(true);
-    assert(test::check_add(1, 5) == 6);
     assert(false);
 
     return 0;

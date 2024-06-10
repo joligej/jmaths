@@ -15,8 +15,15 @@ lib_file = $(lib_file_dir)$(lib_file_name)
 header_file_name = jmaths.hpp
 header_file_dir = $(build_dir)
 header_file = $(header_file_dir)$(header_file_name)
-#LibName = jmaths
-#LibHeader = jmaths.hpp
+
+debug_lib_name = debug_jmaths
+debug_lib_file_name = lib$(debug_lib_name).a
+debug_lib_file_dir = $(build_dir)
+debug_lib_file = $(debug_lib_file_dir)$(debug_lib_file_name)
+
+debug_header_file_name = debug_jmaths.hpp
+debug_header_file_dir = $(build_dir)
+debug_header_file = $(debug_header_file_dir)$(debug_header_file_name)
 
 source_dir = src/
 build_dir = build/
@@ -25,7 +32,6 @@ test_dir = unit_testing/
 
 $(shell mkdir -p "$(build_dir)")
 
-#new:
 dependencies_file_name = custom_dependencies.hpp
 dependencies_file_dir = $(config_dir)
 dependencies_file = $(dependencies_file_dir)$(dependencies_file_name)
@@ -54,6 +60,10 @@ unity_obj_file_name = unity.o
 unity_obj_file_dir = $(build_dir)
 unity_obj_file = $(unity_obj_file_dir)$(unity_obj_file_name)
 
+debug_unity_obj_file_name = debug_unity.o
+debug_unity_obj_file_dir = $(build_dir)
+debug_unity_obj_file = $(debug_unity_obj_file_dir)$(debug_unity_obj_file_name)
+
 test_source_file_name = unit_test.cpp
 test_source_file_dir = $(test_dir)
 test_source_file = $(test_source_file_dir)$(test_source_file_name)
@@ -61,6 +71,10 @@ test_source_file = $(test_source_file_dir)$(test_source_file_name)
 test_program_name = unit_test
 test_program_dir = $(test_dir)
 test_program = $(test_program_dir)$(test_program_name)
+
+preconfigure_script_name = preconfigure
+preconfigure_script_dir = ./
+preconfigure_script = $(preconfigure_script_dir)$(preconfigure_script_name)
 
 dependencies_script_name = dependencies
 dependencies_script_dir = ./
@@ -82,6 +96,8 @@ header_objs = $(implementation_header_file) $(user_settings_file) $(dependencies
 source_files = jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp
 source_objs = $(addprefix $(source_dir), $(source_files))
 
+create_while_building = "$(build_settings_file)" "$(config_program)" "$(user_settings_file)" "$(dependencies_file)" "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)" "$(debug_header_file)" "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM"
+
 ifeq ($(bit_architecture), 64)
 	default_values_list_file = $(default_values_list_64_file)
 else
@@ -94,8 +110,8 @@ compiler_warnings = -Wall -Werror -Wextra -Wpedantic -Wpessimizing-move
 ifeq ($(cc), clang++)
 	compiler_warnings += -Wreturn-std-move -Wdefaulted-function-deleted
 endif
-compiler_release = -O3 -march=native -flto
-compiler_debug = -g
+compiler_release = -O3 -march=native -flto -DNDEBUG
+compiler_debug = -O0 -g
 
 compile_parms_release = $(compiler_version) $(compiler_warnings) $(compiler_release)
 compile_parms_debug = $(compiler_version) $(compiler_warnings) $(compiler_debug)
@@ -118,21 +134,28 @@ define archive
 	echo "Library archived successfully"
 endef
 
-.PHONY: all fresh clean build install uninstall configure unity library header test
+.PHONY: all debug fresh clean build debug_build install uninstall configure unity debug_unity library debug_library header debug_header test
 
 all:
-	@./preconfigure DEFAULT
+	@$(preconfigure_script) DEFAULT
 	@$(MAKE) $(config_program)
 	@$(config_program) DEFAULT
 	@$(dependencies_script) DEFAULT
 	@$(MAKE) build
+
+debug:
+	@$(preconfigure_script) DEFAULT
+	@$(MAKE) $(config_program)
+	@$(config_program) DEFAULT
+	@$(dependencies_script) DEFAULT
+	@$(MAKE) debug_build
 	
 fresh:
 	@$(MAKE) clean && $(MAKE) all
 
 clean:
 	@echo "Cleaning files..."
-	@rm -rf "$(config_program)" "$(user_settings_file)" "$(dependencies_file)" "$(lib_file)" "$(header_file)" "$(unity_source_file)" "$(unity_obj_file)" "$(build_settings_file)" "$(test_program)" "$(test_program).dSYM"
+	@rm -rf $(create_while_building)
 	@echo "Files cleaned successfully"
 	
 build:
@@ -140,7 +163,12 @@ build:
 	@$(MAKE) library && $(MAKE) header
 	@echo "Build successful"
 	@echo "Library ready for installation"
-	
+
+debug_build:
+	@echo "Building in debug mode..."
+	@$(MAKE) debug_library && $(MAKE) debug_header
+	@echo "Debug build successful"
+
 install:
 	@echo "Starting installation..."
 	@mkdir -p $(install_dir) && mv $(lib_file) $(header_file) $(install_dir)
@@ -153,10 +181,6 @@ uninstall:
 	@rm -rf $(install_dir)
 	@echo "Uninstalling successful"
 	@echo "Library removed from system"
-	
-debug: $(unity_source_file)
-	@$(call compile,$<,$(unity_obj_file),$(compile_parms_debug),"debug","unity file")
-	@$(call archive,$(unity_obj_file),$(lib_file))
 	
 $(user_settings_file): $(config_program)
 	@cd "$(config_program_dir)" && ./"$(config_program_name)"
@@ -174,28 +198,47 @@ $(unity_source_file): $(source_objs)
 	@echo "Successfully created $@"
 	
 $(unity_obj_file): $(unity_source_file)
-	@$(call compile,$<,$@,$(compile_parms_release) -DNDEBUG,"release")
+	@$(call compile,$<,$@,$(compile_parms_release),"release","unity file")
+	
+$(debug_unity_obj_file): $(unity_source_file)
+	@$(call compile,$<,$@,$(compile_parms_debug),"debug","unity file")
 
 $(lib_file): $(unity_obj_file)
+	@$(call archive,$^,$@)
+
+$(debug_lib_file): $(debug_unity_obj_file)
 	@$(call archive,$^,$@)
 	
 $(header_file): $(header_objs)
 	@echo "Creating $@..."
 	@cat "$(dependencies_file)" > "$@"
-	@echo "Preprocessing $<..."
+	@echo "Preprocessing $< in release mode..."
+	@$(cc) $(compiler_version) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER -DNDEBUG "$<" -E -P >> "$@"
+	@echo "Successfully created $@"
+
+$(debug_header_file): $(header_objs)
+	@echo "Creating $@..."
+	@cat "$(dependencies_file)" > "$@"
+	@echo "Preprocessing $< in debug mode..."
 	@$(cc) $(compiler_version) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER "$<" -E -P >> "$@"
 	@echo "Successfully created $@"
 
 $(test_program): $(test_source_file)
-	@./preconfigure DEFAULT && $(MAKE) configure && (cd "$(config_program_dir)" && ./"$(config_program_name)" DEFAULT) && ($(dependencies_script) DEFAULT) && $(MAKE) header && $(MAKE) debug
-	@$(call compile_to_exec,$<,$@,$(compile_parms_debug),"test")
+	@$(MAKE) debug
+	@$(call compile_to_exec,$<,$@,$(compiler_version) $(compiler_warnings) -O3 -march=native -flto $(debug_lib_file),"unit test")
 	
 configure: $(config_program)
 
 unity: $(unity_obj_file)
+
+debug_unity: $(debug_unity_obj_file)
 	
 library: $(lib_file)
 
+debug_library: $(debug_lib_file)
+
 header: $(header_file)
+
+debug_header: $(debug_header_file)
 
 test: $(test_program)
