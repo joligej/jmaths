@@ -420,7 +420,7 @@ class Q : public sign_type {
         Q (const N & num, const N & denom, sign_bool sign);
 		Q (std::tuple<N, N, sign_bool> && fraction_info);
 		
-        void canonicalise();
+        void canonicalise_();
 
 		template <typename FLOAT> requires std::is_floating_point_v<FLOAT> static std::tuple<N, N, sign_bool> handle_float_ (FLOAT num);
 		

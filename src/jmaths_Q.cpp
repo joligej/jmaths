@@ -235,16 +235,16 @@ std::strong_ordering operator <=> (const Q & lhs, const Q & rhs) {
 namespace jmaths {
 
 Q::Q (N && num, N && denom, sign_bool sign) : sign_type(sign), num_(std::move(num)), denom_(std::move(denom)) {
-	canonicalise();
+	canonicalise_();
 }
 
 Q::Q (const N & num, const N & denom, sign_bool sign) : sign_type(sign), num_(num), denom_(denom) {
-	canonicalise();
+	canonicalise_();
 }
 
 Q::Q (std::tuple<N, N, sign_bool> && fraction_info) : Q(std::move(std::get<0>(fraction_info)), std::move(std::get<1>(fraction_info)), std::move(std::get<2>(fraction_info))) {}
 
-void Q::canonicalise() {
+void Q::canonicalise_() {
 	const N gcd = calc::gcd(num_, denom_);
 	num_ = detail::opr_div(num_, gcd).first;
 	denom_ = detail::opr_div(denom_, gcd).first;
@@ -258,7 +258,7 @@ Q::Q() : denom_(1) {}
 
 Q::Q (std::string_view num_str, unsigned base) : sign_type(num_str), num_(handle_fraction_string_(num_str), base), denom_(num_str, base) {
 	if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
-	canonicalise();
+	canonicalise_();
 	if (is_zero()) set_sign_(positive);
 }
 
@@ -272,42 +272,42 @@ Q::Q (Z && z) : sign_type(z.sign_), num_(std::move(std::move(z).abs())), denom_(
 
 Q::Q (const N & num, const N & denom) : num_(num), denom_(denom) {
 	if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
-	canonicalise();
+	canonicalise_();
 }
 
 Q::Q (const N & num, N && denom) : num_(num), denom_(std::move(denom)) {
 	if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
-	canonicalise();
+	canonicalise_();
 }
 
 Q::Q (N && num, const N & denom) : num_(std::move(num)), denom_(denom) {
 	if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
-	canonicalise();
+	canonicalise_();
 }
 
 Q::Q (N && num, N && denom) : num_(std::move(num)), denom_(std::move(denom)) {
 	if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
-	canonicalise();
+	canonicalise_();
 }
 
 Q::Q (const Z & num, const Z & denom) : sign_type(num.is_zero() ? positive : static_cast<sign_bool>(num.sign_ ^ denom.sign_)), num_(num.abs()), denom_(denom.abs()) {
 	if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
-	canonicalise();
+	canonicalise_();
 }
 
 Q::Q (const Z & num, Z && denom) : sign_type(num.is_zero() ? positive : static_cast<sign_bool>(num.sign_ ^ denom.sign_)), num_(num.abs()), denom_(std::move(std::move(denom).abs())) {
 	if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
-	canonicalise();
+	canonicalise_();
 }
 
 Q::Q (Z && num, const Z & denom) : sign_type(num.is_zero() ? positive : static_cast<sign_bool>(num.sign_ ^ denom.sign_)), num_(std::move(std::move(num).abs())), denom_(denom.abs()) {
 	if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
-	canonicalise();
+	canonicalise_();
 }
 
 Q::Q (Z && num, Z && denom) : sign_type(num.is_zero() ? positive : static_cast<sign_bool>(num.sign_ ^ denom.sign_)), num_(std::move(std::move(num).abs())), denom_(std::move(std::move(denom).abs())) {
 	if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
-	canonicalise();
+	canonicalise_();
 }
 
 bool Q::is_zero() const {
@@ -467,7 +467,7 @@ Q & Q::operator += (const Q & rhs) {
 	
 	denom_.opr_mult_assign_(rhs.denom_);
 	
-	canonicalise();
+	canonicalise_();
 	
 	return *this;
 }
@@ -525,7 +525,7 @@ Q & Q::operator -= (const Q & rhs) {
 	
 	denom_.opr_mult_assign_(rhs.denom_);
 	
-	canonicalise();
+	canonicalise_();
 	
 	return *this;
 }
@@ -534,7 +534,7 @@ Q & Q::operator *= (const Q & rhs) {
 	num_.opr_mult_assign_(rhs.num_);
 	denom_.opr_mult_assign_(rhs.denom_);
 	set_sign_(is_zero() ? positive : this->sign_ ^ rhs.sign_);
-	canonicalise();
+	canonicalise_();
 	return *this;
 }
 
@@ -544,7 +544,7 @@ Q & Q::operator /= (const Q & rhs) {
 	num_.opr_mult_assign_(rhs.denom_);
 	denom_.opr_mult_assign_(rhs.num_);
 	set_sign_(is_zero() ? positive : this->sign_ ^ rhs.sign_);
-	canonicalise();
+	canonicalise_();
 	return *this;
 }
 
@@ -553,7 +553,7 @@ Q & Q::operator &= (const Q & rhs) {
 	if (denom_.is_zero()) throw error::division_by_zero();
 	num_.opr_and_assign_(rhs.num_);
 	set_sign_(is_zero() ? positive : this->sign_ & rhs.sign_);
-	canonicalise();
+	canonicalise_();
 	return *this;
 }
 
@@ -561,7 +561,7 @@ Q & Q::operator |= (const Q & rhs) {
 	num_.opr_or_assign_(rhs.num_);
 	denom_.opr_or_assign_(rhs.denom_);
 	set_sign_(is_zero() ? positive : this->sign_ | rhs.sign_);
-	canonicalise();
+	canonicalise_();
 	return *this;
 }
 
@@ -570,7 +570,7 @@ Q & Q::operator ^= (const Q & rhs) {
 	if (denom_.is_zero()) throw error::division_by_zero();
 	num_.opr_xor_assign_(rhs.num_);
 	set_sign_(is_zero() ? positive : this->sign_ ^ rhs.sign_);
-	canonicalise();
+	canonicalise_();
 	return *this;
 }
 
@@ -607,7 +607,7 @@ Q Q::operator >> (BIT_TYPE pos) const {
 
 Q & Q::operator <<= (BIT_TYPE pos) {
 	num_.opr_bitshift_l_assign_(pos);
-	canonicalise();
+	canonicalise_();
 	return *this;
 }
 
@@ -621,7 +621,7 @@ Q & Q::operator = (std::string_view num_str) {
 	set_sign_(sign_type::handle_string_(num_str));
 	num_.opr_assign_(sign_type::handle_fraction_string_(num_str));
 	denom_.opr_assign_(num_str);
-	canonicalise();
+	canonicalise_();
 	if (is_zero()) set_sign_(positive);
 	return *this;
 }

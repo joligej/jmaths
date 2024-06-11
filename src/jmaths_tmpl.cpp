@@ -524,7 +524,7 @@ Q & Q::operator = (FLOAT rhs) {
 	denom_ = std::move(std::get<1>(fraction_info));
 	set_sign_(std::get<2>(fraction_info));
 
-	canonicalise();
+	canonicalise_();
 
 	return *this;
 }
