@@ -10,7 +10,7 @@ N calc::gcd (N a, N b) {
 	
 	BIT_TYPE shift = 0;
 	
-	for (; (a.front_() | b.front_()) == 0; shift += BASE_INT_SIZE) {
+	for (; (a.front_() | b.front_()) == 0; shift += BASE_INT_BITS) {
 		a.digits_.erase(a.digits_.begin());
 		b.digits_.erase(b.digits_.begin());
 	}
