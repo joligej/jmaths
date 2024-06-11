@@ -245,7 +245,7 @@ Q::Q (const N & num, const N & denom, sign_bool sign) : sign_type(sign), num_(nu
 Q::Q (std::tuple<N, N, sign_bool> && fraction_info) : Q(std::move(std::get<0>(fraction_info)), std::move(std::get<1>(fraction_info)), std::move(std::get<2>(fraction_info))) {}
 
 void Q::canonicalise() {
-	N && gcd = calc::gcd(num_, denom_);
+	const N gcd = calc::gcd(num_, denom_);
 	num_ = detail::opr_div(num_, gcd).first;
 	denom_ = detail::opr_div(denom_, gcd).first;
 }
@@ -607,6 +607,7 @@ Q Q::operator >> (BIT_TYPE pos) const {
 
 Q & Q::operator <<= (BIT_TYPE pos) {
 	num_.opr_bitshift_l_assign_(pos);
+	canonicalise();
 	return *this;
 }
 
@@ -620,6 +621,7 @@ Q & Q::operator = (std::string_view num_str) {
 	set_sign_(sign_type::handle_string_(num_str));
 	num_.opr_assign_(sign_type::handle_fraction_string_(num_str));
 	denom_.opr_assign_(num_str);
+	canonicalise();
 	if (is_zero()) set_sign_(positive);
 	return *this;
 }

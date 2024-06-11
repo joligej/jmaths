@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cstdint> // for std::uint*_t
 #include <cmath> // for std::frexp and std::scalbn
 #include <iostream> // for std::ostream
@@ -14,3 +12,4 @@
 #include <optional> // for std::optional
 #include <limits> // for std::numeric_limits<T>
 #include <memory> // for std::allocator<T>
+#include <cassert> // for the assert macro

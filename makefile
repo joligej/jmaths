@@ -211,14 +211,16 @@ $(debug_lib_file): $(debug_unity_obj_file)
 	
 $(header_file): $(header_objs)
 	@echo "Creating $@..."
-	@cat "$(dependencies_file)" > "$@"
+	@echo "#pragma once" > "$@"
+	@cat "$(dependencies_file)" >> "$@"
 	@echo "Preprocessing $< in release mode..."
 	@$(cc) $(compiler_version) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER -DNDEBUG "$<" -E -P >> "$@"
 	@echo "Successfully created $@"
 
 $(debug_header_file): $(header_objs)
 	@echo "Creating $@..."
-	@cat "$(dependencies_file)" > "$@"
+	@echo "#pragma once" > "$@"
+	@cat "$(dependencies_file)" >> "$@"
 	@echo "Preprocessing $< in debug mode..."
 	@$(cc) $(compiler_version) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER "$<" -E -P >> "$@"
 	@echo "Successfully created $@"

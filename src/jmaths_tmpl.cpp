@@ -457,8 +457,8 @@ std::optional<FLOAT> Q::fits_into() const {
 		} fields;
 	};*/
 
-	typedef std::conditional_t<std::is_same_v<FLOAT, float>, float_access, std::enable_if_t<std::is_same_v<FLOAT, double>, double_access>> access_type;
-	typedef std::conditional_t<std::is_same_v<FLOAT, float>, float_sizes, std::enable_if_t<std::is_same_v<FLOAT, double>, double_sizes>> sizes_type;
+	typedef std::conditional_t<std::is_same_v<FLOAT, float>, float_access, double_access> access_type;
+	typedef std::conditional_t<std::is_same_v<FLOAT, float>, float_sizes, double_sizes> sizes_type;
 	
 	static_assert(sizeof(float_access) == sizeof(float) && sizeof(float_access) == sizeof(std::uint32_t[1]), "There seems to be a problem with the padding bits for type: float_acess.");
 	static_assert(sizeof(double_access) == sizeof(double) && sizeof(double_access) == sizeof(std::uint64_t[1]), "There seems to be a problem with the padding bits for type: double_access.");
@@ -481,19 +481,19 @@ std::optional<FLOAT> Q::fits_into() const {
 			}
 		} else if (div_pair.first.bits() == nlf::max_exponent) {
 			FLOAT converted{};
-			access_type * const converted_help = &converted;
+			access_type * const converted_help = (access_type*)&converted;
 
 			if constexpr (sizes_type::mantissa <= BASE_INT_BITS) {
 				converted_help->fields.mantissa = div_pair.first.digits_.back() >> (BASE_INT_BITS - sizes_type::mantissa);
 			} else {
 				const auto & last_digit = div_pair.first.digits_.back();
 				converted_help->fields.mantissa = 0;
-				for (BIT_TYPE i = 0; i < sizes_type::mantjssa; ++i) {
+				for (BIT_TYPE i = 0; i < sizes_type::mantissa; ++i) {
 					const std::size_t j = i / BASE_INT_BITS;
 					const BIT_TYPE k = i % BASE_INT_BITS;
 
-					typedef decltype(converted_help->fields.mantjssa) mantissa_type;
-					static constexpr auto mask = (mantissa_type)1 << (sizes_type::mantissa - 1);
+					typedef decltype(converted_help->fields.mantissa) mantissa_type;
+					static constexpr auto mask = (std::uint64_t)1 << (sizes_type::mantissa - 1); // std::uint64_t was mantissa_type
 
 					converted_help->fields.mantissa |= (((mantissa_type)(*(&last_digit - j) << k) & mask) >> i);
 				}
@@ -505,17 +505,16 @@ std::optional<FLOAT> Q::fits_into() const {
 			
 			return converted;
 		} else {
-			
+
+
+			return std::nullopt;
 		}
 
 	} else {
-
+		return std::nullopt;
 	}
 
 }
-
-template <>
-std::optional<long double> Q::fits_into() const;
 
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
@@ -524,6 +523,8 @@ Q & Q::operator = (FLOAT rhs) {
 	num_ = std::move(std::get<0>(fraction_info));
 	denom_ = std::move(std::get<1>(fraction_info));
 	set_sign_(std::get<2>(fraction_info));
+
+	canonicalise();
 
 	return *this;
 }

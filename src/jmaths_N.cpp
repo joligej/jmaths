@@ -14,6 +14,9 @@ static constexpr BASE_INT base_converter (char c) noexcept {
 	if (c >= 'A' && c <= 'Z') return (c - 'A' + 10);
 	if (c >= 'a' && c <= 'z') return (c - 'a' + 10 + 26);
 	if (c == '+') return 62;
+
+	assert(c == '/'); // it is assumed that c == '/' because no other character would be valid or logical
+
 	return 63;
 }
 	
@@ -32,6 +35,9 @@ std::istream & detail::opr_extr (std::istream & is, N & n) {
 	std::string num_str;
 	is >> num_str;
 	n.opr_assign_(num_str);
+
+	assert(n == N(num_str));
+
 	return is;
 }
 
@@ -50,6 +56,8 @@ N detail::opr_add (const N & lhs, const N & rhs) {
 		longest = &lhs;
 		shortest = &rhs;
 	}
+
+	assert(longest && shortest);
 	
 	N sum;
 	sum.digits_.reserve(longest->digits_.size() + 1);
@@ -78,12 +86,14 @@ N detail::opr_add (const N & lhs, const N & rhs) {
 	}
 	
 	if (carry) sum.digits_.emplace_back(1);
+
+	assert(sum.is_zero() || sum.digits_.back() != 0);
 	
 	return sum;
 }
 
 N detail::opr_subtr (N lhs, const N & rhs) {
-	// this functions assumes that lhs >= rhs and for effiency reason should only be called when lhs > rhs
+	// this functions assumes that lhs >= rhs and for effiency reasons should only be called when lhs > rhs
 	
 	// check for additive identity
 	if (rhs.is_zero()) return lhs;
@@ -108,6 +118,8 @@ N detail::opr_subtr (N lhs, const N & rhs) {
 	}
 	
 	difference.remove_leading_zeroes_();
+
+	assert(difference.is_zero() || difference.digits_.back() != 0);
 	
 	return difference;
 }
@@ -155,6 +167,13 @@ std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
 	
 	if (const auto max_size = lhs.digits_.size() - rhs.digits_.size() + 1; lhs.digits_.size() + 1 >= rhs.digits_.size()) {
 		// rhs.digits_.size() is always >= 1 so even if lhs.digits_.size() + 1 overflows to 0 no errors shall occur
+		#ifndef NDEBUG
+			typedef std::numeric_limits<decltype(lhs.digits_.size())> nlim;
+		#endif
+
+		assert(lhs.digits_.size() == nlim::max() ? 1 <= rhs.digits_.size() : lhs.digits_.size() >= rhs.digits_.size() ? lhs.digits_.size() - rhs.digits_.size() <= nlim::max() - 1 : true /*-(rhs.digits_.size() - lhs.digits_.size()) <= nlim::max() - 1*/); // assert for overflow
+		assert(lhs.digits_.size() == nlim::max() ? true : lhs.digits_.size() + 1 >= rhs.digits_.size()); // assert for overflow to 0
+		
 		q.digits_.reserve(max_size);
 	}
 	
@@ -168,6 +187,8 @@ std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
 			q.bit_(i, 1);
 		}
 	}
+
+	assert(q * rhs + r == lhs);
 	
 	return {q, r};
 }
