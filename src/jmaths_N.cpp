@@ -10,6 +10,8 @@ namespace {
 static constexpr BASE_INT base_converter (char c) noexcept; // convert char to number for base >= 2 and <= 64
 
 static constexpr BASE_INT base_converter (char c) noexcept {
+	FUNCTION_TO_STDERR;
+
 	if (c >= '0' && c <= '9') return (c - '0');
 	if (c >= 'A' && c <= 'Z') return (c - 'A' + 10);
 	if (c >= 'a' && c <= 'z') return (c - 'a' + 10 + 26);
@@ -28,10 +30,14 @@ namespace jmaths {
 // implementation functions
 	
 std::ostream & detail::opr_ins (std::ostream & os, const N & n) {
+	FUNCTION_TO_STDERR;
+
 	return os << (std::string)n;
 }
 
 std::istream & detail::opr_extr (std::istream & is, N & n) {
+	FUNCTION_TO_STDERR;
+
 	std::string num_str;
 	is >> num_str;
 	n.opr_assign_(num_str);
@@ -42,6 +48,8 @@ std::istream & detail::opr_extr (std::istream & is, N & n) {
 }
 
 N detail::opr_add (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	// check for additive identity
 	if (lhs.is_zero()) return rhs;
 	if (rhs.is_zero()) return lhs;
@@ -93,6 +101,8 @@ N detail::opr_add (const N & lhs, const N & rhs) {
 }
 
 N detail::opr_subtr (N lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	// this functions assumes that lhs >= rhs and for effiency reasons should only be called when lhs > rhs
 	
 	// check for additive identity
@@ -125,6 +135,8 @@ N detail::opr_subtr (N lhs, const N & rhs) {
 }
 
 N detail::opr_mult (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	// check for multiplicative identity
 	if (lhs.is_one()) return rhs;
 	if (rhs.is_one()) return lhs;
@@ -158,6 +170,8 @@ N detail::opr_mult (const N & lhs, const N & rhs) {
 }
 
 std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	if (lhs.is_zero()) return {N(), N()};
 	
 	// check if lhs == rhs
@@ -194,6 +208,8 @@ std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
 }
 
 N detail::opr_and (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	if (lhs.is_zero() || rhs.is_zero()) return N();
 	
 	const N & shortest = (lhs.digits_.size() < rhs.digits_.size() ? lhs : rhs);
@@ -211,6 +227,8 @@ N detail::opr_and (const N & lhs, const N & rhs) {
 }
 
 N detail::opr_or (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	if (lhs.is_zero()) return rhs;
 	if (rhs.is_zero()) return lhs;
 	
@@ -242,6 +260,8 @@ N detail::opr_or (const N & lhs, const N & rhs) {
 }
 
 N detail::opr_xor (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	if (lhs.is_zero()) return rhs;
 	if (rhs.is_zero()) return lhs;
 	
@@ -275,10 +295,14 @@ N detail::opr_xor (const N & lhs, const N & rhs) {
 }
 
 bool detail::opr_eq (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	return (lhs.digits_ == rhs.digits_);
 }
 
 std::strong_ordering detail::opr_comp (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	if (lhs.digits_.size() < rhs.digits_.size()) return std::strong_ordering::less;
 	if (lhs.digits_.size() > rhs.digits_.size()) return std::strong_ordering::greater;
 	
@@ -294,18 +318,26 @@ std::strong_ordering detail::opr_comp (const N & lhs, const N & rhs) {
 // forwarding functions
 
 std::ostream & operator << (std::ostream & os, const N & n) {
+	FUNCTION_TO_STDERR;
+
 	return detail::opr_ins(os, n);
 }
 
 std::istream & operator >> (std::istream & is, N & n) {
+	FUNCTION_TO_STDERR;
+
 	return detail::opr_extr(is, n);
 }
 
 N operator + (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	return detail::opr_add(lhs, rhs);
 }
 
 N operator - (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	const auto difference = detail::opr_comp(lhs, rhs);
 	
 	if (difference == 0) return N();
@@ -313,31 +345,45 @@ N operator - (const N & lhs, const N & rhs) {
 }
 
 N operator * (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	return detail::opr_mult(lhs, rhs);
 }
 
 std::pair<N, N> operator / (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	if (rhs.is_zero()) throw error::division_by_zero();
 	return detail::opr_div(lhs, rhs);
 }
 
 N operator & (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	return detail::opr_and(lhs, rhs);
 }
 
 N operator | (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	return detail::opr_or(lhs, rhs);
 }
 
 N operator ^ (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	return detail::opr_xor(lhs, rhs);
 }
 
 bool operator == (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	return detail::opr_eq(lhs, rhs);
 }
 
 std::strong_ordering operator <=> (const N & lhs, const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	return detail::opr_comp(lhs, rhs);
 }
 
@@ -346,6 +392,8 @@ std::strong_ordering operator <=> (const N & lhs, const N & rhs) {
 namespace jmaths {
 
 void N::remove_leading_zeroes_() {
+	FUNCTION_TO_STDERR;
+
 	while (!digits_.empty()) {
 		if (digits_.back() != 0) break;
 		digits_.pop_back();
@@ -353,12 +401,16 @@ void N::remove_leading_zeroes_() {
 }
 
 BASE_INT N::front_() const {
+	FUNCTION_TO_STDERR;
+
 	if (digits_.empty()) return 0;
 	
 	return digits_.front();
 }
 
 std::string N::conv_to_base_ (unsigned base) const {
+	FUNCTION_TO_STDERR;
+
 	static constexpr const char base_converter[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/";
 		
 	if (is_zero()) return "0";
@@ -383,6 +435,8 @@ std::string N::conv_to_base_ (unsigned base) const {
 }
 
 void N::handle_str_ (std::string_view num_str, unsigned base) {
+	FUNCTION_TO_STDERR;
+
 	if (num_str.empty() || (num_str.size() == 1 && num_str.front() == '0')) return;
 	
 	for (auto cit = num_str.cbegin(); &*cit != &num_str.back(); ++cit) {
@@ -394,12 +448,16 @@ void N::handle_str_ (std::string_view num_str, unsigned base) {
 }
 
 bool N::bit_ (BIT_TYPE pos) const {
+	FUNCTION_TO_STDERR;
+
 	const N shifted = opr_bitshift_r_(pos);
 
 	return (shifted.front_() & 1);
 }
 
 void N::bit_ (BIT_TYPE pos, bool val) {
+	FUNCTION_TO_STDERR;
+
 	const size_t pos_whole = pos / BASE_INT_BITS;
 	const BIT_TYPE pos_mod = pos % BASE_INT_BITS;
 	
@@ -424,10 +482,14 @@ void N::bit_ (BIT_TYPE pos, bool val) {
 }
 
 size_t N::dynamic_size_() const {
+	FUNCTION_TO_STDERR;
+
 	return (digits_.size() * BASE_INT_SIZE);
 }
 
 void N::opr_incr_() {
+	FUNCTION_TO_STDERR;
+
 	for (auto & digit : digits_)
 		if (digit++ < MAX_DIGIT) return;
 	
@@ -435,6 +497,8 @@ void N::opr_incr_() {
 }
 
 void N::opr_decr_() {
+	FUNCTION_TO_STDERR;
+
 	for (auto & digit : digits_) {
 		if (digit-- > 0) {
 			remove_leading_zeroes_();
@@ -446,6 +510,8 @@ void N::opr_decr_() {
 }
 
 void N::opr_add_assign_ (const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	// check for additive identity
 	if (rhs.is_zero()) return;
 	if (this->is_zero()) return (void)operator=(rhs);
@@ -476,6 +542,8 @@ void N::opr_add_assign_ (const N & rhs) {
 }
 
 void N::opr_subtr_assign_ (const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	// this functions assumes that *this >= rhs and for effiency reasons should only be called when *this > rhs
 	
 	// check for additive identity
@@ -497,6 +565,8 @@ void N::opr_subtr_assign_ (const N & rhs) {
 }
 
 void N::opr_mult_assign_ (const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	// !!! remove temporary (at least temp1) !!!
 	
 	// check for multiplicative identity
@@ -533,6 +603,8 @@ void N::opr_mult_assign_ (const N & rhs) {
 }
 
 void N::opr_and_assign_ (const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	if (this->is_zero()) return;
 	if (rhs.is_zero()) return (void)digits_.clear();
 	
@@ -546,6 +618,8 @@ void N::opr_and_assign_ (const N & rhs) {
 }
 
 void N::opr_or_assign_ (const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	if (this->is_zero()) return (void)operator=(rhs);
 	if (rhs.is_zero()) return;
 	
@@ -576,6 +650,8 @@ void N::opr_or_assign_ (const N & rhs) {
 }
 
 void N::opr_xor_assign_ (const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	if (this->is_zero()) return (void)operator=(rhs);
 	if (rhs.is_zero()) return;
 	
@@ -607,6 +683,8 @@ void N::opr_xor_assign_ (const N & rhs) {
 }
 
 N N::opr_compl_() const {
+	FUNCTION_TO_STDERR;
+
 	// this function returns 0 if *this == 0
 	
 	N inverted;
@@ -622,6 +700,8 @@ N N::opr_compl_() const {
 }
 
 N N::opr_bitshift_l_ (BIT_TYPE pos) const {
+	FUNCTION_TO_STDERR;
+
 	if (is_zero()) return N();
 	
 	const size_t pos_whole = pos / BASE_INT_BITS;
@@ -647,6 +727,8 @@ N N::opr_bitshift_l_ (BIT_TYPE pos) const {
 }
 
 N N::opr_bitshift_r_ (BIT_TYPE pos) const {
+	FUNCTION_TO_STDERR;
+
 	if (is_zero()) return N();
 	
 	const size_t pos_whole = pos / BASE_INT_BITS;
@@ -671,6 +753,8 @@ N N::opr_bitshift_r_ (BIT_TYPE pos) const {
 }
 
 void N::opr_bitshift_l_assign_ (BIT_TYPE pos) {
+	FUNCTION_TO_STDERR;
+
 	if (is_zero()) return;
 	
 	const size_t pos_whole = pos / BASE_INT_BITS;
@@ -696,6 +780,8 @@ void N::opr_bitshift_l_assign_ (BIT_TYPE pos) {
 }
 
 void N::opr_bitshift_r_assign_ (BIT_TYPE pos) {
+	FUNCTION_TO_STDERR;
+
 	if (is_zero()) return;
 	
 	const size_t pos_whole = pos / BASE_INT_BITS;
@@ -719,6 +805,8 @@ void N::opr_bitshift_r_assign_ (BIT_TYPE pos) {
 }
 
 void N::opr_assign_ (std::string_view num_str) {
+	FUNCTION_TO_STDERR;
+
 	digits_.clear();
 	
 	handle_str_(num_str, DEFAULT_BASE);
@@ -727,30 +815,42 @@ void N::opr_assign_ (std::string_view num_str) {
 N::N() = default;
 
 N::N (std::string_view num_str, unsigned base) {
+	FUNCTION_TO_STDERR;
+
 	if (base < 2 || base > 64) throw error::invalid_base("You need to provide a string in a base between 2 and 64!");
 	
 	handle_str_(num_str, base);
 }
 
 bool N::is_zero() const {
+	FUNCTION_TO_STDERR;
+
 	return digits_.empty();
 }
 
 bool N::is_one() const {
+	FUNCTION_TO_STDERR;
+
 	return (digits_.size() == 1 && digits_.front() == 1);
 }
 
 bool N::is_even() const {
+	FUNCTION_TO_STDERR;
+
 	return !is_odd();
 }
 
 bool N::is_odd() const {
+	FUNCTION_TO_STDERR;
+
 	if (is_zero()) return false;
 	
 	return (digits_.front() & 1);
 }
 
 BIT_TYPE N::ctz() const {
+	FUNCTION_TO_STDERR;
+
 	BIT_TYPE tz = 0;
 	for (const auto & digit : digits_) {
 		if (digit != 0) {
@@ -765,25 +865,35 @@ BIT_TYPE N::ctz() const {
 }
 
 BIT_TYPE N::bits() const {
+	FUNCTION_TO_STDERR;
+
 	if (is_zero()) return 1;
 	return (digits_.size() * BASE_INT_BITS - std::countl_zero(digits_.back()));
 }
 
 size_t N::size() const {
+	FUNCTION_TO_STDERR;
+
 	return (sizeof(*this) + dynamic_size_());
 }
 
 std::string N::to_str (unsigned base) const {
+	FUNCTION_TO_STDERR;
+
 	if (base < 2 || base > 64) throw error::invalid_base("You need to enter a base between 2 and 64!");
 	
 	return conv_to_base_(base);
 }
 
 N::operator std::string() const {
+	FUNCTION_TO_STDERR;
+
 	return conv_to_base_(DEFAULT_BASE);
 }
 
 std::string N::to_base16() const {
+	FUNCTION_TO_STDERR;
+
 	if (is_zero()) return "0";
 	
 	std::ostringstream oss;
@@ -804,33 +914,47 @@ std::string N::to_base16() const {
 }
 
 N::operator bool() const {
+	FUNCTION_TO_STDERR;
+
 	return !is_zero();
 }
 
 N::bit_reference N::operator [] (BIT_TYPE pos) {
+	FUNCTION_TO_STDERR;
+
 	return bit_reference(*this, pos);
 }
 
 N::const_bit_reference N::operator [] (BIT_TYPE pos) const {
+	FUNCTION_TO_STDERR;
+
 	return const_bit_reference(*this, pos);
 }
 
 N & N::operator ++ () {
+	FUNCTION_TO_STDERR;
+
 	opr_incr_();
 	return *this;
 }
 
 N & N::operator -- () {
+	FUNCTION_TO_STDERR;
+
 	opr_decr_();
 	return *this;
 }
 
 N & N::operator += (const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	opr_add_assign_(rhs);
 	return *this;
 }
 
 N & N::operator -= (const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	const auto difference = detail::opr_comp(*this, rhs);
 	
 	if (difference == 0) digits_.clear();
@@ -841,48 +965,68 @@ N & N::operator -= (const N & rhs) {
 }
 
 N & N::operator *= (const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	opr_mult_assign_(rhs);
 	return *this;
 }
 
 N & N::operator &= (const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	opr_and_assign_(rhs);
 	return *this;
 }
 
 N & N::operator |= (const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	opr_or_assign_(rhs);
 	return *this;
 }
 
 N & N::operator ^= (const N & rhs) {
+	FUNCTION_TO_STDERR;
+
 	opr_xor_assign_(rhs);
 	return *this;
 }
 
 N N::operator ~ () const {
+	FUNCTION_TO_STDERR;
+
 	return opr_compl_();
 }
 
 N N::operator << (BIT_TYPE pos) const {
+	FUNCTION_TO_STDERR;
+
 	return opr_bitshift_l_(pos);
 }
 
 N N::operator >> (BIT_TYPE pos) const {
+	FUNCTION_TO_STDERR;
+
 	return opr_bitshift_r_(pos);
 }
 
 N & N::operator <<= (BIT_TYPE pos) {
+	FUNCTION_TO_STDERR;
+
 	opr_bitshift_l_assign_(pos);
 	return *this;
 }
 
 N & N::operator >>= (BIT_TYPE pos) {
+	FUNCTION_TO_STDERR;
+
 	opr_bitshift_r_assign_(pos);
 	return *this;
 }
 
 N & N::operator = (std::string_view num_str) {
+	FUNCTION_TO_STDERR;
+
 	opr_assign_(num_str);
 	return *this;
 }
@@ -893,21 +1037,29 @@ namespace jmaths {
 	
 N::bit_reference::bit_reference (const bit_reference & ref) = default;
 N::const_bit_reference::const_bit_reference (const const_bit_reference & ref) = default;
-N::const_bit_reference::const_bit_reference (const bit_reference & ref) : bit_reference_base_(ref.num_, ref.pos_) {}
+N::const_bit_reference::const_bit_reference (const bit_reference & ref) : bit_reference_base_(ref.num_, ref.pos_) {
+	FUNCTION_TO_STDERR;
+}
 
 N::bit_reference & N::bit_reference::operator = (bool val) {
+	FUNCTION_TO_STDERR;
+
 	num_.bit_(pos_, val);
 	num_.remove_leading_zeroes_();
 	return *this;
 }
 
 N::bit_reference & N::bit_reference::operator = (const bit_reference & ref) {
+	FUNCTION_TO_STDERR;
+
 	num_.bit_(pos_, ref.num_.bit_(ref.pos_));
 	num_.remove_leading_zeroes_();
 	return *this;
 }
 
 N::bit_reference & N::bit_reference::operator = (const const_bit_reference & ref) {
+	FUNCTION_TO_STDERR;
+
 	num_.bit_(pos_, ref.num_.bit_(ref.pos_));
 	num_.remove_leading_zeroes_();
 	return *this;
