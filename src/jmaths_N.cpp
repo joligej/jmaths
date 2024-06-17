@@ -7,9 +7,9 @@
 
 namespace {
 	
-static constexpr BASE_INT base_converter (char c) noexcept; // convert char to number for base >= 2 and <= 64
+static BASE_INT base_converter (char c) noexcept; // convert char to number for base >= 2 and <= 64
 
-static constexpr BASE_INT base_converter (char c) noexcept {
+static BASE_INT base_converter (char c) noexcept {
 	FUNCTION_TO_STDERR;
 
 	if (c >= '0' && c <= '9') return (c - '0');
