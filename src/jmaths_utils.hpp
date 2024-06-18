@@ -27,6 +27,6 @@ class function_timer {
         }
 };
 
-} // /namespace struct utils
+}; // /namespace struct utils
 
 } // /namespace jmaths
