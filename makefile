@@ -102,6 +102,15 @@ define archive
 	echo "Library archived successfully"
 endef
 
+define preprocess_header
+	echo "Creating $(2)..."
+	echo "#pragma once" > "$(2)"
+	cat "$(4)" >> "$(2)"
+	echo "Preprocessing $(1) in $(5) mode..."
+	$(cc) $(compiler_version) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER $(3) "$(1)" -E -P >> "$(2)"
+	echo "Successfully created $(2)"
+endef
+
 export
 
 .PHONY: all debug fresh clean build debug_build install uninstall configure unity debug_unity library debug_library header debug_header test
@@ -169,20 +178,10 @@ $(debug_lib_file): $(debug_unity_obj_file)
 	@$(call archive,$^,$@)
 	
 $(header_file): $(header_objs)
-	@echo "Creating $@..."
-	@echo "#pragma once" > "$@"
-	@cat "$(dependencies_file)" >> "$@"
-	@echo "Preprocessing $< in release mode..."
-	@$(cc) $(compiler_version) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER -DNDEBUG "$<" -E -P >> "$@"
-	@echo "Successfully created $@"
+	@$(call preprocess_header,$<,$@,-DNDEBUG,$(dependencies_file),"release")
 
 $(debug_header_file): $(header_objs)
-	@echo "Creating $@..."
-	@echo "#pragma once" > "$@"
-	@cat "$(dependencies_file)" >> "$@"
-	@echo "Preprocessing $< in debug mode..."
-	@$(cc) $(compiler_version) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER "$<" -E -P >> "$@"
-	@echo "Successfully created $@"
+	$(call preprocess_header,$<,$@,,$(dependencies_file),"debug")
 
 $(test_program): $(test_source_file) $(debug_lib_file) $(debug_header_file)
 	@$(call compile_to_exec,$<,$@,$(compile_parms_debug) $(debug_lib_file),"unit test")
