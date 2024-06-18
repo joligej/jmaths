@@ -3,6 +3,10 @@
 #include <iostream>
 #include <chrono>
 
+namespace jmaths {
+
+struct utils {
+
 class function_timer {
     private:
         typedef std::chrono::high_resolution_clock clock_type;
@@ -22,3 +26,7 @@ class function_timer {
             std::cerr << "time\t" << total_time.count() << "ms\tfrom\t" << function_name_ << '\n';
         }
 };
+
+} // /namespace struct utils
+
+} // /namespace jmaths
