@@ -1,12 +1,10 @@
 #ifndef PREPROCESSING_HEADER
 	#pragma once
-    #include "../build/custom_dependencies.hpp"
+    #include "../config/dependencies.hpp"
 #endif
 
 #include "../src/jmaths_utils.hpp" // for jmaths::utils::function_timer
 #include "../config/jmaths_aliases.hpp" // for the type aliases and constants
-
-#include "../config/jmaths_def.cfg"
 
 // all the types
 namespace jmaths {
@@ -125,19 +123,19 @@ class N {
 	
 	private:
 		void remove_leading_zeroes_();
-		BASE_INT front_() const;
+		base_int front_() const;
 		std::string conv_to_base_ (unsigned base) const;
 		void handle_str_ (std::string_view num_str, unsigned base);
 		
-		bool bit_ (BIT_TYPE pos) const;
-		void bit_ (BIT_TYPE pos, bool val);
+		bool bit_ (bit_type pos) const;
+		void bit_ (bit_type pos, bool val);
 				
 		template <typename T> requires std::is_same_v<N, T> || std::is_same_v<const N, T> class bit_reference_base_;
 		
 	protected:
 		std::size_t dynamic_size_() const;
 		
-		std::vector<BASE_INT, ALLOCATOR<BASE_INT>> digits_;
+		std::vector<base_int, allocator<base_int>> digits_;
 		
 		void opr_incr_();
 		void opr_decr_();
@@ -151,11 +149,11 @@ class N {
 		void opr_xor_assign_ (const N & rhs);
 		
 		N opr_compl_() const;
-		N opr_bitshift_l_ (BIT_TYPE pos) const;
-		N opr_bitshift_r_ (BIT_TYPE pos) const;
+		N opr_bitshift_l_ (bit_type pos) const;
+		N opr_bitshift_r_ (bit_type pos) const;
 		
-		void opr_bitshift_l_assign_ (BIT_TYPE pos);
-		void opr_bitshift_r_assign_ (BIT_TYPE pos);
+		void opr_bitshift_l_assign_ (bit_type pos);
+		void opr_bitshift_r_assign_ (bit_type pos);
 		
 		void opr_assign_ (std::string_view num_str);
 		
@@ -166,7 +164,7 @@ class N {
 		class const_bit_reference;
 		
 		N();
-		N (std::string_view num_str, unsigned base = DEFAULT_BASE);
+		N (std::string_view num_str, unsigned base = default_base);
 		template <typename INT> requires std::is_integral_v<INT> N (INT num);
 		
 		bool is_zero() const;
@@ -175,19 +173,19 @@ class N {
 		bool is_even() const;
 		bool is_odd() const;
 		
-		BIT_TYPE ctz() const; // count trailing zeroes
-		BIT_TYPE bits() const; // count number of base 2 digits
+		bit_type ctz() const; // count trailing zeroes
+		bit_type bits() const; // count number of base 2 digits
 		
 		std::size_t size() const; // size of this object in bytes
 		
 		std::string to_str (unsigned base) const; // convert to string in any base >= 2 and <= 64
 		operator std::string() const; // convert to string in default base
-		std::string to_base16() const; // convert to string in base 16 (assumes BASE is a power of 2)
+		std::string to_base16() const; // convert to string in base 16 (assumes base is a power of 2)
 		explicit operator bool() const;
 		template <typename INT> requires std::is_integral_v<INT> && std::is_unsigned_v<INT> std::optional<INT> fits_into() const;
 		
-		bit_reference operator [] (BIT_TYPE pos);
-		const_bit_reference operator [] (BIT_TYPE pos) const;
+		bit_reference operator [] (bit_type pos);
+		const_bit_reference operator [] (bit_type pos) const;
 		
 		N & operator ++ ();
 		N & operator -- ();
@@ -201,11 +199,11 @@ class N {
 		N & operator ^= (const N & rhs);
 		
 		N operator ~ () const;
-		N operator << (BIT_TYPE pos) const;
-		N operator >> (BIT_TYPE pos) const;
+		N operator << (bit_type pos) const;
+		N operator >> (bit_type pos) const;
 		
-		N & operator <<= (BIT_TYPE pos);
-		N & operator >>= (BIT_TYPE pos);
+		N & operator <<= (bit_type pos);
+		N & operator >>= (bit_type pos);
 		
 		N & operator = (std::string_view num_str);
 		template <typename INT> requires std::is_integral_v<INT> N & operator = (INT rhs);
@@ -219,12 +217,12 @@ class N::bit_reference_base_ {
 	
 	private:
 		T & num_;
-		const BIT_TYPE pos_;
+		const bit_type pos_;
 		
 	public:
 		bit_reference_base_() = delete;
-		bit_reference_base_ (T &&, BIT_TYPE) = delete;
-		bit_reference_base_ (T & num, BIT_TYPE pos);
+		bit_reference_base_ (T &&, bit_type) = delete;
+		bit_reference_base_ (T & num, bit_type pos);
 		
 		operator bool () const;
 		explicit operator int () const;
@@ -338,7 +336,7 @@ class Z : public sign_type, private N {
 		using N::ctz, N::bits, N::operator bool, N::operator[];
 		
 		Z();
-		Z (std::string_view num_str, unsigned base = DEFAULT_BASE);
+		Z (std::string_view num_str, unsigned base = default_base);
 		template <typename INT> requires std::is_integral_v<INT> Z (INT num);
 		
 		Z (const N & n);
@@ -355,7 +353,7 @@ class Z : public sign_type, private N {
 		
 		std::string to_str (unsigned base) const; // convert to string in any base >= 2 and <= 64
 		operator std::string() const; // convert to string in default base
-		std::string to_base16() const; // convert to string in base 16 (assumes BASE is a power of 2)
+		std::string to_base16() const; // convert to string in base 16 (assumes base is a power of 2)
 		template <typename INT> requires std::is_integral_v<INT> std::optional<INT> fits_into() const;
 		
 		Z & operator ++ ();
@@ -372,11 +370,11 @@ class Z : public sign_type, private N {
 		Z operator - () const &;
 		Z && operator - () &&;
 		Z operator ~ () const;
-		Z operator << (BIT_TYPE pos) const;
-		Z operator >> (BIT_TYPE pos) const;
+		Z operator << (bit_type pos) const;
+		Z operator >> (bit_type pos) const;
 		
-		Z & operator <<= (BIT_TYPE pos);
-		Z & operator >>= (BIT_TYPE pos);
+		Z & operator <<= (bit_type pos);
+		Z & operator >>= (bit_type pos);
 		
 		Z & operator = (std::string_view num_str);
 		template <typename INT> requires std::is_integral_v<INT> Z & operator = (INT rhs);
@@ -431,7 +429,7 @@ class Q : public sign_type {
     
     public:
         Q();
-        Q (std::string_view num_str, unsigned base = DEFAULT_BASE);
+        Q (std::string_view num_str, unsigned base = default_base);
 		template <typename FLOAT> requires std::is_floating_point_v<FLOAT> Q (FLOAT num);
 		
         Q (const N & n);
@@ -464,7 +462,7 @@ class Q : public sign_type {
 		
 		std::string to_str (unsigned base) const; // convert to string in any base >= 2 and <= 64
 		operator std::string() const; // convert to string in default base
-		std::string to_base16() const; // convert to string in base 16 (assumes BASE is a power of 2)
+		std::string to_base16() const; // convert to string in base 16 (assumes base is a power of 2)
 		explicit operator bool() const;
 		//template <typename FLOAT> requires std::is_floating_point_v<FLOAT> && std::numeric_limits<FLOAT>::is_iec559 std::optional<FLOAT> fits_into() const;
 		
@@ -483,11 +481,11 @@ class Q : public sign_type {
 		Q operator - () const &;
 		Q && operator - () &&;
 		Q operator ~ () const;
-		Q operator << (BIT_TYPE pos) const;
-		Q operator >> (BIT_TYPE pos) const;
+		Q operator << (bit_type pos) const;
+		Q operator >> (bit_type pos) const;
 		
-		Q & operator <<= (BIT_TYPE pos);
-		Q & operator >>= (BIT_TYPE pos);
+		Q & operator <<= (bit_type pos);
+		Q & operator >>= (bit_type pos);
 		
 		Q & operator = (std::string_view num_str);
 		template <typename FLOAT> requires std::is_floating_point_v<FLOAT> Q & operator = (FLOAT rhs);
@@ -551,7 +549,5 @@ Z operator ""_Z (const char * num_str);
 }
 
 } // /namespace jmaths
-
-#include "../config/jmaths_undef.cfg"
 
 #include "../src/jmaths_tmpl.cpp"

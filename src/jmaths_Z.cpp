@@ -517,13 +517,13 @@ Z Z::operator ~ () const {
 	}
 }
 
-Z Z::operator << (BIT_TYPE pos) const {
+Z Z::operator << (bit_type pos) const {
 	FUNCTION_TO_STDERR;
 
 	return Z(N::opr_bitshift_l_(pos), sign_);
 }
 
-Z Z::operator >> (BIT_TYPE pos) const {
+Z Z::operator >> (bit_type pos) const {
 	FUNCTION_TO_STDERR;
 
 	N && shifted = N::opr_bitshift_r_(pos);
@@ -535,14 +535,14 @@ Z Z::operator >> (BIT_TYPE pos) const {
 	}
 }
 
-Z & Z::operator <<= (BIT_TYPE pos) {
+Z & Z::operator <<= (bit_type pos) {
 	FUNCTION_TO_STDERR;
 
 	N::opr_bitshift_l_assign_(pos);
 	return *this;
 }
 
-Z & Z::operator >>= (BIT_TYPE pos) {
+Z & Z::operator >>= (bit_type pos) {
 	FUNCTION_TO_STDERR;
 
 	N::opr_bitshift_r_assign_(pos);

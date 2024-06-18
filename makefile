@@ -26,13 +26,9 @@ test_dir = unit_testing/
 
 $(shell mkdir -p "$(build_dir)")
 
-dependencies_file_name = custom_dependencies.hpp
-dependencies_file_dir = $(build_dir)
+dependencies_file_name = dependencies.hpp
+dependencies_file_dir = $(config_dir)
 dependencies_file = $(dependencies_file_dir)$(dependencies_file_name)
-
-default_dependencies_file_name = dependencies.hpp
-default_dependencies_file_dir = $(source_dir)
-default_dependencies_file = $(default_dependencies_file_dir)$(default_dependencies_file_name)
 
 config_source_file_name = configure.cpp
 config_source_file_dir = $(config_dir)
@@ -66,10 +62,6 @@ test_program_name = unit_test
 test_program_dir = $(test_dir)
 test_program = $(test_program_dir)$(test_program_name)
 
-dependencies_script_name = dependencies
-dependencies_script_dir = ./
-dependencies_script = $(dependencies_script_dir)$(dependencies_script_name)
-
 implementation_header_file_name = jmaths.hpp
 implementation_header_file_dir = $(source_dir)
 implementation_header_file = $(implementation_header_file_dir)$(implementation_header_file_name)
@@ -78,7 +70,7 @@ header_objs = $(implementation_header_file) $(user_settings_file) $(dependencies
 source_files = jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp
 source_objs = $(addprefix $(source_dir), $(source_files))
 
-create_while_building = "$(config_program)" "$(user_settings_file)" "$(dependencies_file)" "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)" "$(debug_header_file)" "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM"
+create_while_building = "$(config_program)" "$(user_settings_file)" "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)" "$(debug_header_file)" "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM"
 
 cc ?= clang++
 compiler_version = -std=c++2b
@@ -157,9 +149,6 @@ $(user_settings_file): $(config_program)
 
 $(config_program): $(config_source_file)
 	@$(call compile_to_exec,$<,$@,$(compile_parms_release) -DSETTINGS_FILE="$(user_settings_file)","configuration")
-	
-$(dependencies_file): $(dependencies_script)
-	@$(dependencies_script) DEFAULT
 	
 $(unity_source_file): $(source_objs)
 	@rm -f "$@"

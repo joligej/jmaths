@@ -3,11 +3,7 @@
 
 There are 2 ways to install this program. You can either use the default settings, by typing `make` and then `sudo make install`, which assumes your machine's architecture has 64-bit integer support, or you can choose these settings yourself by editing `config/jmaths_aliases.hpp`.
 
-The following command shall be run to configure the library's dependencies, allowing you to enter your own dependencies as well, which might be necessary if you've entered your own custom types in the previous step:
-
-```
-./dependencies
-```
+You can enter your own dependencies for the library as well, which might be necessary if you've entered your own custom types in the previous step. Do this by adding the relevant paths to the `config/dependencies.hpp` file.
 
 Regardless of whether you added your own dependencies, type the following to build and install the library:
 

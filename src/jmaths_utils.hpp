@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef PREPROCESSING_HEADER
-#include "../src/dependencies.hpp"
+#include "../config/dependencies.hpp"
 #endif
 
 namespace jmaths {

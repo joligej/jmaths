@@ -6,9 +6,9 @@ namespace jmaths {
 
 namespace {
 	
-static BASE_INT base_converter (char c) noexcept; // convert char to number for base >= 2 and <= 64
+static base_int base_converter (char c) noexcept; // convert char to number for base >= 2 and <= 64
 
-static BASE_INT base_converter (char c) noexcept {
+static base_int base_converter (char c) noexcept {
 	FUNCTION_TO_STDERR;
 
 	if (c >= '0' && c <= '9') return (c - '0');
@@ -77,14 +77,14 @@ N detail::opr_add (const N & lhs, const N & rhs) {
 	
 	for (; i < shortest->digits_.size(); ++i) {	
 		// checks if lhs + rhs + carry < base
-		const bool next_carry = !(lhs.digits_[i] < (carry ? MAX_DIGIT : BASE) - rhs.digits_[i]);
+		const bool next_carry = !(lhs.digits_[i] < (carry ? max_digit : base) - rhs.digits_[i]);
 		
 		sum.digits_.emplace_back(lhs.digits_[i] + rhs.digits_[i] + carry);
 		carry = next_carry;
 	}
 	
 	for (; carry && i < longest->digits_.size(); ++i) {
-		const bool next_carry = !(longest->digits_[i] < (carry ? MAX_DIGIT : BASE));
+		const bool next_carry = !(longest->digits_[i] < (carry ? max_digit : base));
 	
 		sum.digits_.emplace_back(longest->digits_[i] + carry);
 		carry = next_carry;
@@ -147,20 +147,20 @@ N detail::opr_mult (const N & lhs, const N & rhs) {
 	
 	N product;
 	
-	// max overhead would be BASE_INT_SIZE
+	// max overhead would be base_int_size
 	product.digits_.reserve(lhs.digits_.size() + rhs.digits_.size());
 	
 	for (std::size_t i = 0; i < lhs.digits_.size(); ++i) {
 		N temp1;
 		temp1.digits_.reserve(i + rhs.digits_.size() + 1);
 		temp1.digits_.insert(temp1.digits_.begin(), i, 0);
-		BASE_INT carry = 0;
+		base_int carry = 0;
 		for (std::size_t j = 0; j < rhs.digits_.size(); ++j) {
-			const BASE_INT_BIG temp2 = (BASE_INT_BIG)lhs.digits_[i] * (BASE_INT_BIG)rhs.digits_[j];
-			const BASE_INT temp3 = (BASE_INT)temp2;
+			const base_int_big temp2 = (base_int_big)lhs.digits_[i] * (base_int_big)rhs.digits_[j];
+			const base_int temp3 = (base_int)temp2;
 			temp1.digits_.emplace_back(carry + temp3);
-			const BASE_INT temp_carry = ((BASE_INT_BIG)carry + (BASE_INT_BIG)temp3) >> BASE_INT_BITS;
-			carry = (temp2 >> BASE_INT_BITS) + temp_carry;
+			const base_int temp_carry = ((base_int_big)carry + (base_int_big)temp3) >> base_int_bits;
+			carry = (temp2 >> base_int_bits) + temp_carry;
 		}
 		
 		if (carry) temp1.digits_.emplace_back(carry);
@@ -194,7 +194,7 @@ std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
 	
 	r.digits_.reserve(rhs.digits_.size());
 	
-	for (BIT_TYPE i = lhs.digits_.size() * BASE_INT_BITS; i --> 0;) {
+	for (bit_type i = lhs.digits_.size() * base_int_bits; i --> 0;) {
 		r.opr_bitshift_l_assign_(1);
 		r.bit_(0, lhs.bit_(i));
 		if (opr_comp(r, rhs) >= 0) {
@@ -401,7 +401,7 @@ void N::remove_leading_zeroes_() {
 	}
 }
 
-BASE_INT N::front_() const {
+base_int N::front_() const {
 	FUNCTION_TO_STDERR;
 
 	if (digits_.empty()) return 0;
@@ -418,7 +418,7 @@ std::string N::conv_to_base_ (unsigned base) const {
 	
 	std::string num_str;
 	
-	num_str.reserve(((double)BASE_INT_BITS / base) * digits_.size() + 1);
+	num_str.reserve(((double)base_int_bits / base) * digits_.size() + 1);
 	
 	N helper (*this);
 	
@@ -448,7 +448,7 @@ void N::handle_str_ (std::string_view num_str, unsigned base) {
 	opr_add_assign_(base_converter(num_str.back()));
 }
 
-bool N::bit_ (BIT_TYPE pos) const {
+bool N::bit_ (bit_type pos) const {
 	FUNCTION_TO_STDERR;
 
 	const N shifted = opr_bitshift_r_(pos);
@@ -456,19 +456,19 @@ bool N::bit_ (BIT_TYPE pos) const {
 	return (shifted.front_() & 1);
 }
 
-void N::bit_ (BIT_TYPE pos, bool val) {
+void N::bit_ (bit_type pos, bool val) {
 	FUNCTION_TO_STDERR;
 
-	const std::size_t pos_whole = pos / BASE_INT_BITS;
-	const BIT_TYPE pos_mod = pos % BASE_INT_BITS;
+	const std::size_t pos_whole = pos / base_int_bits;
+	const bit_type pos_mod = pos % base_int_bits;
 	
 	if (is_zero()) {
 		digits_.reserve(pos_whole + 1);
 		digits_.insert(digits_.begin(), pos_whole, 0);
-		digits_.emplace_back((BASE_INT)val << pos_mod);
+		digits_.emplace_back((base_int)val << pos_mod);
 	} else {
 		if (pos_whole < digits_.size()) {
-			const BASE_INT bitmask = (BASE_INT)1 << pos_mod;
+			const base_int bitmask = (base_int)1 << pos_mod;
 			if (val) {
 				digits_[pos_whole] |= bitmask;
 			} else {
@@ -477,7 +477,7 @@ void N::bit_ (BIT_TYPE pos, bool val) {
 		} else {
 			digits_.reserve(digits_.size() + pos_whole - digits_.size() + 1);
 			digits_.insert(digits_.end(), pos_whole - digits_.size(), 0);
-			digits_.emplace_back((BASE_INT)val << pos_mod);
+			digits_.emplace_back((base_int)val << pos_mod);
 		}
 	}
 }
@@ -485,14 +485,14 @@ void N::bit_ (BIT_TYPE pos, bool val) {
 std::size_t N::dynamic_size_() const {
 	FUNCTION_TO_STDERR;
 
-	return (digits_.size() * BASE_INT_SIZE);
+	return (digits_.size() * base_int_size);
 }
 
 void N::opr_incr_() {
 	FUNCTION_TO_STDERR;
 
 	for (auto & digit : digits_)
-		if (digit++ < MAX_DIGIT) return;
+		if (digit++ < max_digit) return;
 	
 	digits_.emplace_back(1);
 }
@@ -526,14 +526,14 @@ void N::opr_add_assign_ (const N & rhs) {
 	std::size_t i = 0;
 	
 	for (; i < rhs.digits_.size(); ++i) {
-		const bool next_carry = !(rhs.digits_[i] < (carry ? MAX_DIGIT : BASE) - digits_[i]);
+		const bool next_carry = !(rhs.digits_[i] < (carry ? max_digit : base) - digits_[i]);
 		
 		digits_[i] += carry + rhs.digits_[i];
 		carry = next_carry;
 	}
 	
 	for (; carry && i < digits_.size(); ++i) {
-		const bool next_carry = !(digits_[i] < MAX_DIGIT);
+		const bool next_carry = !(digits_[i] < max_digit);
 		
 		++digits_[i];
 		carry = next_carry;
@@ -580,20 +580,20 @@ void N::opr_mult_assign_ (const N & rhs) {
 	
 	N product;
 	
-	// max overhead would be BASE_INT_SIZE
+	// max overhead would be base_int_size
 	product.digits_.reserve(this->digits_.size() + rhs.digits_.size());
 	
 	for (std::size_t i = 0; i < rhs.digits_.size(); ++i) {
 		N temp1;
 		temp1.digits_.reserve(i + this->digits_.size() + 1);
 		temp1.digits_.insert(temp1.digits_.begin(), i, 0);
-		BASE_INT carry = 0;
+		base_int carry = 0;
 		for (std::size_t j = 0; j < this->digits_.size(); ++j) {
-			const BASE_INT_BIG temp2 = (BASE_INT_BIG)rhs.digits_[i] * (BASE_INT_BIG)this->digits_[j];
-			const BASE_INT temp3 = (BASE_INT)temp2;
+			const base_int_big temp2 = (base_int_big)rhs.digits_[i] * (base_int_big)this->digits_[j];
+			const base_int temp3 = (base_int)temp2;
 			temp1.digits_.emplace_back(carry + temp3);
-			const BASE_INT temp_carry = ((BASE_INT_BIG)carry + (BASE_INT_BIG)temp3) >> BASE_INT_BITS;
-			carry = (temp2 >> BASE_INT_BITS) + temp_carry;
+			const base_int temp_carry = ((base_int_big)carry + (base_int_big)temp3) >> base_int_bits;
+			carry = (temp2 >> base_int_bits) + temp_carry;
 		}
 		
 		if (carry) temp1.digits_.emplace_back(carry);
@@ -700,13 +700,13 @@ N N::opr_compl_() const {
 	return inverted;
 }
 
-N N::opr_bitshift_l_ (BIT_TYPE pos) const {
+N N::opr_bitshift_l_ (bit_type pos) const {
 	FUNCTION_TO_STDERR;
 
 	if (is_zero()) return N();
 	
-	const std::size_t pos_whole = pos / BASE_INT_BITS;
-	const BIT_TYPE pos_mod = pos % BASE_INT_BITS;
+	const std::size_t pos_whole = pos / base_int_bits;
+	const bit_type pos_mod = pos % base_int_bits;
 	
 	N shifted;
 	
@@ -715,10 +715,10 @@ N N::opr_bitshift_l_ (BIT_TYPE pos) const {
 	shifted.digits_.emplace_back(digits_.front() << pos_mod);
 	
 	for (std::size_t i = 1; i < digits_.size(); ++i) {
-		shifted.digits_.emplace_back((digits_[i - 1] >> (BASE_INT_BITS - pos_mod)) + (digits_[i] << pos_mod));
+		shifted.digits_.emplace_back((digits_[i - 1] >> (base_int_bits - pos_mod)) + (digits_[i] << pos_mod));
 	}
 	
-	shifted.digits_.emplace_back(digits_.back() >> (BASE_INT_BITS - pos_mod));
+	shifted.digits_.emplace_back(digits_.back() >> (base_int_bits - pos_mod));
 	
 	shifted.digits_.insert(shifted.digits_.begin(), pos_whole, 0);
 	
@@ -727,23 +727,23 @@ N N::opr_bitshift_l_ (BIT_TYPE pos) const {
 	return shifted;
 }
 
-N N::opr_bitshift_r_ (BIT_TYPE pos) const {
+N N::opr_bitshift_r_ (bit_type pos) const {
 	FUNCTION_TO_STDERR;
 
 	if (is_zero()) return N();
 	
-	const std::size_t pos_whole = pos / BASE_INT_BITS;
+	const std::size_t pos_whole = pos / base_int_bits;
 	
 	if (pos_whole >= digits_.size()) return N();
 	
-	const BIT_TYPE pos_mod = pos % BASE_INT_BITS;
+	const bit_type pos_mod = pos % base_int_bits;
 	
 	N shifted;
 	
 	shifted.digits_.reserve(digits_.size() - pos_whole);
 	
 	for (std::size_t i = pos_whole; i < digits_.size() - 1; ++i) {
-		shifted.digits_.emplace_back((digits_[i] >> pos_mod) + (digits_[i + 1] << (BASE_INT_BITS - pos_mod)));
+		shifted.digits_.emplace_back((digits_[i] >> pos_mod) + (digits_[i + 1] << (base_int_bits - pos_mod)));
 	}
 	
 	shifted.digits_.emplace_back(digits_.back() >> pos_mod);
@@ -753,46 +753,46 @@ N N::opr_bitshift_r_ (BIT_TYPE pos) const {
 	return shifted;
 }
 
-void N::opr_bitshift_l_assign_ (BIT_TYPE pos) {
+void N::opr_bitshift_l_assign_ (bit_type pos) {
 	FUNCTION_TO_STDERR;
 
 	if (is_zero()) return;
 	
-	const std::size_t pos_whole = pos / BASE_INT_BITS;
-	const BIT_TYPE pos_mod = pos % BASE_INT_BITS;
+	const std::size_t pos_whole = pos / base_int_bits;
+	const bit_type pos_mod = pos % base_int_bits;
 	
 	digits_.reserve(digits_.size() + pos_whole + 1);
 	
-	BASE_INT previous = digits_.front();
+	base_int previous = digits_.front();
 	
 	digits_.front() <<= pos_mod;
 	
 	for (std::size_t i = 1; i < digits_.size(); ++i) {
-		const BASE_INT current = digits_[i];
-		digits_[i] = (previous >> (BASE_INT_BITS - pos_mod)) | (digits_[i] << pos_mod);
+		const base_int current = digits_[i];
+		digits_[i] = (previous >> (base_int_bits - pos_mod)) | (digits_[i] << pos_mod);
 		previous = current;
 	}
 	
-	digits_.emplace_back(previous >> (BASE_INT_BITS - pos_mod));
+	digits_.emplace_back(previous >> (base_int_bits - pos_mod));
 	
 	digits_.insert(digits_.begin(), pos_whole, 0);
 	
 	remove_leading_zeroes_();
 }
 
-void N::opr_bitshift_r_assign_ (BIT_TYPE pos) {
+void N::opr_bitshift_r_assign_ (bit_type pos) {
 	FUNCTION_TO_STDERR;
 
 	if (is_zero()) return;
 	
-	const std::size_t pos_whole = pos / BASE_INT_BITS;
+	const std::size_t pos_whole = pos / base_int_bits;
 	
 	if (pos_whole >= digits_.size()) return (void)digits_.clear();
 	
-	const BIT_TYPE pos_mod = pos % BASE_INT_BITS;
+	const bit_type pos_mod = pos % base_int_bits;
 	
 	for (std::size_t i = pos_whole, j = 0; i < digits_.size() - 1; ++i, ++j) {
-		digits_[j] = ((digits_[i] >> pos_mod) + (digits_[i + 1] << (BASE_INT_BITS - pos_mod)));
+		digits_[j] = ((digits_[i] >> pos_mod) + (digits_[i + 1] << (base_int_bits - pos_mod)));
 	}
 	
 	if (pos_whole == 0) {
@@ -810,7 +810,7 @@ void N::opr_assign_ (std::string_view num_str) {
 
 	digits_.clear();
 	
-	handle_str_(num_str, DEFAULT_BASE);
+	handle_str_(num_str, default_base);
 }
 
 N::N() = default;
@@ -849,27 +849,27 @@ bool N::is_odd() const {
 	return (digits_.front() & 1);
 }
 
-BIT_TYPE N::ctz() const {
+bit_type N::ctz() const {
 	FUNCTION_TO_STDERR;
 
-	BIT_TYPE tz = 0;
+	bit_type tz = 0;
 	for (const auto & digit : digits_) {
 		if (digit != 0) {
 			tz += std::countr_zero(digit);
 			break;
 		}
 		
-		tz += BASE_INT_BITS;
+		tz += base_int_bits;
 	}
 	
 	return tz;
 }
 
-BIT_TYPE N::bits() const {
+bit_type N::bits() const {
 	FUNCTION_TO_STDERR;
 
 	if (is_zero()) return 1;
-	return (digits_.size() * BASE_INT_BITS - std::countl_zero(digits_.back()));
+	return (digits_.size() * base_int_bits - std::countl_zero(digits_.back()));
 }
 
 std::size_t N::size() const {
@@ -889,7 +889,7 @@ std::string N::to_str (unsigned base) const {
 N::operator std::string() const {
 	FUNCTION_TO_STDERR;
 
-	return conv_to_base_(DEFAULT_BASE);
+	return conv_to_base_(default_base);
 }
 
 std::string N::to_base16() const {
@@ -920,13 +920,13 @@ N::operator bool() const {
 	return !is_zero();
 }
 
-N::bit_reference N::operator [] (BIT_TYPE pos) {
+N::bit_reference N::operator [] (bit_type pos) {
 	FUNCTION_TO_STDERR;
 
 	return bit_reference(*this, pos);
 }
 
-N::const_bit_reference N::operator [] (BIT_TYPE pos) const {
+N::const_bit_reference N::operator [] (bit_type pos) const {
 	FUNCTION_TO_STDERR;
 
 	return const_bit_reference(*this, pos);
@@ -999,26 +999,26 @@ N N::operator ~ () const {
 	return opr_compl_();
 }
 
-N N::operator << (BIT_TYPE pos) const {
+N N::operator << (bit_type pos) const {
 	FUNCTION_TO_STDERR;
 
 	return opr_bitshift_l_(pos);
 }
 
-N N::operator >> (BIT_TYPE pos) const {
+N N::operator >> (bit_type pos) const {
 	FUNCTION_TO_STDERR;
 
 	return opr_bitshift_r_(pos);
 }
 
-N & N::operator <<= (BIT_TYPE pos) {
+N & N::operator <<= (bit_type pos) {
 	FUNCTION_TO_STDERR;
 
 	opr_bitshift_l_assign_(pos);
 	return *this;
 }
 
-N & N::operator >>= (BIT_TYPE pos) {
+N & N::operator >>= (bit_type pos) {
 	FUNCTION_TO_STDERR;
 
 	opr_bitshift_r_assign_(pos);

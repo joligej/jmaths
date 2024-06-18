@@ -7,6 +7,8 @@
 #include <string>
 #include <limits>
 #include <optional>
+#include <format>
+#include <print>
 
 #include "../build/dbgjmaths.hpp"
 
@@ -87,6 +89,8 @@ int main (int argc, char * argv[]) {
     (void)argv;
 
     std::cout << nlim::max() << '\n';
+
+    std::print(stdout, "hel{0}lo", "hi");
 
     std::cin.get();
 

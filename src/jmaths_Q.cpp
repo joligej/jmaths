@@ -726,20 +726,20 @@ Q Q::operator ~ () const {
 	}
 }
 
-Q Q::operator << (BIT_TYPE pos) const {
+Q Q::operator << (bit_type pos) const {
 	FUNCTION_TO_STDERR;
 
 	return Q(num_.opr_bitshift_l_(pos), denom_, sign_);
 }
 
-Q Q::operator >> (BIT_TYPE pos) const {
+Q Q::operator >> (bit_type pos) const {
 	FUNCTION_TO_STDERR;
 
 	if (is_zero()) return Q();
 	return Q(num_, denom_.opr_bitshift_l_(pos), sign_);
 }
 
-Q & Q::operator <<= (BIT_TYPE pos) {
+Q & Q::operator <<= (bit_type pos) {
 	FUNCTION_TO_STDERR;
 
 	num_.opr_bitshift_l_assign_(pos);
@@ -747,7 +747,7 @@ Q & Q::operator <<= (BIT_TYPE pos) {
 	return *this;
 }
 
-Q & Q::operator >>= (BIT_TYPE pos) {
+Q & Q::operator >>= (bit_type pos) {
 	FUNCTION_TO_STDERR;
 
 	if (is_zero()) return *this;	

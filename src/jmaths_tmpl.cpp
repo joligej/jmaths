@@ -14,13 +14,13 @@ bool detail::opr_eq (const N & lhs, INT rhs) {
 	if (rhs == 0) return lhs.is_zero();
 	if (lhs.is_zero()) return false;
 	
-	if (lhs.digits_.size() * BASE_INT_SIZE - 1 > sizeof(rhs)) return false;
+	if (lhs.digits_.size() * base_int_size - 1 > sizeof(rhs)) return false;
 	
-	if (lhs.digits_.size() * BASE_INT_SIZE < sizeof(rhs) && (rhs >> (BASE_INT_BITS * lhs.digits_.size())) != 0) return false;
+	if (lhs.digits_.size() * base_int_size < sizeof(rhs) && (rhs >> (base_int_bits * lhs.digits_.size())) != 0) return false;
 	
 	for (const auto & digit : lhs.digits_) {
-		if (digit != (BASE_INT)rhs) return false;
-		REPEAT(BASE_INT_SIZE) rhs >>= BITS_IN_BYTE;
+		if (digit != (base_int)rhs) return false;
+		REPEAT(base_int_size) rhs >>= bits_in_byte;
 	}
 	
 	return true;
@@ -34,16 +34,16 @@ std::strong_ordering detail::opr_comp (const N & lhs, INT rhs) {
 	if (rhs == 0) return lhs.is_zero() ? std::strong_ordering::equal : std::strong_ordering::greater;
 	if (lhs.is_zero()) return std::strong_ordering::less;
 	
-	if (lhs.digits_.size() * BASE_INT_SIZE - 1 > sizeof(rhs)) return std::strong_ordering::greater;
+	if (lhs.digits_.size() * base_int_size - 1 > sizeof(rhs)) return std::strong_ordering::greater;
 	
-	if (lhs.digits_.size() * BASE_INT_SIZE < sizeof(rhs) && (rhs >> (BASE_INT_BITS * lhs.digits_.size())) != 0) return std::strong_ordering::less;
+	if (lhs.digits_.size() * base_int_size < sizeof(rhs) && (rhs >> (base_int_bits * lhs.digits_.size())) != 0) return std::strong_ordering::less;
 	
 	std::size_t pos = 1;
 	for (auto crit = lhs.digits_.crbegin(); crit != lhs.digits_.crend(); ++crit) {
 		INT curr_byte = rhs;
-		REPEAT(BASE_INT_SIZE * (lhs.digits_.size() - pos)) curr_byte >>= BITS_IN_BYTE;
-		if (*crit < (BASE_INT)curr_byte) return std::strong_ordering::less;
-		if (*crit > (BASE_INT)curr_byte) return std::strong_ordering::greater;
+		REPEAT(base_int_size * (lhs.digits_.size() - pos)) curr_byte >>= bits_in_byte;
+		if (*crit < (base_int)curr_byte) return std::strong_ordering::less;
+		if (*crit > (base_int)curr_byte) return std::strong_ordering::greater;
 		
 		++pos;
 	}
@@ -218,15 +218,15 @@ void N::opr_assign_ (INT rhs) {
 
 	digits_.clear();
 		
-	digits_.reserve((std::size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO + 1));
+	digits_.reserve((std::size_t)((double)sizeof(INT)/base_int_size - max_ratio + 1));
 	
-	// this assumes that sizeof(smallest type)/BASE_INT_SIZE >= MAX_RATIO
-	REPEAT((std::size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO)) {
-		digits_.emplace_back((BASE_INT)rhs);
-		REPEAT(BASE_INT_SIZE) rhs >>= BITS_IN_BYTE;
+	// this assumes that sizeof(smallest type)/base_int_size >= max_ratio
+	REPEAT((std::size_t)((double)sizeof(INT)/base_int_size - max_ratio)) {
+		digits_.emplace_back((base_int)rhs);
+		REPEAT(base_int_size) rhs >>= bits_in_byte;
 	}
 	
-	digits_.emplace_back((BASE_INT)rhs);
+	digits_.emplace_back((base_int)rhs);
 	
 	remove_leading_zeroes_();
 }
@@ -237,17 +237,17 @@ N::N (INT num) {
 	FUNCTION_TO_STDERR;
 
 	if constexpr (sizeof(INT) > 1) {
-		digits_.reserve((std::size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO + 1));
+		digits_.reserve((std::size_t)((double)sizeof(INT)/base_int_size - max_ratio + 1));
 		
-		// this assumes that sizeof(smallest type)/BASE_INT_SIZE >= MAX_RATIO
-		REPEAT((std::size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO)) {
-			digits_.emplace_back((BASE_INT)num);
-			REPEAT(BASE_INT_SIZE) num >>= BITS_IN_BYTE;
+		// this assumes that sizeof(smallest type)/base_int_size >= max_ratio
+		REPEAT((std::size_t)((double)sizeof(INT)/base_int_size - max_ratio)) {
+			digits_.emplace_back((base_int)num);
+			REPEAT(base_int_size) num >>= bits_in_byte;
 		}
 
 	} else {}
 		
-	digits_.emplace_back((BASE_INT)num);
+	digits_.emplace_back((base_int)num);
 	
 	remove_leading_zeroes_();
 
@@ -269,22 +269,22 @@ std::optional<INT> N::fits_into() const {
 	
 	if (is_zero()) return 0;
 	
-	if constexpr (sizeof(INT) < BASE_INT_SIZE) {
+	if constexpr (sizeof(INT) < base_int_size) {
 		if ((INT)digits_.front() != digits_.front() || digits_.size() > 1) return std::nullopt;
 		return digits_.front();
 	} else {
-		if (digits_.size() * BASE_INT_SIZE > sizeof(INT)) return std::nullopt;
+		if (digits_.size() * base_int_size > sizeof(INT)) return std::nullopt;
 		
 		/*INT converted (digits_.back());
 		for (std::size_t i = digits_.size() - 1; i --> 0;) {
-			converted <<= BASE_INT_BITS;
+			converted <<= base_int_bits;
 		  	converted |= digits_[i];
 		}*/
 	
 		INT converted (digits_.front());
 	
 		for (std::size_t i = 1; i < digits_.size(); ++i) {
-			converted |= ((INT)digits_[i] << (BASE_INT_BITS * i));
+			converted |= ((INT)digits_[i] << (base_int_bits * i));
 		}
 	
 		return converted;	
@@ -307,7 +307,7 @@ namespace jmaths {
 
 template <typename T>
 requires std::is_same_v<N, T> || std::is_same_v<const N, T>
-N::bit_reference_base_<T>::bit_reference_base_ (T & num, BIT_TYPE pos) : num_(num), pos_(pos) {
+N::bit_reference_base_<T>::bit_reference_base_ (T & num, bit_type pos) : num_(num), pos_(pos) {
 	FUNCTION_TO_STDERR;
 }
 
@@ -382,24 +382,24 @@ std::optional<INT> Z::fits_into() const {
 	
 	if (is_zero()) return 0;
 	
-	if constexpr (sizeof(INT) < BASE_INT_SIZE) {
+	if constexpr (sizeof(INT) < base_int_size) {
 		if (digits_.front() > (is_negative() ? -std::numeric_limits<INT>::min() : std::numeric_limits<INT>::max()) || digits_.size() > 1) return std::nullopt;
 		return (is_negative() ? -digits_.front() : digits_.front());
 	} else {
-		if (digits_.size() * BASE_INT_SIZE > sizeof(INT)) return std::nullopt;
+		if (digits_.size() * base_int_size > sizeof(INT)) return std::nullopt;
 		
 		if (detail::opr_comp(*this, (is_negative() ? -std::numeric_limits<INT>::min() : std::numeric_limits<INT>::max())) > 0) return std::nullopt;
 		
 		/*INT converted (digits_.back());
 		for (std::size_t i = digits_.size() - 1; i --> 0;) {
-			converted <<= BASE_INT_BITS;
+			converted <<= base_int_bits;
 		  	converted |= digits_[i];
 		}*/
 	
 		INT converted (digits_.front());
 	
 		for (std::size_t i = 1; i < digits_.size(); ++i) {
-			converted += (INT)((std::make_unsigned_t<INT>)digits_[i] << (BASE_INT_BITS * i));
+			converted += (INT)((std::make_unsigned_t<INT>)digits_[i] << (base_int_bits * i));
 		}
 		
 		if (is_negative()) -converted;
@@ -466,7 +466,7 @@ std::optional<FLOAT> Q::fits_into() const {
 	#endif
 
 	struct float_sizes {
-		enum : BIT_TYPE {
+		enum : bit_type {
 			sign = 1,
 			exponent = 8,
 			mantissa = 23
@@ -474,7 +474,7 @@ std::optional<FLOAT> Q::fits_into() const {
 	};
 
 	struct double_sizes {
-		enum : BIT_TYPE {
+		enum : bit_type {
 			sign = 1,
 			exponent = 11,
 			mantissa = 52
@@ -552,14 +552,14 @@ std::optional<FLOAT> Q::fits_into() const {
 			FLOAT converted{};
 			access_type * const converted_help = (access_type*)&converted;
 
-			if constexpr (sizes_type::mantissa <= BASE_INT_BITS) {
-				converted_help->fields.mantissa = div_pair.first.digits_.back() >> (BASE_INT_BITS - sizes_type::mantissa);
+			if constexpr (sizes_type::mantissa <= base_int_bits) {
+				converted_help->fields.mantissa = div_pair.first.digits_.back() >> (base_int_bits - sizes_type::mantissa);
 			} else {
 				const auto & last_digit = div_pair.first.digits_.back();
 				converted_help->fields.mantissa = 0;
-				for (BIT_TYPE i = 0; i < sizes_type::mantissa; ++i) {
-					const std::size_t j = i / BASE_INT_BITS;
-					const BIT_TYPE k = i % BASE_INT_BITS;
+				for (bit_type i = 0; i < sizes_type::mantissa; ++i) {
+					const std::size_t j = i / base_int_bits;
+					const bit_type k = i % base_int_bits;
 
 					using mantissa_type = decltype(converted_help->fields.mantissa);
 					static constexpr auto mask = (std::uint64_t)1 << (sizes_type::mantissa - 1); // std::uint64_t was mantissa_type
