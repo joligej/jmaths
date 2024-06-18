@@ -24,6 +24,6 @@ sudo make install install_dir=/some/preferred/installation/directory/
 
 Whilst doing this, you will be guided through the configuration process. To rebuild the library from scratch, type `make fresh`, or use `make clean` to restore the folder to its original state.
 
-To uninstall the library, simply type `sudo make uninstall`, and any traces of the library will be removed from your system.
+To uninstall the library, simply type `sudo make uninstall`, and any traces of the library will be removed from your system. If you provided a custom installation directory, please pass the directory as an `install_dir` parameter to the uninstall command as well.
 
 When linking with `libjmaths.a`, it is important to also link with any libraries that it depends on, for example when providing a custom allocator in `config/jmaths_aliases.hpp`, and to do so _after_ linking with `libjmaths.a`.
