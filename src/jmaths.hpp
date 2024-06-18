@@ -118,6 +118,9 @@ class N {
 	friend struct detail;
 	friend struct calc;
 	friend struct detail::unit_testing;
+	friend struct std::hash<N>;
+	friend struct std::hash<Z>;
+	friend struct std::hash<Q>;
 	
 	friend class Q;
 	
@@ -321,6 +324,7 @@ class Z : public sign_type, private N {
 	friend struct detail;
 	friend struct calc;
 	friend struct detail::unit_testing;
+	friend struct std::hash<Z>;
 	
 	friend class Q;
 
@@ -413,6 +417,7 @@ class Q : public sign_type {
     friend struct detail;
     friend struct calc;
 	friend struct detail::unit_testing;
+	friend struct std::hash<Q>;
     
     private:
         N num_, denom_;
@@ -549,5 +554,25 @@ Z operator ""_Z (const char * num_str);
 }
 
 } // /namespace jmaths
+
+// declarations of std::hash specialisations
+namespace std {
+
+template <>
+struct hash<jmaths::N> {
+	std::size_t operator () (const jmaths::N & n) const;
+};
+
+template <>
+struct hash<jmaths::Z> {
+	std::size_t operator () (const jmaths::Z & z) const;
+};
+
+template <>
+struct hash<jmaths::Q> {
+	std::size_t operator () (const jmaths::Q & q) const;
+};
+
+} // /namespace std
 
 #include "../src/jmaths_tmpl.cpp"
