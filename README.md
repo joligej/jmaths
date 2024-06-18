@@ -16,6 +16,8 @@ make
 sudo make install
 ```
 
+To build in debug mode type `make debug` instead of `make`. The library is located at `build/libdbgjmaths.a` and the header at `build/dbgjmaths.hpp`.
+
 The default installation directory is `/usr/local/jmaths/`. If you would like to change that, you can pass an `install_dir` parameter to `sudo make install`, like so:
 
 ```
