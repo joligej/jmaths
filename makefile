@@ -181,7 +181,7 @@ $(header_file): $(header_objs)
 	@$(call preprocess_header,$<,$@,-DNDEBUG,$(dependencies_file),"release")
 
 $(debug_header_file): $(header_objs)
-	$(call preprocess_header,$<,$@,,$(dependencies_file),"debug")
+	@$(call preprocess_header,$<,$@,,$(dependencies_file),"debug")
 
 $(test_program): $(test_source_file) $(debug_lib_file) $(debug_header_file)
 	@$(call compile_to_exec,$<,$@,$(compile_parms_debug) $(debug_lib_file),"unit test")
