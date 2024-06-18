@@ -12,7 +12,7 @@ The following command shall be run to configure the library's dependencies, allo
 Regardless of whether you added your own dependencies, type the following to build and install the library:
 
 ```
-make build
+make
 sudo make install
 ```
 
