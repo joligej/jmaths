@@ -1,7 +1,8 @@
 #pragma once
 
-#include <iostream>
-#include <chrono>
+#ifndef PREPROCESSING_HEADER
+#include "../src/dependencies.hpp"
+#endif
 
 namespace jmaths {
 
@@ -9,7 +10,7 @@ struct utils {
 
 class function_timer {
     private:
-        typedef std::chrono::high_resolution_clock clock_type;
+        using clock_type = std::chrono::high_resolution_clock;
 
         const char * const function_name_;
         const clock_type::time_point start_time_;

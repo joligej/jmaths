@@ -21,3 +21,5 @@ Z operator ""_Z (const char * num_str) {
 } // /namespace literals
 
 } // /namespace jmaths
+
+#include "../config/jmaths_undef.cfg"

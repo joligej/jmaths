@@ -1,10 +1,4 @@
-# this file contains the installation path and bit architecture of the target system
-# it was created by the preconfigure script
-build_settings_file_name = build_settings.mk
-build_settings_file_dir = ./
-build_settings_file = $(build_settings_file_dir)$(build_settings_file_name)
-
--include $(build_settings_file)
+install_dir ?= "/usr/local/jmaths/"
 
 # the names of the library and header to be installed
 lib_name = jmaths
@@ -16,12 +10,12 @@ header_file_name = jmaths.hpp
 header_file_dir = $(build_dir)
 header_file = $(header_file_dir)$(header_file_name)
 
-debug_lib_name = debug_jmaths
+debug_lib_name = dbg$(lib_name)
 debug_lib_file_name = lib$(debug_lib_name).a
 debug_lib_file_dir = $(build_dir)
 debug_lib_file = $(debug_lib_file_dir)$(debug_lib_file_name)
 
-debug_header_file_name = debug_jmaths.hpp
+debug_header_file_name = dbg$(header_file_name)
 debug_header_file_dir = $(build_dir)
 debug_header_file = $(debug_header_file_dir)$(debug_header_file_name)
 
@@ -33,7 +27,7 @@ test_dir = unit_testing/
 $(shell mkdir -p "$(build_dir)")
 
 dependencies_file_name = custom_dependencies.hpp
-dependencies_file_dir = $(config_dir)
+dependencies_file_dir = $(build_dir)
 dependencies_file = $(dependencies_file_dir)$(dependencies_file_name)
 
 default_dependencies_file_name = dependencies.hpp
@@ -45,11 +39,11 @@ config_source_file_dir = $(config_dir)
 config_source_file = $(config_source_file_dir)$(config_source_file_name)
 
 config_program_name = configure
-config_program_dir = $(config_dir)
+config_program_dir = $(build_dir)
 config_program = $(config_program_dir)$(config_program_name)
 
 user_settings_file_name = user_settings.cfg
-user_settings_file_dir = $(config_dir)
+user_settings_file_dir = $(build_dir)
 user_settings_file = $(user_settings_file_dir)$(user_settings_file_name)
 
 unity_source_file_name = unity.cpp
@@ -72,39 +66,21 @@ test_program_name = unit_test
 test_program_dir = $(test_dir)
 test_program = $(test_program_dir)$(test_program_name)
 
-preconfigure_script_name = preconfigure
-preconfigure_script_dir = ./
-preconfigure_script = $(preconfigure_script_dir)$(preconfigure_script_name)
-
 dependencies_script_name = dependencies
 dependencies_script_dir = ./
 dependencies_script = $(dependencies_script_dir)$(dependencies_script_name)
-
-default_values_list_64_file_name = defaults_list.cfg
-default_values_list_64_file_dir = $(config_dir)
-default_values_list_64_file = $(default_values_list_64_file_dir)$(default_values_list_64_file_name)
-
-default_values_list_32_file_name = defaults_list32.cfg
-default_values_list_32_file_dir = $(config_dir)
-default_values_list_32_file = $(default_values_list_32_file_dir)$(default_values_list_32_file_name)
 
 implementation_header_file_name = jmaths.hpp
 implementation_header_file_dir = $(source_dir)
 implementation_header_file = $(implementation_header_file_dir)$(implementation_header_file_name)
 
-header_objs = $(implementation_header_file) $(user_settings_file) $(dependencies_file)
+header_objs = $(implementation_header_file) $(user_settings_file) $(dependencies_file) $(source_dir)jmaths_tmpl.cpp $(config_dir)jmaths_aliases.hpp
 source_files = jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp
 source_objs = $(addprefix $(source_dir), $(source_files))
 
-create_while_building = "$(build_settings_file)" "$(config_program)" "$(user_settings_file)" "$(dependencies_file)" "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)" "$(debug_header_file)" "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM"
+create_while_building = "$(config_program)" "$(user_settings_file)" "$(dependencies_file)" "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)" "$(debug_header_file)" "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM"
 
-ifeq ($(bit_architecture), 64)
-	default_values_list_file = $(default_values_list_64_file)
-else
-	default_values_list_file = $(default_values_list_32_file)
-endif
-
-cc = clang++
+cc ?= clang++
 compiler_version = -std=c++2b
 compiler_warnings = -Wall -Werror -Wextra -Wpedantic -Wpessimizing-move
 ifeq ($(cc), clang++)
@@ -134,20 +110,14 @@ define archive
 	echo "Library archived successfully"
 endef
 
+export
+
 .PHONY: all debug fresh clean build debug_build install uninstall configure unity debug_unity library debug_library header debug_header test
 
 all:
-	@$(preconfigure_script) DEFAULT
-	@$(MAKE) $(config_program)
-	@$(config_program) DEFAULT
-	@$(dependencies_script) DEFAULT
 	@$(MAKE) build
 
 debug:
-	@$(preconfigure_script) DEFAULT
-	@$(MAKE) $(config_program)
-	@$(config_program) DEFAULT
-	@$(dependencies_script) DEFAULT
 	@$(MAKE) debug_build
 	
 fresh:
@@ -183,13 +153,13 @@ uninstall:
 	@echo "Library removed from system"
 	
 $(user_settings_file): $(config_program)
-	@cd "$(config_program_dir)" && ./"$(config_program_name)"
+	@$(config_program)
 
 $(config_program): $(config_source_file)
-	@$(call compile_to_exec,$<,$@,$(compile_parms_release) -DUSER_SETTINGS="$(user_settings_file)" -DDEFAULTS_LIST="../$(default_values_list_file)","configuration")
+	@$(call compile_to_exec,$<,$@,$(compile_parms_release) -DSETTINGS_FILE="$(user_settings_file)","configuration")
 	
 $(dependencies_file): $(dependencies_script)
-	@$(dependencies_script)
+	@$(dependencies_script) DEFAULT
 	
 $(unity_source_file): $(source_objs)
 	@rm -f "$@"
@@ -197,10 +167,10 @@ $(unity_source_file): $(source_objs)
 	@for source_file in $^; do cat "$$source_file" >> "$@"; done
 	@echo "Successfully created $@"
 	
-$(unity_obj_file): $(unity_source_file)
+$(unity_obj_file): $(unity_source_file) $(header_objs)
 	@$(call compile,$<,$@,$(compile_parms_release),"release","unity file")
 	
-$(debug_unity_obj_file): $(unity_source_file)
+$(debug_unity_obj_file): $(unity_source_file) $(header_objs)
 	@$(call compile,$<,$@,$(compile_parms_debug),"debug","unity file")
 
 $(lib_file): $(unity_obj_file)

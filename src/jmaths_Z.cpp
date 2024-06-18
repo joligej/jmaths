@@ -263,7 +263,7 @@ Z::Z (const N & n, sign_bool sign) : sign_type(sign), N(n) {
 	FUNCTION_TO_STDERR;
 }
 
-size_t Z::dynamic_size_() const {
+std::size_t Z::dynamic_size_() const {
 	FUNCTION_TO_STDERR;
 
 	return N::dynamic_size_();
@@ -315,7 +315,7 @@ bool Z::is_neg_one() const {
 	return (is_negative() && N::is_one());
 }
 
-size_t Z::size() const {
+std::size_t Z::size() const {
 	FUNCTION_TO_STDERR;
 
 	return (sizeof(*this) + dynamic_size_());
@@ -580,3 +580,5 @@ Z & Z::operator = (N && n) {
 }
 
 } // /namespace jmaths
+
+#include "../config/jmaths_undef.cfg"

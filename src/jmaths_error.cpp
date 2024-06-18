@@ -41,3 +41,5 @@ error::invalid_base::invalid_base (const char * message) : error(message) {
 };
 
 } // /namespace jmaths
+
+#include "../config/jmaths_undef.cfg"

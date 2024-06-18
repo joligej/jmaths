@@ -302,7 +302,7 @@ void Q::canonicalise_() {
 	denom_ = detail::opr_div(denom_, gcd).first;
 }
 
-size_t Q::dynamic_size_() const {
+std::size_t Q::dynamic_size_() const {
 	FUNCTION_TO_STDERR;
 
 	return (num_.dynamic_size_() + denom_.dynamic_size_());
@@ -438,7 +438,7 @@ Q && Q::inverse() && {
 	return std::move(*this);
 }
 
-size_t Q::size() const {
+std::size_t Q::size() const {
 	FUNCTION_TO_STDERR;
 
 	return (sizeof(*this) + dynamic_size_());
@@ -803,3 +803,5 @@ Q & Q::operator = (Z && z) {
 }
 
 } // /namespace jmaths
+
+#include "../config/jmaths_undef.cfg"

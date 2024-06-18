@@ -1,5 +1,5 @@
 #!/bin/sh
-cat "src/dependencies.hpp" > "config/custom_dependencies.hpp"
+cat "src/dependencies.hpp" > "build/custom_dependencies.hpp"
 
 [[ "$1" == "DEFAULT" ]] && exit 0
 
@@ -11,5 +11,5 @@ while true; do
 read &&
 [[ "${REPLY}" == "q" ]] &&
 break ||
-echo "#include \"${REPLY}\"" >> "config/custom_dependencies.hpp";
+echo "#include \"${REPLY}\"" >> "build/custom_dependencies.hpp";
 done

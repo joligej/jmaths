@@ -1,4 +1,3 @@
-#include <cstdint> // for std::uint*_t
 #include <cmath> // for std::frexp and std::scalbn
 #include <iostream> // for std::ostream
 #include <string> // for std::string
@@ -14,4 +13,7 @@
 #include <memory> // for std::allocator<T>
 #include <cassert> // for the assert macro
 #include <source_location> // for std::source_location
-#include "../src/jmaths_utils.hpp" // for jmaths::utils::function_timer
+#include <chrono> // for std::chrono::high_resolution clock and other related types
+#include <cstdint> // for std::uint*_t
+#include <bit> // to count trailing zeroes
+#include <sstream> // for std::stringstream

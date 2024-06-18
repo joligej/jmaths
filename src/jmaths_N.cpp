@@ -1,9 +1,8 @@
-#include <bit>
-#include <sstream>
-
 #include "../src/jmaths.hpp"
 
 #include "../config/jmaths_def.cfg"
+
+namespace jmaths {
 
 namespace {
 	
@@ -23,6 +22,8 @@ static BASE_INT base_converter (char c) noexcept {
 }
 	
 } // /anonymous namespace
+
+} // /namespace jmaths
 
 namespace jmaths {
 	
@@ -72,7 +73,7 @@ N detail::opr_add (const N & lhs, const N & rhs) {
 	
 	bool carry = false;
 	
-	size_t i = 0;
+	std::size_t i = 0;
 	
 	for (; i < shortest->digits_.size(); ++i) {	
 		// checks if lhs + rhs + carry < base
@@ -111,11 +112,11 @@ N detail::opr_subtr (N lhs, const N & rhs) {
 	N difference;
 	difference.digits_.reserve(lhs.digits_.size());
 	
-	size_t i = 0;
+	std::size_t i = 0;
 	
 	for (; i < rhs.digits_.size(); ++i) {
 		if (lhs.digits_[i] < rhs.digits_[i]) {
-			for (size_t j = i + 1; j < lhs.digits_.size(); ++j) {
+			for (std::size_t j = i + 1; j < lhs.digits_.size(); ++j) {
 				if ((lhs.digits_[j])-- > 0) break;
 			}
 		}
@@ -149,12 +150,12 @@ N detail::opr_mult (const N & lhs, const N & rhs) {
 	// max overhead would be BASE_INT_SIZE
 	product.digits_.reserve(lhs.digits_.size() + rhs.digits_.size());
 	
-	for (size_t i = 0; i < lhs.digits_.size(); ++i) {
+	for (std::size_t i = 0; i < lhs.digits_.size(); ++i) {
 		N temp1;
 		temp1.digits_.reserve(i + rhs.digits_.size() + 1);
 		temp1.digits_.insert(temp1.digits_.begin(), i, 0);
 		BASE_INT carry = 0;
-		for (size_t j = 0; j < rhs.digits_.size(); ++j) {
+		for (std::size_t j = 0; j < rhs.digits_.size(); ++j) {
 			const BASE_INT_BIG temp2 = (BASE_INT_BIG)lhs.digits_[i] * (BASE_INT_BIG)rhs.digits_[j];
 			const BASE_INT temp3 = (BASE_INT)temp2;
 			temp1.digits_.emplace_back(carry + temp3);
@@ -182,7 +183,7 @@ std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
 	if (const auto max_size = lhs.digits_.size() - rhs.digits_.size() + 1; lhs.digits_.size() + 1 >= rhs.digits_.size()) {
 		// rhs.digits_.size() is always >= 1 so even if lhs.digits_.size() + 1 overflows to 0 no errors shall occur
 		#ifndef NDEBUG
-			typedef std::numeric_limits<decltype(lhs.digits_.size())> nlim;
+			using nlim = std::numeric_limits<decltype(lhs.digits_.size())>;
 		#endif
 
 		assert(lhs.digits_.size() == nlim::max() ? 1 <= rhs.digits_.size() : lhs.digits_.size() >= rhs.digits_.size() ? lhs.digits_.size() - rhs.digits_.size() <= nlim::max() - 1 : true /*-(rhs.digits_.size() - lhs.digits_.size()) <= nlim::max() - 1*/); // assert for overflow
@@ -217,7 +218,7 @@ N detail::opr_and (const N & lhs, const N & rhs) {
 	N and_result;
 	and_result.digits_.reserve(shortest.digits_.size());
 	
-	for (size_t i = 0; i < shortest.digits_.size(); ++i) {
+	for (std::size_t i = 0; i < shortest.digits_.size(); ++i) {
 		and_result.digits_.emplace_back(lhs.digits_[i] & rhs.digits_[i]);
 	}
 	
@@ -246,7 +247,7 @@ N detail::opr_or (const N & lhs, const N & rhs) {
 	N or_result;
 	or_result.digits_.reserve(longest->digits_.size());
 	
-	size_t i = 0;
+	std::size_t i = 0;
 	
 	for (; i < shortest->digits_.size(); ++i) {
 		or_result.digits_.emplace_back(lhs.digits_[i] | rhs.digits_[i]);
@@ -279,7 +280,7 @@ N detail::opr_xor (const N & lhs, const N & rhs) {
 	N xor_result;
 	xor_result.digits_.reserve(longest->digits_.size());
 	
-	size_t i = 0;
+	std::size_t i = 0;
 	
 	for (; i < shortest->digits_.size(); ++i) {
 		xor_result.digits_.emplace_back(lhs.digits_[i] ^ rhs.digits_[i]);
@@ -458,7 +459,7 @@ bool N::bit_ (BIT_TYPE pos) const {
 void N::bit_ (BIT_TYPE pos, bool val) {
 	FUNCTION_TO_STDERR;
 
-	const size_t pos_whole = pos / BASE_INT_BITS;
+	const std::size_t pos_whole = pos / BASE_INT_BITS;
 	const BIT_TYPE pos_mod = pos % BASE_INT_BITS;
 	
 	if (is_zero()) {
@@ -481,7 +482,7 @@ void N::bit_ (BIT_TYPE pos, bool val) {
 	}
 }
 
-size_t N::dynamic_size_() const {
+std::size_t N::dynamic_size_() const {
 	FUNCTION_TO_STDERR;
 
 	return (digits_.size() * BASE_INT_SIZE);
@@ -522,7 +523,7 @@ void N::opr_add_assign_ (const N & rhs) {
 	
 	bool carry = false;
 	
-	size_t i = 0;
+	std::size_t i = 0;
 	
 	for (; i < rhs.digits_.size(); ++i) {
 		const bool next_carry = !(rhs.digits_[i] < (carry ? MAX_DIGIT : BASE) - digits_[i]);
@@ -549,11 +550,11 @@ void N::opr_subtr_assign_ (const N & rhs) {
 	// check for additive identity
 	if (rhs.is_zero()) return;
 	
-	size_t i = 0;
+	std::size_t i = 0;
 	
 	for (; i < rhs.digits_.size(); ++i) {
 		if (this->digits_[i] < rhs.digits_[i]) {
-			for (size_t j = i + 1; j < digits_.size(); ++j) {
+			for (std::size_t j = i + 1; j < digits_.size(); ++j) {
 				if ((digits_[j])-- > 0) break;
 			}
 		}
@@ -582,12 +583,12 @@ void N::opr_mult_assign_ (const N & rhs) {
 	// max overhead would be BASE_INT_SIZE
 	product.digits_.reserve(this->digits_.size() + rhs.digits_.size());
 	
-	for (size_t i = 0; i < rhs.digits_.size(); ++i) {
+	for (std::size_t i = 0; i < rhs.digits_.size(); ++i) {
 		N temp1;
 		temp1.digits_.reserve(i + this->digits_.size() + 1);
 		temp1.digits_.insert(temp1.digits_.begin(), i, 0);
 		BASE_INT carry = 0;
-		for (size_t j = 0; j < this->digits_.size(); ++j) {
+		for (std::size_t j = 0; j < this->digits_.size(); ++j) {
 			const BASE_INT_BIG temp2 = (BASE_INT_BIG)rhs.digits_[i] * (BASE_INT_BIG)this->digits_[j];
 			const BASE_INT temp3 = (BASE_INT)temp2;
 			temp1.digits_.emplace_back(carry + temp3);
@@ -610,7 +611,7 @@ void N::opr_and_assign_ (const N & rhs) {
 	
 	digits_.resize(std::min(this->digits_.size(), rhs.digits_.size()));
 		
-	for (size_t i = 0; i < digits_.size(); ++i) {
+	for (std::size_t i = 0; i < digits_.size(); ++i) {
 		this->digits_[i] &= rhs.digits_[i];
 	}
 	
@@ -636,7 +637,7 @@ void N::opr_or_assign_ (const N & rhs) {
 	
 	digits_.reserve(longest->digits_.size());
 	
-	size_t i = 0;
+	std::size_t i = 0;
 	
 	for (; i < shortest->digits_.size(); ++i) {
 		this->digits_[i] |= rhs.digits_[i];
@@ -668,7 +669,7 @@ void N::opr_xor_assign_ (const N & rhs) {
 	
 	digits_.reserve(longest->digits_.size());
 	
-	size_t i = 0;
+	std::size_t i = 0;
 	
 	for (; i < shortest->digits_.size(); ++i) {
 		this->digits_[i] ^= rhs.digits_[i];
@@ -704,7 +705,7 @@ N N::opr_bitshift_l_ (BIT_TYPE pos) const {
 
 	if (is_zero()) return N();
 	
-	const size_t pos_whole = pos / BASE_INT_BITS;
+	const std::size_t pos_whole = pos / BASE_INT_BITS;
 	const BIT_TYPE pos_mod = pos % BASE_INT_BITS;
 	
 	N shifted;
@@ -713,7 +714,7 @@ N N::opr_bitshift_l_ (BIT_TYPE pos) const {
 	
 	shifted.digits_.emplace_back(digits_.front() << pos_mod);
 	
-	for (size_t i = 1; i < digits_.size(); ++i) {
+	for (std::size_t i = 1; i < digits_.size(); ++i) {
 		shifted.digits_.emplace_back((digits_[i - 1] >> (BASE_INT_BITS - pos_mod)) + (digits_[i] << pos_mod));
 	}
 	
@@ -731,7 +732,7 @@ N N::opr_bitshift_r_ (BIT_TYPE pos) const {
 
 	if (is_zero()) return N();
 	
-	const size_t pos_whole = pos / BASE_INT_BITS;
+	const std::size_t pos_whole = pos / BASE_INT_BITS;
 	
 	if (pos_whole >= digits_.size()) return N();
 	
@@ -741,7 +742,7 @@ N N::opr_bitshift_r_ (BIT_TYPE pos) const {
 	
 	shifted.digits_.reserve(digits_.size() - pos_whole);
 	
-	for (size_t i = pos_whole; i < digits_.size() - 1; ++i) {
+	for (std::size_t i = pos_whole; i < digits_.size() - 1; ++i) {
 		shifted.digits_.emplace_back((digits_[i] >> pos_mod) + (digits_[i + 1] << (BASE_INT_BITS - pos_mod)));
 	}
 	
@@ -757,7 +758,7 @@ void N::opr_bitshift_l_assign_ (BIT_TYPE pos) {
 
 	if (is_zero()) return;
 	
-	const size_t pos_whole = pos / BASE_INT_BITS;
+	const std::size_t pos_whole = pos / BASE_INT_BITS;
 	const BIT_TYPE pos_mod = pos % BASE_INT_BITS;
 	
 	digits_.reserve(digits_.size() + pos_whole + 1);
@@ -766,7 +767,7 @@ void N::opr_bitshift_l_assign_ (BIT_TYPE pos) {
 	
 	digits_.front() <<= pos_mod;
 	
-	for (size_t i = 1; i < digits_.size(); ++i) {
+	for (std::size_t i = 1; i < digits_.size(); ++i) {
 		const BASE_INT current = digits_[i];
 		digits_[i] = (previous >> (BASE_INT_BITS - pos_mod)) | (digits_[i] << pos_mod);
 		previous = current;
@@ -784,13 +785,13 @@ void N::opr_bitshift_r_assign_ (BIT_TYPE pos) {
 
 	if (is_zero()) return;
 	
-	const size_t pos_whole = pos / BASE_INT_BITS;
+	const std::size_t pos_whole = pos / BASE_INT_BITS;
 	
 	if (pos_whole >= digits_.size()) return (void)digits_.clear();
 	
 	const BIT_TYPE pos_mod = pos % BASE_INT_BITS;
 	
-	for (size_t i = pos_whole, j = 0; i < digits_.size() - 1; ++i, ++j) {
+	for (std::size_t i = pos_whole, j = 0; i < digits_.size() - 1; ++i, ++j) {
 		digits_[j] = ((digits_[i] >> pos_mod) + (digits_[i + 1] << (BASE_INT_BITS - pos_mod)));
 	}
 	
@@ -871,7 +872,7 @@ BIT_TYPE N::bits() const {
 	return (digits_.size() * BASE_INT_BITS - std::countl_zero(digits_.back()));
 }
 
-size_t N::size() const {
+std::size_t N::size() const {
 	FUNCTION_TO_STDERR;
 
 	return (sizeof(*this) + dynamic_size_());
@@ -1066,3 +1067,5 @@ N::bit_reference & N::bit_reference::operator = (const const_bit_reference & ref
 }
 	
 } // /namespace jmaths
+
+#include "../config/jmaths_undef.cfg"

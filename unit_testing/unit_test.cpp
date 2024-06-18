@@ -8,13 +8,13 @@
 #include <limits>
 #include <optional>
 
-#include "../build/debug_jmaths.hpp"
+#include "../build/dbgjmaths.hpp"
 
-typedef std::uint16_t check_type;
-typedef std::numeric_limits<check_type> nlim;
+using check_type = std::uint16_t;
+using nlim = std::numeric_limits<check_type>;
 
 typedef struct jmaths::detail::unit_testing {
-    typedef jmaths::N testing_type;
+    using testing_type = jmaths::N;
 
     static void check_add();
 } test;

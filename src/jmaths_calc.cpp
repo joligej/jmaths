@@ -92,3 +92,5 @@ Z calc::pow (Z base, N exponent) {
 }
 
 } // /namespace jmaths
+
+#include "../config/jmaths_undef.cfg"

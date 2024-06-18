@@ -1,6 +1,7 @@
 #include "../config/jmaths_def.cfg"
 
-#define REPEAT(x) for (decltype(x) for_loop_repition_counter_ = 0; for_loop_repition_counter_ < x; ++for_loop_repition_counter_)
+#define REPEAT(x) \
+for (std::remove_cv_t<decltype(x)> FOR_LOOP_REPETITION_COUNTER = 0; FOR_LOOP_REPETITION_COUNTER < x; ++FOR_LOOP_REPETITION_COUNTER)
 
 // comparison functions for N with integral types
 namespace jmaths {
@@ -37,7 +38,7 @@ std::strong_ordering detail::opr_comp (const N & lhs, INT rhs) {
 	
 	if (lhs.digits_.size() * BASE_INT_SIZE < sizeof(rhs) && (rhs >> (BASE_INT_BITS * lhs.digits_.size())) != 0) return std::strong_ordering::less;
 	
-	size_t pos = 1;
+	std::size_t pos = 1;
 	for (auto crit = lhs.digits_.crbegin(); crit != lhs.digits_.crend(); ++crit) {
 		INT curr_byte = rhs;
 		REPEAT(BASE_INT_SIZE * (lhs.digits_.size() - pos)) curr_byte >>= BITS_IN_BYTE;
@@ -217,10 +218,10 @@ void N::opr_assign_ (INT rhs) {
 
 	digits_.clear();
 		
-	digits_.reserve((size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO + 1));
+	digits_.reserve((std::size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO + 1));
 	
 	// this assumes that sizeof(smallest type)/BASE_INT_SIZE >= MAX_RATIO
-	REPEAT((size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO)) {
+	REPEAT((std::size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO)) {
 		digits_.emplace_back((BASE_INT)rhs);
 		REPEAT(BASE_INT_SIZE) rhs >>= BITS_IN_BYTE;
 	}
@@ -236,10 +237,10 @@ N::N (INT num) {
 	FUNCTION_TO_STDERR;
 
 	if constexpr (sizeof(INT) > 1) {
-		digits_.reserve((size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO + 1));
+		digits_.reserve((std::size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO + 1));
 		
 		// this assumes that sizeof(smallest type)/BASE_INT_SIZE >= MAX_RATIO
-		REPEAT((size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO)) {
+		REPEAT((std::size_t)((double)sizeof(INT)/BASE_INT_SIZE - MAX_RATIO)) {
 			digits_.emplace_back((BASE_INT)num);
 			REPEAT(BASE_INT_SIZE) num >>= BITS_IN_BYTE;
 		}
@@ -275,14 +276,14 @@ std::optional<INT> N::fits_into() const {
 		if (digits_.size() * BASE_INT_SIZE > sizeof(INT)) return std::nullopt;
 		
 		/*INT converted (digits_.back());
-		for (size_t i = digits_.size() - 1; i --> 0;) {
+		for (std::size_t i = digits_.size() - 1; i --> 0;) {
 			converted <<= BASE_INT_BITS;
 		  	converted |= digits_[i];
 		}*/
 	
 		INT converted (digits_.front());
 	
-		for (size_t i = 1; i < digits_.size(); ++i) {
+		for (std::size_t i = 1; i < digits_.size(); ++i) {
 			converted |= ((INT)digits_[i] << (BASE_INT_BITS * i));
 		}
 	
@@ -390,14 +391,14 @@ std::optional<INT> Z::fits_into() const {
 		if (detail::opr_comp(*this, (is_negative() ? -std::numeric_limits<INT>::min() : std::numeric_limits<INT>::max())) > 0) return std::nullopt;
 		
 		/*INT converted (digits_.back());
-		for (size_t i = digits_.size() - 1; i --> 0;) {
+		for (std::size_t i = digits_.size() - 1; i --> 0;) {
 			converted <<= BASE_INT_BITS;
 		  	converted |= digits_[i];
 		}*/
 	
 		INT converted (digits_.front());
 	
-		for (size_t i = 1; i < digits_.size(); ++i) {
+		for (std::size_t i = 1; i < digits_.size(); ++i) {
 			converted += (INT)((std::make_unsigned_t<INT>)digits_[i] << (BASE_INT_BITS * i));
 		}
 		
@@ -454,7 +455,7 @@ requires std::is_floating_point_v<FLOAT> && std::numeric_limits<FLOAT>::is_iec55
 std::optional<FLOAT> Q::fits_into() const {
 	FUNCTION_TO_STDERR;
 	
-	typedef std::numeric_limits<FLOAT> nlf;
+	using nlf = std::numeric_limits<FLOAT>;
 
 	constexpr bool is_allowed_type = std::is_same_v<FLOAT, float> || std::is_same_v<FLOAT, double>;
 	static_assert(is_allowed_type, "Template type parameter is not one of the allowed types: float and double.");
@@ -525,8 +526,8 @@ std::optional<FLOAT> Q::fits_into() const {
 	//	} fields;
 	//};
 
-	typedef std::conditional_t<std::is_same_v<FLOAT, float>, float_access, double_access> access_type;
-	typedef std::conditional_t<std::is_same_v<FLOAT, float>, float_sizes, double_sizes> sizes_type;
+	using access_type = std::conditional_t<std::is_same_v<FLOAT, float>, float_access, double_access>;
+	using sizes_type = std::conditional_t<std::is_same_v<FLOAT, float>, float_sizes, double_sizes>;
 	
 	static_assert(sizeof(float_access) == sizeof(float) && sizeof(float_access) == sizeof(std::uint32_t[1]), "There seems to be a problem with the padding bits for type: float_acess.");
 	static_assert(sizeof(double_access) == sizeof(double) && sizeof(double_access) == sizeof(std::uint64_t[1]), "There seems to be a problem with the padding bits for type: double_access.");
@@ -560,7 +561,7 @@ std::optional<FLOAT> Q::fits_into() const {
 					const std::size_t j = i / BASE_INT_BITS;
 					const BIT_TYPE k = i % BASE_INT_BITS;
 
-					typedef decltype(converted_help->fields.mantissa) mantissa_type;
+					using mantissa_type = decltype(converted_help->fields.mantissa);
 					static constexpr auto mask = (std::uint64_t)1 << (sizes_type::mantissa - 1); // std::uint64_t was mantissa_type
 
 					converted_help->fields.mantissa |= (((mantissa_type)(*(&last_digit - j) << k) & mask) >> i);

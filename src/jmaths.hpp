@@ -1,7 +1,10 @@
 #ifndef PREPROCESSING_HEADER
 	#pragma once
-    #include "../config/custom_dependencies.hpp"
+    #include "../build/custom_dependencies.hpp"
 #endif
+
+#include "../src/jmaths_utils.hpp" // for jmaths::utils::function_timer
+#include "../config/jmaths_aliases.hpp" // for the type aliases and constants
 
 #include "../config/jmaths_def.cfg"
 
@@ -132,7 +135,7 @@ class N {
 		template <typename T> requires std::is_same_v<N, T> || std::is_same_v<const N, T> class bit_reference_base_;
 		
 	protected:
-		size_t dynamic_size_() const;
+		std::size_t dynamic_size_() const;
 		
 		std::vector<BASE_INT, ALLOCATOR<BASE_INT>> digits_;
 		
@@ -175,7 +178,7 @@ class N {
 		BIT_TYPE ctz() const; // count trailing zeroes
 		BIT_TYPE bits() const; // count number of base 2 digits
 		
-		size_t size() const; // size of this object in bytes
+		std::size_t size() const; // size of this object in bytes
 		
 		std::string to_str (unsigned base) const; // convert to string in any base >= 2 and <= 64
 		operator std::string() const; // convert to string in default base
@@ -327,7 +330,7 @@ class Z : public sign_type, private N {
 		Z (N && n, sign_bool sign);
 		Z (const N & n, sign_bool sign);
 		
-		size_t dynamic_size_() const;
+		std::size_t dynamic_size_() const;
 		
 	public:
 		using N::bit_reference, N::const_bit_reference;
@@ -348,7 +351,7 @@ class Z : public sign_type, private N {
 		bool is_one() const;
 		bool is_neg_one() const;
 		
-		size_t size() const; // size of this object in bytes
+		std::size_t size() const; // size of this object in bytes
 		
 		std::string to_str (unsigned base) const; // convert to string in any base >= 2 and <= 64
 		operator std::string() const; // convert to string in default base
@@ -424,7 +427,7 @@ class Q : public sign_type {
 
 		template <typename FLOAT> requires std::is_floating_point_v<FLOAT> static std::tuple<N, N, sign_bool> handle_float_ (FLOAT num);
 		
-		size_t dynamic_size_() const;
+		std::size_t dynamic_size_() const;
     
     public:
         Q();
@@ -457,7 +460,7 @@ class Q : public sign_type {
 		Q inverse() const &;
 		Q && inverse() &&;
 		
-		size_t size() const; // size of this object in bytes
+		std::size_t size() const; // size of this object in bytes
 		
 		std::string to_str (unsigned base) const; // convert to string in any base >= 2 and <= 64
 		operator std::string() const; // convert to string in default base
