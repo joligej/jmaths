@@ -21,7 +21,7 @@ To build in debug mode type `make debug` instead of `make`. The library is locat
 The default installation directory is `/usr/local/jmaths/`. If you would like to change that, you can pass an `install_dir` parameter to `sudo make install`, like so:
 
 ```
-sudo make install install_dir=/some/preferred/installation/directory/
+sudo make install install_dir="/some/preferred/installation/directory/"
 ```
 
 Whilst doing this, you will be guided through the configuration process. To rebuild the library from scratch, type `make fresh`, or use `make clean` to restore the folder to its original state.
