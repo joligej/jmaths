@@ -10,7 +10,9 @@
 #include <format>
 #include <print>
 
-#include "../build/dbgjmaths.hpp"
+#if __has_include("../build/dbgjmaths.hpp")
+    #include "../build/dbgjmaths.hpp"
+#endif
 
 using check_type = std::uint16_t;
 using nlim = std::numeric_limits<check_type>;
