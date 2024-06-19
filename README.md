@@ -1,4 +1,5 @@
 # jmaths
+
 `jmaths` is a maths library for C++ that has support for arbitrary precision integers and fractions, and for other concepts in common fields in mathematics, like linear algebra.
 
 There are 2 ways to install this program. You can either use the default settings, by typing `make` and then `sudo make install`, which assumes your machine's architecture has 64-bit integer support, or you can choose these settings yourself by editing `config/jmaths_aliases.hpp`.
