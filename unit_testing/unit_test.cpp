@@ -88,11 +88,17 @@ int main (int argc, char * argv[]) {
     (void)argc;
     (void)argv;
 
+    using jmaths::N;
+
     std::cout << nlim::max() << '\n';
 
     std::print(stdout, "hel{0}lo", "hi");
 
     std::cin.get();
+
+    for (unsigned i = 0; i <= 1000; ++i) {
+        std::cout << i << ": " << std::hash<N>{}(N(0)) << '\n';
+    }
 
     test::check_add();
 

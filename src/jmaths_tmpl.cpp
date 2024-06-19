@@ -261,11 +261,13 @@ std::optional<INT> N::fits_into() const {
 
 	// !!! perhaps use std::numeric_limits<T>::max from <limits> for signed types ???
 	
-	/*if constexpr (std::is_signed_v<INT>) {
-		//if (is_positive()) return N::fits_into<INT>();
-		//else return std::nullopt;
+	#if 0
+	if constexpr (std::is_signed_v<INT>) {
+		if (is_positive()) return N::fits_into<INT>();
+		else return std::nullopt;
 		// !!! implement this perhaps ???
-	}*/
+	}
+	#endif
 	
 	if (is_zero()) return 0;
 	
@@ -275,11 +277,13 @@ std::optional<INT> N::fits_into() const {
 	} else {
 		if (digits_.size() * base_int_size > sizeof(INT)) return std::nullopt;
 		
-		/*INT converted (digits_.back());
+		#if 0
+		INT converted (digits_.back());
 		for (std::size_t i = digits_.size() - 1; i --> 0;) {
 			converted <<= base_int_bits;
 		  	converted |= digits_[i];
-		}*/
+		}
+		#endif
 	
 		INT converted (digits_.front());
 	
@@ -390,11 +394,13 @@ std::optional<INT> Z::fits_into() const {
 		
 		if (detail::opr_comp(*this, (is_negative() ? -std::numeric_limits<INT>::min() : std::numeric_limits<INT>::max())) > 0) return std::nullopt;
 		
-		/*INT converted (digits_.back());
+		#if 0
+		INT converted (digits_.back());
 		for (std::size_t i = digits_.size() - 1; i --> 0;) {
 			converted <<= base_int_bits;
 		  	converted |= digits_[i];
-		}*/
+		}
+		#endif
 	
 		INT converted (digits_.front());
 	
@@ -450,7 +456,8 @@ Q::Q (FLOAT num) : Q(handle_float_(num)) {
 	FUNCTION_TO_STDERR;
 }
 
-/*template <typename FLOAT>
+#if 0
+template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT> && std::numeric_limits<FLOAT>::is_iec559
 std::optional<FLOAT> Q::fits_into() const {
 	FUNCTION_TO_STDERR;
@@ -583,7 +590,8 @@ std::optional<FLOAT> Q::fits_into() const {
 		return std::nullopt;
 	}
 
-}*/
+}
+#endif
 
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>

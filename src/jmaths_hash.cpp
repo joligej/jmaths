@@ -5,6 +5,11 @@
 std::size_t std::hash<jmaths::N>::operator () (const jmaths::N & n) const {
     FUNCTION_TO_STDERR;
 
+    if (n.digits_.empty()) {
+        static const auto empty_hash = std::hash<std::string_view>{}(std::string_view());
+        return empty_hash;
+    }
+
     return std::hash<std::string_view>{}(std::string_view((const char*)n.digits_.data(), n.digits_.size() * jmaths::base_int_size));
 }
 
