@@ -170,7 +170,7 @@ $(config_program): $(config_source_file)
 $(unity_source_file): $(source_objs)
 	@rm -f "$@"
 	@echo "Creating $@..."
-	@for source_file in $^; do cat "$$source_file" >> "$@"; done
+	@for source_file in $^; do echo "#include \"../$$source_file\"" >> "$@"; done
 	@echo "Successfully created $@"
 	
 $(unity_obj_file): $(unity_source_file) $(header_objs)
