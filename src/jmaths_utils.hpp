@@ -24,7 +24,7 @@ class function_timer {
             const clock_type::time_point end_time = clock_type::now();
             const std::chrono::duration<double, std::milli> total_time = end_time - start_time_;
             
-            std::cerr << "time\t" << total_time.count() << "ms\tfrom\t" << function_name_ << '\n';
+            std::cerr << "time\t" << total_time.count() << "\tms\tfrom\t" << function_name_ << '\n';
         }
 };
 

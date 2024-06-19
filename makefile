@@ -62,12 +62,20 @@ test_program_name = unit_test
 test_program_dir = $(test_dir)
 test_program = $(test_program_dir)$(test_program_name)
 
+error_log_source_file_name = handle_error_log.cpp
+error_log_source_file_dir = $(test_dir)
+error_log_source_file = $(error_log_source_file_dir)$(error_log_source_file_name)
+
+error_log_program_name = handle_error_log
+error_log_program_dir = $(test_dir)
+error_log_program = $(error_log_program_dir)$(error_log_program_name)
+
 implementation_header_file_name = jmaths.hpp
 implementation_header_file_dir = $(source_dir)
 implementation_header_file = $(implementation_header_file_dir)$(implementation_header_file_name)
 
 header_objs = $(implementation_header_file) $(user_settings_file) $(dependencies_file) $(source_dir)jmaths_tmpl.cpp $(config_dir)jmaths_aliases.hpp
-source_files = jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp jmaths_hash.cpp
+source_files = jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp jmaths_hash.cpp jmaths_rand.cpp
 source_objs = $(addprefix $(source_dir), $(source_files))
 
 create_while_building = "$(config_program)" "$(user_settings_file)" "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)" "$(debug_header_file)" "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM"
@@ -186,6 +194,9 @@ $(debug_header_file): $(header_objs)
 $(test_program): $(test_source_file) $(debug_lib_file) $(debug_header_file)
 	@$(call compile_to_exec,$<,$@,$(compile_parms_debug) $(debug_lib_file),"unit test")
 	
+$(error_log_program): $(error_log_source_file)
+	@$(call compile_to_exec,$<,$@,$(compile_parms_release),"error handling")
+
 configure: $(config_program)
 
 unity: $(unity_obj_file)
@@ -200,4 +211,4 @@ header: $(header_file)
 
 debug_header: $(debug_header_file)
 
-test: $(test_program)
+test: $(test_program) $(error_log_program)

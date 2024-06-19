@@ -6,7 +6,7 @@ std::size_t std::hash<jmaths::N>::operator () (const jmaths::N & n) const {
     FUNCTION_TO_STDERR;
 
     if (n.digits_.empty()) {
-        static const auto empty_hash = std::hash<std::string_view>{}(std::string_view());
+        static const auto empty_hash = std::hash<std::string_view>{}(std::string_view{});
         return empty_hash;
     }
 

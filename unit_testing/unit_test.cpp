@@ -90,17 +90,16 @@ int main (int argc, char * argv[]) {
 
     using jmaths::N;
 
-    std::cout << nlim::max() << '\n';
+    constexpr std::size_t break_value = 9999;
+    constexpr unsigned amount_of_rands = 1;
 
-    std::print(stdout, "hel{0}lo", "hi");
-
-    std::cin.get();
-
-    for (unsigned i = 0; i <= 1000; ++i) {
-        std::cout << i << ": " << std::hash<N>{}(N(0)) << '\n';
+    for (std::size_t n = 0; n != break_value; std::cin >> n) {
+        for (unsigned i = 0; i < amount_of_rands; ++i) {
+            std::cout << N::rand(n) << '\n';
+        }
     }
 
-    test::check_add();
+    std::cin.get();
 
 
     assert(true);

@@ -17,6 +17,7 @@
 #include <cstdint> // for std::uint*_t
 #include <bit> // to count trailing zeroes
 #include <sstream> // for std::stringstream
+#include <random> // for the random functions
 
 // feel free to add your own dependencies below
 // you should #include the full path, because this file might be moved around, changing the relative path
