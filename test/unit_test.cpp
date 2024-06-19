@@ -15,7 +15,7 @@
 using check_type = std::uint16_t;
 using nlim = std::numeric_limits<check_type>;
 
-typedef struct jmaths::detail::unit_testing {
+typedef struct jmaths::detail::test {
     using testing_type = jmaths::N;
 
     static void check_add();

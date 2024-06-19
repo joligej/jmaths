@@ -22,7 +22,7 @@ debug_header_file = $(debug_header_file_dir)$(debug_header_file_name)
 source_dir = src/
 build_dir = build/
 config_dir = config/
-test_dir = unit_testing/
+test_dir = test/
 
 $(shell mkdir -p "$(build_dir)")
 

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+parent_path=$( cd "$(dirname "$0")" ; pwd -P )
+
+cd $parent_path
+
+./unit_test 2> logfile.txt
+./handle_error_log < logfile.txt > logdata.csv

@@ -85,7 +85,7 @@ template <typename FLOAT> requires std::is_floating_point_v<FLOAT> static bool o
 static std::strong_ordering opr_comp (const Q & lhs, const Q & rhs);
 template <typename FLOAT> requires std::is_floating_point_v<FLOAT> static std::strong_ordering opr_comp (const Q & lhs, FLOAT rhs);
 
-struct unit_testing;
+struct test;
 
 }; // /namespace struct detail
 
@@ -117,7 +117,7 @@ template <typename INT> requires std::is_integral_v<INT> std::strong_ordering op
 class N {
 	friend struct detail;
 	friend struct calc;
-	friend struct detail::unit_testing;
+	friend struct detail::test;
 	friend struct std::hash<N>;
 	friend struct std::hash<Z>;
 	friend struct std::hash<Q>;
@@ -266,7 +266,7 @@ class sign_type {
 	
 	friend struct detail;
 	friend struct calc;
-	friend struct detail::unit_testing;
+	friend struct detail::test;
 		
 	protected:
 		enum sign_bool : bool {
@@ -325,7 +325,7 @@ class Z : public sign_type, private N {
 	
 	friend struct detail;
 	friend struct calc;
-	friend struct detail::unit_testing;
+	friend struct detail::test;
 	friend struct std::hash<Z>;
 	
 	friend class Q;
@@ -420,7 +420,7 @@ class Q : public sign_type {
     
     friend struct detail;
     friend struct calc;
-	friend struct detail::unit_testing;
+	friend struct detail::test;
 	friend struct std::hash<Q>;
     
     private:
