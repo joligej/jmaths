@@ -78,7 +78,7 @@ header_objs = $(implementation_header_file) $(user_settings_file) $(dependencies
 source_files = jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp jmaths_hash.cpp jmaths_rand.cpp
 source_objs = $(addprefix $(source_dir), $(source_files))
 
-create_while_building = "$(config_program)" "$(user_settings_file)" "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)" "$(debug_header_file)" "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM"
+create_while_building = "$(config_program)" "$(user_settings_file)" "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)" "$(debug_header_file)" "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM" "$(error_log_program)"
 
 cc ?= clang++
 compiler_version = -std=c++2b
