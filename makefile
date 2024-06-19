@@ -74,7 +74,7 @@ implementation_header_file_name = jmaths.hpp
 implementation_header_file_dir = $(source_dir)
 implementation_header_file = $(implementation_header_file_dir)$(implementation_header_file_name)
 
-header_objs = $(implementation_header_file) $(user_settings_file) $(dependencies_file) $(source_dir)jmaths_tmpl.cpp $(config_dir)jmaths_aliases.hpp
+header_objs = $(implementation_header_file) $(user_settings_file) $(dependencies_file) $(source_dir)jmaths_tmpl.tpp $(config_dir)jmaths_aliases.hpp
 source_files = jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp jmaths_hash.cpp jmaths_rand.cpp
 source_objs = $(addprefix $(source_dir), $(source_files))
 

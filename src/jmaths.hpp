@@ -579,4 +579,4 @@ struct hash<jmaths::Q> {
 
 } // /namespace std
 
-#include "../src/jmaths_tmpl.cpp"
+#include "../src/jmaths_tmpl.tpp"
