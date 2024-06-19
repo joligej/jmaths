@@ -27,3 +27,5 @@ To uninstall the library, simply type `sudo make uninstall`, and any traces of t
 The default compiler is `clang++`. If you wish to specify another compiler, such as `g++`, pass the path to the compiler command as a parameter to the makefile, by specifying, for example, `cc=g++14`, just like with the installation directory.
 
 When linking with `libjmaths.a`, it is important to also link with any libraries that it depends on, for example when providing a custom allocator in `config/jmaths_aliases.hpp`, and to do so _after_ linking with `libjmaths.a`.
+
+To do a unit test, run `make test` and then `./test`. The file `unit_testing/logdata.csv` will contain the function profiling data.
