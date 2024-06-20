@@ -28,18 +28,18 @@ void test::check_add() {
     times.reserve(nlim::max() + 1);
 
     for (check_type a = 0; a <= nlim::max(); ++a) {
-        std::cerr << "a: " << a << '\n';
+        std::clog << "a: " << a << '\n';
 
         const auto start = std::clock();
 
         const testing_type a_big = testing_type(a);
 
         for (check_type b = 0; b <= nlim::max(); ++b) {
-            //std::cerr << "b: " << b << '\n';
+            //std::clog << "b: " << b << '\n';
 
             if (a > nlim::max() - b) {
-                std::cerr << "b: " << b << '\n';
-                std::cerr << "Skipping the rest due to overflow\n";
+                std::clog << "b: " << b << '\n';
+                std::clog << "Skipping the rest due to overflow\n";
                 goto next_a;
             }
 

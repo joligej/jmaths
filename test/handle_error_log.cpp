@@ -21,6 +21,10 @@ class function {
         function (std::string && name) : name_{name} {}
         function (const std::string & name) : name_{name} {}
 
+        std::string_view name() const {
+            return name_;
+        }
+
         void new_time (double call_time) {
             total_time += call_time;
             ++call_count;
@@ -70,7 +74,7 @@ int main (/*int argc, char * argv[]*/) {
         line_stream >> first_word;
         line_stream >> std::ws;
 
-        if (first_word == "call") {
+        if (first_word == "log:call") {
             std::getline(line_stream, line);
             function_by_name.try_emplace(line, line);
 
@@ -81,7 +85,7 @@ int main (/*int argc, char * argv[]*/) {
             }
 
             function_stack.emplace(function_called);
-        } else if (first_word == "time") { // this means first_word == "time"
+        } else if (first_word == "log:time") { // this means first_word == "time"
             double call_time;
             line_stream >> call_time;
 
@@ -108,8 +112,15 @@ int main (/*int argc, char * argv[]*/) {
 
             function_stack.pop();
         } else {
+            std::getline(line_stream, line);
             std::cerr << "Skipping a line\n";
         }
+    }
+
+    std::clog << "Open stack frame:\n";
+    while (!function_stack.empty()) {
+        std::clog << function_stack.top()->name() << '\n';
+        function_stack.pop();
     }
 
     std::cout << "name,ttltime,avgtime,to,from\n";

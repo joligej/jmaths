@@ -1,4 +1,5 @@
 install_dir ?= "/usr/local/jmaths/"
+pth_extension ?= .gch
 
 # the names of the library and header to be installed
 lib_name = jmaths
@@ -78,7 +79,7 @@ header_objs = $(implementation_header_file) $(user_settings_file) $(dependencies
 source_files = jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_misc.cpp jmaths_error.cpp jmaths_literals.cpp jmaths_hash.cpp jmaths_rand.cpp
 source_objs = $(addprefix $(source_dir), $(source_files))
 
-create_while_building = "$(config_program)" "$(user_settings_file)" "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)" "$(debug_header_file)" "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM" "$(error_log_program)"
+create_while_building = "$(config_program)" "$(user_settings_file)" "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)"* "$(debug_header_file)"* "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM" "$(error_log_program)"
 
 cc ?= clang++
 compiler_version = -std=c++2b
@@ -119,6 +120,12 @@ define preprocess_header
 	echo "Successfully created $(2)"
 endef
 
+define precompile_header
+	echo "Precompiling $(1)..."
+	$(cc) $(compiler_version) -x c++-header $(2) "$(1)" -o "$(1)$(pth_extension)"
+	echo "Precompilation of header succesful"
+endef
+
 export
 
 .PHONY: all debug fresh clean build debug_build install uninstall configure unity debug_unity library debug_library header debug_header test
@@ -150,7 +157,7 @@ debug_build:
 
 install:
 	@echo "Starting installation..."
-	@mkdir -p $(install_dir) && mv $(lib_file) $(header_file) $(install_dir)
+	@mkdir -p $(install_dir) && mv $(lib_file) $(header_file)* $(install_dir)
 	@echo "Installation successful"
 	@echo "Library installed to: $(install_dir)"
 	@echo "Library ready for use"
@@ -187,9 +194,11 @@ $(debug_lib_file): $(debug_unity_obj_file)
 	
 $(header_file): $(header_objs)
 	@$(call preprocess_header,$<,$@,-DNDEBUG,$(dependencies_file),"release")
+	@$(call precompile_header,$@,$(patsubst -flto,,$(compiler_release)))
 
 $(debug_header_file): $(header_objs)
 	@$(call preprocess_header,$<,$@,,$(dependencies_file),"debug")
+	@$(call precompile_header,$@,$(compiler_debug))
 
 $(test_program): $(test_source_file) $(debug_lib_file) $(debug_header_file)
 	@$(call compile_to_exec,$<,$@,$(compile_parms_debug) $(debug_lib_file),"unit test")
