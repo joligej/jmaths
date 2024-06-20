@@ -80,7 +80,7 @@ void test::check_add() {
 
         const auto expected_time = std::accumulate(times.cbegin(), times.cend(), 0) * to_do / done;
 
-        std::cerr << "Expected time: " << expected_time << '\n';
+        std::cout << "Expected time: " << expected_time << '\n';
 
 
     }

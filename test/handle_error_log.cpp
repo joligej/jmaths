@@ -113,7 +113,7 @@ int main (/*int argc, char * argv[]*/) {
             function_stack.pop();
         } else {
             std::getline(line_stream, line);
-            std::cerr << "Skipping a line\n";
+            std::clog << "Skipping a line\n";
         }
     }
 
