@@ -79,7 +79,7 @@ int main (/*int argc, char * argv[]*/) {
             function_by_name.try_emplace(line, line);
 
             function * function_called = &function_by_name.at(line);
-            
+
             if (!function_stack.empty()) {
                 function_stack.top()->new_call(function_called);
             }

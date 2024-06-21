@@ -135,7 +135,7 @@ all:
 
 debug:
 	@$(MAKE) debug_build
-	
+
 fresh:
 	@$(MAKE) clean && $(MAKE) all
 
@@ -143,7 +143,7 @@ clean:
 	@echo "Cleaning files..."
 	@rm -rf $(create_while_building)
 	@echo "Files cleaned successfully"
-	
+
 build:
 	@echo "Building..."
 	@$(MAKE) library && $(MAKE) header
@@ -161,28 +161,28 @@ install:
 	@echo "Installation successful"
 	@echo "Library installed to: $(install_dir)"
 	@echo "Library ready for use"
-	
+
 uninstall:
 	@echo "Uninstalling..."
 	@rm -rf $(install_dir)
 	@echo "Uninstalling successful"
 	@echo "Library removed from system"
-	
+
 $(user_settings_file): $(config_program)
 	@$(config_program)
 
 $(config_program): $(config_source_file)
 	@$(call compile_to_exec,$<,$@,$(compile_parms_release) -DSETTINGS_FILE="$(user_settings_file)","configuration")
-	
+
 $(unity_source_file): $(source_objs)
 	@rm -f "$@"
 	@echo "Creating $@..."
 	@for source_file in $^; do echo "#include \"../$$source_file\"" >> "$@"; done
 	@echo "Successfully created $@"
-	
+
 $(unity_obj_file): $(unity_source_file) $(header_objs)
 	@$(call compile,$<,$@,$(compile_parms_release),"release","unity file")
-	
+
 $(debug_unity_obj_file): $(unity_source_file) $(header_objs)
 	@$(call compile,$<,$@,$(compile_parms_debug),"debug","unity file")
 
@@ -191,7 +191,7 @@ $(lib_file): $(unity_obj_file)
 
 $(debug_lib_file): $(debug_unity_obj_file)
 	@$(call archive,$^,$@)
-	
+
 $(header_file): $(header_objs)
 	@$(call preprocess_header,$<,$@,-DNDEBUG,$(dependencies_file),"release")
 	@$(call precompile_header,$@,$(patsubst -flto,,$(compiler_release)))
@@ -202,7 +202,7 @@ $(debug_header_file): $(header_objs)
 
 $(test_program): $(test_source_file) $(debug_lib_file) $(debug_header_file)
 	@$(call compile_to_exec,$<,$@,$(compile_parms_debug) $(debug_lib_file),"unit test")
-	
+
 $(error_log_program): $(error_log_source_file)
 	@$(call compile_to_exec,$<,$@,$(compile_parms_release),"error handling")
 
@@ -211,7 +211,7 @@ configure: $(config_program)
 unity: $(unity_obj_file)
 
 debug_unity: $(debug_unity_obj_file)
-	
+
 library: $(lib_file)
 
 debug_library: $(debug_lib_file)

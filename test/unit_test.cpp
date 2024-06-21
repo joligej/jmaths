@@ -47,7 +47,7 @@ void test::check_add() {
 
             const testing_type b_big = testing_type(b);
 
-            
+
             const auto result = a_big + b_big;
             const auto expected = a + b;
             const auto fits = result.fits_into<check_type>();

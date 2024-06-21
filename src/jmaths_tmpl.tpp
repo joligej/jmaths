@@ -9,52 +9,52 @@ namespace jmaths {
 template <typename INT>
 requires std::is_integral_v<INT>
 bool detail::opr_eq (const N & lhs, INT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	if (rhs == 0) return lhs.is_zero();
 	if (lhs.is_zero()) return false;
-	
+
 	if (lhs.digits_.size() * base_int_size - 1 > sizeof(rhs)) return false;
-	
+
 	if (lhs.digits_.size() * base_int_size < sizeof(rhs) && (rhs >> (base_int_bits * lhs.digits_.size())) != 0) return false;
-	
+
 	for (const auto & digit : lhs.digits_) {
 		if (digit != (base_int)rhs) return false;
 		REPEAT(base_int_size) rhs >>= bits_in_byte;
 	}
-	
+
 	return true;
 }
 
 template <typename INT>
 requires std::is_integral_v<INT>
 std::strong_ordering detail::opr_comp (const N & lhs, INT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	if (rhs == 0) return lhs.is_zero() ? std::strong_ordering::equal : std::strong_ordering::greater;
 	if (lhs.is_zero()) return std::strong_ordering::less;
-	
+
 	if (lhs.digits_.size() * base_int_size - 1 > sizeof(rhs)) return std::strong_ordering::greater;
-	
+
 	if (lhs.digits_.size() * base_int_size < sizeof(rhs) && (rhs >> (base_int_bits * lhs.digits_.size())) != 0) return std::strong_ordering::less;
-	
+
 	std::size_t pos = 1;
 	for (auto crit = lhs.digits_.crbegin(); crit != lhs.digits_.crend(); ++crit) {
 		INT curr_byte = rhs;
 		REPEAT(base_int_size * (lhs.digits_.size() - pos)) curr_byte >>= bits_in_byte;
 		if (*crit < (base_int)curr_byte) return std::strong_ordering::less;
 		if (*crit > (base_int)curr_byte) return std::strong_ordering::greater;
-		
+
 		++pos;
 	}
-	
+
 	return std::strong_ordering::equal;
 }
 
 template <typename INT>
 requires std::is_integral_v<INT>
 bool operator == (const N & lhs, INT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	return detail::opr_eq(lhs, rhs);
 }
@@ -62,7 +62,7 @@ bool operator == (const N & lhs, INT rhs) {
 template <typename INT>
 requires std::is_integral_v<INT>
 bool operator == (INT lhs, const N & rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	return detail::opr_eq(rhs, lhs);
 }
@@ -70,7 +70,7 @@ bool operator == (INT lhs, const N & rhs) {
 template <typename INT>
 requires std::is_integral_v<INT>
 std::strong_ordering operator <=> (const N & lhs, INT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	return detail::opr_comp(lhs, rhs);
 }
@@ -78,7 +78,7 @@ std::strong_ordering operator <=> (const N & lhs, INT rhs) {
 template <typename INT>
 requires std::is_integral_v<INT>
 std::strong_ordering operator <=> (INT lhs, const N & rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	return (0 <=> detail::opr_comp(rhs, lhs));
 }
@@ -91,20 +91,20 @@ namespace jmaths {
 template <typename INT>
 requires std::is_integral_v<INT>
 bool detail::opr_eq (const Z & lhs, INT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
     if (rhs < 0) {
         if (lhs.is_positive()) return false;
         return (lhs.abs() == -rhs);
     }
-    
+
     return (lhs.abs() == rhs);
 }
 
 template <typename INT>
 requires std::is_integral_v<INT>
 std::strong_ordering detail::opr_comp (const Z & lhs, INT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
     if (lhs.is_positive()) {
         if (rhs >= 0) {
@@ -124,15 +124,15 @@ std::strong_ordering detail::opr_comp (const Z & lhs, INT rhs) {
 template <typename INT>
 requires std::is_integral_v<INT>
 bool operator == (const Z & lhs, INT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
     return detail::opr_eq(lhs, rhs);
 }
-	
+
 template <typename INT>
 requires std::is_integral_v<INT>
 bool operator == (INT lhs, const Z & rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
     return detail::opr_eq(rhs, lhs);
 }
@@ -140,7 +140,7 @@ bool operator == (INT lhs, const Z & rhs) {
 template <typename INT>
 requires std::is_integral_v<INT>
 std::strong_ordering operator <=> (const Z & lhs, INT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
     return detail::opr_comp(lhs, rhs);
 }
@@ -148,7 +148,7 @@ std::strong_ordering operator <=> (const Z & lhs, INT rhs) {
 template <typename INT>
 requires std::is_integral_v<INT>
 std::strong_ordering operator <=> (INT lhs, const Z & rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
     return (0 <=> detail::opr_comp(rhs, lhs));
 }
@@ -161,7 +161,7 @@ namespace jmaths {
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
 bool detail::opr_eq (const Q & lhs, FLOAT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
     return (lhs == Q(rhs));
 }
@@ -169,7 +169,7 @@ bool detail::opr_eq (const Q & lhs, FLOAT rhs) {
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
 std::strong_ordering detail::opr_comp (const Q & lhs, FLOAT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
     return (lhs <=> Q(rhs));
 }
@@ -177,7 +177,7 @@ std::strong_ordering detail::opr_comp (const Q & lhs, FLOAT rhs) {
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
 bool operator == (const Q & lhs, FLOAT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
     return detail::opr_eq(lhs, rhs);
 }
@@ -185,7 +185,7 @@ bool operator == (const Q & lhs, FLOAT rhs) {
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
 bool operator == (FLOAT lhs, const Q & rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
     return detail::opr_eq(rhs, lhs);
 }
@@ -193,7 +193,7 @@ bool operator == (FLOAT lhs, const Q & rhs) {
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
 std::strong_ordering operator <=> (const Q & lhs, FLOAT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
     return detail::opr_comp(lhs, rhs);
 }
@@ -201,7 +201,7 @@ std::strong_ordering operator <=> (const Q & lhs, FLOAT rhs) {
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
 std::strong_ordering operator <=> (FLOAT lhs, const Q & rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
     return (0 <=> detail::opr_comp(rhs, lhs));
 }
@@ -214,31 +214,31 @@ namespace jmaths {
 template <typename INT>
 requires std::is_integral_v<INT>
 void N::opr_assign_ (INT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	digits_.clear();
-		
+
 	digits_.reserve((std::size_t)((double)sizeof(INT)/base_int_size - max_ratio + 1));
-	
+
 	// this assumes that sizeof(smallest type)/base_int_size >= max_ratio
 	REPEAT((std::size_t)((double)sizeof(INT)/base_int_size - max_ratio)) {
 		digits_.emplace_back((base_int)rhs);
 		REPEAT(base_int_size) rhs >>= bits_in_byte;
 	}
-	
+
 	digits_.emplace_back((base_int)rhs);
-	
+
 	remove_leading_zeroes_();
 }
 
 template <typename INT>
 requires std::is_integral_v<INT>
 N::N (INT num) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	if constexpr (sizeof(INT) > 1) {
 		digits_.reserve((std::size_t)((double)sizeof(INT)/base_int_size - max_ratio + 1));
-		
+
 		// this assumes that sizeof(smallest type)/base_int_size >= max_ratio
 		REPEAT((std::size_t)((double)sizeof(INT)/base_int_size - max_ratio)) {
 			digits_.emplace_back((base_int)num);
@@ -246,9 +246,9 @@ N::N (INT num) {
 		}
 
 	} else {}
-		
+
 	digits_.emplace_back((base_int)num);
-	
+
 	remove_leading_zeroes_();
 
 	assert(digits_.empty() || digits_.back() != 0);
@@ -257,10 +257,10 @@ N::N (INT num) {
 template <typename INT>
 requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 std::optional<INT> N::fits_into() const {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	// !!! perhaps use std::numeric_limits<T>::max from <limits> for signed types ???
-	
+
 	#if 0
 	if constexpr (std::is_signed_v<INT>) {
 		if (is_positive()) return N::fits_into<INT>();
@@ -268,15 +268,15 @@ std::optional<INT> N::fits_into() const {
 		// !!! implement this perhaps ???
 	}
 	#endif
-	
+
 	if (is_zero()) return 0;
-	
+
 	if constexpr (sizeof(INT) < base_int_size) {
 		if ((INT)digits_.front() != digits_.front() || digits_.size() > 1) return std::nullopt;
 		return digits_.front();
 	} else {
 		if (digits_.size() * base_int_size > sizeof(INT)) return std::nullopt;
-		
+
 		#if 0
 		INT converted (digits_.back());
 		for (std::size_t i = digits_.size() - 1; i --> 0;) {
@@ -284,22 +284,22 @@ std::optional<INT> N::fits_into() const {
 		  	converted |= digits_[i];
 		}
 		#endif
-	
+
 		INT converted (digits_.front());
-	
+
 		for (std::size_t i = 1; i < digits_.size(); ++i) {
 			converted |= ((INT)digits_[i] << (base_int_bits * i));
 		}
-	
-		return converted;	
+
+		return converted;
 	}
 }
 
 template <typename INT>
 requires std::is_integral_v<INT>
 N & N::operator = (INT rhs) {
-	FUNCTION_TO_STDERR;
-	
+	FUNCTION_TO_LOG;
+
 	opr_assign_(rhs);
 	return *this;
 }
@@ -312,13 +312,13 @@ namespace jmaths {
 template <typename T>
 requires std::is_same_v<N, T> || std::is_same_v<const N, T>
 N::bit_reference_base_<T>::bit_reference_base_ (T & num, bit_type pos) : num_(num), pos_(pos) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 }
 
 template <typename T>
 requires std::is_same_v<N, T> || std::is_same_v<const N, T>
 N::bit_reference_base_<T>::operator bool () const {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	return num_.bit_(pos_);
 }
@@ -326,7 +326,7 @@ N::bit_reference_base_<T>::operator bool () const {
 template <typename T>
 requires std::is_same_v<N, T> || std::is_same_v<const N, T>
 N::bit_reference_base_<T>::operator int () const {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	return operator bool();
 }
@@ -339,13 +339,13 @@ namespace jmaths {
 template <typename INT>
 requires std::is_integral_v<INT>
 sign_type::sign_type (INT & num) : sign_(handle_int_(num)) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 }
 
 template <typename INT>
 requires std::is_integral_v<INT>
 sign_type::sign_bool sign_type::handle_int_ (INT & num) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	if (num < 0) {
 		num *= -1;
@@ -358,11 +358,11 @@ sign_type::sign_bool sign_type::handle_int_ (INT & num) {
 template <typename BOOL>
 requires std::is_convertible_v<BOOL, std::underlying_type_t<sign_type::sign_bool>>
 void sign_type::set_sign_ (BOOL val) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	sign_ = static_cast<sign_bool>(val);
 }
-	
+
 } // /namespace jmaths
 
 // member function templates of Z
@@ -371,29 +371,29 @@ namespace jmaths {
 template <typename INT>
 requires std::is_integral_v<INT>
 Z::Z (INT num) : sign_type(num), N(num) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 }
 
 template <typename INT>
 requires std::is_integral_v<INT>
 std::optional<INT> Z::fits_into() const {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	if constexpr (std::is_unsigned_v<INT>) {
 		if (is_positive()) return N::fits_into<INT>();
 		else return std::nullopt;
 	}
-	
+
 	if (is_zero()) return 0;
-	
+
 	if constexpr (sizeof(INT) < base_int_size) {
 		if (digits_.front() > (is_negative() ? -std::numeric_limits<INT>::min() : std::numeric_limits<INT>::max()) || digits_.size() > 1) return std::nullopt;
 		return (is_negative() ? -digits_.front() : digits_.front());
 	} else {
 		if (digits_.size() * base_int_size > sizeof(INT)) return std::nullopt;
-		
+
 		if (detail::opr_comp(*this, (is_negative() ? -std::numeric_limits<INT>::min() : std::numeric_limits<INT>::max())) > 0) return std::nullopt;
-		
+
 		#if 0
 		INT converted (digits_.back());
 		for (std::size_t i = digits_.size() - 1; i --> 0;) {
@@ -401,28 +401,28 @@ std::optional<INT> Z::fits_into() const {
 		  	converted |= digits_[i];
 		}
 		#endif
-	
+
 		INT converted (digits_.front());
-	
+
 		for (std::size_t i = 1; i < digits_.size(); ++i) {
 			converted += (INT)((std::make_unsigned_t<INT>)digits_[i] << (base_int_bits * i));
 		}
-		
+
 		if (is_negative()) -converted;
-		else return converted;	
+		else return converted;
 	}
 }
 
 template <typename INT>
 requires std::is_integral_v<INT>
 Z & Z::operator = (INT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	set_sign_(sign_type::handle_int_(rhs));
 	N::opr_assign_(rhs);
 	return *this;
 }
-	
+
 } // /namespace jmaths
 
 // member function templates of Q
@@ -431,20 +431,20 @@ namespace jmaths {
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
 std::tuple<N, N, sign_type::sign_bool> Q::handle_float_ (FLOAT num) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	int exponent;
     FLOAT significant_part = std::frexp(num, &exponent);
     significant_part = std::scalbn(significant_part, std::numeric_limits<FLOAT>::digits);
     exponent -= std::numeric_limits<FLOAT>::digits;
-    
+
     auto numerator = std::llrint(significant_part);
     auto denominator = std::llrint(std::exp2(-exponent));
-    
+
     const auto sign = (numerator < 0) ? sign_type::negative : sign_type::positive;
-    
+
     if (sign == sign_type::negative) numerator *= -1;
-    
+
     // it is assumed here that exponent is negative at this point
 
 	return {(std::make_unsigned_t<decltype(numerator)>)numerator, (std::make_unsigned_t<decltype(denominator)>)denominator, sign};
@@ -453,15 +453,15 @@ std::tuple<N, N, sign_type::sign_bool> Q::handle_float_ (FLOAT num) {
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
 Q::Q (FLOAT num) : Q(handle_float_(num)) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 }
 
 #if 0
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT> && std::numeric_limits<FLOAT>::is_iec559
 std::optional<FLOAT> Q::fits_into() const {
-	FUNCTION_TO_STDERR;
-	
+	FUNCTION_TO_LOG;
+
 	using nlf = std::numeric_limits<FLOAT>;
 
 	constexpr bool is_allowed_type = std::is_same_v<FLOAT, float> || std::is_same_v<FLOAT, double>;
@@ -535,7 +535,7 @@ std::optional<FLOAT> Q::fits_into() const {
 
 	using access_type = std::conditional_t<std::is_same_v<FLOAT, float>, float_access, double_access>;
 	using sizes_type = std::conditional_t<std::is_same_v<FLOAT, float>, float_sizes, double_sizes>;
-	
+
 	static_assert(sizeof(float_access) == sizeof(float) && sizeof(float_access) == sizeof(std::uint32_t[1]), "There seems to be a problem with the padding bits for type: float_acess.");
 	static_assert(sizeof(double_access) == sizeof(double) && sizeof(double_access) == sizeof(std::uint64_t[1]), "There seems to be a problem with the padding bits for type: double_access.");
 	//static_assert(sizeof(long_double_access) == sizeof(long double) && sizeof(long_double_access) == sizeof(std::uint64_t[2]), "There seems to be a problem with the padding bits for type: long_double_access.");
@@ -578,7 +578,7 @@ std::optional<FLOAT> Q::fits_into() const {
 			converted_help->fields.exponent = div_pair.first.bits() - 1;
 
 			converted_help->fields.sign = is_negative();
-			
+
 			return converted;
 		} else {
 
@@ -596,7 +596,7 @@ std::optional<FLOAT> Q::fits_into() const {
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>
 Q & Q::operator = (FLOAT rhs) {
-	FUNCTION_TO_STDERR;
+	FUNCTION_TO_LOG;
 
 	auto fraction_info = handle_float_(rhs);
 	num_ = std::move(std::get<0>(fraction_info));

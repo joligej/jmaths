@@ -5,7 +5,7 @@
 namespace jmaths {
 
 N N::rand (std::size_t upper_bound_exponent) {
-    FUNCTION_TO_STDERR;
+    FUNCTION_TO_LOG;
 
     static std::mt19937 gen (std::random_device{}());
     static std::uniform_int_distribution<base_int> distrib;
@@ -23,8 +23,8 @@ N N::rand (std::size_t upper_bound_exponent) {
 }
 
 Z Z::rand (std::size_t upper_bound_exponent) {
-    FUNCTION_TO_STDERR;
-    
+    FUNCTION_TO_LOG;
+
     static std::mt19937 gen (std::random_device{}());
     static std::uniform_int_distribution<int> distrib (0, 1);
 
