@@ -129,7 +129,7 @@ N calc::pow_mod (N base, N exponent, const N & mod) {
 	for (;;) {
 		if (exponent.front_() & 1) {
 			result.opr_mult_assign_(base);
-			result = detail::opr_div(result, mod).second;
+			result = detail::opr_div(result, mod).second; // maybe use separate function just for mod ???
 		}
 
 		exponent.opr_bitshift_r_assign_(1);
