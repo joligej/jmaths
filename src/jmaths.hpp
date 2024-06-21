@@ -475,6 +475,7 @@ class Q : public sign_type {
 		operator std::string() const; // convert to string in default base
 		std::string to_base16() const; // convert to string in base 16 (assumes base is a power of 2)
 		explicit operator bool() const;
+		// FIXME:
 		//template <typename FLOAT> requires std::is_floating_point_v<FLOAT> && std::numeric_limits<FLOAT>::is_iec559 std::optional<FLOAT> fits_into() const;
 
 		Q & operator ++ ();
