@@ -45,7 +45,7 @@ std::pair<N, N> calc::sqrt (const N & num) {
 	while (detail::opr_comp(start, end) <= 0) {
 		N mid = detail::opr_add(start, end).opr_bitshift_r_(1);
 
-		N sqr = pow(mid, 2);
+		const N sqr = detail::opr_mult(mid, mid);
 
 		const auto compared = detail::opr_comp(sqr, num);
 
@@ -61,7 +61,7 @@ std::pair<N, N> calc::sqrt (const N & num) {
 		}
 	}
 
-	N remainder = detail::opr_subtr(num, pow(ans, 2));
+	N remainder = detail::opr_subtr(num, detail::opr_mult(ans, ans));
 
     return {std::move(ans), std::move(remainder)};
 }
@@ -79,7 +79,7 @@ N calc::sqrt_whole (const N & num) {
 	while (detail::opr_comp(start, end) <= 0) {
 		N mid = detail::opr_add(start, end).opr_bitshift_r_(1);
 
-		N sqr = pow(mid, 2);
+		const N sqr = detail::opr_mult(mid, mid);
 
 		const auto compared = detail::opr_comp(sqr, num);
 
