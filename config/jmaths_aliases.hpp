@@ -6,7 +6,9 @@
 
 namespace jmaths {
 
-#if BIT_ARCHITECTURE >= 64
+#ifndef BIT_ARCHITECTURE
+    #error You didn't define the bit architecture!
+#elif BIT_ARCHITECTURE >= 64
 
 using base_int = std::uint32_t;
 using base_int_big = std::uint64_t;
