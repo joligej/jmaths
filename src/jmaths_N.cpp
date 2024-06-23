@@ -295,10 +295,11 @@ std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
 
 	if (lhs.is_zero()) return {N{}, N{}};
 
-	static const N one (1);
-
 	// check if lhs == rhs
-	if (opr_eq(lhs, rhs)) return {one, N{}};
+	if (opr_eq(lhs, rhs)) {
+		static const N one (1);
+		return {one, N{}};
+	}
 
 	N q, r;
 
