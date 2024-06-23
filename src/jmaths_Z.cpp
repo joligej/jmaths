@@ -35,7 +35,7 @@ Z detail::opr_add (const Z & lhs, const Z & rhs) {
 			const auto difference = detail::opr_comp(lhs.abs(), rhs.abs());
 
 			if (difference == 0) {
-				return Z();
+				return Z{};
 			} else if (difference > 0) {
 				return Z(detail::opr_subtr(lhs.abs(), rhs.abs()), positive);
 			} else {
@@ -48,7 +48,7 @@ Z detail::opr_add (const Z & lhs, const Z & rhs) {
 			const auto difference = detail::opr_comp(lhs.abs(), rhs.abs());
 
 			if (difference == 0) {
-				return Z();
+				return Z{};
 			} else if (difference > 0) {
 				return Z(detail::opr_subtr(lhs.abs(), rhs.abs()), negative);
 			} else {
@@ -71,7 +71,7 @@ Z detail::opr_subtr (const Z & lhs, const Z & rhs) {
 			const auto difference = detail::opr_comp(lhs.abs(), rhs.abs());
 
 			if (difference == 0) {
-				return Z();
+				return Z{};
 			} else if (difference > 0) {
 				return Z(detail::opr_subtr(lhs.abs(), rhs.abs()), positive);
 			} else {
@@ -87,7 +87,7 @@ Z detail::opr_subtr (const Z & lhs, const Z & rhs) {
 			const auto difference = detail::opr_comp(lhs.abs(), rhs.abs());
 
 			if (difference == 0) {
-				return Z();
+				return Z{};
 			} else if (difference > 0) {
 				return Z(detail::opr_subtr(lhs.abs(), rhs.abs()), negative);
 			} else {
@@ -102,7 +102,7 @@ Z detail::opr_mult (const Z & lhs, const Z & rhs) {
 
 	N && product = lhs.abs() * rhs.abs();
 
-	if (product.is_zero()) return Z();
+	if (product.is_zero()) return Z{};
 
 	return Z(std::move(product), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
 
@@ -115,13 +115,13 @@ std::pair<Z, Z> detail::opr_div (const Z & lhs, const Z & rhs) {
 
 	if (quotient.first.is_zero()) {
 		if (quotient.second.is_zero()) {
-			return {Z(), Z()};
+			return {Z{}, Z{}};
 		} else {
-			return {Z(), Z(std::move(quotient.second), lhs.sign_)};
+			return {Z{}, Z(std::move(quotient.second), lhs.sign_)};
 		}
 	} else {
 		if (quotient.second.is_zero()) {
-			return {Z(std::move(quotient.first), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)), Z()};
+			return {Z(std::move(quotient.first), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)), Z{}};
 		} else {
 			return {Z(std::move(quotient.first), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)), Z(std::move(quotient.second), lhs.sign_)};
 		}
@@ -133,7 +133,7 @@ Z detail::opr_and (const Z & lhs, const Z & rhs) {
 
 	N && and_result = lhs.abs() & rhs.abs();
 
-	if (and_result.is_zero()) return Z();
+	if (and_result.is_zero()) return Z{};
 
 	return Z(std::move(and_result), static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_));
 }
@@ -143,7 +143,7 @@ Z detail::opr_or (const Z & lhs, const Z & rhs) {
 
 	N && or_result = lhs.abs() | rhs.abs();
 
-	if (or_result.is_zero()) return Z();
+	if (or_result.is_zero()) return Z{};
 
 	return Z(std::move(or_result), static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_));
 }
@@ -153,7 +153,7 @@ Z detail::opr_xor (const Z & lhs, const Z & rhs) {
 
 	N && xor_result = lhs.abs() ^ rhs.abs();
 
-	if (xor_result.is_zero()) return Z();
+	if (xor_result.is_zero()) return Z{};
 
 	return Z(std::move(xor_result), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
 }
@@ -511,7 +511,7 @@ Z Z::operator ~ () const {
 	N && complemented = N::opr_compl_();
 
 	if (complemented.is_zero()) {
-		return Z();
+		return Z{};
 	} else {
 		return Z(std::move(complemented), static_cast<sign_bool>(!sign_));
 	}
@@ -529,7 +529,7 @@ Z Z::operator >> (bit_type pos) const {
 	N && shifted = N::opr_bitshift_r_(pos);
 
 	if (shifted.is_zero()) {
-		return Z();
+		return Z{};
 	} else {
 		return Z(std::move(shifted), sign_);
 	}

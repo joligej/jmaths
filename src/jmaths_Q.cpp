@@ -39,7 +39,7 @@ Q detail::opr_add (const Q & lhs, const Q & rhs) {
 			const auto difference = detail::opr_comp(first_product, second_product);
 
 			if (difference == 0) {
-				return Q();
+				return Q{};
 			} else if (difference > 0) {
 				first_product.opr_subtr_assign_(second_product);
 				return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
@@ -56,7 +56,7 @@ Q detail::opr_add (const Q & lhs, const Q & rhs) {
 			const auto difference = detail::opr_comp(first_product, second_product);
 
 			if (difference == 0) {
-				return Q();
+				return Q{};
 			} else if (difference > 0) {
 				first_product.opr_subtr_assign_(second_product);
 				return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
@@ -85,7 +85,7 @@ Q detail::opr_subtr (const Q & lhs, const Q & rhs) {
 			const auto difference = detail::opr_comp(first_product, second_product);
 
 			if (difference == 0) {
-				return Q();
+				return Q{};
 			} else if (difference > 0) {
 				first_product.opr_subtr_assign_(second_product);
 				return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
@@ -110,7 +110,7 @@ Q detail::opr_subtr (const Q & lhs, const Q & rhs) {
 			const auto difference = detail::opr_comp(first_product, second_product);
 
 			if (difference == 0) {
-				return Q();
+				return Q{};
 			} else if (difference > 0) {
 				first_product.opr_subtr_assign_(second_product);
 				return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
@@ -127,7 +127,7 @@ Q detail::opr_mult (const Q & lhs, const Q & rhs) {
 
 	N && numerator = lhs.num_ * rhs.num_;
 
-	if (numerator.is_zero()) return Q();
+	if (numerator.is_zero()) return Q{};
 
 	return Q(std::move(numerator), lhs.denom_ * rhs.denom_, static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
 }
@@ -137,7 +137,7 @@ Q detail::opr_div (const Q & lhs, const Q & rhs) {
 
 	N && numerator = lhs.num_ * rhs.denom_;
 
-	if (numerator.is_zero()) return Q();
+	if (numerator.is_zero()) return Q{};
 
 	return Q(std::move(numerator), lhs.denom_ * rhs.num_, static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
 }
@@ -151,7 +151,7 @@ Q detail::opr_and (const Q & lhs, const Q & rhs) {
 
 	N && numerator = lhs.num_ & rhs.num_;
 
-	if (numerator.is_zero()) return Q();
+	if (numerator.is_zero()) return Q{};
 
 	return Q(std::move(numerator), std::move(denominator), static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_));
 }
@@ -161,7 +161,7 @@ Q detail::opr_or (const Q & lhs, const Q & rhs) {
 
 	N && numerator = lhs.num_ | rhs.num_;
 
-	if (numerator.is_zero()) return Q();
+	if (numerator.is_zero()) return Q{};
 
 	return Q(std::move(numerator), lhs.denom_ | rhs.denom_, static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_));
 }
@@ -175,7 +175,7 @@ Q detail::opr_xor (const Q & lhs, const Q & rhs) {
 
 	N && numerator = lhs.num_ ^ rhs.num_;
 
-	if (numerator.is_zero()) return Q();
+	if (numerator.is_zero()) return Q{};
 
 	return Q(std::move(numerator), std::move(denominator), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
 }
@@ -718,7 +718,7 @@ Q Q::operator ~ () const {
 	N && num_complemented = num_.opr_compl_();
 
 	if (num_complemented.is_zero()) {
-		return Q();
+		return Q{};
 	} else {
 		N && denom_complemented = denom_.opr_compl_();
 		if (denom_complemented.is_zero()) throw error::division_by_zero("Denominator of complemented fraction cannot be zero!");
@@ -735,7 +735,7 @@ Q Q::operator << (bit_type pos) const {
 Q Q::operator >> (bit_type pos) const {
 	FUNCTION_TO_LOG;
 
-	if (is_zero()) return Q();
+	if (is_zero()) return Q{};
 	return Q(num_, denom_.opr_bitshift_l_(pos), sign_);
 }
 

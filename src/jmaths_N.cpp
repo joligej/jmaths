@@ -151,7 +151,7 @@ N detail::opr_mult (const N & lhs, const N & rhs) {
 	if (rhs.is_one()) return lhs;
 
 	// check for multiplicative zero
-	if (lhs.is_zero() || rhs.is_zero()) return N();
+	if (lhs.is_zero() || rhs.is_zero()) return N{};
 
 	const N * longest;
 	const N * shortest;
@@ -214,7 +214,7 @@ N detail::opr_mult (const N & lhs, const N & rhs) {
 		if (rhs.is_one()) return lhs;
 
 		// check for multiplicative zero
-		if (lhs.is_zero() || rhs.is_zero()) return N();
+		if (lhs.is_zero() || rhs.is_zero()) return N{};
 
 		N product;
 
@@ -261,7 +261,7 @@ N detail::opr_mult (const N & lhs, const N & rhs) {
 	if (rhs.is_one()) return lhs;
 
 	// check for multiplicative zero
-	if (lhs.is_zero() || rhs.is_zero()) return N();
+	if (lhs.is_zero() || rhs.is_zero()) return N{};
 
 	N product;
 
@@ -293,10 +293,12 @@ N detail::opr_mult (const N & lhs, const N & rhs) {
 std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
 	FUNCTION_TO_LOG;
 
-	if (lhs.is_zero()) return {N(), N()};
+	if (lhs.is_zero()) return {N{}, N{}};
+
+	static const N one (1);
 
 	// check if lhs == rhs
-	if (opr_eq(lhs, rhs)) return {N(1), N()};
+	if (opr_eq(lhs, rhs)) return {one, N{}};
 
 	N q, r;
 
@@ -331,7 +333,7 @@ std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
 N detail::opr_and (const N & lhs, const N & rhs) {
 	FUNCTION_TO_LOG;
 
-	if (lhs.is_zero() || rhs.is_zero()) return N();
+	if (lhs.is_zero() || rhs.is_zero()) return N{};
 
 	const N & shortest = (lhs.digits_.size() < rhs.digits_.size() ? lhs : rhs);
 
@@ -461,7 +463,7 @@ N operator - (const N & lhs, const N & rhs) {
 
 	const auto difference = detail::opr_comp(lhs, rhs);
 
-	if (difference == 0) return N();
+	if (difference == 0) return N{};
 	return (difference > 0 ? detail::opr_subtr(lhs, rhs) : detail::opr_subtr(rhs, lhs));
 }
 
@@ -823,7 +825,7 @@ N N::opr_compl_() const {
 N N::opr_bitshift_l_ (bit_type pos) const {
 	FUNCTION_TO_LOG;
 
-	if (is_zero()) return N();
+	if (is_zero()) return N{};
 
 	const std::size_t pos_whole = pos / base_int_bits;
 	const bit_type pos_mod = pos % base_int_bits;
@@ -850,11 +852,11 @@ N N::opr_bitshift_l_ (bit_type pos) const {
 N N::opr_bitshift_r_ (bit_type pos) const {
 	FUNCTION_TO_LOG;
 
-	if (is_zero()) return N();
+	if (is_zero()) return N{};
 
 	const std::size_t pos_whole = pos / base_int_bits;
 
-	if (pos_whole >= digits_.size()) return N();
+	if (pos_whole >= digits_.size()) return N{};
 
 	const bit_type pos_mod = pos % base_int_bits;
 
