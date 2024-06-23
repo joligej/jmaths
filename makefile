@@ -1,5 +1,6 @@
 install_dir ?= "/usr/local/jmaths/"
 pth_extension ?= .gch
+karatsuba ?= 0
 
 # the names of the library and header to be installed
 lib_name = jmaths
@@ -181,10 +182,10 @@ $(unity_source_file): $(source_objs)
 	@echo "Successfully created $@"
 
 $(unity_obj_file): $(unity_source_file) $(header_objs)
-	@$(call compile,$<,$@,$(compile_parms_release),"release","unity file")
+	@$(call compile,$<,$@,$(compile_parms_release) -DKARATSUBA=$(karatsuba),"release","unity file")
 
 $(debug_unity_obj_file): $(unity_source_file) $(header_objs)
-	@$(call compile,$<,$@,$(compile_parms_debug),"debug","unity file")
+	@$(call compile,$<,$@,$(compile_parms_debug) -DKARATSUBA=$(karatsuba),"debug","unity file")
 
 $(lib_file): $(unity_obj_file)
 	@$(call archive,$^,$@)

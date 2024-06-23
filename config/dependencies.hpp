@@ -4,6 +4,8 @@
 #include <string_view> //for std::string_view
 #include <vector> // for std::vector
 #include <utility> // for std::pair and std::swap
+#include <algorithm> // for std::copy
+#include <iterator> // for std::back_inserter
 #include <tuple> // for std::tuple and std::gets
 #include <compare> // for std::strong_ordering
 #include <exception> // for std::exception

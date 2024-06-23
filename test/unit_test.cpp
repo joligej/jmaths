@@ -21,6 +21,7 @@ typedef struct jmaths::detail::test {
     using testing_type = jmaths::N;
 
     static void check_add();
+    static void check_multiply();
 } test;
 
 void test::check_add() {
@@ -86,11 +87,31 @@ void test::check_add() {
     }
 }
 
+void test::check_multiply() {
+    for (unsigned long long i = 2; i < jmaths::base; i *= 3) {
+        const N a (std::to_string(i));
+
+        for (unsigned long long j = 2; j < jmaths::base; j *= 3) {
+            const N b (std::to_string(j));
+
+            const auto result = a * b;
+
+            std::cout << "a: " << a << '\n';
+            std::cout << "b: " << b << '\n';
+            std::cout << "result: " << result << '\n';
+
+            assert((result / a).first == b);
+        }
+    }
+}
+
 int main (int argc, char * argv[]) {
     (void)argc;
     (void)argv;
 
     using jmaths::N;
+
+    test::check_multiply();
 
     constexpr std::size_t break_value = 9999;
     constexpr unsigned amount_of_rands = 1;

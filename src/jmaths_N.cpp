@@ -138,6 +138,124 @@ N detail::opr_subtr (N lhs, const N & rhs) {
 N detail::opr_mult (const N & lhs, const N & rhs) {
 	FUNCTION_TO_LOG;
 
+	#ifndef KARATSUBA
+		#error KARATSUBA is not defined, please define it when compiling!
+	#endif
+
+	#if KARATSUBA
+
+	#error The KARATSUBA algorithm is still a work in progress, please define KARATSUBA as 0
+
+	// check for multiplicative identity
+	if (lhs.is_one()) return rhs;
+	if (rhs.is_one()) return lhs;
+
+	// check for multiplicative zero
+	if (lhs.is_zero() || rhs.is_zero()) return N();
+
+	const N * longest;
+	const N * shortest;
+
+	if (lhs.digits_.size() < rhs.digits_.size()) {
+		longest = &rhs;
+		shortest = &lhs;
+	} else {
+		longest = &lhs;
+		shortest = &rhs;
+	}
+
+	assert(longest && shortest);
+
+	const std::size_t longest_digits_count = longest->digits_.size();
+	const std::size_t longest_digits_left = longest_digits_count / 2;
+	const std::size_t longest_digits_right = (longest_digits_count / 2) + 0.999;
+
+	N longest_num_r, longest_num_l;
+
+	{
+		longest_num_r.digits_.reserve(longest_digits_right);
+		longest_num_l.digits_.reserve(longest_digits_left);
+
+		auto cit = longest->digits_.cbegin();
+
+		for (std::size_t i = 0; i < longest_digits_right; ++cit, ++i) {
+			longest_num_r.digits_.emplace_back(*cit);
+		}
+
+		for (std::size_t i = 0; i < longest_digits_left; ++cit, ++i) {
+			assert((cit != longest->digits_.cend()));
+			longest_num_l.digits_.emplace_back(*cit);
+		}
+	}
+
+	N shortest_num_r, shortest_num_l;
+
+	{
+		shortest_num_r.digits_.reserve(longest_digits_right);
+
+		auto cit = shortest->digits_.cbegin();
+
+		for (std::size_t i = 0; i < longest_digits_right && cit != shortest->digits_.cend(); ++cit, ++i) {
+			shortest_num_r.digits_.emplace_back(*cit);
+		}
+
+		if (cit != shortest->digits_.cend()) {
+			shortest_num_l.digits_.reserve(longest_digits_left);
+		}
+
+		for (std::size_t i = 0; i < longest_digits_left && cit != shortest->digits_.cend(); ++cit, ++i) {
+			shortest_num_l.digits_.emplace_back(*cit);
+		}
+	}
+	
+	const auto multiply = [] (const N & lhs, const N & rhs, std::size_t exp) -> N {
+		// check for multiplicative identity
+		if (lhs.is_one()) return rhs;
+		if (rhs.is_one()) return lhs;
+
+		// check for multiplicative zero
+		if (lhs.is_zero() || rhs.is_zero()) return N();
+
+		N product;
+
+		// max overhead would be base_int_size
+		product.digits_.reserve(lhs.digits_.size() + rhs.digits_.size() + exp);
+
+		for (std::size_t i = 0; i < lhs.digits_.size(); ++i) {
+			N temp1;
+			temp1.digits_.reserve(i + rhs.digits_.size() + 1);
+			temp1.digits_.insert(temp1.digits_.begin(), i, 0);
+			base_int carry = 0;
+			for (std::size_t j = 0; j < rhs.digits_.size(); ++j) {
+				const base_int_big temp2 = (base_int_big)lhs.digits_[i] * (base_int_big)rhs.digits_[j];
+				const base_int temp3 = (base_int)temp2;
+				temp1.digits_.emplace_back(carry + temp3);
+				const base_int temp_carry = ((base_int_big)carry + (base_int_big)temp3) >> base_int_bits;
+				carry = (temp2 >> base_int_bits) + temp_carry;
+			}
+
+			if (carry) temp1.digits_.emplace_back(carry);
+			product.opr_add_assign_(temp1);
+		}
+
+		return product;
+	};
+
+	const auto insert_front = [] (const N & n, std::size_t exp) -> N {
+		N exponentiated;
+		exponentiated.digits_.reserve(n.digits_.size() + exp);
+		exponentiated.digits_.insert(exponentiated.digits_.begin(), exp, 0);
+		std::copy(n.digits_.begin(), n.digits_.end(), std::back_inserter(exponentiated.digits_));
+		return exponentiated;
+	};
+
+	const auto XlYl = multiply(shortest_num_l, longest_num_l, 2 * longest_digits_right);
+	const auto XrYr = multiply(shortest_num_r, longest_num_r, 0); // should this really be 0 ???
+
+	return insert_front(XlYl, 2 * longest_digits_right) + insert_front(((multiply(shortest_num_l + shortest_num_r, longest_num_l + longest_num_r, 0) - XlYl) - XrYr), longest_digits_right) + XrYr;
+	
+	#else
+
 	// check for multiplicative identity
 	if (lhs.is_one()) return rhs;
 	if (rhs.is_one()) return lhs;
@@ -168,6 +286,8 @@ N detail::opr_mult (const N & lhs, const N & rhs) {
 	}
 
 	return product;
+
+	#endif
 }
 
 std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
