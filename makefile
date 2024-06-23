@@ -1,5 +1,6 @@
 install_dir ?= "/usr/local/jmaths/"
 pth_extension ?= .gch
+bit_architecture ?= 64
 karatsuba ?= 0
 
 # the names of the library and header to be installed
@@ -96,7 +97,7 @@ compile_parms_debug = $(compiler_version) $(compiler_warnings) $(compiler_debug)
 
 define compile
 	echo "Compiling $(5) in $(4) mode..."
-	$(cc) $(3) "$(1)" -c -o "$(2)"
+	$(cc) $(3) -DBIT_ARCHITECTURE=$(bit_architecture) "$(1)" -c -o "$(2)"
 	echo "Successfully compiled $(5)"
 endef
 
@@ -117,7 +118,7 @@ define preprocess_header
 	echo "#pragma once" > "$(2)"
 	cat "$(4)" >> "$(2)"
 	echo "Preprocessing $(1) in $(5) mode..."
-	$(cc) $(compiler_version) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER $(3) "$(1)" -E -P >> "$(2)"
+	$(cc) $(compiler_version) -nostdinc++ -nostdinc -DPREPROCESSING_HEADER -DBIT_ARCHITECTURE=$(bit_architecture) $(3) "$(1)" -E -P >> "$(2)"
 	echo "Successfully created $(2)"
 endef
 

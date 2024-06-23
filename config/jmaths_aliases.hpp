@@ -6,10 +6,29 @@
 
 namespace jmaths {
 
-using base_int = std::uint32_t; // or std::uint16_t on 32-bit architectures
-using base_int_big = std::uint64_t; // or std::uint32_t on 32-bit architectures
+#if BIT_ARCHITECTURE >= 64
+
+using base_int = std::uint32_t;
+using base_int_big = std::uint64_t;
+inline constexpr base_int_big base = 4'294'967'296;
+
+#elif BIT_ARCHITECTURE >= 32
+
+using base_int = std::uint16_t;
+using base_int_big = std::uint32_t;
+inline constexpr base_int_big base = 65'536;
+
+#elif BIT_ARCHITECTURE >= 16
+
+using base_int = std::uint8_t;
+using base_int_big = std::uint16_t;
+inline constexpr base_int_big base = 256;
+
+#else
+    #error No support for bit architectures below 16
+#endif
+
 using bit_type = unsigned long long; // the type that should store a number of bits, preferably the largest type available
-inline constexpr base_int_big base = 4'294'967'296; // or 65'536 on 32-bit architectures
 inline constexpr unsigned default_base = 10; // the default base that strings are assumed to be in
 template <typename T> using allocator = std::allocator<T>; // the allocator used to store the numbers in a container on the heap
 

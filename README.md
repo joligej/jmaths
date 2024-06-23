@@ -25,7 +25,7 @@ Whilst doing this, you will be guided through the configuration process. To rebu
 
 To uninstall the library, simply type `sudo make uninstall`, and any traces of the library will be removed from your system. If you provided a custom installation directory, please pass the directory as an `install_dir` parameter to the uninstall command as well.
 
-The default compiler is `clang++`. If you wish to specify another compiler, such as `g++`, pass the path to the compiler command as a parameter to the makefile, by specifying, for example, `cc=g++14`, just like with the installation directory. The same goes for changing the extension of pretokenised headers, which by default is `.gch`. Change this by passing `pth_extension=.something` as a parameter.
+The default compiler is `clang++`. If you wish to specify another compiler, such as `g++`, pass the path to the compiler command as a parameter to the makefile, by specifying, for example, `cc=g++14`, just like with the installation directory. The same goes for changing the extension of pretokenised headers, which by default is `.gch`. Change this by passing `pth_extension=.something` as a parameter. Also, your system's bit architecture can be set via the parameter `bit_architecture=some_value`, like 32 or 64. Be advised that there is no support for bit architectures below 16.
 
 When linking with `libjmaths.a`, it is important to also link with any libraries that it depends on, for example when providing a custom allocator in `config/jmaths_aliases.hpp`, and to do so _after_ linking with `libjmaths.a`.
 
