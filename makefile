@@ -2,6 +2,15 @@ install_dir ?= "/usr/local/jmaths/"
 pth_extension ?= .gch
 bit_architecture ?= 64
 karatsuba ?= 0
+cc ?= clang++
+
+compiler_version = -std=c++2b
+compiler_warnings = -Wall -Werror -Wextra -Wpedantic -Wpessimizing-move
+ifeq ($(cc), clang++)
+	compiler_warnings += -Wreturn-std-move -Wdefaulted-function-deleted
+endif
+compiler_release = -O3 -march=native -flto -DNDEBUG
+compiler_debug = -O0 -g
 
 # the names of the library and header to be installed
 lib_name = jmaths
@@ -82,15 +91,6 @@ source_files = jmaths_N.cpp jmaths_Z.cpp jmaths_Q.cpp jmaths_calc.cpp jmaths_mis
 source_objs = $(addprefix $(source_dir), $(source_files))
 
 create_while_building = "$(config_program)" "$(user_settings_file)" "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)"* "$(debug_header_file)"* "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM" "$(error_log_program)"
-
-cc ?= clang++
-compiler_version = -std=c++2b
-compiler_warnings = -Wall -Werror -Wextra -Wpedantic -Wpessimizing-move
-ifeq ($(cc), clang++)
-	compiler_warnings += -Wreturn-std-move -Wdefaulted-function-deleted
-endif
-compiler_release = -O3 -march=native -flto -DNDEBUG
-compiler_debug = -O0 -g
 
 compile_parms_release = $(compiler_version) $(compiler_warnings) $(compiler_release)
 compile_parms_debug = $(compiler_version) $(compiler_warnings) $(compiler_debug)
