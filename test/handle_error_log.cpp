@@ -117,7 +117,7 @@ int main (/*int argc, char * argv[]*/) {
         }
     }
 
-    std::clog << "Open stack frame:\n";
+    if (!function_stack.empty()) std::clog << "Open stack frame:\n";
     while (!function_stack.empty()) {
         std::clog << function_stack.top()->name() << '\n';
         function_stack.pop();
