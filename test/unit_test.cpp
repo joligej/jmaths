@@ -533,8 +533,10 @@ decltype(testables::combined_conv_pairs) testables::combined_conv_pairs = []{
     return converted;
 }();
 
+struct arg2res {
+    template <typename T>
+    using func = std::function<T(const T&, const T&)>;
 
-struct num2argres {
     enum value : std::size_t {
         add = 0,
         subtract,
@@ -546,7 +548,10 @@ struct num2argres {
     };
 };
 
-struct num2argcomp {
+struct arg2comp {
+    template <typename T>
+    using func = std::function<bool(const T&, const T&)>;
+
     enum value : std::size_t {
         equal_to = 0,
         not_equal_to,
@@ -558,13 +563,71 @@ struct num2argcomp {
     };
 };
 
-using num2argassign = num2argres;
+struct arg2assign : arg2res {
+    template <typename T>
+    using func = std::function<T&(T&, const T&)>;
+};
+
+struct arg1single {
+    template <typename T>
+    using func = std::function<T&(T&)>;
+
+    enum value : std::size_t {
+        increment = 0,
+        decrement,
+        max_value
+    };
+};
+
+struct arg2bit {
+    template <typename T>
+    using func = std::function<T(const T&, bit_type)>;
+
+    enum value : std::size_t {
+        left = 0,
+        right,
+        max_value
+    };
+};
+
+struct arg2bitassign : arg2bit {
+    template <typename T>
+    using func = std::function<T&(T&, bit_type)>;
+};
+
+struct arg1bitwise {
+    template <typename T>
+    using func = std::function<T(const T&)>;
+    
+    enum value : std::size_t {
+        complement = 0,
+        max_value
+    };
+};
+
+struct arg2div {
+    template <typename T>
+    using func = std::function<T(const T&, const T&)>;
+
+    template <typename T>
+    using func_special = std::function<std::pair<T, T>(const T&, const T&)>;
+
+    enum value : std::size_t {
+        division = 0,
+        max_value
+    };
+};
 
 template <typename T>
 struct check_operators {
     static const T res[];
     static const T comp[];
     static const T assign[];
+    static const T single[];
+    static const T bit[];
+    static const T bitassign[];
+    static const T bitwise[];
+    static const T division[];
 };
 
 template <typename T>
@@ -597,60 +660,63 @@ const T check_operators<T>::assign[] = {
     [](auto & n1, const auto & n2) -> auto& { return n1 ^= n2; }
 };
 
-#if 0
-const std::function<N&(N&)> operators_incr_decr[] = {
-    [](N & n) -> N& { return ++n; },
-    [](N & n) -> N& { return --n; }
+template <typename T>
+const T check_operators<T>::single[] = {
+    [](auto & n) -> auto& { return ++n; },
+    [](auto & n) -> auto& { return --n; }
 };
-
-const std::function<N(const N&, jmaths::bit_type)> operators_bit[] = {
-    [](const N & n, jmaths::bit_type bit) -> N { return n << bit; },
-    [](const N & n, jmaths::bit_type bit) -> N { return n >> bit; }
-};
-
-const std::function<N&(N&, jmaths::bit_type)> operators_bit_assign[] = {
-    [](N & n, jmaths::bit_type bit) -> N& { return n <<= bit; },
-    [](N & n, jmaths::bit_type bit) -> N& { return n >>= bit; }
-};
-
-const std::function<N(const N&)> operators_misc[] = {
-    std::bit_not{},
-};
-
-// and std::divides{}
-#endif
 
 template <typename T>
-using func2argres = std::function<T(const T&, const T&)>;
+const T check_operators<T>::bit[] = {
+    [](const auto & n, bit_type bit) -> auto { return n << bit; },
+    [](const auto & n, bit_type bit) -> auto { return n >> bit; }
+};
 
 template <typename T>
-using func2argcomp = std::function<bool(const T&, const T&)>;
+const T check_operators<T>::bitassign[] = {
+    [](auto & n, bit_type bit) -> auto& { return n <<= bit; },
+    [](auto & n, bit_type bit) -> auto& { return n >>= bit; }
+};
 
 template <typename T>
-using func2argassign = std::function<T&(T&, const T&)>;
+const T check_operators<T>::bitwise[] = {
+    std::bit_not{}
+};
+
+template <typename T>
+const T check_operators<T>::division[] = {
+    std::divides{}
+};
 
 typedef struct detail::test {
-    static void check2argres (num2argres::value check_func);
-    static void check2argcomp (num2argcomp::value check_func);
-    static void check2argassign (num2argassign::value check_func);
-
-    static void check_all_funcs (auto && func_container, auto check_func);
+    static void run_all();
 
     private:
-        static void for_all_lists (auto func);
-} test;
+        static void check2res (arg2res::value check_func);
+        static void check2comp (arg2comp::value check_func);
+        static void check2assign (arg2assign::value check_func);
+        static void check1single (arg1single::value check_func);
+        static void check2bit (arg2bit::value check_func);
+        static void check2bitassign (arg2bitassign::value check_func);
+        static void check1bitwise (arg1bitwise::value check_func);
+        static void check2div (arg2div::value check_func);
 
-void test::check2argres (num2argres::value check_func) {
+        static void check_all_funcs (auto && func_container, auto check_func);
+        static void for_all_lists_pairs (auto func);
+        static void for_all_lists_single (auto func);
+} tests;
+
+void tests::check2res (arg2res::value check_func) {
     const auto check_list = [check_func] (auto && value_list, auto && value_list_conv) {
         for (std::size_t i = 0; i < std::size(value_list); ++i) {
             base_int_big result_primitive;
-            if (check_func == num2argres::subtract && value_list[i].first < value_list[i].second) {
-                result_primitive = check_operators<func2argres<base_int_big>>::res[check_func](value_list[i].second, value_list[i].first);
+            if (check_func == arg2res::subtract && value_list[i].first < value_list[i].second) {
+                result_primitive = check_operators<arg2res::func<base_int_big>>::res[check_func](value_list[i].second, value_list[i].first);
             } else {
-                result_primitive = check_operators<func2argres<base_int_big>>::res[check_func](value_list[i].first, value_list[i].second);
+                result_primitive = check_operators<arg2res::func<base_int_big>>::res[check_func](value_list[i].first, value_list[i].second);
             }
 
-            auto result_special = check_operators<func2argres<N>>::res[check_func](value_list_conv[i].first, value_list_conv[i].second);
+            auto result_special = check_operators<arg2res::func<N>>::res[check_func](value_list_conv[i].first, value_list_conv[i].second);
 
             if (result_primitive != result_special) {
                 assert(result_special.front_() == (base_int)result_primitive); // assert this is due to overflow
@@ -658,37 +724,37 @@ void test::check2argres (num2argres::value check_func) {
         }
     };
 
-    for_all_lists(check_list);
+    for_all_lists_pairs(check_list);
 }
 
-void test::check2argcomp (num2argcomp::value check_func) {
+void tests::check2comp (arg2comp::value check_func) {
     const auto check_list = [check_func] (auto && value_list, auto && value_list_conv) {
         for (std::size_t i = 0; i < std::size(value_list); ++i) {
-            bool result_primitive = check_operators<func2argcomp<base_int_big>>::comp[check_func](value_list[i].first, value_list[i].second);
-            bool result_special = check_operators<func2argcomp<N>>::comp[check_func](value_list_conv[i].first, value_list_conv[i].second);
+            bool result_primitive = check_operators<arg2comp::func<base_int_big>>::comp[check_func](value_list[i].first, value_list[i].second);
+            bool result_special = check_operators<arg2comp::func<N>>::comp[check_func](value_list_conv[i].first, value_list_conv[i].second);
 
             assert (result_primitive == result_special);
         }
     };
 
-    for_all_lists(check_list);
+    for_all_lists_pairs(check_list);
 }
 
-void test::check2argassign (num2argassign::value check_func) {
+void tests::check2assign (arg2assign::value check_func) {
     const auto check_list = [check_func] (auto && value_list, auto && value_list_conv) {
         for (std::size_t i = 0; i < std::size(value_list); ++i) {
             base_int_big result_primitive;
-            if (check_func == num2argassign::subtract && value_list[i].first < value_list[i].second) {
+            if (check_func == arg2assign::subtract && value_list[i].first < value_list[i].second) {
                 result_primitive = value_list[i].second;
-                check_operators<func2argassign<base_int_big>>::assign[check_func](result_primitive, value_list[i].first);
+                check_operators<arg2assign::func<base_int_big>>::assign[check_func](result_primitive, value_list[i].first);
             } else {
                 result_primitive = value_list[i].first;
-                check_operators<func2argassign<base_int_big>>::assign[check_func](result_primitive, value_list[i].second);
+                check_operators<arg2assign::func<base_int_big>>::assign[check_func](result_primitive, value_list[i].second);
             }
 
 
             N result_special = value_list_conv[i].first;
-            check_operators<func2argassign<N>>::assign[check_func](result_special, value_list_conv[i].second);
+            check_operators<arg2assign::func<N>>::assign[check_func](result_special, value_list_conv[i].second);
 
             if (result_primitive != result_special) {
                 assert(result_special.front_() == (base_int)result_primitive); // assert this is due to overflow
@@ -696,10 +762,112 @@ void test::check2argassign (num2argassign::value check_func) {
         }
     };
 
-    for_all_lists(check_list);
+    for_all_lists_pairs(check_list);
 }
 
-void test::check_all_funcs (auto && func_container, auto check_func) {
+void tests::check1single (arg1single::value check_func) {
+    const auto check_list = [check_func] (auto && value_list, auto && value_list_conv) {
+        for (std::size_t i = 0; i < std::size(value_list); ++i) {
+            base_int_big result_primitive;
+            if (check_func == arg1single::decrement && value_list[i] == 0) {
+                result_primitive = 0;
+            } else {
+                result_primitive = value_list[i];
+                check_operators<arg1single::func<base_int_big>>::single[check_func](result_primitive);
+            }
+
+
+            N result_special = value_list_conv[i];
+            check_operators<arg1single::func<N>>::single[check_func](result_special);
+
+            if (result_primitive != result_special) {
+                assert(result_special.front_() == (base_int)result_primitive); // assert this is due to overflow
+            }
+        }
+    };
+
+    for_all_lists_single(check_list);
+}
+
+void tests::check2bit (arg2bit::value check_func) {
+    static constexpr bit_type max_bitshift = 32;
+
+    const auto check_list = [check_func] (auto && value_list, auto && value_list_conv) {
+        for (std::size_t i = 0; i < std::size(value_list); ++i) {
+            for (bit_type shift = 0; shift < max_bitshift; ++shift) {
+                base_int_big result_primitive = check_operators<arg2bit::func<base_int_big>>::bit[check_func](value_list[i], shift);
+
+                auto result_special = check_operators<arg2bit::func<N>>::bit[check_func](value_list_conv[i], shift);
+
+                if (result_primitive != result_special) {
+                    assert(result_special.front_() == (base_int)result_primitive); // assert this is due to overflow
+                }
+            }
+        }
+    };
+
+    for_all_lists_single(check_list);
+}
+
+void tests::check2bitassign (arg2bitassign::value check_func) {
+    static constexpr bit_type max_bitshift = 32;
+
+    const auto check_list = [check_func] (auto && value_list, auto && value_list_conv) {
+        for (std::size_t i = 0; i < std::size(value_list); ++i) {
+            for (bit_type shift = 0; shift < max_bitshift; ++shift) {
+                base_int_big result_primitive = value_list[i];
+                check_operators<arg2bit::func<base_int_big>>::bit[check_func](result_primitive, shift);
+
+                N result_special = value_list_conv[i];
+                check_operators<arg2bit::func<N>>::bit[check_func](result_special, shift);
+
+                if (result_primitive != result_special) {
+                    assert(result_special.front_() == (base_int)result_primitive); // assert this is due to overflow
+                }
+            }
+        }
+    };
+
+    for_all_lists_single(check_list);
+}
+
+void tests::check1bitwise (arg1bitwise::value check_func) {
+    const auto check_list = [check_func] (auto && value_list, auto && value_list_conv) {
+        for (std::size_t i = 0; i < std::size(value_list); ++i) {
+            base_int_big result_primitive = value_list[i] == 0 ? 0 : check_operators<arg1bitwise::func<base_int_big>>::bitwise[check_func](value_list[i]);
+
+            N result_special = check_operators<arg1bitwise::func<N>>::bitwise[check_func](value_list_conv[i]);
+
+            if (result_primitive != result_special) {
+                assert(result_special.front_() == (base_int)result_primitive); // assert this is due to overflow
+            }
+        }
+    };
+
+    for_all_lists_single(check_list);
+}
+
+void tests::check2div (arg2div::value check_func) {
+    const auto check_list = [check_func] (auto && value_list, auto && value_list_conv) {
+        for (std::size_t i = 0; i < std::size(value_list); ++i) {
+            base_int_big result_primitive_div = value_list[i].second == 0 ? 0 : check_operators<arg2div::func<base_int_big>>::division[check_func](value_list[i].first, value_list[i].second);
+            base_int_big result_primitive_mod = value_list[i].second == 0 ? 0 : value_list[i].first - result_primitive_div * value_list[i].second;
+
+            try {
+                auto result_special = check_operators<arg2div::func_special<N>>::division[check_func](value_list_conv[i].first, value_list_conv[i].second);
+
+                assert(result_primitive_div == result_special.first);
+                assert(result_primitive_mod == result_special.second);
+            } catch (const error::division_by_zero & e) {
+                assert(value_list[i].second == 0);
+            }
+        }
+    };
+
+    for_all_lists_pairs(check_list);
+}
+
+void tests::check_all_funcs (auto && func_container, auto check_func) {
     using func_type = std::remove_reference_t<decltype(func_container)>;
     using value_type = typename func_type::value;
 
@@ -708,14 +876,32 @@ void test::check_all_funcs (auto && func_container, auto check_func) {
     }
 }
 
-void test::for_all_lists (auto func) {
+void tests::run_all() {
+    check_all_funcs(arg2comp{}, check2comp);
+    check_all_funcs(arg2res{}, check2res);
+    check_all_funcs(arg2assign{}, check2assign);
+    check_all_funcs(arg1single{}, check1single);
+    check_all_funcs(arg2bit{}, check2bit);
+    check_all_funcs(arg2bitassign{}, check2bitassign);
+    check_all_funcs(arg1bitwise{}, check1bitwise);
+    check_all_funcs(arg2div{}, check2div);
+}
+
+void tests::for_all_lists_pairs (auto func) {
     func(testables::combined_pairs, testables::combined_conv_pairs);
     func(testables::values1_pairs, testables::values1_conv_pairs);
     func(testables::values2_pairs, testables::values2_conv_pairs);
 }
 
+void tests::for_all_lists_single (auto func) {
+    func(testables::values1, testables::values1_conv);
+    func(testables::values2, testables::values2_conv);
+}
+
 int main() {
-    test::check_all_funcs(num2argcomp{}, test::check2argcomp);
-    test::check_all_funcs(num2argres{}, test::check2argres);
-    test::check_all_funcs(num2argassign{}, test::check2argassign);
+    std::cout << "Starting unit test...\n";
+
+    tests::run_all();
+
+    std::cout << "Succesfully finished unit test\n";
 }

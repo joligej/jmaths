@@ -586,9 +586,10 @@ void N::bit_ (bit_type pos, bool val) {
 	const bit_type pos_mod = pos % base_int_bits;
 
 	if (is_zero()) {
+		if (val == 0) return;
 		digits_.reserve(pos_whole + 1);
 		digits_.insert(digits_.begin(), pos_whole, 0);
-		digits_.emplace_back((base_int)val << pos_mod);
+		digits_.emplace_back((base_int)1 << pos_mod);
 	} else {
 		if (pos_whole < digits_.size()) {
 			const base_int bitmask = (base_int)1 << pos_mod;
@@ -597,10 +598,13 @@ void N::bit_ (bit_type pos, bool val) {
 			} else {
 				digits_[pos_whole] &= ~bitmask;
 			}
+
+			remove_leading_zeroes_();
 		} else {
-			digits_.reserve(digits_.size() + pos_whole - digits_.size() + 1);
+			if (val == 0) return;
+			digits_.reserve(digits_.size() + pos_whole + 1);
 			digits_.insert(digits_.end(), pos_whole - digits_.size(), 0);
-			digits_.emplace_back((base_int)val << pos_mod);
+			digits_.emplace_back((base_int)1 << pos_mod);
 		}
 	}
 }
