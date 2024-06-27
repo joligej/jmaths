@@ -58,6 +58,8 @@ class function {
 };
 
 int main (/*int argc, char * argv[]*/) {
+    std::clog << "Processing log file...\n";
+    
     std::istream & log_file = std::cin;
 
     std::map<std::string, function> function_by_name;
@@ -130,4 +132,6 @@ int main (/*int argc, char * argv[]*/) {
         std::cout << function.calls_to() << ',';
         std::cout << function.calls_from() << '\n';
     }
+
+    std::clog << "Log file processed succesfully\n";
 }
