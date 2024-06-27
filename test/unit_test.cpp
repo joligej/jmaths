@@ -689,7 +689,10 @@ typedef struct detail::test {
         static void check1bitwise (arg1bitwise::value check_func);
         static void check2div (arg2div::value check_func);
 
+        static void checkbitmanip();
+
         static void check_all_funcs (auto && func_container, auto check_func);
+        static void check_single_func (auto check_func);
         static void for_all_lists_pairs (auto func);
         static void for_all_lists_single (auto func);
 } tests;
@@ -855,6 +858,38 @@ void tests::check2div (arg2div::value check_func) {
     for_all_lists_pairs(check_list);
 }
 
+void tests::checkbitmanip() {
+    static constexpr bit_type max_bit = 32;
+
+    const auto check_list = [](auto && value_list, auto && value_list_conv) {
+        for (std::size_t i = 0; i < std::size(value_list); ++i) {
+            for (bit_type shift = 0; shift < max_bit; ++shift) {
+                base_int_big result_primitive_on = value_list[i];
+                base_int_big result_primitive_off = value_list[i];
+
+                result_primitive_on |= (base_int_big)1 << shift;
+                result_primitive_off &= ~((base_int_big)1 << shift);
+
+                N result_special_on = value_list_conv[i];
+                N result_special_off = value_list_conv[i];
+
+                result_special_on[shift] = 1;
+                result_special_off[shift] = 0;
+
+                if (result_primitive_on != result_special_on) {
+                    assert(result_special_on.front_() == (base_int)result_primitive_on); // assert this is due to overflow
+                }
+
+                if (result_primitive_off != result_special_off) {
+                    assert(result_special_off.front_() == (base_int)result_primitive_off); // assert this is due to overflow
+                }
+            }
+        }
+    };
+
+    for_all_lists_single(check_list);
+}
+
 void tests::check_all_funcs (auto && func_container, auto check_func) {
     using func_type = std::remove_reference_t<decltype(func_container)>;
     using value_type = typename func_type::value;
@@ -864,7 +899,13 @@ void tests::check_all_funcs (auto && func_container, auto check_func) {
     }
 }
 
+void tests::check_single_func (auto check_func) {
+    check_func();
+}
+
 void tests::run_all() {
+    check_single_func(checkbitmanip);
+
     check_all_funcs(arg2comp{}, check2comp);
     check_all_funcs(arg2res{}, check2res);
     check_all_funcs(arg2assign{}, check2assign);
