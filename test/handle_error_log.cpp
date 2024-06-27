@@ -57,10 +57,16 @@ class function {
 
 };
 
-int main (/*int argc, char * argv[]*/) {
+int main (int argc, char * argv[]) {
     std::clog << "Processing log file...\n";
+
+    std::ifstream potential_log_file;
+
+    if (argc > 1) {
+        potential_log_file.open(argv[1]);
+    }
     
-    std::istream & log_file = std::cin;
+    std::istream & log_file = potential_log_file.is_open() ? potential_log_file : std::cin;
 
     std::map<std::string, function> function_by_name;
 

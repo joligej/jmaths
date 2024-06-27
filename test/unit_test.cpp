@@ -12,7 +12,10 @@
     #include "../build/dbgjmaths.hpp"
 #endif
 
-static_assert(std::is_same_v<jmaths::base_int_big, std::uint32_t>, "The unit test is specialised only for 32-bit architectures");
+#define REPEAT(x) \
+for (std::remove_cv_t<decltype(x)> FOR_LOOP_REPETITION_COUNTER = 0; FOR_LOOP_REPETITION_COUNTER < x; ++FOR_LOOP_REPETITION_COUNTER)
+
+static_assert(std::is_same_v<jmaths::base_int_big, std::uint32_t>, "This unit test is specialised only for 32-bit architectures");
 
 using namespace jmaths;
 
@@ -643,7 +646,7 @@ void tests::for_all_lists_single (auto func) {
 int main() {
     std::cout << "Starting unit test...\n";
 
-    tests::run_all();
+    REPEAT(10) tests::run_all();
 
     std::cout << "Succesfully finished unit test\n";
 }
