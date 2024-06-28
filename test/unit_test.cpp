@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <utility>
 #include <iostream>
+#include <string>
 
 
 #if __has_include("../build/dbgjmaths.hpp")
@@ -406,6 +407,7 @@ typedef struct detail::test {
         static void check2div (arg2div::value check_func);
 
         static void checkbitmanip();
+        static void checkconv();
 
         static void check_all_funcs (auto && func_container, auto check_func);
         static void check_single_func (auto check_func);
@@ -606,6 +608,21 @@ void tests::checkbitmanip() {
     for_all_lists_single(check_list);
 }
 
+void tests::checkconv() {
+    const auto check_list = [](auto && value_list, auto && value_list_conv) {
+        for (std::size_t i = 0; i < std::size(value_list); ++i) {
+            base_int_big result_primitive = value_list_conv[i].template fits_into<base_int_big>().value_or(value_list[i] + 1);
+            N result_special (std::to_string(value_list[i]));
+
+            assert(result_primitive == value_list[i]);
+            assert(value_list[i] == result_special);
+            assert(value_list[i] == value_list_conv[i]);
+        }
+    };
+
+    for_all_lists_single(check_list);
+}
+
 void tests::check_all_funcs (auto && func_container, auto check_func) {
     using func_type = std::remove_reference_t<decltype(func_container)>;
     using value_type = typename func_type::value;
@@ -621,6 +638,7 @@ void tests::check_single_func (auto check_func) {
 
 void tests::run_all() {
     check_single_func(checkbitmanip);
+    check_single_func(checkconv);
 
     check_all_funcs(arg2comp{}, check2comp);
     check_all_funcs(arg2res{}, check2res);
