@@ -1,5 +1,6 @@
-#include "/usr/local/jmaths/jmaths.hpp"
 #include <iostream>
+#include <string>
+#include "/usr/local/jmaths/jmaths.hpp"
 
 int main() {
     std::string input_str;
