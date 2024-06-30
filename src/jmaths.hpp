@@ -213,7 +213,7 @@ class N {
 		N & operator = (std::string_view num_str);
 		template <typename INT> requires std::is_integral_v<INT> N & operator = (INT rhs);
 
-		static N rand (std::size_t upper_bound_exponent);
+		static N rand (bit_type upper_bound_exponent);
 };
 
 template <typename T>
@@ -390,7 +390,7 @@ class Z : public sign_type, private N {
 		Z & operator = (const N & n);
 		Z & operator = (N && n);
 
-		static Z rand (std::size_t upper_bound_exponent);
+		static Z rand (bit_type upper_bound_exponent);
 };
 
 } // /namespace jmaths
