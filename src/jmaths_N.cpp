@@ -301,7 +301,9 @@ std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
 		return {one, N{}};
 	}
 
-	N q, r;
+	std::pair<N, N> result;
+
+	auto & [q, r] = result;
 
 	if (const auto max_size = lhs.digits_.size() - rhs.digits_.size() + 1; lhs.digits_.size() + 1 >= rhs.digits_.size()) {
 		// rhs.digits_.size() is always >= 1 so even if lhs.digits_.size() + 1 overflows to 0 no errors shall occur
@@ -317,7 +319,7 @@ std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
 
 	r.digits_.reserve(rhs.digits_.size());
 
-	for (bit_type i = lhs.digits_.size() * base_int_bits; i --> 0;) {
+	for (bit_type i = lhs.bits(); i --> 0;) {
 		r.opr_bitshift_l_assign_(1);
 		r.bit_(0, lhs.bit_(i));
 		if (opr_comp(r, rhs) >= 0) {
@@ -328,7 +330,7 @@ std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
 
 	assert(q * rhs + r == lhs);
 
-	return {q, r};
+	return result;
 }
 
 N detail::opr_and (const N & lhs, const N & rhs) {
