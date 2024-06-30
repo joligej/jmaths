@@ -4,6 +4,9 @@ bit_architecture ?= 64
 karatsuba ?= 0
 cc ?= clang++
 
+install_include_dir = $(install_dir)include/
+install_lib_dir = $(install_dir)lib/
+
 compiler_version = -std=c++2b
 compiler_warnings = -Wall -Werror -Wextra -Wpedantic -Wpessimizing-move
 ifeq ($(cc), clang++)
@@ -159,9 +162,13 @@ debug_build:
 
 install:
 	@echo "Starting installation..."
-	@mkdir -p $(install_dir) && mv $(lib_file) $(header_file)* $(install_dir)
+	@mkdir -p $(install_lib_dir) $(install_include_dir)
+	@mv $(lib_file) $(install_lib_dir)
+	@mv $(header_file)* $(install_include_dir)
 	@echo "Installation successful"
-	@echo "Library installed to: $(install_dir)"
+	@echo "Library installed to: \033[1;4;32m$(install_lib_dir)$(lib_file_name)\033[0m"
+	@echo "Header installed to: \033[1;4;32m$(install_include_dir)$(header_file_name)\033[0m"
+	@echo "Pretokenised header installed to: \033[1;4;32m$(install_include_dir)$(header_file_name)$(pth_extension)\033[0m"
 	@echo "Library ready for use"
 
 uninstall:
