@@ -408,7 +408,7 @@ std::optional<INT> Z::fits_into() const {
 			converted += (INT)((std::make_unsigned_t<INT>)digits_[i] << (base_int_bits * i));
 		}
 
-		if (is_negative()) -converted;
+		if (is_negative()) return -converted;
 		else return converted;
 	}
 }
