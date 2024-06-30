@@ -464,13 +464,13 @@ Q::operator std::string() const {
 	}
 }
 
-std::string Q::to_base16() const {
+std::string Q::to_hex() const {
 	FUNCTION_TO_LOG;
 
 	if (is_negative()) {
-		return (std::string{'-'} + num_.to_base16() + '/' + denom_.to_base16());
+		return (std::string{'-'} + num_.to_hex() + '/' + denom_.to_hex());
 	} else {
-		return (num_.to_base16() + '/' + denom_.to_base16());
+		return (num_.to_hex() + '/' + denom_.to_hex());
 	}
 }
 

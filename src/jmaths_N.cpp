@@ -1021,26 +1021,20 @@ N::operator std::string() const {
 	return conv_to_base_(default_base);
 }
 
-std::string N::to_base16() const {
+std::string N::to_hex() const {
 	FUNCTION_TO_LOG;
 
 	if (is_zero()) return "0";
 
 	std::ostringstream oss;
 
+	oss.setf(std::ios_base::hex | std::ios_base::uppercase);
+
 	for (auto crit = digits_.crbegin(); crit != digits_.crend(); ++crit) {
-		oss << std::hex << *crit;
+		oss << *crit;
 	}
 
-	std::string num_str = oss.str();
-
-	for (auto & digit : num_str) {
-		if (digit >= 'a' && digit <= 'z') {
-			digit -= 'a' - 'A';
-		}
-	}
-
-	return num_str;
+	return std::move(oss).str();
 }
 
 N::operator bool() const {

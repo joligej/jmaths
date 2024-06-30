@@ -185,7 +185,7 @@ class N {
 
 		std::string to_str (unsigned base) const; // convert to string in any base >= 2 and <= 64
 		operator std::string() const; // convert to string in default base
-		std::string to_base16() const; // convert to string in base 16 (assumes base is a power of 2)
+		std::string to_hex() const; // convert to string in base 16 (assumes base is a power of 2)
 		explicit operator bool() const;
 		template <typename INT> requires std::is_integral_v<INT> && std::is_unsigned_v<INT> std::optional<INT> fits_into() const;
 
@@ -361,7 +361,7 @@ class Z : public sign_type, private N {
 
 		std::string to_str (unsigned base) const; // convert to string in any base >= 2 and <= 64
 		operator std::string() const; // convert to string in default base
-		std::string to_base16() const; // convert to string in base 16 (assumes base is a power of 2)
+		std::string to_hex() const; // convert to string in base 16 (assumes base is a power of 2)
 		template <typename INT> requires std::is_integral_v<INT> std::optional<INT> fits_into() const;
 
 		Z & operator ++ ();
@@ -473,7 +473,7 @@ class Q : public sign_type {
 
 		std::string to_str (unsigned base) const; // convert to string in any base >= 2 and <= 64
 		operator std::string() const; // convert to string in default base
-		std::string to_base16() const; // convert to string in base 16 (assumes base is a power of 2)
+		std::string to_hex() const; // convert to string in base 16 (assumes base is a power of 2)
 		explicit operator bool() const;
 		// FIXME:
 		//template <typename FLOAT> requires std::is_floating_point_v<FLOAT> && std::numeric_limits<FLOAT>::is_iec559 std::optional<FLOAT> fits_into() const;

@@ -341,13 +341,13 @@ Z::operator std::string() const {
 	}
 }
 
-std::string Z::to_base16() const {
+std::string Z::to_hex() const {
 	FUNCTION_TO_LOG;
 
 	if (is_negative()) {
-		return std::string{'-'} + N::to_base16();
+		return std::string{'-'} + N::to_hex();
 	} else {
-		return N::to_base16();
+		return N::to_hex();
 	}
 }
 
