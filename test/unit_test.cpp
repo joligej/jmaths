@@ -425,7 +425,7 @@ void tests::check2res (arg2res::value check_func) {
                 result_primitive = check_operators<arg2res::func<base_int_big>>::res[check_func](value_list[i].first, value_list[i].second);
             }
 
-            auto result_special = check_operators<arg2res::func<N>>::res[check_func](value_list_conv[i].first, value_list_conv[i].second);
+            const auto result_special = check_operators<arg2res::func<N>>::res[check_func](value_list_conv[i].first, value_list_conv[i].second);
 
             if (result_primitive != result_special) {
                 assert(result_special.front_() == (base_int)result_primitive); // assert this is due to overflow
@@ -439,8 +439,8 @@ void tests::check2res (arg2res::value check_func) {
 void tests::check2comp (arg2comp::value check_func) {
     const auto check_list = [check_func] (auto && value_list, auto && value_list_conv) {
         for (std::size_t i = 0; i < std::size(value_list); ++i) {
-            bool result_primitive = check_operators<arg2comp::func<base_int_big>>::comp[check_func](value_list[i].first, value_list[i].second);
-            bool result_special = check_operators<arg2comp::func<N>>::comp[check_func](value_list_conv[i].first, value_list_conv[i].second);
+            const bool result_primitive = check_operators<arg2comp::func<base_int_big>>::comp[check_func](value_list[i].first, value_list[i].second);
+            const bool result_special = check_operators<arg2comp::func<N>>::comp[check_func](value_list_conv[i].first, value_list_conv[i].second);
 
             assert (result_primitive == result_special);
         }
@@ -504,9 +504,9 @@ void tests::check2bit (arg2bit::value check_func) {
     const auto check_list = [check_func] (auto && value_list, auto && value_list_conv) {
         for (std::size_t i = 0; i < std::size(value_list); ++i) {
             for (bit_type shift = 0; shift < max_bitshift; ++shift) {
-                base_int_big result_primitive = check_operators<arg2bit::func<base_int_big>>::bit[check_func](value_list[i], shift);
+                const base_int_big result_primitive = check_operators<arg2bit::func<base_int_big>>::bit[check_func](value_list[i], shift);
 
-                auto result_special = check_operators<arg2bit::func<N>>::bit[check_func](value_list_conv[i], shift);
+                const auto result_special = check_operators<arg2bit::func<N>>::bit[check_func](value_list_conv[i], shift);
 
                 if (result_primitive != result_special) {
                     assert(result_special.front_() == (base_int)result_primitive); // assert this is due to overflow
@@ -543,9 +543,9 @@ void tests::check2bitassign (arg2bitassign::value check_func) {
 void tests::check1bitwise (arg1bitwise::value check_func) {
     const auto check_list = [check_func] (auto && value_list, auto && value_list_conv) {
         for (std::size_t i = 0; i < std::size(value_list); ++i) {
-            base_int_big result_primitive = value_list[i] == 0 ? 0 : check_operators<arg1bitwise::func<base_int_big>>::bitwise[check_func](value_list[i]);
+            const base_int_big result_primitive = value_list[i] == 0 ? 0 : check_operators<arg1bitwise::func<base_int_big>>::bitwise[check_func](value_list[i]);
 
-            N result_special = check_operators<arg1bitwise::func<N>>::bitwise[check_func](value_list_conv[i]);
+            const N result_special = check_operators<arg1bitwise::func<N>>::bitwise[check_func](value_list_conv[i]);
 
             if (result_primitive != result_special) {
                 assert(result_special.front_() == (base_int)result_primitive); // assert this is due to overflow
@@ -559,11 +559,11 @@ void tests::check1bitwise (arg1bitwise::value check_func) {
 void tests::check2div (arg2div::value check_func) {
     const auto check_list = [check_func] (auto && value_list, auto && value_list_conv) {
         for (std::size_t i = 0; i < std::size(value_list); ++i) {
-            base_int_big result_primitive_div = value_list[i].second == 0 ? 0 : check_operators<arg2div::func<base_int_big>>::division[check_func](value_list[i].first, value_list[i].second);
-            base_int_big result_primitive_mod = value_list[i].second == 0 ? 0 : value_list[i].first - result_primitive_div * value_list[i].second;
+            const base_int_big result_primitive_div = value_list[i].second == 0 ? 0 : check_operators<arg2div::func<base_int_big>>::division[check_func](value_list[i].first, value_list[i].second);
+            const base_int_big result_primitive_mod = value_list[i].second == 0 ? 0 : value_list[i].first - result_primitive_div * value_list[i].second;
 
             try {
-                auto result_special = check_operators<arg2div::func_special<N>>::division[check_func](value_list_conv[i].first, value_list_conv[i].second);
+                const auto result_special = check_operators<arg2div::func_special<N>>::division[check_func](value_list_conv[i].first, value_list_conv[i].second);
 
                 assert(result_primitive_div == result_special.first);
                 assert(result_primitive_mod == result_special.second);
@@ -611,8 +611,8 @@ void tests::checkbitmanip() {
 void tests::checkconv() {
     const auto check_list = [](auto && value_list, auto && value_list_conv) {
         for (std::size_t i = 0; i < std::size(value_list); ++i) {
-            base_int_big result_primitive = value_list_conv[i].template fits_into<base_int_big>().value_or(value_list[i] + 1);
-            N result_special (std::to_string(value_list[i]));
+            const base_int_big result_primitive = value_list_conv[i].template fits_into<base_int_big>().value_or(value_list[i] + 1);
+            const N result_special (std::to_string(value_list[i]));
 
             assert(result_primitive == value_list[i]);
             assert(value_list[i] == result_special);
