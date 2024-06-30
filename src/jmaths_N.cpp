@@ -576,9 +576,14 @@ void N::handle_str_ (std::string_view num_str, unsigned base) {
 bool N::bit_ (bit_type pos) const {
 	FUNCTION_TO_LOG;
 
-	const N shifted = opr_bitshift_r_(pos);
+	const std::size_t pos_whole = pos / base_int_bits;
+	const bit_type pos_mod = pos % base_int_bits;
 
-	return (shifted.front_() & 1);
+	if (pos_whole < digits_.size()) {
+		return (digits_[pos_whole] >> pos_mod) & 1;
+	} else {
+		return 0;
+	}
 }
 
 void N::bit_ (bit_type pos, bool val) {
