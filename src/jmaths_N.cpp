@@ -319,7 +319,7 @@ std::pair<N, N> detail::opr_div (const N & lhs, const N & rhs) {
 
 	r.digits_.reserve(rhs.digits_.size());
 
-	for (bit_type i = lhs.bits(); i --> 0;) {
+	for (bit_type i = lhs.digits_.size() * base_int_bits - std::countl_zero(lhs.digits_.back()); i --> 0;) {
 		r.opr_bitshift_l_assign_(1);
 		r.bit_(0, lhs.bit_(i));
 		if (opr_comp(r, rhs) >= 0) {
