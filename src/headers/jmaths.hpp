@@ -1,10 +1,10 @@
 #ifndef PREPROCESSING_HEADER
 	#pragma once
-    #include "../config/dependencies.hpp"
+    #include "../dep/dependencies.hpp"
 #endif
 
-#include "../src/jmaths_utils.hpp" // for jmaths::utils::function_timer
-#include "../config/jmaths_aliases.hpp" // for the type aliases and constants
+#include "jmaths_utils.hpp" // for jmaths::utils::function_timer
+#include "../dep/jmaths_aliases.hpp" // for the type aliases and constants
 
 // all the types
 namespace jmaths {
@@ -582,4 +582,4 @@ struct hash<jmaths::Q> {
 
 } // /namespace std
 
-#include "../src/jmaths_tmpl.tpp"
+#include "../jmaths_tmpl.tpp"

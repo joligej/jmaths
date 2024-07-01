@@ -1,6 +1,6 @@
-#include "../src/jmaths.hpp"
+#include "headers/jmaths.hpp"
 
-#include "../config/jmaths_def.cfg"
+#include "headers/jmaths_def.cfg"
 
 std::size_t std::hash<jmaths::N>::operator () (const jmaths::N & n) const {
     FUNCTION_TO_LOG;
@@ -25,4 +25,4 @@ std::size_t std::hash<jmaths::Q>::operator () (const jmaths::Q & q) const {
     return (std::hash<jmaths::N>{}(q.num_) ^ std::hash<jmaths::N>{}(q.denom_)) ^ ((std::size_t)q.sign_ << ((q.num_.front_() ^ q.denom_.front_()) % (sizeof(std::size_t) * jmaths::bits_in_byte)));
 }
 
-#include "../config/jmaths_undef.cfg"
+#include "headers/jmaths_undef.cfg"

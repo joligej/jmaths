@@ -1,6 +1,6 @@
-#include "../src/jmaths.hpp"
+#include "headers/jmaths.hpp"
 
-#include "../config/jmaths_def.cfg"
+#include "headers/jmaths_def.cfg"
 
 namespace jmaths {
 
@@ -150,4 +150,4 @@ Z calc::pow (Z base, N exponent) {
 
 } // /namespace jmaths
 
-#include "../config/jmaths_undef.cfg"
+#include "headers/jmaths_undef.cfg"

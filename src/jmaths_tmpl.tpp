@@ -1,4 +1,4 @@
-#include "../config/jmaths_def.cfg"
+#include "headers/jmaths_def.cfg"
 
 #define REPEAT(x) \
 for (std::remove_cv_t<decltype(x)> FOR_LOOP_REPETITION_COUNTER = 0; FOR_LOOP_REPETITION_COUNTER < x; ++FOR_LOOP_REPETITION_COUNTER)
@@ -613,4 +613,4 @@ Q & Q::operator = (FLOAT rhs) {
 
 #undef REPEAT
 
-#include "../config/jmaths_undef.cfg"
+#include "headers/jmaths_undef.cfg"
