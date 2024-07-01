@@ -37,7 +37,7 @@ template <typename T> using allocator = std::allocator<T>; // the allocator used
 // you shouldn't edit the below code unless you know what you're doing
 
 inline constexpr double max_ratio = 0.000125; // the ratio between sizeof(smallest type) and sizeof(base_int), preferably a lot smaller
-inline constexpr bit_type bits_in_byte = 8;
+inline constexpr bit_type bits_in_byte = CHAR_BIT;
 
 inline constexpr base_int max_digit = base - 1;
 inline constexpr std::size_t base_int_size = sizeof(base_int);
