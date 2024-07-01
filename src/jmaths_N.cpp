@@ -1033,9 +1033,19 @@ std::string N::to_hex() const {
 
 	std::ostringstream oss;
 
-	oss.setf(std::ios_base::hex | std::ios_base::uppercase);
+	oss.setf(std::ios_base::hex, std::ios_base::basefield);
+	oss.setf(std::ios_base::uppercase);
 
-	for (auto crit = digits_.crbegin(); crit != digits_.crend(); ++crit) {
+	auto crit = digits_.crbegin();
+
+	oss << *crit;
+
+	oss.setf(std::ios_base::right, std::ios_base::adjustfield);
+	constexpr auto field_width = base_int_bits / 4;
+	oss.width(field_width);
+	oss.fill('0');
+
+	while (++crit != digits_.crend()) {
 		oss << *crit;
 	}
 
