@@ -139,12 +139,12 @@ N detail::opr_mult (const N & lhs, const N & rhs) {
 	FUNCTION_TO_LOG;
 
 	#ifndef KARATSUBA
-		#error KARATSUBA is not defined, please define it when compiling!
+		#error "KARATSUBA is not defined, please define it when compiling!"
 	#endif
 
 	#if KARATSUBA
 
-	#error The KARATSUBA algorithm is still a work in progress, please define KARATSUBA as 0
+	#error "The KARATSUBA algorithm is still a work in progress, please define KARATSUBA as 0"
 
 	// check for multiplicative identity
 	if (lhs.is_one()) return rhs;

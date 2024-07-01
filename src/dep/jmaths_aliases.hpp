@@ -27,7 +27,7 @@ using base_int_big = std::uint16_t;
 inline constexpr base_int_big base = 256;
 
 #else
-    #error No support for bit architectures below 16
+    #error "No support for bit architectures below 16"
 #endif
 
 using bit_type = unsigned long long; // the type that should store a number of bits, preferably the largest type available
