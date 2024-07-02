@@ -10,13 +10,13 @@ N calc::gcd (N a, N b) {
 	if (a.is_zero()) return b;
 	if (b.is_zero()) return a;
 
-	auto i = a.ctz();
-	auto j = b.ctz();
+	const bit_type i = a.ctz();
+	const bit_type j = b.ctz();
 
 	a.opr_bitshift_r_assign_(i);
 	b.opr_bitshift_r_assign_(j);
 
-	auto k = std::min(i, j);
+	const bit_type k = std::min(i, j);
 
 	for (;;) {
 		assert(a.is_odd());

@@ -259,8 +259,6 @@ requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 std::optional<INT> N::fits_into() const {
 	FUNCTION_TO_LOG;
 
-	// !!! perhaps use std::numeric_limits<T>::max from <limits> for signed types ???
-
 	#if 0
 	if constexpr (std::is_signed_v<INT>) {
 		if (is_positive()) return N::fits_into<INT>();
@@ -457,7 +455,6 @@ Q::Q (FLOAT num) : Q(handle_float_(num)) {
 }
 
 // FIXME:
-#if 0
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT> && std::numeric_limits<FLOAT>::is_iec559
 std::optional<FLOAT> Q::fits_into() const {
@@ -465,7 +462,11 @@ std::optional<FLOAT> Q::fits_into() const {
 
 	using nlf = std::numeric_limits<FLOAT>;
 
-	constexpr bool is_allowed_type = std::is_same_v<FLOAT, float> || std::is_same_v<FLOAT, double>;
+	static constexpr bool is_float = std::is_same_v<FLOAT, float>;
+	static constexpr bool is_double = std::is_same_v<FLOAT, double>;
+
+	static constexpr bool is_allowed_type = is_float || is_double;
+	
 	static_assert(is_allowed_type, "Template type parameter is not one of the allowed types: float and double.");
 	static_assert(nlf::radix == 2, "The radix of the floating point type is currently not supported. Please make sure it is equal to 2.");
 
@@ -519,80 +520,102 @@ std::optional<FLOAT> Q::fits_into() const {
 		} fields;
 	};
 
-	//union long_double_access {
-	//	std::uint64_t long_double_size[2];
-	//	struct {
-	//	#ifdef NATIVELY_BIG_ENDIAN
-	//		std::uint64_t sign : 1;
-	//		std::uint64_t exponent : 15;
-	//		std::uint64_t mantissa : 112;
-	//	#else
-	//		std::uint64_t mantissa : 112;
-	//		std::uint64_t exponent : 15;
-	//		std::uint64_t sign : 1;
-	//	#endif
-	//	} fields;
-	//};
-
-	using access_type = std::conditional_t<std::is_same_v<FLOAT, float>, float_access, double_access>;
-	using sizes_type = std::conditional_t<std::is_same_v<FLOAT, float>, float_sizes, double_sizes>;
+	#if 0
+	union long_double_access {
+		std::uint64_t long_double_size[2];
+		struct {
+		#ifdef NATIVELY_BIG_ENDIAN
+			std::uint64_t sign : 1;
+			std::uint64_t exponent : 15;
+			std::uint64_t mantissa : 112;
+		#else
+			std::uint64_t mantissa : 112;
+			std::uint64_t exponent : 15;
+			std::uint64_t sign : 1;
+		#endif
+		} fields;
+	};
+	#endif
 
 	static_assert(sizeof(float_access) == sizeof(float) && sizeof(float_access) == sizeof(std::uint32_t[1]), "There seems to be a problem with the padding bits for type: float_acess.");
 	static_assert(sizeof(double_access) == sizeof(double) && sizeof(double_access) == sizeof(std::uint64_t[1]), "There seems to be a problem with the padding bits for type: double_access.");
-	//static_assert(sizeof(long_double_access) == sizeof(long double) && sizeof(long_double_access) == sizeof(std::uint64_t[2]), "There seems to be a problem with the padding bits for type: long_double_access.");
+	
+	#if 0
+	static_assert(sizeof(long_double_access) == sizeof(long double) && sizeof(long_double_access) == sizeof(std::uint64_t[2]), "There seems to be a problem with the padding bits for type: long_double_access.");
+	#endif
+
+	using access_type = std::conditional_t<is_float, float_access, double_access>;
+	using sizes_type = std::conditional_t<is_float, float_sizes, double_sizes>;
 
 	if (num_.is_zero()) return 0;
 	if (is_one()) return 1;
 	if (is_neg_one()) return -1;
 
-	// check if radix == 2 !!! ...
+	FLOAT numerator{};
 
-	if (num_ > denom_) {
-		const auto div_pair = detail::opr_div(num_, denom_);
+	{
+		std::size_t i = 0;
 
-		if (div_pair.first.bits() > nlf::max_exponent) { // maybe the right checking condition ??? !!!
+		for (auto crit = num_.digits_.crbegin(); crit != num_.digits_.crend() && i < sizeof(FLOAT) / base_int_size; ++crit, ++i) {
+			numerator = numerator * base + *crit;
+		}
+
+		for (; i < sizeof(FLOAT) / base_int_size; ++i) {
+			numerator *= base;
+		}
+	}
+
+	FLOAT denominator{};
+	
+	{
+		std::size_t j = 0;
+
+		for (auto crit = denom_.digits_.crbegin(); crit != denom_.digits_.crend() && j < sizeof(FLOAT) / base_int_size; ++crit, ++j) {
+			denominator = denominator * base + *crit;
+		}
+
+		for (; j < sizeof(FLOAT) / base_int_size; ++j) {
+			denominator *= base;
+		}
+	}
+
+	FLOAT result = numerator / denominator;
+	access_type * const result_help = (access_type*)&result;
+
+	if (num_.digits_.size() < denom_.digits_.size()) {
+		static constexpr std::uint16_t min_exponent = (std::uint16_t)1;
+
+		if (result_help->fields.exponent < min_exponent + (denom_.digits_.size() - num_.digits_.size()) * base_int_bits) {
+			#if 0
+			if (*this >= Q(nlf::min())) {
+				return nlf::min();
+			} else {
+				return std::nullopt;
+			}
+			#endif
+			// ^^^ doesn't yet take care of subnormals
+			return std::nullopt;
+		}
+
+		result_help->fields.exponent -= (denom_.digits_.size() - num_.digits_.size()) * base_int_bits;
+	} else {
+		static constexpr std::uint16_t max_exponent = ~(~(std::uint16_t)0 << sizes_type::exponent) - 1;
+
+		if ((num_.digits_.size() - denom_.digits_.size()) * base_int_bits > max_exponent - result_help->fields.exponent) {
 			if constexpr (nlf::has_infinity) {
 				return nlf::infinity();
 			} else {
 				return std::nullopt;
 			}
-		} else if (div_pair.first.bits() == nlf::max_exponent) {
-			FLOAT converted{};
-			access_type * const converted_help = (access_type*)&converted;
-
-			if constexpr (sizes_type::mantissa <= base_int_bits) {
-				converted_help->fields.mantissa = div_pair.first.digits_.back() >> (base_int_bits - sizes_type::mantissa);
-			} else {
-				const auto & last_digit = div_pair.first.digits_.back();
-				converted_help->fields.mantissa = 0;
-				for (bit_type i = 0; i < sizes_type::mantissa; ++i) {
-					const std::size_t j = i / base_int_bits;
-					const bit_type k = i % base_int_bits;
-
-					using mantissa_type = decltype(converted_help->fields.mantissa);
-					static constexpr auto mask = (std::uint64_t)1 << (sizes_type::mantissa - 1); // std::uint64_t was mantissa_type
-
-					converted_help->fields.mantissa |= (((mantissa_type)(*(&last_digit - j) << k) & mask) >> i);
-				}
-			}
-
-			converted_help->fields.exponent = div_pair.first.bits() - 1;
-
-			converted_help->fields.sign = is_negative();
-
-			return converted;
-		} else {
-
-
-			return std::nullopt;
 		}
 
-	} else {
-		return std::nullopt;
+		result_help->fields.exponent += (num_.digits_.size() - denom_.digits_.size()) * base_int_bits;
 	}
+	
+	result_help->fields.sign = is_negative();
 
+	return result;
 }
-#endif
 
 template <typename FLOAT>
 requires std::is_floating_point_v<FLOAT>

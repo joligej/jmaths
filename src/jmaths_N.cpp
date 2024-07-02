@@ -714,7 +714,7 @@ void N::opr_mult_assign_ (const N & rhs) {
 
 	N product;
 
-	// max overhead would be base_int_size
+	// max storage surplus would be base_int_size
 	product.digits_.reserve(this->digits_.size() + rhs.digits_.size());
 
 	for (std::size_t i = 0; i < rhs.digits_.size(); ++i) {
@@ -870,6 +870,7 @@ N N::opr_bitshift_r_ (bit_type pos) const {
 	FUNCTION_TO_LOG;
 
 	if (is_zero()) return N{};
+	if (pos == 0) return *this;
 
 	const std::size_t pos_whole = pos / base_int_bits;
 
@@ -881,13 +882,17 @@ N N::opr_bitshift_r_ (bit_type pos) const {
 
 	shifted.digits_.reserve(digits_.size() - pos_whole);
 
-	for (std::size_t i = pos_whole; i < digits_.size() - 1; ++i) {
-		shifted.digits_.emplace_back((digits_[i] >> pos_mod) + (digits_[i + 1] << (base_int_bits - pos_mod)));
+	if (pos_mod == 0) {
+		std::copy(digits_.data() + pos_whole, digits_.data() + digits_.size(), std::back_inserter(shifted.digits_));
+	} else {
+		for (std::size_t i = pos_whole; i < digits_.size() - 1; ++i) {
+			shifted.digits_.emplace_back((digits_[i] >> pos_mod) + (digits_[i + 1] << (base_int_bits - pos_mod)));
+		}
+
+		shifted.digits_.emplace_back(digits_.back() >> pos_mod);
+
+		shifted.remove_leading_zeroes_();
 	}
-
-	shifted.digits_.emplace_back(digits_.back() >> pos_mod);
-
-	shifted.remove_leading_zeroes_();
 
 	return shifted;
 }
@@ -926,25 +931,25 @@ void N::opr_bitshift_r_assign_ (bit_type pos) {
 	FUNCTION_TO_LOG;
 
 	if (is_zero()) return;
+	if (pos == 0) return;
 
 	const std::size_t pos_whole = pos / base_int_bits;
 
 	if (pos_whole >= digits_.size()) return (void)digits_.clear();
 
+	digits_.erase(digits_.begin(), digits_.begin() + pos_whole);
+
 	const bit_type pos_mod = pos % base_int_bits;
 
-	for (std::size_t i = pos_whole, j = 0; i < digits_.size() - 1; ++i, ++j) {
-		digits_[j] = ((digits_[i] >> pos_mod) + (digits_[i + 1] << (base_int_bits - pos_mod)));
-	}
+	if (pos_mod != 0) {
+		for (std::size_t i = 0; i < digits_.size() - 1; ++i) {
+			digits_[i] = ((digits_[i] >> pos_mod) + (digits_[i + 1] << (base_int_bits - pos_mod)));
+		}
 
-	if (pos_whole == 0) {
 		digits_.back() >>= pos_mod;
-	} else {
-		digits_[digits_.size() - pos_whole] = digits_.back() >> pos_mod;
-		digits_.resize(digits_.size() - pos_whole + 1);
-	}
 
-	remove_leading_zeroes_();
+		remove_leading_zeroes_();
+	}
 }
 
 void N::opr_assign_ (std::string_view num_str) {

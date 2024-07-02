@@ -752,6 +752,7 @@ Q & Q::operator >>= (bit_type pos) {
 
 	if (is_zero()) return *this;
 	denom_.opr_bitshift_l_assign_(pos);
+	canonicalise_();
 	return *this;
 }
 

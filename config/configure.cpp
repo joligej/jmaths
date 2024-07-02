@@ -1,15 +1,11 @@
 #include <iostream>
 #include <fstream>
-//#include <cstring>
 #include <bit>
 
 #define TO_STRING_HELPER(x) #x
 #define TO_STRING(x) TO_STRING_HELPER(x)
 
-int main (/*int argc, char * argv[]*/) {
-    //const bool default_state = argc > 1 && strcmp(argv[1], "DEFAULT") == 0;
-    // not necessary anymore since the cleanup
-
+int main() {
     constexpr auto settings_file_name = TO_STRING(SETTINGS_FILE);
 
     std::ofstream settings_file (settings_file_name);
