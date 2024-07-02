@@ -7,7 +7,7 @@ cc ?= clang++
 install_include_dir = $(install_dir)include/
 install_lib_dir = $(install_dir)lib/
 
-compiler_version = -std=c++20
+compiler_version = -std=c++2b
 compiler_warnings = -Wall -Werror -Wextra -Wpedantic -Wpessimizing-move
 ifeq ($(cc), clang++)
 	compiler_warnings += -Wreturn-std-move -Wdefaulted-function-deleted

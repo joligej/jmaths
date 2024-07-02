@@ -3,7 +3,7 @@
 
 /********************
 compiled with:
--std=c++20 -I/usr/local/jmaths/include -L/usr/local/jmaths/lib -ljmaths samples/fig_terminal_q_fits_into_example.cpp -o samples/fig_terminal_q_fits_into_example
+-std=c++2b -I/usr/local/jmaths/include -L/usr/local/jmaths/lib -ljmaths samples/fig_terminal_q_fits_into_example.cpp -o samples/fig_terminal_q_fits_into_example
 ********************/
 
 int main() {
