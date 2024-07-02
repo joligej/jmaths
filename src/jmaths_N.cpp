@@ -838,6 +838,7 @@ N N::opr_bitshift_l_ (bit_type pos) const {
 	FUNCTION_TO_LOG;
 
 	if (is_zero()) return N{};
+	if (pos == 0) return *this;
 
 	const std::size_t pos_whole = pos / base_int_bits;
 	const bit_type pos_mod = pos % base_int_bits;
@@ -846,17 +847,21 @@ N N::opr_bitshift_l_ (bit_type pos) const {
 
 	shifted.digits_.reserve(digits_.size() + pos_whole + 1);
 
-	shifted.digits_.emplace_back(digits_.front() << pos_mod);
-
-	for (std::size_t i = 1; i < digits_.size(); ++i) {
-		shifted.digits_.emplace_back((digits_[i - 1] >> (base_int_bits - pos_mod)) + (digits_[i] << pos_mod));
-	}
-
-	shifted.digits_.emplace_back(digits_.back() >> (base_int_bits - pos_mod));
-
 	shifted.digits_.insert(shifted.digits_.begin(), pos_whole, 0);
 
-	shifted.remove_leading_zeroes_();
+	if (pos_mod == 0) {
+		std::copy(digits_.cbegin(), digits_.cend(), std::back_inserter(shifted.digits_));
+	} else {
+		shifted.digits_.emplace_back(digits_.front() << pos_mod);
+
+		for (std::size_t i = 1; i < digits_.size(); ++i) {
+			shifted.digits_.emplace_back((digits_[i - 1] >> (base_int_bits - pos_mod)) + (digits_[i] << pos_mod));
+		}
+
+		shifted.digits_.emplace_back(digits_.back() >> (base_int_bits - pos_mod));
+
+		shifted.remove_leading_zeroes_();
+	}
 
 	return shifted;
 }
@@ -891,27 +896,30 @@ void N::opr_bitshift_l_assign_ (bit_type pos) {
 	FUNCTION_TO_LOG;
 
 	if (is_zero()) return;
+	if (pos == 0) return;
 
 	const std::size_t pos_whole = pos / base_int_bits;
 	const bit_type pos_mod = pos % base_int_bits;
 
 	digits_.reserve(digits_.size() + pos_whole + 1);
 
-	base_int previous = digits_.front();
+	if (pos_mod != 0) {
+		base_int previous = digits_.front();
 
-	digits_.front() <<= pos_mod;
+		digits_.front() <<= pos_mod;
 
-	for (std::size_t i = 1; i < digits_.size(); ++i) {
-		const base_int current = digits_[i];
-		digits_[i] = (previous >> (base_int_bits - pos_mod)) | (digits_[i] << pos_mod);
-		previous = current;
+		for (std::size_t i = 1; i < digits_.size(); ++i) {
+			const base_int current = digits_[i];
+			digits_[i] = (previous >> (base_int_bits - pos_mod)) | (digits_[i] << pos_mod);
+			previous = current;
+		}
+
+		digits_.emplace_back(previous >> (base_int_bits - pos_mod));
+
+		remove_leading_zeroes_();
 	}
 
-	digits_.emplace_back(previous >> (base_int_bits - pos_mod));
-
 	digits_.insert(digits_.begin(), pos_whole, 0);
-
-	remove_leading_zeroes_();
 }
 
 void N::opr_bitshift_r_assign_ (bit_type pos) {

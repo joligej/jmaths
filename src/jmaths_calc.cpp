@@ -10,29 +10,30 @@ N calc::gcd (N a, N b) {
 	if (a.is_zero()) return b;
 	if (b.is_zero()) return a;
 
-	bit_type shift = 0;
+	auto i = a.ctz();
+	auto j = b.ctz();
 
-	for (; (a.front_() | b.front_()) == 0; shift += base_int_bits) {
-		a.digits_.erase(a.digits_.begin());
-		b.digits_.erase(b.digits_.begin());
-	}
+	a.opr_bitshift_r_assign_(i);
+	b.opr_bitshift_r_assign_(j);
 
-	for (; ((a.front_() | b.front_()) & 1) == 0; ++shift) {
-		a.opr_bitshift_r_assign_(1);
-		b.opr_bitshift_r_assign_(1);
-	}
+	auto k = std::min(i, j);
 
-	while ((a.front_() & 1) == 0) a.opr_bitshift_r_assign_(1);
+	for (;;) {
+		assert(a.is_odd());
+		assert(b.is_odd());
 
-	do {
-		while ((b.front_() & 1) == 0) b.opr_bitshift_r_assign_(1);
-
-		if (detail::opr_comp(a, b) > 0) a.digits_.swap(b.digits_);
+		if (detail::opr_comp(a, b) > 0) {
+			a.digits_.swap(b.digits_);
+		}
 
 		b.opr_subtr_assign_(a);
-	} while (!b.is_zero());
 
-	return a.opr_bitshift_l_(shift);
+		if (b.is_zero()) {
+			return a.opr_bitshift_l_(k);
+		}
+
+		b.opr_bitshift_r_assign_(b.ctz());
+	}
 }
 
 std::pair<N, N> calc::sqrt (const N & num) {
