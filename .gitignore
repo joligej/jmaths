@@ -3,8 +3,8 @@
 *
 !*.*
 !*/
-/build
 *.cfg
+/build
 
 # Compiled source #
 ###################
@@ -45,6 +45,6 @@
 ehthumbs.db
 Thumbs.db
 
-# IDE generated files #
+# IDE generated files and directories #
 ######################
-.vscode
+/.vscode
