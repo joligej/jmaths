@@ -1,6 +1,6 @@
 #include "headers/jmaths.hpp"
 
-#include "headers/jmaths_def.cfg"
+#include "headers/jmaths_def.hh"
 
 namespace jmaths {
 
@@ -22,4 +22,4 @@ Z operator ""_Z (const char * num_str) {
 
 } // /namespace jmaths
 
-#include "headers/jmaths_undef.cfg"
+#include "headers/jmaths_undef.hh"

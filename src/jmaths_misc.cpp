@@ -1,6 +1,6 @@
 #include "headers/jmaths.hpp"
 
-#include "headers/jmaths_def.cfg"
+#include "headers/jmaths_def.hh"
 
 // functions for jmaths::sign_type
 namespace jmaths {
@@ -58,4 +58,4 @@ void sign_type::flip_sign() {
 
 } // /namespace jmaths
 
-#include "headers/jmaths_undef.cfg"
+#include "headers/jmaths_undef.hh"

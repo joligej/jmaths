@@ -1,6 +1,7 @@
 # Project-specific #
 ###################
 /build
+*.cfg
 
 # Compiled source #
 ###################

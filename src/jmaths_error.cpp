@@ -1,6 +1,6 @@
 #include "headers/jmaths.hpp"
 
-#include "headers/jmaths_def.cfg"
+#include "headers/jmaths_def.hh"
 
 namespace jmaths {
 
@@ -42,4 +42,4 @@ error::invalid_base::invalid_base (const char * message) : error(message) {
 
 } // /namespace jmaths
 
-#include "headers/jmaths_undef.cfg"
+#include "headers/jmaths_undef.hh"
