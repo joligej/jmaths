@@ -1,4 +1,9 @@
-#include "headers/jmaths.hpp"
+#include <random>
+#include <cstddef>
+
+#include "headers/jmaths_constants_and_types.hpp"
+#include "headers/jmaths_N.hpp"
+#include "headers/jmaths_Z.hpp"
 
 #include "headers/jmaths_def.hh"
 

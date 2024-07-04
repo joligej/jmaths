@@ -1,4 +1,11 @@
-#include "headers/jmaths.hpp"
+#include <cstddef>
+#include <string_view>
+
+#include "headers/jmaths_constants_and_types.hpp"
+#include "headers/jmaths_hash.hpp"
+#include "headers/jmaths_N.hpp"
+#include "headers/jmaths_Z.hpp"
+#include "headers/jmaths_Q.hpp"
 
 #include "headers/jmaths_def.hh"
 

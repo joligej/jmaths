@@ -1,4 +1,7 @@
-#include "headers/jmaths.hpp"
+#include <string_view>
+
+#include "headers/jmaths_constants_and_types.hpp"
+#include "headers/jmaths_sign_type.hpp"
 
 #include "headers/jmaths_def.hh"
 

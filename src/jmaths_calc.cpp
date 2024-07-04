@@ -1,4 +1,13 @@
-#include "headers/jmaths.hpp"
+#include <algorithm>
+#include <utility>
+#include <cassert>
+
+#include "headers/jmaths_constants_and_types.hpp"
+#include "headers/jmaths_calc.hpp"
+#include "headers/jmaths_N.hpp"
+#include "headers/jmaths_Z.hpp"
+#include "headers/jmaths_detail.hpp"
+#include "headers/jmaths_error.hpp"
 
 #include "headers/jmaths_def.hh"
 

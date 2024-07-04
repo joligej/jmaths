@@ -5,6 +5,8 @@
 !*/
 *.cfg
 /build
+/DerivedData
+/Build
 
 # Compiled source #
 ###################

@@ -1,26 +1,25 @@
 #pragma once
 
-#ifndef PREPROCESSING_HEADER
-    #include "dependencies.hpp"
-#endif
+#include <cstdint>
+#include <cstddef>
+#include <climits>
+#include <memory>
 
 namespace jmaths {
 
-#ifndef BIT_ARCHITECTURE
-    #error "You didn't define the bit architecture!"
-#elif BIT_ARCHITECTURE >= 64
+#if defined(UINT64_MAX)
 
 using base_int = std::uint32_t;
 using base_int_big = std::uint64_t;
 inline constexpr base_int_big base = 4'294'967'296;
 
-#elif BIT_ARCHITECTURE >= 32
+#elif defined(UINT32_MAX)
 
 using base_int = std::uint16_t;
 using base_int_big = std::uint32_t;
 inline constexpr base_int_big base = 65'536;
 
-#elif BIT_ARCHITECTURE >= 16
+#elif defined(UINT16_MAX)
 
 using base_int = std::uint8_t;
 using base_int_big = std::uint16_t;

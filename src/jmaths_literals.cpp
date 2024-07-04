@@ -1,4 +1,6 @@
-#include "headers/jmaths.hpp"
+#include "headers/jmaths_literals.hpp"
+#include "headers/jmaths_N.hpp"
+#include "headers/jmaths_Z.hpp"
 
 #include "headers/jmaths_def.hh"
 
