@@ -448,9 +448,9 @@ std::string Q::to_str (unsigned base) const {
 	FUNCTION_TO_LOG;
 
 	if (is_negative()) {
-		return (std::string{'-'} + num_.to_str(base) + '/' + denom_.to_str(base));
+		return (std::string{'-'} + num_.to_str(base) + vinculum + denom_.to_str(base));
 	} else {
-		return (num_.to_str(base) + '/' + denom_.to_str(base));
+		return (num_.to_str(base) + vinculum + denom_.to_str(base));
 	}
 }
 
@@ -458,9 +458,9 @@ Q::operator std::string() const {
 	FUNCTION_TO_LOG;
 
 	if (is_negative()) {
-		return (std::string{'-'} + (std::string)num_ + '/' + (std::string)denom_);
+		return (std::string{'-'} + (std::string)num_ + vinculum + (std::string)denom_);
 	} else {
-		return ((std::string)num_ + '/' + (std::string)denom_);
+		return ((std::string)num_ + vinculum + (std::string)denom_);
 	}
 }
 
@@ -468,9 +468,9 @@ std::string Q::to_hex() const {
 	FUNCTION_TO_LOG;
 
 	if (is_negative()) {
-		return (std::string{'-'} + num_.to_hex() + '/' + denom_.to_hex());
+		return (std::string{'-'} + num_.to_hex() + vinculum + denom_.to_hex());
 	} else {
-		return (num_.to_hex() + '/' + denom_.to_hex());
+		return (num_.to_hex() + vinculum + denom_.to_hex());
 	}
 }
 
