@@ -470,15 +470,28 @@ std::optional<FLOAT> Q::fits_into() const {
 	static_assert(is_allowed_type, "Template type parameter is not one of the allowed types: float and double.");
 	static_assert(nlf::radix == 2, "The radix of the floating point type is currently not supported. Please make sure it is equal to 2.");
 
-	#if defined (NATIVELY_BIG_ENDIAN) && defined (NATIVELY_LITTLE_ENDIAN)
-			#error "Both little and big endian. Unclear how to implement floating point manipulation."
-	#endif
+	static constexpr bool is_big_endian = std::endian::native == std::endian::big;
+	static constexpr bool is_little_endian = std::endian::native == std::endian::little;
+
+	static_assert(is_big_endian || is_little_endian, "Mixed endianness is not supported. Unclear how to implement floating point manipulation.");
 
 	struct float_sizes {
 		enum : bit_type {
 			sign = 1,
 			exponent = 8,
 			mantissa = 23
+		};
+
+		struct big_endian {
+			std::uint32_t sign : float_sizes::sign;
+			std::uint32_t exponent : float_sizes::exponent;
+			std::uint32_t mantissa : float_sizes::mantissa;
+		};
+
+		struct little_endian {
+			std::uint32_t mantissa : float_sizes::mantissa;
+			std::uint32_t exponent : float_sizes::exponent;
+			std::uint32_t sign : float_sizes::sign;
 		};
 	};
 
@@ -488,41 +501,41 @@ std::optional<FLOAT> Q::fits_into() const {
 			exponent = 11,
 			mantissa = 52
 		};
+
+		struct big_endian {
+			std::uint64_t sign : double_sizes::sign;
+			std::uint64_t exponent : double_sizes::exponent;
+			std::uint64_t mantissa : double_sizes::mantissa;
+		};
+
+		struct little_endian {
+			std::uint64_t mantissa : double_sizes::mantissa;
+			std::uint64_t exponent : double_sizes::exponent;
+			std::uint64_t sign : double_sizes::sign;
+		};
 	};
 
 	union float_access {
-		std::uint32_t float_size[1];
-		struct {
-		#ifdef NATIVELY_BIG_ENDIAN
-			std::uint32_t sign : float_sizes::sign;
-			std::uint32_t exponent : float_sizes::exponent;
-			std::uint32_t mantissa : float_sizes::mantissa;
-		#else
-			std::uint32_t mantissa : float_sizes::mantissa;
-			std::uint32_t exponent : float_sizes::exponent;
-			std::uint32_t sign : float_sizes::sign;
-		#endif
-		} fields;
+		float val;
+		
+		std::conditional_t<is_big_endian,
+			typename float_sizes::big_endian,
+			typename float_sizes::little_endian>
+		fields;
 	};
 
 	union double_access {
-		std::uint64_t double_size[1];
-		struct {
-		#ifdef NATIVELY_BIG_ENDIAN
-			std::uint64_t sign : double_sizes::sign;
-			std::uint64_t exponent : double_sizes::exponent;
-			std::uint64_t mantissa : double_sizes::mantissa;
-		#else
-			std::uint64_t mantissa : double_sizes::mantissa;
-			std::uint64_t exponent : double_sizes::exponent;
-			std::uint64_t sign : double_sizes::sign;
-		#endif
-		} fields;
+		double val;
+
+		std::conditional_t<is_big_endian,
+			typename double_sizes::big_endian,
+			typename double_sizes::little_endian>
+		fields;
 	};
 
 	#if 0
 	union long_double_access {
-		std::uint64_t long_double_size[2];
+		long double val;
 		struct {
 		#ifdef NATIVELY_BIG_ENDIAN
 			std::uint64_t sign : 1;
@@ -537,7 +550,7 @@ std::optional<FLOAT> Q::fits_into() const {
 	};
 	#endif
 
-	static_assert(sizeof(float_access) == sizeof(float) && sizeof(float_access) == sizeof(std::uint32_t[1]), "There seems to be a problem with the padding bits for type: float_acess.");
+	static_assert(sizeof(float_access) == sizeof(float) && sizeof(float_access) == sizeof(std::uint32_t[1]), "There seems to be a problem with the padding bits for type: float_access.");
 	static_assert(sizeof(double_access) == sizeof(double) && sizeof(double_access) == sizeof(std::uint64_t[1]), "There seems to be a problem with the padding bits for type: double_access.");
 	
 	#if 0

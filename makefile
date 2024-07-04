@@ -47,18 +47,6 @@ dependencies_file_name = dependencies.hpp
 dependencies_file_dir = $(source_dependencies_dir)
 dependencies_file = $(dependencies_file_dir)$(dependencies_file_name)
 
-config_source_file_name = configure.cpp
-config_source_file_dir = $(config_dir)
-config_source_file = $(config_source_file_dir)$(config_source_file_name)
-
-config_program_name = configure
-config_program_dir = $(config_dir)
-config_program = $(config_program_dir)$(config_program_name)
-
-user_settings_file_name = user_settings.cfg
-user_settings_file_dir = $(config_dir)
-user_settings_file = $(user_settings_file_dir)$(user_settings_file_name)
-
 unity_source_file_name = unity.cpp
 unity_source_file_dir = $(build_dir)
 unity_source_file = $(unity_source_file_dir)$(unity_source_file_name)
@@ -91,10 +79,10 @@ implementation_header_file_name = jmaths.hpp
 implementation_header_file_dir = $(source_headers_dir)
 implementation_header_file = $(implementation_header_file_dir)$(implementation_header_file_name)
 
-header_files = $(implementation_header_file) $(user_settings_file) $(dependencies_file) $(source_dir)jmaths_tmpl.tpp $(source_dependencies_dir)jmaths_aliases.hpp
+header_files = $(implementation_header_file) $(dependencies_file) $(source_dir)jmaths_tmpl.tpp $(source_dependencies_dir)jmaths_aliases.hpp
 source_files = $(wildcard $(source_dir)*.cpp)
 
-create_while_building = "$(config_program)" "$(user_settings_file)" "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)"* "$(debug_header_file)"* "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM" "$(error_log_program)"
+create_while_building = "$(unity_source_file)" "$(lib_file)" "$(debug_lib_file)" "$(header_file)"* "$(debug_header_file)"* "$(unity_obj_file)" "$(debug_unity_obj_file)" "$(test_program)" "$(test_program).dSYM" "$(error_log_program)"
 
 compile_parms_release = $(compiler_version) $(compiler_warnings) $(compiler_release)
 compile_parms_debug = $(compiler_version) $(compiler_warnings) $(compiler_debug)
@@ -134,7 +122,7 @@ endef
 
 export
 
-.PHONY: all debug fresh clean build debug_build install uninstall configure unity debug_unity library debug_library header debug_header test
+.PHONY: all debug fresh clean build debug_build install uninstall unity debug_unity library debug_library header debug_header test
 
 all:
 	@$(MAKE) build
@@ -178,12 +166,6 @@ uninstall:
 	@echo "Uninstalling successful"
 	@echo "Library removed from system"
 
-$(user_settings_file): $(config_program)
-	@$(config_program)
-
-$(config_program): $(config_source_file)
-	@$(call compile_to_exec,$<,$@,$(compile_parms_release) -DSETTINGS_FILE="$(user_settings_file)","configuration")
-
 $(unity_source_file): $(source_files)
 	@rm -f "$@"
 	@echo "Creating $@..."
@@ -215,8 +197,6 @@ $(test_program): $(test_source_file) $(debug_lib_file) $(debug_header_file)
 
 $(error_log_program): $(error_log_source_file)
 	@$(call compile_to_exec,$<,$@,$(compile_parms_release),"error handling")
-
-configure: $(config_program)
 
 unity: $(unity_obj_file)
 
