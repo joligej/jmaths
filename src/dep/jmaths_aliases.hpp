@@ -30,6 +30,7 @@ inline constexpr base_int_big base = 256;
     #error "No support for bit architectures below 16"
 #endif
 
+inline constexpr char negative_sign = '-';
 inline constexpr char vinculum = '/';
 using bit_type = unsigned long long; // the type that should store a number of bits, preferably the largest type available
 inline constexpr unsigned default_base = 10; // the default base that strings are assumed to be in

@@ -10,7 +10,7 @@ namespace jmaths {
 std::ostream & detail::opr_ins (std::ostream & os, const Z & z) {
 	FUNCTION_TO_LOG;
 
-	if (z.is_negative()) return os << '-' << z.abs();
+	if (z.is_negative()) return os << negative_sign << z.abs();
 	else return os << z.abs();
 }
 
@@ -325,7 +325,7 @@ std::string Z::to_str (unsigned base) const {
 	FUNCTION_TO_LOG;
 
 	if (is_negative()) {
-		return std::string{'-'} + N::to_str(base);
+		return negative_sign + N::to_str(base);
 	} else {
 		return N::to_str(base);
 	}
@@ -335,7 +335,7 @@ Z::operator std::string() const {
 	FUNCTION_TO_LOG;
 
 	if (is_negative()) {
-		return std::string{'-'} + N::operator std::string();
+		return negative_sign + N::operator std::string();
 	} else {
 		return N::operator std::string();
 	}
@@ -345,7 +345,7 @@ std::string Z::to_hex() const {
 	FUNCTION_TO_LOG;
 
 	if (is_negative()) {
-		return std::string{'-'} + N::to_hex();
+		return negative_sign + N::to_hex();
 	} else {
 		return N::to_hex();
 	}

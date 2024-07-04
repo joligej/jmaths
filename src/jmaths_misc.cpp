@@ -20,7 +20,7 @@ sign_type::sign_type (std::string_view & num_str) : sign_(handle_string_(num_str
 sign_type::sign_bool sign_type::handle_string_ (std::string_view & num_str) {
 	FUNCTION_TO_LOG;
 
-	if (!num_str.empty() && num_str.front() == '-') {
+	if (!num_str.empty() && num_str.front() == negative_sign) {
 		num_str.remove_prefix(1);
 		return num_str.empty() ? positive : negative;
 	} else {
