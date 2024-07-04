@@ -30,8 +30,8 @@ inline constexpr base_int_big base = 256;
     #error "No support for bit architectures below 16"
 #endif
 
-inline constexpr char negative_sign = '-';
-inline constexpr char vinculum = '/';
+inline constexpr char negative_sign = '-'; // the sign that precedes negative numbers
+inline constexpr char vinculum = '/'; // the fraction bar that separates the numerator and denominator of a fraction
 using bit_type = unsigned long long; // the type that should store a number of bits, preferably the largest type available
 inline constexpr unsigned default_base = 10; // the default base that strings are assumed to be in
 template <typename T> using allocator = std::allocator<T>; // the allocator used to store the numbers in a container on the heap
