@@ -130,3 +130,5 @@ class Q : public sign_type {
 };
 
 } // /namespace jmaths
+
+#include "jmaths_tmpl_Q.hpp"

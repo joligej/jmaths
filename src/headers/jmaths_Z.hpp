@@ -108,3 +108,5 @@ class Z : public sign_type, private N {
 };
 
 } // /namespace jmaths
+
+#include "jmaths_tmpl_Z.hpp"

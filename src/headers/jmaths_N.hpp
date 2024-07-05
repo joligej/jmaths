@@ -181,3 +181,5 @@ class N::const_bit_reference : public bit_reference_base_<const N> {
 };
 
 } // /namespace jmaths
+
+#include "jmaths_tmpl_N.hpp"

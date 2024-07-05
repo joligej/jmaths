@@ -4,6 +4,7 @@
 #include <compare>
 #include <cstddef>
 #include <optional>
+#include <cassert>
 
 #include "jmaths_constants_and_types.hpp"
 #include "jmaths_N.hpp"

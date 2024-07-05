@@ -40,3 +40,5 @@ class sign_type {
 };
 
 } // /namespace jmaths
+
+#include "jmaths_tmpl_sign_type.hpp"

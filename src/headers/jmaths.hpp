@@ -8,8 +8,3 @@
 #include "jmaths_hash.hpp"
 #include "jmaths_literals.hpp"
 #include "jmaths_error.hpp"
-
-#include "jmaths_tmpl_N.hpp"
-#include "jmaths_tmpl_Z.hpp"
-#include "jmaths_tmpl_Q.hpp"
-#include "jmaths_tmpl_sign_type.hpp"
