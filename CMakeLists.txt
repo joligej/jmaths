@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.28.1)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -12,8 +12,8 @@ add_compile_options(
 
 project(jmaths VERSION 1.0 DESCRIPTION "The jmaths library for C++" LANGUAGES CXX)
 
-file(GLOB src_files ${PROJECT_SOURCE_DIR}/src/*.cpp)
-file(GLOB header_files ${PROJECT_SOURCE_DIR}/src/headers/*.hpp)
+file(GLOB src_files ${PROJECT_SOURCE_DIR}/src/*.c*)
+file(GLOB header_files ${PROJECT_SOURCE_DIR}/src/headers/*.h*)
 
 add_library(jmaths STATIC ${src_files})
 
