@@ -74,8 +74,7 @@ class Z : public sign_type, private N {
 		std::size_t size() const; // size of this object in bytes
 
 		std::string to_str (unsigned base) const; // convert to string in any base >= 2 and <= 64
-		operator std::string() const; // convert to string in default base
-		std::string to_hex() const; // convert to string in base 16 (assumes base is a power of 2)
+		std::string to_hex() const; // convert to string in base 16 (assumes base is an integer power of 2)
 		template <typename INT> requires std::is_integral_v<INT> std::optional<INT> fits_into() const;
 
 		Z & operator ++ ();

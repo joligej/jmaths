@@ -270,16 +270,6 @@ std::string Q::to_str (unsigned base) const {
 	}
 }
 
-Q::operator std::string() const {
-	FUNCTION_TO_LOG;
-
-	if (is_negative()) {
-		return (negative_sign + (std::string)num_ + vinculum + (std::string)denom_);
-	} else {
-		return ((std::string)num_ + vinculum + (std::string)denom_);
-	}
-}
-
 std::string Q::to_hex() const {
 	FUNCTION_TO_LOG;
 

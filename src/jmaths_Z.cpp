@@ -165,16 +165,6 @@ std::string Z::to_str (unsigned base) const {
 	}
 }
 
-Z::operator std::string() const {
-	FUNCTION_TO_LOG;
-
-	if (is_negative()) {
-		return negative_sign + N::operator std::string();
-	} else {
-		return N::operator std::string();
-	}
-}
-
 std::string Z::to_hex() const {
 	FUNCTION_TO_LOG;
 

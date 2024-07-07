@@ -637,12 +637,6 @@ std::string N::to_str (unsigned base) const {
 	return conv_to_base_(base);
 }
 
-N::operator std::string() const {
-	FUNCTION_TO_LOG;
-
-	return conv_to_base_(default_base);
-}
-
 std::string N::to_hex() const {
 	FUNCTION_TO_LOG;
 
