@@ -152,9 +152,9 @@ std::string N::conv_to_base_ (unsigned base) const {
 	N helper (*this);
 
 	while (!helper.is_zero()) {
-		const auto div_pair = detail::opr_div(helper, base);
-		num_str.push_back(base_converter[div_pair.second.front_()]);
-		helper = div_pair.first;
+		auto [quotient, remainder] = detail::opr_div(helper, base);
+		num_str.push_back(base_converter[remainder.front_()]);
+		helper = std::move(quotient);
 	}
 
 	num_str.shrink_to_fit();

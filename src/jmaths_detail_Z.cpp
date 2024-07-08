@@ -121,19 +121,19 @@ Z detail::opr_mult (const Z & lhs, const Z & rhs) {
 std::pair<Z, Z> detail::opr_div (const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
-    auto && quotient = lhs.abs() / rhs.abs();
+    auto [quotient, remainder] = lhs.abs() / rhs.abs();
 
-    if (quotient.first.is_zero()) {
-        if (quotient.second.is_zero()) {
+    if (quotient.is_zero()) {
+        if (remainder.is_zero()) {
             return {Z{}, Z{}};
         } else {
-            return {Z{}, Z(std::move(quotient.second), lhs.sign_)};
+            return {Z{}, Z(std::move(remainder), lhs.sign_)};
         }
     } else {
-        if (quotient.second.is_zero()) {
-            return {Z(std::move(quotient.first), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)), Z{}};
+        if (remainder.is_zero()) {
+            return {Z(std::move(quotient), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)), Z{}};
         } else {
-            return {Z(std::move(quotient.first), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)), Z(std::move(quotient.second), lhs.sign_)};
+            return {Z(std::move(quotient), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)), Z(std::move(remainder), lhs.sign_)};
         }
     }
 }

@@ -5,7 +5,6 @@
 !*/
 *.cfg
 /build
-/DerivedData
 /Build
 
 # Compiled source #
@@ -50,3 +49,6 @@ Thumbs.db
 # IDE generated files and directories #
 ######################
 /.vscode
+/DerivedData
+/.idea
+/cmake-build-*
