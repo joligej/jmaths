@@ -1,3 +1,5 @@
+#pragma once
+
 #include "jmaths_declarations.hpp"
 #include "jmaths_constants_and_types.hpp"
 #include "jmaths_N.hpp"

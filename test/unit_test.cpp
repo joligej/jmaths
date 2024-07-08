@@ -8,9 +8,8 @@
 #include <iostream>
 #include <string>
 
-
-#if __has_include("../build/dbgjmaths.hpp")
-    #include "../build/dbgjmaths.hpp"
+#if __has_include("jmaths.hpp")
+    #include "jmaths.hpp"
 #endif
 
 #define REPEAT(x) \
