@@ -23,7 +23,7 @@ std::size_t std::hash<jmaths::N>::operator () (const jmaths::N & n) const {
 std::size_t std::hash<jmaths::Z>::operator () (const jmaths::Z & z) const {
     FUNCTION_TO_LOG;
 
-    return std::hash<jmaths::N>{}(z) ^ ((std::size_t)z.sign_ << (((const jmaths::N&)z).front_() % (sizeof(std::size_t) * jmaths::bits_in_byte)));
+    return std::hash<jmaths::N>{}(z) ^ ((std::size_t)z.sign_ << (z.front_() % (sizeof(std::size_t) * jmaths::bits_in_byte)));
 }
 
 std::size_t std::hash<jmaths::Q>::operator () (const jmaths::Q & q) const {
