@@ -17,7 +17,7 @@ class rand {
         inline static std::mt19937 gen {seed_type{}()};
 
         std::uniform_int_distribution<INT> distrib;
-    
+ 
     public:
         rand (INT min, INT max) : distrib(min, max) {}
         rand() : rand(0, std::numeric_limits<INT>::max()) {}

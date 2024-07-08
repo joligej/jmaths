@@ -65,7 +65,7 @@ int main (int argc, char * argv[]) {
     if (argc > 1) {
         potential_log_file.open(argv[1]);
     }
-    
+ 
     std::istream & log_file = potential_log_file.is_open() ? potential_log_file : std::cin;
 
     std::map<std::string, function> function_by_name;

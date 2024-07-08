@@ -82,8 +82,8 @@ struct testables {
         45'126,
         65'500,
         65'535
-    };  
-    
+    };
+ 
     static constexpr auto values1_size = std::size(values1);
 
     static constexpr base_int_big values2[] = {
@@ -155,7 +155,7 @@ struct testables {
     };
 
     static constexpr auto values2_size = std::size(values2);
-    
+ 
     static std::array<N, values1_size> values1_conv;
     static std::array<N, values2_size> values2_conv;
 
@@ -302,7 +302,7 @@ struct arg2bitassign : arg2bit {
 struct arg1bitwise {
     template <typename T>
     using func = std::function<T(const T&)>;
-    
+ 
     enum value : std::size_t {
         complement = 0,
         max_value

@@ -114,7 +114,7 @@ std::optional<FLOAT> Q::fits_into() const {
 	static constexpr bool is_double = std::is_same_v<FLOAT, double>;
 
 	static constexpr bool is_allowed_type = is_float || is_double;
-	
+
 	static_assert(is_allowed_type, "Template type parameter is not one of the allowed types: float and double.");
 	static_assert(nlf::radix == 2, "The radix of the floating point type is currently not supported. Please make sure it is equal to 2.");
 
@@ -165,7 +165,7 @@ std::optional<FLOAT> Q::fits_into() const {
 
 	union float_access {
 		float val;
-		
+	
 		std::conditional_t<is_big_endian,
 			typename float_sizes::big_endian,
 			typename float_sizes::little_endian>
@@ -200,7 +200,7 @@ std::optional<FLOAT> Q::fits_into() const {
 
 	static_assert(sizeof(float_access) == sizeof(float) && sizeof(float_access) == sizeof(std::uint32_t[1]), "There seems to be a problem with the padding bits for type: float_access.");
 	static_assert(sizeof(double_access) == sizeof(double) && sizeof(double_access) == sizeof(std::uint64_t[1]), "There seems to be a problem with the padding bits for type: double_access.");
-	
+
 	#if 0
 	static_assert(sizeof(long_double_access) == sizeof(long double) && sizeof(long_double_access) == sizeof(std::uint64_t[2]), "There seems to be a problem with the padding bits for type: long_double_access.");
 	#endif
@@ -227,7 +227,7 @@ std::optional<FLOAT> Q::fits_into() const {
 	}
 
 	FLOAT denominator{};
-	
+
 	{
 		std::size_t j = 0;
 
@@ -272,7 +272,7 @@ std::optional<FLOAT> Q::fits_into() const {
 
 		result_help->fields.exponent += (num_.digits_.size() - denom_.digits_.size()) * base_int_bits;
 	}
-	
+
 	result_help->fields.sign = is_negative();
 
 	return result;
