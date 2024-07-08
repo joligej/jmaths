@@ -38,7 +38,7 @@ N N::rand (bit_type upper_bound_exponent) {
 Z Z::rand (bit_type upper_bound_exponent) {
     FUNCTION_TO_LOG;
 
-    static internal::rand<base_int> rand_gen (0, 1);
+    static internal::rand<unsigned char> rand_gen (0, 1);
 
     return Z(N::rand(upper_bound_exponent), static_cast<sign_bool>(rand_gen()));
 }
