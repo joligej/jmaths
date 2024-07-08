@@ -35,7 +35,7 @@ std::string_view sign_type::handle_fraction_string_ (std::string_view & num_str)
 	FUNCTION_TO_LOG;
 
 	const auto fraction_bar = num_str.find(vinculum);
-	std::string_view numerator = num_str.substr(0, fraction_bar);
+	const std::string_view numerator = num_str.substr(0, fraction_bar);
 	num_str.remove_prefix(fraction_bar + 1);
 	return numerator;
 }
