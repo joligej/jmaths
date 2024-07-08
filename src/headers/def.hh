@@ -8,4 +8,4 @@
 #endif
 
 #define REPEAT(x) \
-for (::std::remove_cv_t<decltype(x)> FOR_LOOP_REPETITION_COUNTER = 0; FOR_LOOP_REPETITION_COUNTER < x; ++FOR_LOOP_REPETITION_COUNTER)
+for (::std::remove_cv_t<decltype(x)> FOR_LOOP_REPETITION_COUNTER{}; FOR_LOOP_REPETITION_COUNTER < x; ++FOR_LOOP_REPETITION_COUNTER)
