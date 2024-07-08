@@ -8,8 +8,8 @@
 #include <iostream>
 #include <string>
 
-#if __has_include("jmaths.hpp")
-    #include "jmaths.hpp"
+#if __has_include("jmaths/all.hpp")
+    #include "jmaths/all.hpp"
 #endif
 
 #define REPEAT(x) \

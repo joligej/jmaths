@@ -1,5 +1,5 @@
 #include <iostream>
-#include "jmaths.hpp"
+#include "jmaths/all.hpp"
 
 /********************
 compiled with:

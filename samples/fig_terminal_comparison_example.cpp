@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "jmaths/jmaths.hpp"
+#include "jmaths/all.hpp"
 
 /********************
 compiled with:
