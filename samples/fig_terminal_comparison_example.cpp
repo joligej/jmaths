@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
-#include "jmaths.hpp"
+#include "jmaths/jmaths.hpp"
 
 /********************
 compiled with:
--std=c++2b -I/usr/local/jmaths/include -L/usr/local/jmaths/lib -ljmaths samples/fig_terminal_comparison_example.cpp -o samples/fig_terminal_comparison_example
+-std=c++2b -I/usr/local/include/ -L/usr/local/lib/ -ljmaths samples/fig_terminal_comparison_example.cpp -o samples/fig_terminal_comparison_example
 ********************/
 
 int main() {
