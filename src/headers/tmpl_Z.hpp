@@ -6,12 +6,12 @@
 #include <optional>
 #include <limits>
 
-#include "jmaths_constants_and_types.hpp"
-#include "jmaths_Z.hpp"
-#include "jmaths_sign_type.hpp"
-#include "jmaths_detail.hpp"
+#include "constants_and_types.hpp"
+#include "Z.hpp"
+#include "sign_type.hpp"
+#include "detail.hpp"
 
-#include "jmaths_def.hh"
+#include "def.hh"
 
 // comparison functions for Z with integral types
 namespace jmaths {
@@ -143,4 +143,4 @@ Z & Z::operator = (INT rhs) {
 
 } // /namespace jmaths
 
-#include "jmaths_undef.hh"
+#include "undef.hh"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "jmaths_declarations.hpp"
+#include "declarations.hpp"
 
 // declarations of literals
 namespace jmaths {

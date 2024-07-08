@@ -11,9 +11,9 @@
 #include <cstddef>
 #include <optional>
 
-#include "jmaths_constants_and_types.hpp"
-#include "jmaths_declarations.hpp"
-#include "jmaths_hash.hpp"
+#include "constants_and_types.hpp"
+#include "declarations.hpp"
+#include "hash.hpp"
 
 // declarations of N and associated functions and types
 namespace jmaths {
@@ -181,4 +181,4 @@ class N::const_bit_reference : public bit_reference_base_<const N> {
 
 } // /namespace jmaths
 
-#include "jmaths_tmpl_N.hpp"
+#include "tmpl_N.hpp"

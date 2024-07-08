@@ -10,11 +10,11 @@
 #include <compare>
 #include <cassert>
 
-#include "headers/jmaths_constants_and_types.hpp"
-#include "headers/jmaths_detail.hpp"
-#include "headers/jmaths_N.hpp"
+#include "headers/constants_and_types.hpp"
+#include "headers/detail.hpp"
+#include "headers/N.hpp"
 
-#include "headers/jmaths_def.hh"
+#include "headers/def.hh"
 
 namespace jmaths {
 
@@ -433,4 +433,4 @@ std::strong_ordering detail::opr_comp (const N & lhs, const N & rhs) {
 
 } // /namespace jmaths
 
-#include "headers/jmaths_undef.hh"
+#include "headers/undef.hh"

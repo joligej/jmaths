@@ -6,7 +6,7 @@
 #include <compare>
 #include <type_traits>
 
-#include "jmaths_declarations.hpp"
+#include "declarations.hpp"
 
 // declarations of namespace structs calc and detail
 namespace jmaths {

@@ -2,14 +2,14 @@
 #include <utility>
 #include <cassert>
 
-#include "headers/jmaths_constants_and_types.hpp"
-#include "headers/jmaths_calc.hpp"
-#include "headers/jmaths_N.hpp"
-#include "headers/jmaths_Z.hpp"
-#include "headers/jmaths_detail.hpp"
-#include "headers/jmaths_error.hpp"
+#include "headers/constants_and_types.hpp"
+#include "headers/calc.hpp"
+#include "headers/N.hpp"
+#include "headers/Z.hpp"
+#include "headers/detail.hpp"
+#include "headers/error.hpp"
 
-#include "headers/jmaths_def.hh"
+#include "headers/def.hh"
 
 namespace jmaths {
 
@@ -160,4 +160,4 @@ Z calc::pow (Z base, N exponent) {
 
 } // /namespace jmaths
 
-#include "headers/jmaths_undef.hh"
+#include "headers/undef.hh"

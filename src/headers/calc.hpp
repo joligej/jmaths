@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "jmaths_declarations.hpp"
+#include "declarations.hpp"
 
 // declarations of namespace structs calc and detail
 namespace jmaths {

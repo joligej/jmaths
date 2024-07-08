@@ -3,7 +3,7 @@
 #include <random>
 #include <limits>
 
-#include "jmaths_constants_and_types.hpp"
+#include "constants_and_types.hpp"
 
 namespace jmaths {
 

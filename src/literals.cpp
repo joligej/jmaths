@@ -1,8 +1,8 @@
-#include "headers/jmaths_literals.hpp"
-#include "headers/jmaths_N.hpp"
-#include "headers/jmaths_Z.hpp"
+#include "headers/literals.hpp"
+#include "headers/N.hpp"
+#include "headers/Z.hpp"
 
-#include "headers/jmaths_def.hh"
+#include "headers/def.hh"
 
 namespace jmaths {
 
@@ -24,4 +24,4 @@ Z operator ""_Z (const char * num_str) {
 
 } // /namespace jmaths
 
-#include "headers/jmaths_undef.hh"
+#include "headers/undef.hh"

@@ -1,13 +1,13 @@
 #include <cstddef>
 #include <string_view>
 
-#include "headers/jmaths_constants_and_types.hpp"
-#include "headers/jmaths_hash.hpp"
-#include "headers/jmaths_N.hpp"
-#include "headers/jmaths_Z.hpp"
-#include "headers/jmaths_Q.hpp"
+#include "headers/constants_and_types.hpp"
+#include "headers/hash.hpp"
+#include "headers/N.hpp"
+#include "headers/Z.hpp"
+#include "headers/Q.hpp"
 
-#include "headers/jmaths_def.hh"
+#include "headers/def.hh"
 
 std::size_t std::hash<jmaths::N>::operator () (const jmaths::N & n) const {
     FUNCTION_TO_LOG;
@@ -32,4 +32,4 @@ std::size_t std::hash<jmaths::Q>::operator () (const jmaths::Q & q) const {
     return (std::hash<jmaths::N>{}(q.num_) ^ std::hash<jmaths::N>{}(q.denom_)) ^ ((std::size_t)q.sign_ << ((q.num_.front_() ^ q.denom_.front_()) % (sizeof(std::size_t) * jmaths::bits_in_byte)));
 }
 
-#include "headers/jmaths_undef.hh"
+#include "headers/undef.hh"

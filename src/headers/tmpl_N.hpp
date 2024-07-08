@@ -6,11 +6,11 @@
 #include <optional>
 #include <cassert>
 
-#include "jmaths_constants_and_types.hpp"
-#include "jmaths_N.hpp"
-#include "jmaths_detail.hpp"
+#include "constants_and_types.hpp"
+#include "N.hpp"
+#include "detail.hpp"
 
-#include "jmaths_def.hh"
+#include "def.hh"
 
 // comparison functions for N with integral types
 namespace jmaths {
@@ -217,4 +217,4 @@ N::bit_reference_base_<T>::operator int () const {
 
 } // /namespace jmaths
 
-#include "jmaths_undef.hh"
+#include "undef.hh"

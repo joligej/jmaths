@@ -2,9 +2,9 @@
 
 #include <type_traits>
 
-#include "jmaths_sign_type.hpp"
+#include "sign_type.hpp"
 
-#include "jmaths_def.hh"
+#include "def.hh"
 
 // member function templates of sign_type
 namespace jmaths {
@@ -38,4 +38,4 @@ void sign_type::set_sign_ (BOOL val) {
 
 } // /namespace jmaths
 
-#include "jmaths_undef.hh"
+#include "undef.hh"

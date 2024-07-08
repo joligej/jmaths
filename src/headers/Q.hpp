@@ -10,11 +10,11 @@
 #include <cstddef>
 #include <optional>
 
-#include "jmaths_constants_and_types.hpp"
-#include "jmaths_declarations.hpp"
-#include "jmaths_sign_type.hpp"
-#include "jmaths_N.hpp"
-#include "jmaths_hash.hpp"
+#include "constants_and_types.hpp"
+#include "declarations.hpp"
+#include "sign_type.hpp"
+#include "N.hpp"
+#include "hash.hpp"
 
 // declarations of Q and associated functions and types
 namespace jmaths {
@@ -130,4 +130,4 @@ class Q : public sign_type {
 
 } // /namespace jmaths
 
-#include "jmaths_tmpl_Q.hpp"
+#include "tmpl_Q.hpp"

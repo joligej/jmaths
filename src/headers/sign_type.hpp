@@ -3,7 +3,7 @@
 #include <string_view>
 #include <type_traits>
 
-#include "jmaths_declarations.hpp"
+#include "declarations.hpp"
 
 // declarations of sign_type and associated functions and types
 namespace jmaths {
@@ -41,4 +41,4 @@ class sign_type {
 
 } // /namespace jmaths
 
-#include "jmaths_tmpl_sign_type.hpp"
+#include "tmpl_sign_type.hpp"

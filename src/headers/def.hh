@@ -1,6 +1,6 @@
 #ifndef NDEBUG
     #include <source_location>
-    #include "jmaths_function_timer.hpp"
+    #include "function_timer.hpp"
     #define FUNCTION_TO_LOG \
     ::jmaths::internal::function_timer TIME_THIS_FUNCTION (::std::source_location::current().function_name())
 #else

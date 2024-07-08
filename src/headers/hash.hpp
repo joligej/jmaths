@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <functional>
 
-#include "jmaths_declarations.hpp"
+#include "declarations.hpp"
 
 // declarations of std::hash specialisations
 namespace std {

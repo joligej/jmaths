@@ -11,12 +11,12 @@
 #include <utility>
 #include <cstdint>
 
-#include "jmaths_constants_and_types.hpp"
-#include "jmaths_Q.hpp"
-#include "jmaths_sign_type.hpp"
-#include "jmaths_detail.hpp"
+#include "constants_and_types.hpp"
+#include "Q.hpp"
+#include "sign_type.hpp"
+#include "detail.hpp"
 
-#include "jmaths_def.hh"
+#include "def.hh"
 
 // comparison functions for Q with floating point types
 namespace jmaths {
@@ -295,4 +295,4 @@ Q & Q::operator = (FLOAT rhs) {
 
 } // /namespace jmaths
 
-#include "jmaths_undef.hh"
+#include "undef.hh"
