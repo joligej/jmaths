@@ -91,7 +91,7 @@ class Q : public sign_type {
 
 		std::size_t size() const; // size of this object in bytes
 
-		std::string to_str (unsigned base) const; // convert to string in any base >= 2 and <= 64
+		std::string to_str (unsigned base = default_base) const; // convert to string in any base >= 2 and <= 64
 		std::string to_hex() const; // convert to string in base 16 (assumes base is an integer power of 2)
 		explicit operator bool() const;
 		template <typename FLOAT> requires std::is_floating_point_v<FLOAT> && std::numeric_limits<FLOAT>::is_iec559 std::optional<FLOAT> fits_into() const;

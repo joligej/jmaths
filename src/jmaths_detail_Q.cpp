@@ -21,7 +21,7 @@ namespace jmaths {
 std::ostream & detail::opr_ins (std::ostream & os, const Q & q) {
     FUNCTION_TO_LOG;
 
-    return os << (std::string)q;
+    return os << q.to_str();
 }
 
 std::istream & detail::opr_extr (std::istream & is, Q & q) {

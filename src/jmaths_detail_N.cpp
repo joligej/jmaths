@@ -24,7 +24,7 @@ namespace jmaths {
 std::ostream & detail::opr_ins (std::ostream & os, const N & n) {
     FUNCTION_TO_LOG;
     
-    return os << (std::string)n;
+    return os << n.to_str();
 }
 
 std::istream & detail::opr_extr (std::istream & is, N & n) {

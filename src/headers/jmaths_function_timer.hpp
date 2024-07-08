@@ -5,7 +5,7 @@
 
 namespace jmaths {
 
-struct utils {
+namespace internal {
 
 class function_timer {
     private:
@@ -27,6 +27,6 @@ class function_timer {
         }
 };
 
-}; // /namespace struct utils
+}; // /namespace internal
 
 } // /namespace jmaths
