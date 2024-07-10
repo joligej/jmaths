@@ -23,7 +23,7 @@ install(FILES ${header_files} DESTINATION include/jmaths/)
 install(EXPORT jmaths_targets FILE jmaths_targets.cmake DESTINATION lib/cmake/jmaths/)
 
 include(InstallRequiredSystemLibraries)
-set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/license.txt)
+set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
 set(CPACK_PACKAGE_VERSION_MAJOR ${jmaths_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${jmaths_VERSION_MINOR})
 set(CPACK_GENERATOR TGZ)
