@@ -8,9 +8,7 @@
 #include <iostream>
 #include <string>
 
-#if __has_include("all.hpp")
-    #include "all.hpp"
-#endif
+#include "all.hpp"
 
 #define REPEAT(x) \
 for (std::remove_cv_t<decltype(x)> FOR_LOOP_REPETITION_COUNTER{}; FOR_LOOP_REPETITION_COUNTER < x; ++FOR_LOOP_REPETITION_COUNTER)

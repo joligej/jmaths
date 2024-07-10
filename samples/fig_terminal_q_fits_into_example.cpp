@@ -1,10 +1,6 @@
 #include <iostream>
-#include "jmaths/all.hpp"
 
-/********************
-compiled with:
--std=c++2b -I/usr/local/include/ -L/usr/local/lib/ -ljmaths samples/fig_terminal_q_fits_into_example.cpp -o samples/fig_terminal_q_fits_into_example
-********************/
+#include "all.hpp"
 
 int main() {
     using jmaths::Q;

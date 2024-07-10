@@ -1,11 +1,7 @@
 #include <iostream>
 #include <string>
-#include "jmaths/all.hpp"
 
-/********************
-compiled with:
--std=c++2b -I/usr/local/include/ -L/usr/local/lib/ -ljmaths samples/fig_terminal_comparison_example.cpp -o samples/fig_terminal_comparison_example
-********************/
+#include "all.hpp"
 
 int main() {
     std::string input_str;
