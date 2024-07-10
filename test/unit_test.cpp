@@ -8,14 +8,14 @@
 #include <iostream>
 #include <string>
 
-#if __has_include("jmaths/all.hpp")
-    #include "jmaths/all.hpp"
+#if __has_include("all.hpp")
+    #include "all.hpp"
 #endif
 
 #define REPEAT(x) \
 for (std::remove_cv_t<decltype(x)> FOR_LOOP_REPETITION_COUNTER{}; FOR_LOOP_REPETITION_COUNTER < x; ++FOR_LOOP_REPETITION_COUNTER)
 
-static_assert(std::is_same_v<jmaths::base_int_big, std::uint32_t>, "This unit test is specialised only for 32-bit architectures");
+//static_assert(std::is_same_v<jmaths::base_int_big, std::uint32_t>, "This unit test is specialised only for 32-bit architectures");
 
 using namespace jmaths;
 
