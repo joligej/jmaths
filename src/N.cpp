@@ -12,12 +12,12 @@
 #include <ios>
 #include <cassert>
 
-#include "headers/constants_and_types.hpp"
-#include "headers/N.hpp"
-#include "headers/detail.hpp"
-#include "headers/error.hpp"
+#include "constants_and_types.hpp"
+#include "N.hpp"
+#include "detail.hpp"
+#include "error.hpp"
 
-#include "headers/def.hh"
+#include "def.hh"
 
 namespace jmaths {
 
@@ -817,4 +817,4 @@ N::bit_reference & N::bit_reference::operator = (const const_bit_reference & ref
 
 } // /namespace jmaths
 
-#include "headers/undef.hh"
+#include "undef.hh"

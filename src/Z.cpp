@@ -6,13 +6,13 @@
 #include <string>
 #include <string_view>
 
-#include "headers/constants_and_types.hpp"
-#include "headers/Z.hpp"
-#include "headers/N.hpp"
-#include "headers/sign_type.hpp"
-#include "headers/detail.hpp"
+#include "constants_and_types.hpp"
+#include "Z.hpp"
+#include "N.hpp"
+#include "sign_type.hpp"
+#include "detail.hpp"
 
-#include "headers/def.hh"
+#include "def.hh"
 
 namespace jmaths {
 
@@ -405,4 +405,4 @@ Z & Z::operator = (N && n) {
 
 } // /namespace jmaths
 
-#include "headers/undef.hh"
+#include "undef.hh"

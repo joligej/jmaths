@@ -1,9 +1,9 @@
 #include <string_view>
 
-#include "headers/constants_and_types.hpp"
-#include "headers/sign_type.hpp"
+#include "constants_and_types.hpp"
+#include "sign_type.hpp"
 
-#include "headers/def.hh"
+#include "def.hh"
 
 // functions for jmaths::sign_type
 namespace jmaths {
@@ -61,4 +61,4 @@ void sign_type::flip_sign() {
 
 } // /namespace jmaths
 
-#include "headers/undef.hh"
+#include "undef.hh"

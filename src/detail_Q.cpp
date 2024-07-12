@@ -4,14 +4,14 @@
 #include <utility>
 #include <compare>
 
-#include "headers/constants_and_types.hpp"
-#include "headers/detail.hpp"
-#include "headers/Q.hpp"
-#include "headers/sign_type.hpp"
-#include "headers/N.hpp"
-#include "headers/error.hpp"
+#include "constants_and_types.hpp"
+#include "detail.hpp"
+#include "Q.hpp"
+#include "sign_type.hpp"
+#include "N.hpp"
+#include "error.hpp"
 
-#include "headers/def.hh"
+#include "def.hh"
 
 namespace jmaths {
 
@@ -217,4 +217,4 @@ std::strong_ordering detail::opr_comp (const Q & lhs, const Q & rhs) {
 
 } // /namespace jmaths
 
-#include "headers/undef.hh"
+#include "undef.hh"

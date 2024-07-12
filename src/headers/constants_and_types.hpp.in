@@ -45,3 +45,18 @@ inline constexpr std::size_t base_int_size = sizeof(base_int);
 inline constexpr bit_type base_int_bits = base_int_size * bits_in_byte;
 
 } // /namespace jmaths
+
+namespace jmaths {
+
+namespace internal {
+
+struct version {
+
+inline static constexpr unsigned major = @jmaths_VERSION_MAJOR@;
+inline static constexpr unsigned minor = @jmaths_VERSION_MINOR@;
+
+};
+
+} // /namespace internal
+
+} // /namespace jmaths

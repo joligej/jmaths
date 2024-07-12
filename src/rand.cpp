@@ -1,12 +1,12 @@
 #include <random>
 #include <cstddef>
 
-#include "headers/constants_and_types.hpp"
-#include "headers/rand.hpp"
-#include "headers/N.hpp"
-#include "headers/Z.hpp"
+#include "constants_and_types.hpp"
+#include "rand.hpp"
+#include "N.hpp"
+#include "Z.hpp"
 
-#include "headers/def.hh"
+#include "def.hh"
 
 namespace jmaths {
 
@@ -45,4 +45,4 @@ Z Z::rand (bit_type upper_bound_exponent) {
 
 } // /namespace jmaths
 
-#include "headers/undef.hh"
+#include "undef.hh"

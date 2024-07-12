@@ -2,14 +2,14 @@
 #include <utility>
 #include <cassert>
 
-#include "headers/constants_and_types.hpp"
-#include "headers/calc.hpp"
-#include "headers/N.hpp"
-#include "headers/Z.hpp"
-#include "headers/detail.hpp"
-#include "headers/error.hpp"
+#include "constants_and_types.hpp"
+#include "calc.hpp"
+#include "N.hpp"
+#include "Z.hpp"
+#include "detail.hpp"
+#include "error.hpp"
 
-#include "headers/def.hh"
+#include "def.hh"
 
 namespace jmaths {
 
@@ -160,4 +160,4 @@ Z calc::pow (Z base, N exponent) {
 
 } // /namespace jmaths
 
-#include "headers/undef.hh"
+#include "undef.hh"
