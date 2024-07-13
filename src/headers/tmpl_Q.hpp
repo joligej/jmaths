@@ -240,13 +240,12 @@ std::optional<FLOAT> Q::fits_into() const {
 		}
 	}
 
-	FLOAT result = numerator / denominator;
-	access_type * const result_help = (access_type*)&result;
+	access_type result = {.val = numerator / denominator};
 
 	if (num_.digits_.size() < denom_.digits_.size()) {
 		static constexpr std::uint16_t min_exponent = (std::uint16_t)1;
 
-		if (result_help->fields.exponent < min_exponent + (denom_.digits_.size() - num_.digits_.size()) * base_int_bits) {
+		if (result.fields.exponent < min_exponent + (denom_.digits_.size() - num_.digits_.size()) * base_int_bits) {
 			#if 0
 			if (*this >= Q(nlf::min())) {
 				return nlf::min();
@@ -258,11 +257,11 @@ std::optional<FLOAT> Q::fits_into() const {
 			return std::nullopt;
 		}
 
-		result_help->fields.exponent -= (denom_.digits_.size() - num_.digits_.size()) * base_int_bits;
+		result.fields.exponent -= (denom_.digits_.size() - num_.digits_.size()) * base_int_bits;
 	} else {
 		static constexpr std::uint16_t max_exponent = ~(~(std::uint16_t)0 << sizes_type::exponent) - 1;
 
-		if ((num_.digits_.size() - denom_.digits_.size()) * base_int_bits > max_exponent - result_help->fields.exponent) {
+		if ((num_.digits_.size() - denom_.digits_.size()) * base_int_bits > max_exponent - result.fields.exponent) {
 			if constexpr (nlf::has_infinity) {
 				return nlf::infinity();
 			} else {
@@ -270,12 +269,12 @@ std::optional<FLOAT> Q::fits_into() const {
 			}
 		}
 
-		result_help->fields.exponent += (num_.digits_.size() - denom_.digits_.size()) * base_int_bits;
+		result.fields.exponent += (num_.digits_.size() - denom_.digits_.size()) * base_int_bits;
 	}
 
-	result_help->fields.sign = is_negative();
+	result.fields.sign = is_negative();
 
-	return result;
+	return result.val;
 }
 
 template <typename FLOAT>
