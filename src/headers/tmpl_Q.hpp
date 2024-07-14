@@ -218,11 +218,11 @@ std::optional<FLOAT> Q::fits_into() const {
 		std::size_t i = 0;
 
 		for (auto crit = num_.digits_.crbegin(); crit != num_.digits_.crend() && i < sizeof(FLOAT) / base_int_size; ++crit, ++i) {
-			numerator = numerator * base + *crit;
+			numerator = numerator * radix + *crit;
 		}
 
 		for (; i < sizeof(FLOAT) / base_int_size; ++i) {
-			numerator *= base;
+			numerator *= radix;
 		}
 	}
 
@@ -232,11 +232,11 @@ std::optional<FLOAT> Q::fits_into() const {
 		std::size_t j = 0;
 
 		for (auto crit = denom_.digits_.crbegin(); crit != denom_.digits_.crend() && j < sizeof(FLOAT) / base_int_size; ++crit, ++j) {
-			denominator = denominator * base + *crit;
+			denominator = denominator * radix + *crit;
 		}
 
 		for (; j < sizeof(FLOAT) / base_int_size; ++j) {
-			denominator *= base;
+			denominator *= radix;
 		}
 	}
 

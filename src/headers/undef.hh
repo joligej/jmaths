@@ -1,2 +1,5 @@
 #undef FUNCTION_TO_LOG
+
+#undef CONCAT2HELP
+#undef CONCAT2
 #undef REPEAT

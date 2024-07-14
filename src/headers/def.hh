@@ -7,5 +7,8 @@
     #define FUNCTION_TO_LOG ((void)0)
 #endif
 
+#define CONCAT2HELP(x, y) x ## y
+#define CONCAT2(x, y) CONCAT2HELP(x, y)
+
 #define REPEAT(x) \
-for (::std::remove_cv_t<decltype(x)> FOR_LOOP_REPETITION_COUNTER{}; FOR_LOOP_REPETITION_COUNTER < x; ++FOR_LOOP_REPETITION_COUNTER)
+for (::std::remove_cv_t<decltype(x)> CONCAT2(FOR_LOOP_REPETITION_COUNTER, __LINE__) {}; CONCAT2(FOR_LOOP_REPETITION_COUNTER, __LINE__) < x; ++CONCAT2(FOR_LOOP_REPETITION_COUNTER, __LINE__))

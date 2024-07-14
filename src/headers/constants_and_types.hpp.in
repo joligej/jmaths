@@ -11,19 +11,19 @@ namespace jmaths {
 
 using base_int = std::uint32_t;
 using base_int_big = std::uint64_t;
-inline constexpr base_int_big base = 4'294'967'296;
+inline constexpr base_int_big radix = 4'294'967'296;
 
 #elif defined(UINT32_MAX)
 
 using base_int = std::uint16_t;
 using base_int_big = std::uint32_t;
-inline constexpr base_int_big base = 65'536;
+inline constexpr base_int_big radix = 65'536;
 
 #elif defined(UINT16_MAX)
 
 using base_int = std::uint8_t;
 using base_int_big = std::uint16_t;
-inline constexpr base_int_big base = 256;
+inline constexpr base_int_big radix = 256;
 
 #else
     #error "No support for bit architectures below 16"
@@ -40,7 +40,7 @@ template <typename T> using allocator = std::allocator<T>; // the allocator used
 inline constexpr double max_ratio = 0.000125; // the ratio between sizeof(smallest type) and sizeof(base_int), preferably a lot smaller
 inline constexpr bit_type bits_in_byte = CHAR_BIT;
 
-inline constexpr base_int max_digit = base - 1;
+inline constexpr base_int max_digit = radix - 1;
 inline constexpr std::size_t base_int_size = sizeof(base_int);
 inline constexpr bit_type base_int_bits = base_int_size * bits_in_byte;
 
@@ -50,12 +50,20 @@ namespace jmaths {
 
 namespace internal {
 
+struct metadata {
+
+inline static constexpr const char product_name[] = "@product_name@";
+
 struct version {
 
-inline static constexpr unsigned major = @jmaths_VERSION_MAJOR@;
-inline static constexpr unsigned minor = @jmaths_VERSION_MINOR@;
-
+enum : unsigned {
+    major = @jmaths_VERSION_MAJOR@,
+    minor = @jmaths_VERSION_MINOR@
 };
+
+}; // /namespace struct version
+
+}; // /namespace struct metadata
 
 } // /namespace internal
 

@@ -264,7 +264,7 @@ void N::opr_add_assign_ (const N & rhs) {
 	std::size_t i = 0;
 
 	for (; i < rhs.digits_.size(); ++i) {
-		const bool next_carry = !(rhs.digits_[i] < (carry ? max_digit : base) - digits_[i]);
+		const bool next_carry = !(rhs.digits_[i] < (carry ? max_digit : radix) - digits_[i]);
 
 		digits_[i] += carry + rhs.digits_[i];
 		carry = next_carry;

@@ -68,14 +68,14 @@ N detail::opr_add (const N & lhs, const N & rhs) {
  
     for (; i < shortest->digits_.size(); ++i) {
         // checks if lhs + rhs + carry < base
-        const bool next_carry = !(lhs.digits_[i] < (carry ? max_digit : base) - rhs.digits_[i]);
+        const bool next_carry = !(lhs.digits_[i] < (carry ? max_digit : radix) - rhs.digits_[i]);
      
         sum.digits_.emplace_back(lhs.digits_[i] + rhs.digits_[i] + carry);
         carry = next_carry;
     }
  
     for (; carry && i < longest->digits_.size(); ++i) {
-        const bool next_carry = !(longest->digits_[i] < (carry ? max_digit : base));
+        const bool next_carry = !(longest->digits_[i] < (carry ? max_digit : radix));
      
         sum.digits_.emplace_back(longest->digits_[i] + carry);
         carry = next_carry;
