@@ -12,7 +12,6 @@ set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
 
 target_compile_options(compilation_flags INTERFACE
         "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wpedantic;-Wshadow;-Werror>>"
-        #"$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wpedantic;-Werror>>"
         "$<${msvc_cxx}:$<BUILD_INTERFACE:-W4;-WX>>")
 
 install(TARGETS compilation_flags EXPORT jmaths_targets)
