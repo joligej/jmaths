@@ -11,8 +11,8 @@ Regardless of whether you added your own dependencies, type the following to bui
 ```
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-cmake --build -j6 .
+cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake --build . -j8
 sudo cmake --install .
 ```
 
