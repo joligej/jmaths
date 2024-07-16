@@ -28,11 +28,3 @@ target_include_directories(jmaths PUBLIC
 
 install(TARGETS jmaths EXPORT jmathsTargets DESTINATION lib/)
 install(FILES ${header_files} ${CMAKE_CURRENT_BINARY_DIR}/constants_and_types.hpp DESTINATION include/jmaths/)
-
-include(InstallRequiredSystemLibraries)
-set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
-set(CPACK_PACKAGE_VERSION_MAJOR ${jmaths_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${jmaths_VERSION_MINOR})
-set(CPACK_GENERATOR TGZ)
-set(CPACK_SOURCE_GENERATOR TGZ)
-include(CPack)

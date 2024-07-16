@@ -2,9 +2,15 @@ cmake_minimum_required(VERSION 3.28.1)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 
-project(jmaths VERSION 1.0 DESCRIPTION "The jmaths library for C++" LANGUAGES CXX)
+project(jmaths
+        VERSION 1.0
+        DESCRIPTION "The jmaths library for C++"
+        LANGUAGES CXX
+        HOMEPAGE_URL "https://github.com/joligej/jmaths.git")
 
 set(product_name "jmaths")
+
+set(CMAKE_DEBUG_POSTFIX d)
 
 add_library(compilation_flags INTERFACE)
 target_compile_features(compilation_flags INTERFACE cxx_std_23)
@@ -15,6 +21,16 @@ set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
 target_compile_options(compilation_flags INTERFACE
         "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wpedantic;-Wshadow;-Werror>>"
         "$<${msvc_cxx}:$<BUILD_INTERFACE:-W4;-WX>>")
+
+include(CheckIPOSupported)
+check_ipo_supported(RESULT ipo_supported OUTPUT ipo_error)
+
+if(ipo_supported)
+    message(STATUS "IPO / LTO supported in release builds")
+    set_property(TARGET compilation_flags PROPERTY INTERPROCEDURAL_OPTIMIZATION_RELEASE True)
+else()
+    message(STATUS "IPO / LTO not supported: <${ipo_error}>")
+endif()
 
 install(TARGETS compilation_flags EXPORT jmathsTargets)
 
@@ -51,3 +67,11 @@ export(EXPORT jmathsTargets
 
 enable_testing()
 add_test(NAME unit_test COMMAND jmaths_unit_test)
+
+include(InstallRequiredSystemLibraries)
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt")
+set(CPACK_PACKAGE_VERSION_MAJOR "${jmaths_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${jmaths_VERSION_MINOR}")
+set(CPACK_GENERATOR "TGZ")
+set(CPACK_SOURCE_GENERATOR "TGZ")
+include(CPack)
