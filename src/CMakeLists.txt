@@ -2,7 +2,7 @@ add_library(jmaths)
 
 target_link_libraries(jmaths PRIVATE compilation_flags)
 
-file(GLOB src_files "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+file(GLOB src_files *.cpp)
 
 target_sources(jmaths PRIVATE ${src_files})
 
