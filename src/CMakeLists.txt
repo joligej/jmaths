@@ -1,4 +1,4 @@
-add_library(jmaths STATIC)
+add_library(jmaths)
 
 target_link_libraries(jmaths PRIVATE compilation_flags)
 
@@ -26,9 +26,8 @@ target_include_directories(jmaths PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
         "$<INSTALL_INTERFACE:include/jmaths/>")
 
-install(TARGETS jmaths EXPORT jmaths_targets DESTINATION lib/)
+install(TARGETS jmaths EXPORT jmathsTargets DESTINATION lib/)
 install(FILES ${header_files} ${CMAKE_CURRENT_BINARY_DIR}/constants_and_types.hpp DESTINATION include/jmaths/)
-install(EXPORT jmaths_targets FILE jmaths_targets.cmake DESTINATION lib/cmake/jmaths/)
 
 include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)

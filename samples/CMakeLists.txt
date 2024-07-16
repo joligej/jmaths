@@ -18,4 +18,4 @@ set(sample_targets
         fig_terminal_q_fits_into
         fig_terminal_n_random)
 
-install(TARGETS ${sample_targets} EXPORT jmaths_targets DESTINATION lib/jmaths/samples/)
+install(TARGETS ${sample_targets} EXPORT jmathsTargets DESTINATION lib/jmaths/samples/)

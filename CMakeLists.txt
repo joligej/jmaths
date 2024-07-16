@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.28.1)
 
+option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
+
 project(jmaths VERSION 1.0 DESCRIPTION "The jmaths library for C++" LANGUAGES CXX)
 
 set(product_name "jmaths")
@@ -14,7 +16,7 @@ target_compile_options(compilation_flags INTERFACE
         "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wpedantic;-Wshadow;-Werror>>"
         "$<${msvc_cxx}:$<BUILD_INTERFACE:-W4;-WX>>")
 
-install(TARGETS compilation_flags EXPORT jmaths_targets)
+install(TARGETS compilation_flags EXPORT jmathsTargets)
 
 install(FILES LICENSE.txt DESTINATION lib/jmaths/)
 
@@ -22,6 +24,30 @@ add_subdirectory(src)
 add_subdirectory(samples)
 add_subdirectory(test)
 add_subdirectory(doc)
+
+install(EXPORT jmathsTargets FILE jmathsTargets.cmake DESTINATION lib/cmake/jmaths/)
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/jmathsConfig.cmake"
+        INSTALL_DESTINATION "lib/cmake/jmaths/"
+        NO_SET_AND_CHECK_MACRO
+        NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+
+write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/jmathsConfigVersion.cmake"
+        VERSION "${jmaths_VERSION_MAJOR}.${jmaths_VERSION_MINOR}"
+        COMPATIBILITY AnyNewerVersion)
+
+install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/jmathsConfig.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/jmathsConfigVersion.cmake
+        DESTINATION lib/cmake/jmaths/)
+
+export(EXPORT jmathsTargets
+        FILE "${CMAKE_CURRENT_BINARY_DIR}/jmathsTargets.cmake")
 
 enable_testing()
 add_test(NAME unit_test COMMAND jmaths_unit_test)
