@@ -1,6 +1,6 @@
 add_library(jmaths STATIC)
 
-target_link_libraries(jmaths PUBLIC compilation_flags)
+target_link_libraries(jmaths PRIVATE compilation_flags)
 
 file(GLOB src_files ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
