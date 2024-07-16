@@ -48,7 +48,7 @@ include(CMakePackageConfigHelpers)
 configure_package_config_file(
         "${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in"
         "${CMAKE_CURRENT_BINARY_DIR}/jmathsConfig.cmake"
-        INSTALL_DESTINATION "lib/cmake/jmaths/"
+        INSTALL_DESTINATION lib/cmake/jmaths/
         NO_SET_AND_CHECK_MACRO
         NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 
@@ -58,8 +58,8 @@ write_basic_package_version_file(
         COMPATIBILITY AnyNewerVersion)
 
 install(FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/jmathsConfig.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/jmathsConfigVersion.cmake
+        "${CMAKE_CURRENT_BINARY_DIR}/jmathsConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/jmathsConfigVersion.cmake"
         DESTINATION lib/cmake/jmaths/)
 
 export(EXPORT jmathsTargets

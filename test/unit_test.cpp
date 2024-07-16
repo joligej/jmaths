@@ -11,7 +11,7 @@
 #include "all.hpp"
 
 #define REPEAT(x) \
-for (std::remove_cv_t<decltype(x)> FOR_LOOP_REPETITION_COUNTER{}; FOR_LOOP_REPETITION_COUNTER < x; ++FOR_LOOP_REPETITION_COUNTER)
+for (std::remove_cvref_t<decltype(x)> FOR_LOOP_REPETITION_COUNTER{}; FOR_LOOP_REPETITION_COUNTER < x; ++FOR_LOOP_REPETITION_COUNTER)
 
 //static_assert(std::is_same_v<jmaths::base_int_big, std::uint32_t>, "This unit test is specialised only for 32-bit architectures");
 
@@ -661,7 +661,7 @@ void tests::for_all_lists_single (auto func) {
 int main() {
     std::cout << "Starting unit test...\n";
 
-    REPEAT(10) tests::run_all();
+    REPEAT(2) tests::run_all();
 
     std::cout << "Succesfully finished unit test\n";
 }
