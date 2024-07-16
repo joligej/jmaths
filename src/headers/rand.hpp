@@ -4,6 +4,7 @@
 #include <limits>
 
 #include "constants_and_types.hpp"
+#include "def.hh"
 
 namespace jmaths {
 
@@ -19,15 +20,24 @@ class rand {
         std::uniform_int_distribution<INT> distrib;
  
     public:
-        rand (INT min, INT max) : distrib(min, max) {}
-        rand() : rand(0, std::numeric_limits<INT>::max()) {}
+        rand (INT min, INT max) : distrib(min, max) {
+            FUNCTION_TO_LOG;
+        }
+
+        rand() : rand(0, std::numeric_limits<INT>::max()) {
+            FUNCTION_TO_LOG;
+        }
 
         INT operator () () {
+            FUNCTION_TO_LOG;
+
             return distrib(gen);
         }
 
         template <typename SEED>
         static void reseed (SEED seed = seed_type{}()) {
+            FUNCTION_TO_LOG;
+
             gen.seed(seed);
         }
 };
@@ -35,3 +45,5 @@ class rand {
 } // /namespace internal
 
 } // /namespace jmaths
+
+#include "undef.hh"
