@@ -4,11 +4,11 @@
 
 namespace jmaths {
 
-constexpr const char error::default_message_[] = "No error message provided!";
+constexpr char error::default_message_[] = "No error message provided!";
 
-constexpr const char error::division_by_zero::default_message_[] = "You tried to divide by zero!";
+constexpr char error::division_by_zero::default_message_[] = "You tried to divide by zero!";
 
-constexpr const char error::invalid_base::default_message_[] = "You tried to use an invalid base!";
+constexpr char error::invalid_base::default_message_[] = "You tried to use an invalid base!";
 
 error::error() : error(default_message_) {
 	FUNCTION_TO_LOG;

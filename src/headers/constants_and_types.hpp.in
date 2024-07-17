@@ -52,7 +52,7 @@ namespace internal {
 
 struct metadata {
 
-inline static constexpr const char product_name[] = "@product_name@";
+static constexpr char product_name[] = "@product_name@";
 
 struct version {
 

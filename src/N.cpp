@@ -141,7 +141,7 @@ base_int N::front_() const {
 std::string N::conv_to_base_ (unsigned base) const {
 	FUNCTION_TO_LOG;
 
-	static constexpr const char base_converter[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/";
+	static constexpr char base_converter[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/";
 
 	if (is_zero()) return "0";
 
