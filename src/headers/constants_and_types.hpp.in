@@ -58,7 +58,8 @@ struct version {
 
 enum : unsigned {
     major = @jmaths_VERSION_MAJOR@,
-    minor = @jmaths_VERSION_MINOR@
+    minor = @jmaths_VERSION_MINOR@,
+    patch = @jmaths_VERSION_PATCH@ + 0
 };
 
 }; // /namespace struct version
