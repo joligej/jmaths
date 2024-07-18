@@ -23,9 +23,9 @@ namespace jmaths {
 
 namespace {
 
-static base_int base_converter (char c) noexcept; // convert char to number for base >= 2 and <= 64
+base_int base_converter (char c) noexcept; // convert char to number for base >= 2 and <= 64
 
-static base_int base_converter (char c) noexcept {
+base_int base_converter (char c) noexcept {
 	FUNCTION_TO_LOG;
 
 	if (c >= '0' && c <= '9') return (c - '0');

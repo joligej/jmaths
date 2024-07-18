@@ -2,11 +2,12 @@
 #include <boost/test/unit_test.hpp>
 
 #include <cstdint>
+#include <functional>
 
 #include "all.hpp"
 
 struct test_data {
-    static constexpr jmaths::base_int small_values[] = {
+    static constexpr jmaths::base_int_big small_values[] = {
         0U,
         1U,
         2U,
@@ -18,6 +19,7 @@ struct test_data {
         8U,
         9U,
         10U,
+        11U,
         12U,
         14U,
         16U,
@@ -379,12 +381,77 @@ struct test_data {
     };
 };
 
-BOOST_AUTO_TEST_CASE(FailTest) {
-    BOOST_CHECK_EQUAL(2U,
- 3);
+namespace {
+
+using jmaths::base_int_big;
+
+template<typename TEST_TYPE, typename OPERATOR_TYPE, typename EXTRA_TYPE>
+void test_binary_operator (base_int_big lhs, base_int_big rhs, OPERATOR_TYPE binary_operator, EXTRA_TYPE extra_test) {
+    const auto result_test = binary_operator(TEST_TYPE(lhs), TEST_TYPE(rhs));
+    const auto result_check = binary_operator(lhs, rhs);
+    BOOST_CHECK(result_test == result_check || extra_test(result_test) == result_check);
+}
+
+void for_all_number_pairs (auto test_action) {
+    for (auto * number_list_lhs : {&test_data::small_values, &test_data::big_values}) {
+        for (auto number_lhs : *number_list_lhs) {
+            for (auto * number_list_rhs : {&test_data::small_values, &test_data::big_values}) {
+                for (auto number_rhs : *number_list_rhs) {
+                    test_action(number_lhs, number_rhs);
+                }
+            }
+        }
+    }
+}
+
+template <typename TEST_TYPE>
+void binary_operator_complete_test (auto binary_operator, auto extra_test) {
+    using namespace std::placeholders;
+    for_all_number_pairs(std::bind(test_binary_operator<TEST_TYPE, decltype(binary_operator), decltype(extra_test)>, _1, _2, binary_operator, extra_test));
+}
+
+} // /anonymous namespace
+
+BOOST_AUTO_TEST_CASE(jmaths_N_operator_add) {
+    using test_type = jmaths::N;
+    auto binary_operator = std::plus{};
+
+    using jmaths::base_int_big;
+    auto extra_test = [](const test_type & val){ return val & test_type(~(base_int_big)0); };
+
+    binary_operator_complete_test<test_type>(binary_operator, extra_test);
+}
+
+BOOST_AUTO_TEST_CASE(jmaths_Z_operator_add) {
+    using test_type = jmaths::Z;
+    auto binary_operator = std::plus{};
+
+    using jmaths::base_int_big;
+    auto extra_test = [](const test_type & val){ return val & test_type(~(base_int_big)0); };
+
+    binary_operator_complete_test<test_type>(binary_operator, extra_test);
+}
+
+BOOST_AUTO_TEST_CASE(jmaths_N_operator_subtr) {
+    using test_type = jmaths::N;
+    auto binary_operator = std::minus{};
+
+    using jmaths::base_int_big;
+    auto extra_test = [](const test_type & val) { return -*val.fits_into<base_int_big>(); };
+
+    binary_operator_complete_test<test_type>(binary_operator, extra_test);
+}
+
+BOOST_AUTO_TEST_CASE(jmaths_Z_operator_subtr) {
+    using test_type = jmaths::Z;
+    auto binary_operator = std::minus{};
+
+    using jmaths::base_int_big;
+    auto extra_test = [](const test_type & val) { return (val + ~(base_int_big)0) + 1; };
+
+    binary_operator_complete_test<test_type>(binary_operator, extra_test);
 }
 
 BOOST_AUTO_TEST_CASE(PassTest) {
-    BOOST_CHECK_EQUAL(9U,
- 3);
+    BOOST_CHECK_EQUAL(9U, 9);
 }
