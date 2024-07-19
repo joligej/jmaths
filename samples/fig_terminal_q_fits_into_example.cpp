@@ -18,7 +18,7 @@
 
 #include "Q.hpp"
 
-int main() {
+int main(int, char *[]) {
     using jmaths::Q;
     using flt_type = double;
     constexpr flt_type not_present = -1;

@@ -11,11 +11,6 @@ target_sources(fig_terminal_q_fits_into PRIVATE fig_terminal_q_fits_into_example
 target_link_libraries(fig_terminal_q_fits_into PRIVATE examples)
 list(APPEND sample_targets fig_terminal_q_fits_into)
 
-add_executable(fig_terminal_n_random)
-target_sources(fig_terminal_n_random PRIVATE fig_terminal_n_random_example.cpp)
-target_link_libraries(fig_terminal_n_random PRIVATE examples)
-list(APPEND sample_targets fig_terminal_n_random)
-
 add_executable(fig_terminal_z_random)
 target_sources(fig_terminal_z_random PRIVATE fig_terminal_z_random_example.cpp)
 target_link_libraries(fig_terminal_z_random PRIVATE examples)

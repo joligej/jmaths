@@ -20,7 +20,7 @@
 
 #include "Z.hpp"
 
-int main(int, char*[]) {
+int main(int, char *[]) {
     using jmaths::Z, jmaths::bit_type;
 
     jmaths::internal::rand<bit_type> exponent_generator(0, 32);

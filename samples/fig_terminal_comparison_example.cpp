@@ -20,7 +20,7 @@
 #include "Z.hpp"
 #include "calc.hpp"
 
-int main() {
+int main(int, char *[]) {
     std::string input_str;
     std::cout << "Enter your number:\n";
     std::cin >> input_str;
