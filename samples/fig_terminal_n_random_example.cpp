@@ -20,7 +20,7 @@
 #include <cstring>
 #include <iostream>
 
-#include "all.hpp"
+#include "N.hpp"
 #include "def.hh"
 
 int main(int argc, char * argv[]) {

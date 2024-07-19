@@ -57,7 +57,11 @@ Z Z::rand(bit_type upper_bound_exponent) {
 
     static internal::rand<unsigned char> rand_gen(0, 1);
 
-    return Z(N::rand(upper_bound_exponent), static_cast<sign_bool>(rand_gen()));
+    N random_number = N::rand(upper_bound_exponent);
+
+    if (random_number.is_zero()) return Z{};
+
+    return Z(std::move(random_number), static_cast<sign_bool>(rand_gen()));
 }
 
 }  // namespace jmaths

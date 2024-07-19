@@ -351,11 +351,9 @@ Z Z::operator~() const {
 
     N complemented = N::opr_compl_();
 
-    if (complemented.is_zero()) {
-        return Z{};
-    } else {
-        return Z(std::move(complemented), static_cast<sign_bool>(!sign_));
-    }
+    if (complemented.is_zero()) return Z{};
+
+    return Z(std::move(complemented), static_cast<sign_bool>(!sign_));
 }
 
 Z Z::operator<<(bit_type pos) const {
@@ -369,11 +367,9 @@ Z Z::operator>>(bit_type pos) const {
 
     N shifted = N::opr_bitshift_r_(pos);
 
-    if (shifted.is_zero()) {
-        return Z{};
-    } else {
-        return Z(std::move(shifted), sign_);
-    }
+    if (shifted.is_zero()) return Z{};
+
+    return Z(std::move(shifted), sign_);
 }
 
 Z & Z::operator<<=(bit_type pos) {

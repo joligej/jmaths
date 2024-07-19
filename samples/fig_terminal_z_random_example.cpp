@@ -15,32 +15,18 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <iostream>
+#include <string>
 
-#include "Q.hpp"
+#include "Z.hpp"
 
-int main() {
-    using jmaths::Q;
-    using flt_type = double;
-    constexpr flt_type not_present = -1;
+int main(int argc, char * argv[]) {
+    using jmaths::Z, jmaths::bit_type;
 
-    const auto print = [not_present](const Q & q) {
-        std::cout << q << '\n';
-        const auto into_float =
-            q.template fits_into<flt_type>().value_or(not_present);
-        std::cout << into_float << '\n';
-    };
+    const bit_type max_exponent = argc > 1 ? std::stoul(argv[1]) : 20;
 
-#define SHOW(x)                                 \
-    std::cout << "Results for " << #x << ":\n"; \
-    print(Q(x));
-
-    SHOW("3/1");
-    SHOW("-3/1");
-    SHOW(3.765787);
-
-    SHOW("-1/12");
-    SHOW(0.18);
-    SHOW(-234.24);
-
-    SHOW("12/17");
+    while (std::cin.get() != 'q') {
+        std::cout << Z::rand(max_exponent) << '\n';
+    }
 }
+
+#include "undef.hh"

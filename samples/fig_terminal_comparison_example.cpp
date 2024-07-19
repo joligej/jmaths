@@ -17,7 +17,8 @@
 #include <iostream>
 #include <string>
 
-#include "all.hpp"
+#include "Z.hpp"
+#include "calc.hpp"
 
 int main() {
     std::string input_str;
