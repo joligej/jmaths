@@ -60,28 +60,24 @@ inline constexpr base_int max_digit = radix - 1;
 inline constexpr std::size_t base_int_size = sizeof(base_int);
 inline constexpr bit_type base_int_bits = base_int_size * bits_in_byte;
 
-} // /namespace jmaths
+}  // namespace jmaths
 
 namespace jmaths {
 
 namespace internal {
 
 struct metadata {
+    static constexpr char product_name[] = "@product_name@";
 
-static constexpr char product_name[] = "@product_name@";
+    struct version {
+        enum : unsigned {
+            major = @jmaths_VERSION_MAJOR@,
+            minor = @jmaths_VERSION_MINOR@,
+            patch = @jmaths_VERSION_PATCH@ + 0
+        };
+    };  // namespace struct version
+};  // namespace struct metadata
 
-struct version {
+}  // namespace internal
 
-enum : unsigned {
-    major = @jmaths_VERSION_MAJOR@,
-    minor = @jmaths_VERSION_MINOR@,
-    patch = @jmaths_VERSION_PATCH@ + 0
-};
-
-}; // /namespace struct version
-
-}; // /namespace struct metadata
-
-} // /namespace internal
-
-} // /namespace jmaths
+}  // namespace jmaths

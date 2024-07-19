@@ -20,7 +20,6 @@
 
 #include "declarations.hpp"
 
-// declarations of namespace structs calc and detail
 namespace jmaths {
 
 struct calc {
@@ -30,6 +29,6 @@ struct calc {
     static N pow(N base, N exponent);
     static N pow_mod(N base, N exponent, const N & mod);
     static Z pow(Z base, N exponent);
-};  // /namespace struct calc
+};  // namespace struct calc
 
 }  // namespace jmaths

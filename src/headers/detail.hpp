@@ -24,7 +24,6 @@
 
 #include "declarations.hpp"
 
-// declarations of namespace structs calc and detail
 namespace jmaths {
 
 struct detail {
@@ -93,6 +92,6 @@ struct detail {
     template <typename FLOAT>
         requires std::is_floating_point_v<FLOAT>
     static std::strong_ordering opr_comp(const Q & lhs, FLOAT rhs);
-};  // /namespace struct detail
+};  // namespace struct detail
 
 }  // namespace jmaths
