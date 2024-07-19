@@ -1,150 +1,150 @@
 #define BOOST_TEST_MODULE jmaths_unit_test
 #include <boost/test/unit_test.hpp>
-
 #include <cstdint>
 #include <functional>
 
 #include "all.hpp"
 
 struct test_data {
-    static constexpr jmaths::base_int_big small_values[] = {
-        0U,
-        1U,
-        2U,
-        3U,
-        4U,
-        5U,
-        6U,
-        7U,
-        8U,
-        9U,
-        10U,
-        11U,
-        12U,
-        14U,
-        16U,
-        20U,
-        24U,
-        28U,
-        32U,
-        40U,
-        48U,
-        56U,
-        64U,
-        80U,
-        96U,
-        112U,
-        128U,
-        160U,
-        192U,
-        224U,
-        255U
+    static constexpr jmaths::base_int_big small_values[] = {0U,
+                                                            1U,
+                                                            2U,
+                                                            3U,
+                                                            4U,
+                                                            5U,
+                                                            6U,
+                                                            7U,
+                                                            8U,
+                                                            9U,
+                                                            10U,
+                                                            11U,
+                                                            12U,
+                                                            14U,
+                                                            16U,
+                                                            20U,
+                                                            24U,
+                                                            28U,
+                                                            32U,
+                                                            40U,
+                                                            48U,
+                                                            56U,
+                                                            64U,
+                                                            80U,
+                                                            96U,
+                                                            112U,
+                                                            128U,
+                                                            160U,
+                                                            192U,
+                                                            224U,
+                                                            255U
 #if defined(UINT32_MAX)
-        ,256U,
-        320U,
-        384U,
-        448U,
-        512U,
-        640U,
-        768U,
-        896U,
-        1024U,
-        1280U,
-        1536U,
-        1792U,
-        2048U,
-        2560U,
-        3072U,
-        3584U,
-        4096U,
-        5120U,
-        6144U,
-        7168U,
-        8192U,
-        10240U,
-        12288U,
-        14336U,
-        16384U,
-        20480U,
-        24576U,
-        28672U,
-        32768U,
-        40960U,
-        49152U,
-        57344U,
-        65535U
+                                                            ,
+                                                            256U,
+                                                            320U,
+                                                            384U,
+                                                            448U,
+                                                            512U,
+                                                            640U,
+                                                            768U,
+                                                            896U,
+                                                            1024U,
+                                                            1280U,
+                                                            1536U,
+                                                            1792U,
+                                                            2048U,
+                                                            2560U,
+                                                            3072U,
+                                                            3584U,
+                                                            4096U,
+                                                            5120U,
+                                                            6144U,
+                                                            7168U,
+                                                            8192U,
+                                                            10240U,
+                                                            12288U,
+                                                            14336U,
+                                                            16384U,
+                                                            20480U,
+                                                            24576U,
+                                                            28672U,
+                                                            32768U,
+                                                            40960U,
+                                                            49152U,
+                                                            57344U,
+                                                            65535U
 #endif
 #if defined(UINT64_MAX)
-        ,65536U,
-        81920U,
-        98304U,
-        114688U,
-        131072U,
-        163840U,
-        196608U,
-        229376U,
-        262144U,
-        327680U,
-        393216U,
-        458752U,
-        524288U,
-        655360U,
-        786432U,
-        917504U,
-        1048576U,
-        1310720U,
-        1572864U,
-        1835008U,
-        2097152U,
-        2621440U,
-        3145728U,
-        3670016U,
-        4194304U,
-        5242880U,
-        6291456U,
-        7340032U,
-        8388608U,
-        10485760U,
-        12582912U,
-        14680064U,
-        16777216U,
-        20971520U,
-        25165824U,
-        29360128U,
-        33554432U,
-        41943040U,
-        50331648U,
-        58720256U,
-        67108864U,
-        83886080U,
-        100663296U,
-        117440512U,
-        134217728U,
-        167772160U,
-        201326592U,
-        234881024U,
-        268435456U,
-        335544320U,
-        402653184U,
-        469762048U,
-        536870912U,
-        671088640U,
-        805306368U,
-        939524096U,
-        1073741824U,
-        1342177280U,
-        1610612736U,
-        1879048192U,
-        2147483648U,
-        2684354560U,
-        3221225472U,
-        3758096384U,
-        4294967295U
+                                                            ,
+                                                            65536U,
+                                                            81920U,
+                                                            98304U,
+                                                            114688U,
+                                                            131072U,
+                                                            163840U,
+                                                            196608U,
+                                                            229376U,
+                                                            262144U,
+                                                            327680U,
+                                                            393216U,
+                                                            458752U,
+                                                            524288U,
+                                                            655360U,
+                                                            786432U,
+                                                            917504U,
+                                                            1048576U,
+                                                            1310720U,
+                                                            1572864U,
+                                                            1835008U,
+                                                            2097152U,
+                                                            2621440U,
+                                                            3145728U,
+                                                            3670016U,
+                                                            4194304U,
+                                                            5242880U,
+                                                            6291456U,
+                                                            7340032U,
+                                                            8388608U,
+                                                            10485760U,
+                                                            12582912U,
+                                                            14680064U,
+                                                            16777216U,
+                                                            20971520U,
+                                                            25165824U,
+                                                            29360128U,
+                                                            33554432U,
+                                                            41943040U,
+                                                            50331648U,
+                                                            58720256U,
+                                                            67108864U,
+                                                            83886080U,
+                                                            100663296U,
+                                                            117440512U,
+                                                            134217728U,
+                                                            167772160U,
+                                                            201326592U,
+                                                            234881024U,
+                                                            268435456U,
+                                                            335544320U,
+                                                            402653184U,
+                                                            469762048U,
+                                                            536870912U,
+                                                            671088640U,
+                                                            805306368U,
+                                                            939524096U,
+                                                            1073741824U,
+                                                            1342177280U,
+                                                            1610612736U,
+                                                            1879048192U,
+                                                            2147483648U,
+                                                            2684354560U,
+                                                            3221225472U,
+                                                            3758096384U,
+                                                            4294967295U
 #endif
     };
 
     static constexpr jmaths::base_int_big big_values[] = {
-        //start 16
+    // start 16
 #if !defined(UINT64_MAX) && !defined(UINT32_MAX) && defined(UINT16_MAX)
         256U,
         300U,
@@ -385,17 +385,23 @@ namespace {
 
 using jmaths::base_int_big;
 
-template<typename TEST_TYPE, typename OPERATOR_TYPE, typename EXTRA_TYPE>
-void test_binary_operator (base_int_big lhs, base_int_big rhs, OPERATOR_TYPE binary_operator, EXTRA_TYPE extra_test) {
+template <typename TEST_TYPE, typename OPERATOR_TYPE, typename EXTRA_TYPE>
+void test_binary_operator(base_int_big lhs,
+                          base_int_big rhs,
+                          OPERATOR_TYPE binary_operator,
+                          EXTRA_TYPE extra_test) {
     const auto result_test = binary_operator(TEST_TYPE(lhs), TEST_TYPE(rhs));
     const auto result_check = binary_operator(lhs, rhs);
-    BOOST_CHECK(result_test == result_check || extra_test(result_test) == result_check);
+    BOOST_CHECK(result_test == result_check ||
+                extra_test(result_test) == result_check);
 }
 
-void for_all_number_pairs (auto test_action) {
-    for (auto * number_list_lhs : {&test_data::small_values, &test_data::big_values}) {
+void for_all_number_pairs(auto test_action) {
+    for (auto * number_list_lhs :
+         {&test_data::small_values, &test_data::big_values}) {
         for (auto number_lhs : *number_list_lhs) {
-            for (auto * number_list_rhs : {&test_data::small_values, &test_data::big_values}) {
+            for (auto * number_list_rhs :
+                 {&test_data::small_values, &test_data::big_values}) {
                 for (auto number_rhs : *number_list_rhs) {
                     test_action(number_lhs, number_rhs);
                 }
@@ -405,19 +411,28 @@ void for_all_number_pairs (auto test_action) {
 }
 
 template <typename TEST_TYPE>
-void binary_operator_complete_test (auto binary_operator, auto extra_test) {
+void binary_operator_complete_test(auto binary_operator, auto extra_test) {
     using namespace std::placeholders;
-    for_all_number_pairs(std::bind(test_binary_operator<TEST_TYPE, decltype(binary_operator), decltype(extra_test)>, _1, _2, binary_operator, extra_test));
+    for_all_number_pairs(
+        std::bind(test_binary_operator<TEST_TYPE,
+                                       decltype(binary_operator),
+                                       decltype(extra_test)>,
+                  _1,
+                  _2,
+                  binary_operator,
+                  extra_test));
 }
 
-} // /anonymous namespace
+}  // namespace
 
 BOOST_AUTO_TEST_CASE(jmaths_N_operator_add) {
     using test_type = jmaths::N;
     auto binary_operator = std::plus{};
 
     using jmaths::base_int_big;
-    auto extra_test = [](const test_type & val){ return val & test_type(~(base_int_big)0); };
+    auto extra_test = [](const test_type & val) {
+        return val & test_type(~(base_int_big)0);
+    };
 
     binary_operator_complete_test<test_type>(binary_operator, extra_test);
 }
@@ -427,7 +442,9 @@ BOOST_AUTO_TEST_CASE(jmaths_Z_operator_add) {
     auto binary_operator = std::plus{};
 
     using jmaths::base_int_big;
-    auto extra_test = [](const test_type & val){ return val & test_type(~(base_int_big)0); };
+    auto extra_test = [](const test_type & val) {
+        return val & test_type(~(base_int_big)0);
+    };
 
     binary_operator_complete_test<test_type>(binary_operator, extra_test);
 }
@@ -437,7 +454,9 @@ BOOST_AUTO_TEST_CASE(jmaths_N_operator_subtr) {
     auto binary_operator = std::minus{};
 
     using jmaths::base_int_big;
-    auto extra_test = [](const test_type & val) { return -*val.fits_into<base_int_big>(); };
+    auto extra_test = [](const test_type & val) {
+        return -*val.fits_into<base_int_big>();
+    };
 
     binary_operator_complete_test<test_type>(binary_operator, extra_test);
 }
@@ -447,7 +466,9 @@ BOOST_AUTO_TEST_CASE(jmaths_Z_operator_subtr) {
     auto binary_operator = std::minus{};
 
     using jmaths::base_int_big;
-    auto extra_test = [](const test_type & val) { return (val + ~(base_int_big)0) + 1; };
+    auto extra_test = [](const test_type & val) {
+        return (val + ~(base_int_big)0) + 1;
+    };
 
     binary_operator_complete_test<test_type>(binary_operator, extra_test);
 }
