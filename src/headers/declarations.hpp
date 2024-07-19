@@ -12,4 +12,4 @@ class Z;
 class Q;
 class error;
 
-} // /namespace jmaths
+}  // namespace jmaths

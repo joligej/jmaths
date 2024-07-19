@@ -9,11 +9,12 @@ int main() {
 
     const auto print = [not_present](const Q & q) {
         std::cout << q << '\n';
-        const auto into_float = q.template fits_into<flt_type>().value_or(not_present);
+        const auto into_float =
+            q.template fits_into<flt_type>().value_or(not_present);
         std::cout << into_float << '\n';
     };
 
-    #define SHOW(x) \
+#define SHOW(x)                                 \
     std::cout << "Results for " << #x << ":\n"; \
     print(Q(x));
 

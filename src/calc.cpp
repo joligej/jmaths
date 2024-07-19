@@ -1,163 +1,163 @@
-#include <algorithm>
-#include <utility>
-#include <cassert>
-
-#include "constants_and_types.hpp"
 #include "calc.hpp"
+
+#include <algorithm>
+#include <cassert>
+#include <utility>
+
 #include "N.hpp"
 #include "Z.hpp"
+#include "constants_and_types.hpp"
+#include "def.hh"
 #include "detail.hpp"
 #include "error.hpp"
 
-#include "def.hh"
-
 namespace jmaths {
 
-N calc::gcd (N a, N b) {
-	FUNCTION_TO_LOG;
+N calc::gcd(N a, N b) {
+    FUNCTION_TO_LOG;
 
-	if (a.is_zero()) return b;
-	if (b.is_zero()) return a;
+    if (a.is_zero()) return b;
+    if (b.is_zero()) return a;
 
-	const bit_type i = a.ctz();
-	const bit_type j = b.ctz();
+    const bit_type i = a.ctz();
+    const bit_type j = b.ctz();
 
-	a.opr_bitshift_r_assign_(i);
-	b.opr_bitshift_r_assign_(j);
+    a.opr_bitshift_r_assign_(i);
+    b.opr_bitshift_r_assign_(j);
 
-	const bit_type k = std::min(i, j);
+    const bit_type k = std::min(i, j);
 
-	for (;;) {
-		assert(a.is_odd());
-		assert(b.is_odd());
+    for (;;) {
+        assert(a.is_odd());
+        assert(b.is_odd());
 
-		if (detail::opr_comp(a, b) > 0) {
-			a.digits_.swap(b.digits_);
-		}
+        if (detail::opr_comp(a, b) > 0) { a.digits_.swap(b.digits_); }
 
-		b.opr_subtr_assign_(a);
+        b.opr_subtr_assign_(a);
 
-		if (b.is_zero()) {
-			return a.opr_bitshift_l_(k);
-		}
+        if (b.is_zero()) { return a.opr_bitshift_l_(k); }
 
-		b.opr_bitshift_r_assign_(b.ctz());
-	}
+        b.opr_bitshift_r_assign_(b.ctz());
+    }
 }
 
-std::pair<N, N> calc::sqrt (const N & num) {
-	FUNCTION_TO_LOG;
+std::pair<N, N> calc::sqrt(const N & num) {
+    FUNCTION_TO_LOG;
 
-	if (num.is_zero() || num.is_one()) return {num, N{}};
+    if (num.is_zero() || num.is_one()) return {num, N{}};
 
-	N start = 1, end = num.opr_bitshift_r_(1), ans;
+    N start = 1, end = num.opr_bitshift_r_(1), ans;
 
-	while (detail::opr_comp(start, end) <= 0) {
-		N mid = detail::opr_add(start, end).opr_bitshift_r_(1);
+    while (detail::opr_comp(start, end) <= 0) {
+        N mid = detail::opr_add(start, end).opr_bitshift_r_(1);
 
-		const N sqr = detail::opr_mult(mid, mid);
+        const N sqr = detail::opr_mult(mid, mid);
 
-		const auto compared = detail::opr_comp(sqr, num);
+        const auto compared = detail::opr_comp(sqr, num);
 
-		if (compared == 0) return {std::move(mid), N{}};
+        if (compared == 0) return {std::move(mid), N{}};
 
-		if (compared < 0) {
-			ans = mid;
-			mid.opr_incr_();
-			start = std::move(mid);
-		} else {
-			mid.opr_decr_();
-			end = std::move(mid);
-		}
-	}
+        if (compared < 0) {
+            ans = mid;
+            mid.opr_incr_();
+            start = std::move(mid);
+        } else {
+            mid.opr_decr_();
+            end = std::move(mid);
+        }
+    }
 
-	N remainder = detail::opr_subtr(num, detail::opr_mult(ans, ans));
+    N remainder = detail::opr_subtr(num, detail::opr_mult(ans, ans));
 
     return {std::move(ans), std::move(remainder)};
 }
 
-N calc::sqrt_whole (const N & num) {
-	FUNCTION_TO_LOG;
+N calc::sqrt_whole(const N & num) {
+    FUNCTION_TO_LOG;
 
-	#pragma GCC diagnostic push
-	#pragma GCC diagnostic ignored "-Wpessimizing-move"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpessimizing-move"
 
-	if (num.is_zero() || num.is_one()) return num;
+    if (num.is_zero() || num.is_one()) return num;
 
-	N start = 1, end = num.opr_bitshift_r_(1), ans;
+    N start = 1, end = num.opr_bitshift_r_(1), ans;
 
-	while (detail::opr_comp(start, end) <= 0) {
-		N mid = detail::opr_add(start, end).opr_bitshift_r_(1);
+    while (detail::opr_comp(start, end) <= 0) {
+        N mid = detail::opr_add(start, end).opr_bitshift_r_(1);
 
-		const N sqr = detail::opr_mult(mid, mid);
+        const N sqr = detail::opr_mult(mid, mid);
 
-		const auto compared = detail::opr_comp(sqr, num);
+        const auto compared = detail::opr_comp(sqr, num);
 
-		if (compared == 0) return std::move(mid);
+        if (compared == 0) return std::move(mid);
 
-		if (compared < 0) {
-			ans = mid;
-			mid.opr_incr_();
-			start = std::move(mid);
-		} else {
-			mid.opr_decr_();
-			end = std::move(mid);
-		}
-	}
+        if (compared < 0) {
+            ans = mid;
+            mid.opr_incr_();
+            start = std::move(mid);
+        } else {
+            mid.opr_decr_();
+            end = std::move(mid);
+        }
+    }
 
     return std::move(ans);
 
-	#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 }
 
-N calc::pow (N base, N exponent) {
-	FUNCTION_TO_LOG;
+N calc::pow(N base, N exponent) {
+    FUNCTION_TO_LOG;
 
-	if (exponent.is_zero()) return 1;
+    if (exponent.is_zero()) return 1;
 
-	N result (1);
+    N result(1);
 
-	for (;;) {
-		if (exponent.front_() & 1) result.opr_mult_assign_(base);
-		exponent.opr_bitshift_r_assign_(1);
-		if (exponent.is_zero()) break;
-		base.opr_mult_assign_(base);
-	}
+    for (;;) {
+        if (exponent.front_() & 1) result.opr_mult_assign_(base);
+        exponent.opr_bitshift_r_assign_(1);
+        if (exponent.is_zero()) break;
+        base.opr_mult_assign_(base);
+    }
 
-	return result;
+    return result;
 }
 
-N calc::pow_mod (N base, N exponent, const N & mod) {
-	FUNCTION_TO_LOG;
+N calc::pow_mod(N base, N exponent, const N & mod) {
+    FUNCTION_TO_LOG;
 
-	if (mod.is_zero()) throw error::division_by_zero();
+    if (mod.is_zero()) throw error::division_by_zero();
 
-	if (exponent.is_zero()) return 1;
+    if (exponent.is_zero()) return 1;
 
-	N result (1);
+    N result(1);
 
-	for (;;) {
-		if (exponent.front_() & 1) {
-			result.opr_mult_assign_(base);
-			result = detail::opr_div(result, mod).second; // maybe use separate function just for mod ???
-		}
+    for (;;) {
+        if (exponent.front_() & 1) {
+            result.opr_mult_assign_(base);
+            result =
+                detail::opr_div(result, mod)
+                    .second;  // maybe use separate function just for mod ???
+        }
 
-		exponent.opr_bitshift_r_assign_(1);
-		if (exponent.is_zero()) break;
-		base.opr_mult_assign_(base);
-	}
+        exponent.opr_bitshift_r_assign_(1);
+        if (exponent.is_zero()) break;
+        base.opr_mult_assign_(base);
+    }
 
-	return result;
+    return result;
 }
 
-Z calc::pow (Z base, N exponent) {
-	FUNCTION_TO_LOG;
+Z calc::pow(Z base, N exponent) {
+    FUNCTION_TO_LOG;
 
-	const auto sign = base.is_negative() && exponent.is_odd() ? sign_type::negative : sign_type::positive;
+    const auto sign = base.is_negative() && exponent.is_odd() ?
+                          sign_type::negative :
+                          sign_type::positive;
 
-	return Z(pow(std::move(std::move(base).abs()), std::move(exponent)), sign);
+    return Z(pow(std::move(std::move(base).abs()), std::move(exponent)), sign);
 }
 
-} // /namespace jmaths
+}  // namespace jmaths
 
 #include "undef.hh"

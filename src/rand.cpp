@@ -1,16 +1,16 @@
-#include <random>
-#include <cstddef>
-
-#include "constants_and_types.hpp"
 #include "rand.hpp"
+
+#include <cstddef>
+#include <random>
+
 #include "N.hpp"
 #include "Z.hpp"
-
+#include "constants_and_types.hpp"
 #include "def.hh"
 
 namespace jmaths {
 
-N N::rand (bit_type upper_bound_exponent) {
+N N::rand(bit_type upper_bound_exponent) {
     FUNCTION_TO_LOG;
 
     static internal::rand<base_int> rand_gen;
@@ -27,7 +27,8 @@ N N::rand (bit_type upper_bound_exponent) {
     }
 
     if (pos_mod > 0) {
-        random_number.digits_.emplace_back(rand_gen() >> (base_int_bits - pos_mod));
+        random_number.digits_.emplace_back(rand_gen() >>
+                                           (base_int_bits - pos_mod));
     }
 
     random_number.remove_leading_zeroes_();
@@ -35,14 +36,14 @@ N N::rand (bit_type upper_bound_exponent) {
     return random_number;
 }
 
-Z Z::rand (bit_type upper_bound_exponent) {
+Z Z::rand(bit_type upper_bound_exponent) {
     FUNCTION_TO_LOG;
 
-    static internal::rand<unsigned char> rand_gen (0, 1);
+    static internal::rand<unsigned char> rand_gen(0, 1);
 
     return Z(N::rand(upper_bound_exponent), static_cast<sign_bool>(rand_gen()));
 }
 
-} // /namespace jmaths
+}  // namespace jmaths
 
 #include "undef.hh"

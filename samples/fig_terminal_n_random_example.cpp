@@ -1,13 +1,13 @@
-#include <iostream>
-#include <cstdint>
-#include <cstddef>
 #include <climits>
+#include <cstddef>
+#include <cstdint>
 #include <cstring>
+#include <iostream>
 
 #include "all.hpp"
 #include "def.hh"
 
-int main (int argc, char * argv[]) {
+int main(int argc, char * argv[]) {
     const bool csv_format = argc > 1 && !std::strcmp(argv[1], "csv");
 
     using jmaths::N;
@@ -20,7 +20,8 @@ int main (int argc, char * argv[]) {
     ull values[max_value]{};
 
     REPEAT(25'000) {
-        const auto random_value = *N::rand(random_type_exp).fits_into<random_type>();
+        const auto random_value =
+            *N::rand(random_type_exp).fits_into<random_type>();
         ++values[random_value];
     }
 

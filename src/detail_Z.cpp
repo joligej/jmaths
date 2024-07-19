@@ -1,30 +1,31 @@
-#include <ostream>
+#include <compare>
 #include <istream>
+#include <ostream>
 #include <string>
 #include <utility>
-#include <compare>
 
-#include "constants_and_types.hpp"
-#include "detail.hpp"
-#include "Z.hpp"
-#include "sign_type.hpp"
 #include "N.hpp"
-
+#include "Z.hpp"
+#include "constants_and_types.hpp"
 #include "def.hh"
+#include "detail.hpp"
+#include "sign_type.hpp"
 
 namespace jmaths {
 
 /**********************************************************/
 // implementation functions
 
-std::ostream & detail::opr_ins (std::ostream & os, const Z & z) {
+std::ostream & detail::opr_ins(std::ostream & os, const Z & z) {
     FUNCTION_TO_LOG;
 
-    if (z.is_negative()) return os << negative_sign << z.abs();
-    else return os << z.abs();
+    if (z.is_negative())
+        return os << negative_sign << z.abs();
+    else
+        return os << z.abs();
 }
 
-std::istream & detail::opr_extr (std::istream & is, Z & z) {
+std::istream & detail::opr_extr(std::istream & is, Z & z) {
     FUNCTION_TO_LOG;
 
     std::string num_str;
@@ -33,7 +34,7 @@ std::istream & detail::opr_extr (std::istream & is, Z & z) {
     return is;
 }
 
-Z detail::opr_add (const Z & lhs, const Z & rhs) {
+Z detail::opr_add(const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
@@ -51,7 +52,6 @@ Z detail::opr_add (const Z & lhs, const Z & rhs) {
             } else {
                 return Z(detail::opr_subtr(rhs.abs(), lhs.abs()), negative);
             }
-
         }
     } else {
         if (rhs.is_positive()) {
@@ -71,7 +71,7 @@ Z detail::opr_add (const Z & lhs, const Z & rhs) {
     }
 }
 
-Z detail::opr_subtr (const Z & lhs, const Z & rhs) {
+Z detail::opr_subtr(const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
@@ -107,18 +107,18 @@ Z detail::opr_subtr (const Z & lhs, const Z & rhs) {
     }
 }
 
-Z detail::opr_mult (const Z & lhs, const Z & rhs) {
+Z detail::opr_mult(const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
     N product = lhs.abs() * rhs.abs();
 
     if (product.is_zero()) return Z{};
 
-    return Z(std::move(product), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
-
+    return Z(std::move(product),
+             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
 }
 
-std::pair<Z, Z> detail::opr_div (const Z & lhs, const Z & rhs) {
+std::pair<Z, Z> detail::opr_div(const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
     auto [quotient, remainder] = lhs.abs() / rhs.abs();
@@ -131,50 +131,57 @@ std::pair<Z, Z> detail::opr_div (const Z & lhs, const Z & rhs) {
         }
     } else {
         if (remainder.is_zero()) {
-            return {Z(std::move(quotient), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)), Z{}};
+            return {Z(std::move(quotient),
+                      static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)),
+                    Z{}};
         } else {
-            return {Z(std::move(quotient), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)), Z(std::move(remainder), lhs.sign_)};
+            return {Z(std::move(quotient),
+                      static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)),
+                    Z(std::move(remainder), lhs.sign_)};
         }
     }
 }
 
-Z detail::opr_and (const Z & lhs, const Z & rhs) {
+Z detail::opr_and(const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
     N and_result = lhs.abs() & rhs.abs();
 
     if (and_result.is_zero()) return Z{};
 
-    return Z(std::move(and_result), static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_));
+    return Z(std::move(and_result),
+             static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_));
 }
 
-Z detail::opr_or (const Z & lhs, const Z & rhs) {
+Z detail::opr_or(const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
     N or_result = lhs.abs() | rhs.abs();
 
     if (or_result.is_zero()) return Z{};
 
-    return Z(std::move(or_result), static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_));
+    return Z(std::move(or_result),
+             static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_));
 }
 
-Z detail::opr_xor (const Z & lhs, const Z & rhs) {
+Z detail::opr_xor(const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
     N xor_result = lhs.abs() ^ rhs.abs();
 
     if (xor_result.is_zero()) return Z{};
 
-    return Z(std::move(xor_result), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
+    return Z(std::move(xor_result),
+             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
 }
 
-bool detail::opr_eq (const Z & lhs, const Z & rhs) {
+bool detail::opr_eq(const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
     return (lhs.sign_ == rhs.sign_ && lhs.abs() == rhs.abs());
 }
 
-std::strong_ordering detail::opr_comp (const Z & lhs, const Z & rhs) {
+std::strong_ordering detail::opr_comp(const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
     if (lhs.is_positive()) {
@@ -192,6 +199,6 @@ std::strong_ordering detail::opr_comp (const Z & lhs, const Z & rhs) {
     }
 }
 
-} // /namespace jmaths
+}  // namespace jmaths
 
 #include "undef.hh"

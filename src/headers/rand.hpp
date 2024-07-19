@@ -1,49 +1,46 @@
 #pragma once
 
-#include <random>
 #include <limits>
+#include <random>
 
-#include "constants_and_types.hpp"
 #include "def.hh"
 
 namespace jmaths {
 
 namespace internal {
 
-template <typename INT>
-class rand {
-    private:
-        using seed_type = std::random_device;
+template <typename INT> class rand {
+   private:
+    using seed_type = std::random_device;
 
-        inline static std::mt19937 gen {seed_type{}()};
+    inline static std::mt19937 gen{seed_type{}()};
 
-        std::uniform_int_distribution<INT> distrib;
- 
-    public:
-        rand (INT min, INT max) : distrib(min, max) {
-            FUNCTION_TO_LOG;
-        }
+    std::uniform_int_distribution<INT> distrib;
 
-        rand() : rand(0, std::numeric_limits<INT>::max()) {
-            FUNCTION_TO_LOG;
-        }
+   public:
+    rand(INT min, INT max) : distrib(min, max) {
+        FUNCTION_TO_LOG;
+    }
 
-        INT operator () () {
-            FUNCTION_TO_LOG;
+    rand() : rand(0, std::numeric_limits<INT>::max()) {
+        FUNCTION_TO_LOG;
+    }
 
-            return distrib(gen);
-        }
+    INT operator()() {
+        FUNCTION_TO_LOG;
 
-        template <typename SEED>
-        static void reseed (SEED seed = seed_type{}()) {
-            FUNCTION_TO_LOG;
+        return distrib(gen);
+    }
 
-            gen.seed(seed);
-        }
+    template <typename SEED> static void reseed(SEED seed = seed_type{}()) {
+        FUNCTION_TO_LOG;
+
+        gen.seed(seed);
+    }
 };
 
-} // /namespace internal
+}  // namespace internal
 
-} // /namespace jmaths
+}  // namespace jmaths
 
 #include "undef.hh"
