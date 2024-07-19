@@ -15,17 +15,18 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <iostream>
+#include <rand.hpp>
 #include <string>
 
 #include "Z.hpp"
 
-int main(int argc, char * argv[]) {
+int main(int, char*[]) {
     using jmaths::Z, jmaths::bit_type;
 
-    const bit_type max_exponent = argc > 1 ? std::stoul(argv[1]) : 20;
+    jmaths::internal::rand<bit_type> exponent_generator(0, 32);
 
     while (std::cin.get() != 'q') {
-        std::cout << Z::rand(max_exponent) << '\n';
+        std::cout << Z::rand(exponent_generator()) << '\n';
     }
 }
 
