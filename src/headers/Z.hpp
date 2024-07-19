@@ -92,7 +92,7 @@ class Z : public sign_type, private N {
     const N & abs() const &;
     N && abs() &&;
 
-    virtual bool is_zero() const;
+    bool is_zero() const override;
     bool is_one() const;
     bool is_neg_one() const;
 

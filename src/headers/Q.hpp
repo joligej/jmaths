@@ -106,7 +106,7 @@ class Q : public sign_type {
     Q(Z && num, const Z & denom);
     Q(Z && num, Z && denom);
 
-    virtual bool is_zero() const;
+    bool is_zero() const override;
     bool is_one() const;
     bool is_neg_one() const;
 
