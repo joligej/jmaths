@@ -332,7 +332,7 @@ Z && Z::operator - () && {
 Z Z::operator ~ () const {
 	FUNCTION_TO_LOG;
 
-	N && complemented = N::opr_compl_();
+	N complemented = N::opr_compl_();
 
 	if (complemented.is_zero()) {
 		return Z{};
@@ -350,7 +350,7 @@ Z Z::operator << (bit_type pos) const {
 Z Z::operator >> (bit_type pos) const {
 	FUNCTION_TO_LOG;
 
-	N && shifted = N::opr_bitshift_r_(pos);
+	N shifted = N::opr_bitshift_r_(pos);
 
 	if (shifted.is_zero()) {
 		return Z{};

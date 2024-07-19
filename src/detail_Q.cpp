@@ -40,12 +40,12 @@ Q detail::opr_add (const Q & lhs, const Q & rhs) {
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
-            N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
             first_product.opr_add_assign_(detail::opr_mult(lhs.denom_, rhs.num_));
             return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
         } else {
-            N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
-            N && second_product = detail::opr_mult(lhs.denom_, rhs.num_);
+            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+            N second_product = detail::opr_mult(lhs.denom_, rhs.num_);
 
             const auto difference = detail::opr_comp(first_product, second_product);
 
@@ -61,8 +61,8 @@ Q detail::opr_add (const Q & lhs, const Q & rhs) {
         }
     } else {
         if (rhs.is_positive()) {
-            N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
-            N && second_product = detail::opr_mult(lhs.denom_, rhs.num_);
+            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+            N second_product = detail::opr_mult(lhs.denom_, rhs.num_);
 
             const auto difference = detail::opr_comp(first_product, second_product);
 
@@ -76,7 +76,7 @@ Q detail::opr_add (const Q & lhs, const Q & rhs) {
                 return Q(std::move(second_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
             }
         } else {
-            N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
             first_product.opr_add_assign_(detail::opr_mult(lhs.denom_, rhs.num_));
             return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
         }
@@ -90,8 +90,8 @@ Q detail::opr_subtr (const Q & lhs, const Q & rhs) {
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
-            N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
-            N && second_product = detail::opr_mult(lhs.denom_, rhs.num_);
+            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+            N second_product = detail::opr_mult(lhs.denom_, rhs.num_);
 
             const auto difference = detail::opr_comp(first_product, second_product);
 
@@ -105,18 +105,18 @@ Q detail::opr_subtr (const Q & lhs, const Q & rhs) {
                 return Q(std::move(second_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
             }
         } else {
-            N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
             first_product.opr_add_assign_(detail::opr_mult(lhs.denom_, rhs.num_));
             return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
         }
     } else {
         if (rhs.is_positive()) {
-            N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
             first_product.opr_add_assign_(detail::opr_mult(lhs.denom_, rhs.num_));
             return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
         } else {
-            N && first_product = detail::opr_mult(lhs.num_, rhs.denom_);
-            N && second_product = detail::opr_mult(lhs.denom_, rhs.num_);
+            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
+            N second_product = detail::opr_mult(lhs.denom_, rhs.num_);
 
             const auto difference = detail::opr_comp(first_product, second_product);
 
@@ -136,7 +136,7 @@ Q detail::opr_subtr (const Q & lhs, const Q & rhs) {
 Q detail::opr_mult (const Q & lhs, const Q & rhs) {
     FUNCTION_TO_LOG;
 
-    N && numerator = lhs.num_ * rhs.num_;
+    N numerator = lhs.num_ * rhs.num_;
 
     if (numerator.is_zero()) return Q{};
 
@@ -146,7 +146,7 @@ Q detail::opr_mult (const Q & lhs, const Q & rhs) {
 Q detail::opr_div (const Q & lhs, const Q & rhs) {
     FUNCTION_TO_LOG;
 
-    N && numerator = lhs.num_ * rhs.denom_;
+    N numerator = lhs.num_ * rhs.denom_;
 
     if (numerator.is_zero()) return Q{};
 
@@ -156,11 +156,11 @@ Q detail::opr_div (const Q & lhs, const Q & rhs) {
 Q detail::opr_and (const Q & lhs, const Q & rhs) {
     FUNCTION_TO_LOG;
 
-    N && denominator = lhs.denom_ & rhs.denom_;
+    N denominator = lhs.denom_ & rhs.denom_;
 
     if (denominator.is_zero()) throw error::division_by_zero();
 
-    N && numerator = lhs.num_ & rhs.num_;
+    N numerator = lhs.num_ & rhs.num_;
 
     if (numerator.is_zero()) return Q{};
 
@@ -170,7 +170,7 @@ Q detail::opr_and (const Q & lhs, const Q & rhs) {
 Q detail::opr_or (const Q & lhs, const Q & rhs) {
     FUNCTION_TO_LOG;
 
-    N && numerator = lhs.num_ | rhs.num_;
+    N numerator = lhs.num_ | rhs.num_;
 
     if (numerator.is_zero()) return Q{};
 
@@ -180,11 +180,11 @@ Q detail::opr_or (const Q & lhs, const Q & rhs) {
 Q detail::opr_xor (const Q & lhs, const Q & rhs) {
     FUNCTION_TO_LOG;
 
-    N && denominator = lhs.denom_ ^ rhs.denom_;
+    N denominator = lhs.denom_ ^ rhs.denom_;
 
     if (denominator.is_zero()) throw error::division_by_zero();
 
-    N && numerator = lhs.num_ ^ rhs.num_;
+    N numerator = lhs.num_ ^ rhs.num_;
 
     if (numerator.is_zero()) return Q{};
 

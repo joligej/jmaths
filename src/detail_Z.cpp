@@ -110,7 +110,7 @@ Z detail::opr_subtr (const Z & lhs, const Z & rhs) {
 Z detail::opr_mult (const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
-    N && product = lhs.abs() * rhs.abs();
+    N product = lhs.abs() * rhs.abs();
 
     if (product.is_zero()) return Z{};
 
@@ -141,7 +141,7 @@ std::pair<Z, Z> detail::opr_div (const Z & lhs, const Z & rhs) {
 Z detail::opr_and (const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
-    N && and_result = lhs.abs() & rhs.abs();
+    N and_result = lhs.abs() & rhs.abs();
 
     if (and_result.is_zero()) return Z{};
 
@@ -151,7 +151,7 @@ Z detail::opr_and (const Z & lhs, const Z & rhs) {
 Z detail::opr_or (const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
-    N && or_result = lhs.abs() | rhs.abs();
+    N or_result = lhs.abs() | rhs.abs();
 
     if (or_result.is_zero()) return Z{};
 
@@ -161,7 +161,7 @@ Z detail::opr_or (const Z & lhs, const Z & rhs) {
 Z detail::opr_xor (const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
-    N && xor_result = lhs.abs() ^ rhs.abs();
+    N xor_result = lhs.abs() ^ rhs.abs();
 
     if (xor_result.is_zero()) return Z{};
 

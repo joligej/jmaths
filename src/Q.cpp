@@ -335,12 +335,12 @@ Q & Q::operator += (const Q & rhs) {
 
 	if (this->is_positive()) {
 		if (rhs.is_positive()) {
-			N && first_product = detail::opr_mult(num_, rhs.denom_);
+			N first_product = detail::opr_mult(num_, rhs.denom_);
 			first_product.opr_add_assign_(detail::opr_mult(denom_, rhs.num_));
 			num_ = std::move(first_product);
 		} else {
-			N && first_product = detail::opr_mult(num_, rhs.denom_);
-			N && second_product = detail::opr_mult(denom_, rhs.num_);
+			N first_product = detail::opr_mult(num_, rhs.denom_);
+			N second_product = detail::opr_mult(denom_, rhs.num_);
 
 			const auto difference = detail::opr_comp(first_product, second_product);
 
@@ -359,8 +359,8 @@ Q & Q::operator += (const Q & rhs) {
 		}
 	} else {
 		if (rhs.is_positive()) {
-			N && first_product = detail::opr_mult(num_, rhs.denom_);
-			N && second_product = detail::opr_mult(denom_, rhs.num_);
+			N first_product = detail::opr_mult(num_, rhs.denom_);
+			N second_product = detail::opr_mult(denom_, rhs.num_);
 
 			const auto difference = detail::opr_comp(first_product, second_product);
 
@@ -377,7 +377,7 @@ Q & Q::operator += (const Q & rhs) {
 				set_sign_(positive);
 			}
 		} else {
-			N && first_product = detail::opr_mult(num_, rhs.denom_);
+			N first_product = detail::opr_mult(num_, rhs.denom_);
 			first_product.opr_add_assign_(detail::opr_mult(denom_, rhs.num_));
 			num_ = std::move(first_product);
 		}
@@ -395,8 +395,8 @@ Q & Q::operator -= (const Q & rhs) {
 
 	if (this->is_positive()) {
 		if (rhs.is_positive()) {
-			N && first_product = detail::opr_mult(num_, rhs.denom_);
-			N && second_product = detail::opr_mult(denom_, rhs.num_);
+			N first_product = detail::opr_mult(num_, rhs.denom_);
+			N second_product = detail::opr_mult(denom_, rhs.num_);
 
 			const auto difference = detail::opr_comp(first_product, second_product);
 
@@ -413,18 +413,18 @@ Q & Q::operator -= (const Q & rhs) {
 				set_sign_(negative);
 			}
 		} else {
-			N && first_product = detail::opr_mult(num_, rhs.denom_);
+			N first_product = detail::opr_mult(num_, rhs.denom_);
 			first_product.opr_add_assign_(detail::opr_mult(denom_, rhs.num_));
 			num_ = std::move(first_product);
 		}
 	} else {
 		if (rhs.is_positive()) {
-			N && first_product = detail::opr_mult(num_, rhs.denom_);
+			N first_product = detail::opr_mult(num_, rhs.denom_);
 			first_product.opr_add_assign_(detail::opr_mult(denom_, rhs.num_));
 			num_ = std::move(first_product);
 		} else {
-			N && first_product = detail::opr_mult(num_, rhs.denom_);
-			N && second_product = detail::opr_mult(denom_, rhs.num_);
+			N first_product = detail::opr_mult(num_, rhs.denom_);
+			N second_product = detail::opr_mult(denom_, rhs.num_);
 
 			const auto difference = detail::opr_comp(first_product, second_product);
 
@@ -521,12 +521,12 @@ Q && Q::operator - () && {
 Q Q::operator ~ () const {
 	FUNCTION_TO_LOG;
 
-	N && num_complemented = num_.opr_compl_();
+	N num_complemented = num_.opr_compl_();
 
 	if (num_complemented.is_zero()) {
 		return Q{};
 	} else {
-		N && denom_complemented = denom_.opr_compl_();
+		N denom_complemented = denom_.opr_compl_();
 		if (denom_complemented.is_zero()) throw error::division_by_zero("Denominator of complemented fraction cannot be zero!");
 		return Q(std::move(num_complemented), std::move(denom_complemented), static_cast<sign_bool>(!sign_));
 	}
