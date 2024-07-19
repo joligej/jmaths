@@ -48,18 +48,18 @@ N operator^(const N & lhs, const N & rhs);
 
 bool operator==(const N & lhs, const N & rhs);
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 bool operator==(const N & lhs, INT rhs);
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 bool operator==(INT lhs, const N & rhs);
 
 std::strong_ordering operator<=>(const N & lhs, const N & rhs);
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 std::strong_ordering operator<=>(const N & lhs, INT rhs);
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 std::strong_ordering operator<=>(INT lhs, const N & rhs);
 
 class N {
@@ -110,7 +110,7 @@ class N {
     void opr_assign_(std::string_view num_str);
 
     template <typename INT>
-        requires std::is_integral_v<INT>
+        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
     void opr_assign_(INT rhs);
 
    public:
@@ -120,7 +120,7 @@ class N {
     N();
     N(std::string_view num_str, unsigned base = default_base);
     template <typename INT>
-        requires std::is_integral_v<INT>
+        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
     N(INT num);
 
     bool is_zero() const;
@@ -166,7 +166,7 @@ class N {
 
     N & operator=(std::string_view num_str);
     template <typename INT>
-        requires std::is_integral_v<INT>
+        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
     N & operator=(INT rhs);
 
     static N rand(bit_type upper_bound_exponent);

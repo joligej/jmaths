@@ -62,7 +62,7 @@ std::pair<N, N> calc::sqrt(const N & num) {
 
     if (num.is_zero() || num.is_one()) return {num, N{}};
 
-    N start = 1, end = num.opr_bitshift_r_(1), ans;
+    N start = 1U, end = num.opr_bitshift_r_(1), ans;
 
     while (detail::opr_comp(start, end) <= 0) {
         N mid = detail::opr_add(start, end).opr_bitshift_r_(1);
@@ -96,7 +96,7 @@ N calc::sqrt_whole(const N & num) {
 
     if (num.is_zero() || num.is_one()) return num;
 
-    N start = 1, end = num.opr_bitshift_r_(1), ans;
+    N start = 1U, end = num.opr_bitshift_r_(1), ans;
 
     while (detail::opr_comp(start, end) <= 0) {
         N mid = detail::opr_add(start, end).opr_bitshift_r_(1);
@@ -125,9 +125,9 @@ N calc::sqrt_whole(const N & num) {
 N calc::pow(N base, N exponent) {
     FUNCTION_TO_LOG;
 
-    if (exponent.is_zero()) return 1;
+    if (exponent.is_zero()) return 1U;
 
-    N result(1);
+    N result(1U);
 
     for (;;) {
         if (exponent.front_() & 1) result.opr_mult_assign_(base);
@@ -144,9 +144,9 @@ N calc::pow_mod(N base, N exponent, const N & mod) {
 
     if (mod.is_zero()) throw error::division_by_zero();
 
-    if (exponent.is_zero()) return 1;
+    if (exponent.is_zero()) return 1U;
 
-    N result(1);
+    N result(1U);
 
     for (;;) {
         if (exponent.front_() & 1) {

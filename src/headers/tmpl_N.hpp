@@ -31,14 +31,14 @@
 namespace jmaths {
 
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 bool detail::opr_eq(const N & lhs, INT rhs) {
     FUNCTION_TO_LOG;
 
     if (rhs == 0) return lhs.is_zero();
     if (lhs.is_zero()) return false;
 
-    if (lhs.digits_.size() * base_int_size - 1 > sizeof(rhs)) return false;
+    if ((lhs.digits_.size() - 1) * base_int_size + 1 > sizeof(rhs)) return false;
 
     if (lhs.digits_.size() * base_int_size < sizeof(rhs) &&
         (rhs >> (base_int_bits * lhs.digits_.size())) != 0)
@@ -46,14 +46,17 @@ bool detail::opr_eq(const N & lhs, INT rhs) {
 
     for (const auto & digit : lhs.digits_) {
         if (digit != (base_int)rhs) return false;
-        REPEAT(base_int_size) rhs >>= bits_in_byte;
+        
+        if constexpr (sizeof(rhs) > base_int_size) {
+            rhs >>= base_int_bits;
+        } else {}
     }
 
     return true;
 }
 
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 std::strong_ordering detail::opr_comp(const N & lhs, INT rhs) {
     FUNCTION_TO_LOG;
 
@@ -62,7 +65,7 @@ std::strong_ordering detail::opr_comp(const N & lhs, INT rhs) {
                                std::strong_ordering::greater;
     if (lhs.is_zero()) return std::strong_ordering::less;
 
-    if (lhs.digits_.size() * base_int_size - 1 > sizeof(rhs))
+    if ((lhs.digits_.size() - 1) * base_int_size + 1 > sizeof(rhs))
         return std::strong_ordering::greater;
 
     if (lhs.digits_.size() * base_int_size < sizeof(rhs) &&
@@ -73,8 +76,10 @@ std::strong_ordering detail::opr_comp(const N & lhs, INT rhs) {
     for (auto crit = lhs.digits_.crbegin(); crit != lhs.digits_.crend();
          ++crit) {
         INT curr_byte = rhs;
-        REPEAT(base_int_size * (lhs.digits_.size() - pos))
-        curr_byte >>= bits_in_byte;
+        REPEAT(base_int_size * (lhs.digits_.size() - pos)) {
+            curr_byte >>= bits_in_byte;
+        }
+
         if (*crit < (base_int)curr_byte) return std::strong_ordering::less;
         if (*crit > (base_int)curr_byte) return std::strong_ordering::greater;
 
@@ -85,7 +90,7 @@ std::strong_ordering detail::opr_comp(const N & lhs, INT rhs) {
 }
 
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 bool operator==(const N & lhs, INT rhs) {
     FUNCTION_TO_LOG;
 
@@ -93,7 +98,7 @@ bool operator==(const N & lhs, INT rhs) {
 }
 
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 bool operator==(INT lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
@@ -101,7 +106,7 @@ bool operator==(INT lhs, const N & rhs) {
 }
 
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 std::strong_ordering operator<=>(const N & lhs, INT rhs) {
     FUNCTION_TO_LOG;
 
@@ -109,7 +114,7 @@ std::strong_ordering operator<=>(const N & lhs, INT rhs) {
 }
 
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 std::strong_ordering operator<=>(INT lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
@@ -122,19 +127,22 @@ std::strong_ordering operator<=>(INT lhs, const N & rhs) {
 namespace jmaths {
 
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 void N::opr_assign_(INT rhs) {
     FUNCTION_TO_LOG;
 
     digits_.clear();
 
-    digits_.reserve(
-        (std::size_t)((double)sizeof(INT) / base_int_size - max_ratio + 1));
+    if constexpr (sizeof(INT) > base_int_size) {
+        digits_.reserve(
+            (std::size_t)((double)sizeof(INT) / base_int_size - max_ratio + 1));
 
-    // this assumes that sizeof(smallest type)/base_int_size >= max_ratio
-    REPEAT((std::size_t)((double)sizeof(INT) / base_int_size - max_ratio)) {
-        digits_.emplace_back((base_int)rhs);
-        REPEAT(base_int_size) rhs >>= bits_in_byte;
+        // this assumes that sizeof(smallest type)/base_int_size >= max_ratio
+        REPEAT((std::size_t)((double)sizeof(INT) / base_int_size - max_ratio)) {
+            digits_.emplace_back((base_int)rhs);
+            rhs >>= base_int_bits;
+        }
+    } else {
     }
 
     digits_.emplace_back((base_int)rhs);
@@ -143,20 +151,19 @@ void N::opr_assign_(INT rhs) {
 }
 
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 N::N(INT num) {
     FUNCTION_TO_LOG;
 
-    if constexpr (sizeof(INT) > 1) {
+    if constexpr (sizeof(INT) > base_int_size) {
         digits_.reserve(
             (std::size_t)((double)sizeof(INT) / base_int_size - max_ratio + 1));
 
         // this assumes that sizeof(smallest type)/base_int_size >= max_ratio
         REPEAT((std::size_t)((double)sizeof(INT) / base_int_size - max_ratio)) {
             digits_.emplace_back((base_int)num);
-            REPEAT(base_int_size) num >>= bits_in_byte;
+            num >>= base_int_bits;
         }
-
     } else {
     }
 
@@ -187,7 +194,7 @@ std::optional<INT> N::fits_into() const {
             return std::nullopt;
         return digits_.front();
     } else {
-        if (digits_.size() * base_int_size > sizeof(INT)) return std::nullopt;
+        if ((digits_.size() - 1) * base_int_size + 1 > sizeof(INT)) return std::nullopt;
 
 #if 0
   INT converted (digits_.back());
@@ -208,7 +215,7 @@ std::optional<INT> N::fits_into() const {
 }
 
 template <typename INT>
-    requires std::is_integral_v<INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 N & N::operator=(INT rhs) {
     FUNCTION_TO_LOG;
 

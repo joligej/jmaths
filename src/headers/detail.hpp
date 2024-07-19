@@ -41,12 +41,12 @@ struct detail {
 
     static bool opr_eq(const N & lhs, const N & rhs);
     template <typename INT>
-        requires std::is_integral_v<INT>
+        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
     static bool opr_eq(const N & lhs, INT rhs);
 
     static std::strong_ordering opr_comp(const N & lhs, const N & rhs);
     template <typename INT>
-        requires std::is_integral_v<INT>
+        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
     static std::strong_ordering opr_comp(const N & lhs, INT rhs);
 
     static std::ostream & opr_ins(std::ostream & os, const Z & z);
