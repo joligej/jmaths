@@ -16,12 +16,15 @@
 
 #pragma once
 
+#include <bit>
 #include <cassert>
 #include <cmath>
 #include <compare>
 #include <cstddef>
+#include <def.hh>
 #include <optional>
 #include <type_traits>
+#include <utility>
 
 #include "N.hpp"
 #include "constants_and_types.hpp"
@@ -197,9 +200,9 @@ void N::handle_int_(INT num) {
             const std::size_t curr_offset = curr_byte % base_int_size;
             if (curr_offset == 0) { digits_.emplace_back(); }
 
-            static constexpr unsigned bit_mask = ~(unsigned char)0;
+            static constexpr unsigned bitmask = ~(unsigned char)0;
 
-            digits_[curr_index] |= (num & bit_mask)
+            digits_[curr_index] |= (num & bitmask)
                                    << (curr_offset * bits_in_byte);
 
             num >>= bits_in_byte;
@@ -211,6 +214,26 @@ void N::handle_int_(INT num) {
     }
 
     remove_leading_zeroes_();
+}
+
+template <typename INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
+INT N::fit_into_(std::size_t max_byte) const {
+    INT converted = 0;
+
+    for (std::size_t curr_byte = 0; curr_byte < max_byte; ++curr_byte) {
+        const std::size_t curr_index = curr_byte / base_int_size;
+        const std::size_t curr_offset = curr_byte % base_int_size;
+
+        static constexpr unsigned bitmask = ~(unsigned char)0;
+
+        const auto relevant_byte =
+            (digits_[curr_index] >> (curr_offset * bits_in_byte)) & bitmask;
+
+        converted |= ((INT)relevant_byte << (curr_byte * bits_in_byte));
+    }
+
+    return converted;
 }
 
 template <typename INT>
@@ -235,39 +258,36 @@ template <typename INT>
 std::optional<INT> N::fits_into() const {
     FUNCTION_TO_LOG;
 
-#if 0
-  if constexpr (std::is_signed_v<INT>) {
-  if (is_positive()) return N::fits_into<INT>();
-  else return std::nullopt;
-  // !!! implement this perhaps ???
-  }
-#endif
-
     if (is_zero()) return 0;
 
-    if constexpr (sizeof(INT) < base_int_size) {
-        if ((INT)digits_.front() != digits_.front() || digits_.size() > 1)
-            return std::nullopt;
-        return digits_.front();
-    } else {
-        if ((digits_.size() - 1) * base_int_size + 1 > sizeof(INT))
-            return std::nullopt;
-
-#if 0
-  INT converted (digits_.back());
-  for (std::size_t i = digits_.size() - 1; i --> 0;) {
-  converted <<= base_int_bits;
-  converted |= digits_[i];
-  }
-#endif
-
-        INT converted(digits_.front());
-
-        for (std::size_t i = 1; i < digits_.size(); ++i) {
-            converted |= ((INT)digits_[i] << (base_int_bits * i));
+    if constexpr (base_int_size < sizeof(INT)) {
+        if (digits_.size() * base_int_size < sizeof(INT)) {
+            return fit_into_<INT>(digits_.size() * base_int_size);
         }
 
-        return converted;
+        if (digits_.size() * base_int_size > sizeof(INT)) {
+            if ((unsigned)std::countr_zero(digits_.back()) <
+                (digits_.size() * base_int_size - sizeof(INT)) * bits_in_byte) {
+                return std::nullopt;
+            }
+        }
+
+        return fit_into_<INT>(sizeof(INT));
+    } else if constexpr (base_int_size > sizeof(INT)) {
+        if (digits_.size() > 1) return std::nullopt;
+
+        static constexpr auto bitmask = ~(INT)0;
+
+        if (const auto masked_digit = digits_.front() & bitmask;
+            masked_digit == digits_.front()) {
+            return masked_digit;
+        }
+
+        return std::nullopt;
+    } else {
+        if (digits_.size() > 1) { return std::nullopt; }
+
+        return digits_.front();
     }
 }
 

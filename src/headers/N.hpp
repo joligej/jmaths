@@ -93,6 +93,10 @@ class N {
         requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
     void handle_int_(INT num);
 
+    template <typename INT>
+        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
+    INT fit_into_(std::size_t max_byte) const;
+
     void opr_incr_();
     void opr_decr_();
 
