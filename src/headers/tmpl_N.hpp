@@ -17,6 +17,7 @@
 #pragma once
 
 #include <cassert>
+#include <cmath>
 #include <compare>
 #include <cstddef>
 #include <optional>
@@ -35,10 +36,13 @@ template <typename INT>
 bool detail::opr_eq(const N & lhs, INT rhs) {
     FUNCTION_TO_LOG;
 
+#if 0
+
     if (rhs == 0) return lhs.is_zero();
     if (lhs.is_zero()) return false;
 
-    if ((lhs.digits_.size() - 1) * base_int_size + 1 > sizeof(rhs)) return false;
+    if ((lhs.digits_.size() - 1) * base_int_size + 1 > sizeof(rhs))
+        return false;
 
     if (lhs.digits_.size() * base_int_size < sizeof(rhs) &&
         (rhs >> (base_int_bits * lhs.digits_.size())) != 0)
@@ -46,19 +50,61 @@ bool detail::opr_eq(const N & lhs, INT rhs) {
 
     for (const auto & digit : lhs.digits_) {
         if (digit != (base_int)rhs) return false;
-        
+
         if constexpr (sizeof(rhs) > base_int_size) {
             rhs >>= base_int_bits;
-        } else {}
+        } else {
+        }
     }
 
     return true;
+
+#endif
+
+    if (const auto try_and_fit = lhs.fits_into<INT>();
+        try_and_fit.has_value()) {
+        return (*try_and_fit == rhs);
+    } else {
+        return false;
+    }
+
+#if 0
+
+    if constexpr (base_int_size < sizeof(rhs)) {
+        if (lhs.digits_.size() * base_int_size < sizeof(rhs)) {
+
+        } else if (lhs.digits_.size() * base_int_size > sizeof(rhs)) {
+
+        } else {
+
+        }
+    } else if constexpr (base_int_size > sizeof(rhs)) {
+        if (lhs.digits_.size() * base_int_size < sizeof(rhs)) {
+
+        } else if (lhs.digits_.size() * base_int_size > sizeof(rhs)) {
+
+        } else {
+
+        }
+    } else {
+        if (lhs.digits_.size() * base_int_size < sizeof(rhs)) {
+
+        } else if (lhs.digits_.size() * base_int_size > sizeof(rhs)) {
+
+        } else {
+            return (lhs.digits_.front() == rhs);
+        }
+    }
+
+#endif
 }
 
 template <typename INT>
     requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 std::strong_ordering detail::opr_comp(const N & lhs, INT rhs) {
     FUNCTION_TO_LOG;
+
+#if 0
 
     if (rhs == 0)
         return lhs.is_zero() ? std::strong_ordering::equal :
@@ -87,6 +133,15 @@ std::strong_ordering detail::opr_comp(const N & lhs, INT rhs) {
     }
 
     return std::strong_ordering::equal;
+
+#endif
+
+    if (const auto try_and_fit = lhs.fits_into<INT>();
+        try_and_fit.has_value()) {
+        return (*try_and_fit <=> rhs);
+    } else {
+        return std::strong_ordering::greater;
+    }
 }
 
 template <typename INT>
@@ -128,26 +183,43 @@ namespace jmaths {
 
 template <typename INT>
     requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
+void N::handle_int_(INT num) {
+    FUNCTION_TO_LOG;
+
+    if constexpr (base_int_size < sizeof(num)) {
+        static constexpr std::size_t digits_needed =
+            std::ceil((long double)sizeof(num) / base_int_size);
+
+        digits_.reserve(digits_needed);
+
+        for (std::size_t curr_byte = 0; curr_byte < sizeof(num); ++curr_byte) {
+            const std::size_t curr_index = curr_byte / base_int_size;
+            const std::size_t curr_offset = curr_byte % base_int_size;
+            if (curr_offset == 0) { digits_.emplace_back(); }
+
+            static constexpr unsigned bit_mask = ~(unsigned char)0;
+
+            digits_[curr_index] |= (num & bit_mask)
+                                   << (curr_offset * bits_in_byte);
+
+            num >>= bits_in_byte;
+        }
+
+        assert(num == 0);
+    } else {
+        digits_.emplace_back((base_int)num);
+    }
+
+    remove_leading_zeroes_();
+}
+
+template <typename INT>
+    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
 void N::opr_assign_(INT rhs) {
     FUNCTION_TO_LOG;
 
     digits_.clear();
-
-    if constexpr (sizeof(INT) > base_int_size) {
-        digits_.reserve(
-            (std::size_t)((double)sizeof(INT) / base_int_size - max_ratio + 1));
-
-        // this assumes that sizeof(smallest type)/base_int_size >= max_ratio
-        REPEAT((std::size_t)((double)sizeof(INT) / base_int_size - max_ratio)) {
-            digits_.emplace_back((base_int)rhs);
-            rhs >>= base_int_bits;
-        }
-    } else {
-    }
-
-    digits_.emplace_back((base_int)rhs);
-
-    remove_leading_zeroes_();
+    handle_int_(rhs);
 }
 
 template <typename INT>
@@ -155,23 +227,7 @@ template <typename INT>
 N::N(INT num) {
     FUNCTION_TO_LOG;
 
-    if constexpr (sizeof(INT) > base_int_size) {
-        digits_.reserve(
-            (std::size_t)((double)sizeof(INT) / base_int_size - max_ratio + 1));
-
-        // this assumes that sizeof(smallest type)/base_int_size >= max_ratio
-        REPEAT((std::size_t)((double)sizeof(INT) / base_int_size - max_ratio)) {
-            digits_.emplace_back((base_int)num);
-            num >>= base_int_bits;
-        }
-    } else {
-    }
-
-    digits_.emplace_back((base_int)num);
-
-    remove_leading_zeroes_();
-
-    assert(digits_.empty() || digits_.back() != 0);
+    handle_int_(num);
 }
 
 template <typename INT>
@@ -194,7 +250,8 @@ std::optional<INT> N::fits_into() const {
             return std::nullopt;
         return digits_.front();
     } else {
-        if ((digits_.size() - 1) * base_int_size + 1 > sizeof(INT)) return std::nullopt;
+        if ((digits_.size() - 1) * base_int_size + 1 > sizeof(INT))
+            return std::nullopt;
 
 #if 0
   INT converted (digits_.back());
@@ -229,14 +286,14 @@ N & N::operator=(INT rhs) {
 namespace jmaths {
 
 template <typename T>
-    requires std::is_same_v<N, T> || std::is_same_v<const N, T>
+    requires std::is_same_v<N, std::decay_t<T>>
 N::bit_reference_base_<T>::bit_reference_base_(T & num, bit_type pos) :
     num_(num), pos_(pos) {
     FUNCTION_TO_LOG;
 }
 
 template <typename T>
-    requires std::is_same_v<N, T> || std::is_same_v<const N, T>
+    requires std::is_same_v<N, std::decay_t<T>>
 N::bit_reference_base_<T>::operator bool() const {
     FUNCTION_TO_LOG;
 
@@ -244,7 +301,7 @@ N::bit_reference_base_<T>::operator bool() const {
 }
 
 template <typename T>
-    requires std::is_same_v<N, T> || std::is_same_v<const N, T>
+    requires std::is_same_v<N, std::decay_t<T>>
 N::bit_reference_base_<T>::operator int() const {
     FUNCTION_TO_LOG;
 

@@ -81,13 +81,17 @@ class N {
     void bit_(bit_type pos, bool val);
 
     template <typename T>
-        requires std::is_same_v<N, T> || std::is_same_v<const N, T>
+        requires std::is_same_v<N, std::decay_t<T>>
     class bit_reference_base_;
 
    protected:
     std::size_t dynamic_size_() const;
 
     std::vector<base_int, allocator<base_int>> digits_;
+
+    template <typename INT>
+        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
+    void handle_int_(INT num);
 
     void opr_incr_();
     void opr_decr_();
@@ -173,7 +177,7 @@ class N {
 };
 
 template <typename T>
-    requires std::is_same_v<N, T> || std::is_same_v<const N, T>
+    requires std::is_same_v<N, std::decay_t<T>>
 class N::bit_reference_base_ {
     friend class N::bit_reference;
     friend class N::const_bit_reference;

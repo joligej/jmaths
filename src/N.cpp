@@ -147,6 +147,8 @@ void N::remove_leading_zeroes_() {
         if (digits_.back() != 0) break;
         digits_.pop_back();
     }
+
+    assert(digits_.empty() || digits_.back() != 0);
 }
 
 base_int N::front_() const {
