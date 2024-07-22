@@ -91,9 +91,6 @@ std::pair<N, N> calc::sqrt(const N & num) {
 N calc::sqrt_whole(const N & num) {
     FUNCTION_TO_LOG;
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wpessimizing-move"
-
     if (num.is_zero() || num.is_one()) return num;
 
     N start = 1U, end = num.opr_bitshift_r_(1), ans;
@@ -105,7 +102,7 @@ N calc::sqrt_whole(const N & num) {
 
         const auto compared = detail::opr_comp(sqr, num);
 
-        if (compared == 0) return std::move(mid);
+        if (compared == 0) return mid;
 
         if (compared < 0) {
             ans = mid;
@@ -117,9 +114,7 @@ N calc::sqrt_whole(const N & num) {
         }
     }
 
-    return std::move(ans);
-
-#pragma GCC diagnostic pop
+    return ans;
 }
 
 N calc::pow(N base, N exponent) {
