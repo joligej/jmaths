@@ -4,12 +4,14 @@ target_link_libraries(jmaths PRIVATE compilation_flags)
 
 file(GLOB src_files *.cpp)
 
+set_source_files_properties(${src_files} PROPERTIES UNITY_GROUP "main_source_group")
+
 target_sources(jmaths PRIVATE ${src_files})
 
 set(headers_dir "${CMAKE_CURRENT_SOURCE_DIR}/headers/")
 file(GLOB_RECURSE header_files "${headers_dir}/*.hpp" "${headers_dir}/*.hh")
 
-set(UNITY_BUILD True)
+set_target_properties(jmaths PROPERTIES UNITY_BUILD ON UNITY_BUILD_MODE GROUP)
 
 option(use_karatsuba "Use Karatsuba algorithm to multiply 2 numbers (this option is defective, please do not use it)" OFF)
 

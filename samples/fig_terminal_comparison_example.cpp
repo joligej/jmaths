@@ -31,6 +31,6 @@ int main(int, char *[]) {
     std::cout << "z == " << z << '\n';
     ++z;
     std::cout << "z + 1 == " << z << '\n';
-    z = calc::pow(z, 2);  // or z *= z;
+    z = calc::pow(z, 2U);  // or z *= z;
     std::cout << "(z + 1)^2 == " << z << '\n';
 }
