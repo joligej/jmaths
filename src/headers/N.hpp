@@ -17,6 +17,7 @@
 #pragma once
 
 #include <compare>
+#include <concepts>
 #include <cstddef>
 #include <istream>
 #include <optional>
@@ -47,20 +48,12 @@ N operator|(const N & lhs, const N & rhs);
 N operator^(const N & lhs, const N & rhs);
 
 bool operator==(const N & lhs, const N & rhs);
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-bool operator==(const N & lhs, INT rhs);
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-bool operator==(INT lhs, const N & rhs);
+bool operator==(const N & lhs, std::integral auto rhs);
+bool operator==(std::integral auto lhs, const N & rhs);
 
 std::strong_ordering operator<=>(const N & lhs, const N & rhs);
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-std::strong_ordering operator<=>(const N & lhs, INT rhs);
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-std::strong_ordering operator<=>(INT lhs, const N & rhs);
+std::strong_ordering operator<=>(const N & lhs, std::integral auto rhs);
+std::strong_ordering operator<=>(std::integral auto lhs, const N & rhs);
 
 class N {
     friend struct detail;
@@ -72,30 +65,25 @@ class N {
     friend class Q;
 
    private:
+    std::vector<base_int, allocator<base_int>> digits_;
+
     void remove_leading_zeroes_();
     base_int front_() const;
     std::string conv_to_base_(unsigned base) const;
     void handle_str_(std::string_view num_str, unsigned base);
+    void handle_int_(std::integral auto num);
+
+    template <std::unsigned_integral T> T fit_into_(std::size_t max_byte) const;
 
     bool bit_(bit_type pos) const;
     void bit_(bit_type pos, bool val);
 
     template <typename T>
-        requires std::is_same_v<N, std::decay_t<T>>
+        requires std::same_as<N, std::decay_t<T>>
     class bit_reference_base_;
 
    protected:
     std::size_t dynamic_size_() const;
-
-    std::vector<base_int, allocator<base_int>> digits_;
-
-    template <typename INT>
-        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-    void handle_int_(INT num);
-
-    template <typename INT>
-        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-    INT fit_into_(std::size_t max_byte) const;
 
     void opr_incr_();
     void opr_decr_();
@@ -116,10 +104,7 @@ class N {
     void opr_bitshift_r_assign_(bit_type pos);
 
     void opr_assign_(std::string_view num_str);
-
-    template <typename INT>
-        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-    void opr_assign_(INT rhs);
+    void opr_assign_(std::integral auto rhs);
 
    public:
     class bit_reference;
@@ -127,9 +112,7 @@ class N {
 
     N();
     N(std::string_view num_str, unsigned base = default_base);
-    template <typename INT>
-        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-    N(INT num);
+    N(std::integral auto num);
 
     bool is_zero() const;
     bool is_one() const;
@@ -142,17 +125,17 @@ class N {
 
     std::size_t size() const;  // size of this object in bytes
 
-    std::string to_str(unsigned base = default_base)
-        const;                   // convert to string in any base >= 2 and <= 64
-    std::string to_hex() const;  // convert to string in base 16 (assumes base
-                                 // is an integer power of 2)
+    std::string to_str(unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
+    std::string to_hex() const;                              // convert to string in base 16 (assumes base
+                                                             // is an integer power of 2)
     explicit operator bool() const;
-    template <typename INT>
-        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-    std::optional<INT> fits_into() const;
+    template <std::unsigned_integral T> std::optional<T> fits_into() const;
+    template <std::signed_integral T> std::optional<T> fits_into() const;
 
     bit_reference operator[](bit_type pos);
     const_bit_reference operator[](bit_type pos) const;
+
+    void set_zero();
 
     N & operator++();
     N & operator--();
@@ -173,15 +156,13 @@ class N {
     N & operator>>=(bit_type pos);
 
     N & operator=(std::string_view num_str);
-    template <typename INT>
-        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-    N & operator=(INT rhs);
+    N & operator=(std::integral auto rhs);
 
     static N rand(bit_type upper_bound_exponent);
 };
 
 template <typename T>
-    requires std::is_same_v<N, std::decay_t<T>>
+    requires std::same_as<N, std::decay_t<T>>
 class N::bit_reference_base_ {
     friend class N::bit_reference;
     friend class N::const_bit_reference;

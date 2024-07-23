@@ -20,9 +20,7 @@
 #include "Z.hpp"
 #include "def.hh"
 
-namespace jmaths {
-
-inline namespace literals {
+namespace jmaths::inline literals {
 
 N operator""_N(const char * num_str) {
     FUNCTION_TO_LOG;
@@ -36,8 +34,6 @@ Z operator""_Z(const char * num_str) {
     return Z(num_str);
 }
 
-}  // namespace literals
-
-}  // namespace jmaths
+}  // namespace jmaths::inline literals
 
 #include "undef.hh"

@@ -17,9 +17,9 @@
 #pragma once
 
 #include <compare>
+#include <concepts>
 #include <istream>
 #include <ostream>
-#include <type_traits>
 #include <utility>
 
 #include "declarations.hpp"
@@ -40,14 +40,10 @@ struct detail {
     static N opr_xor(const N & lhs, const N & rhs);
 
     static bool opr_eq(const N & lhs, const N & rhs);
-    template <typename INT>
-        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-    static bool opr_eq(const N & lhs, INT rhs);
+    static bool opr_eq(const N & lhs, std::integral auto rhs);
 
     static std::strong_ordering opr_comp(const N & lhs, const N & rhs);
-    template <typename INT>
-        requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-    static std::strong_ordering opr_comp(const N & lhs, INT rhs);
+    static std::strong_ordering opr_comp(const N & lhs, std::integral auto rhs);
 
     static std::ostream & opr_ins(std::ostream & os, const Z & z);
     static std::istream & opr_extr(std::istream & is, Z & z);
@@ -62,14 +58,10 @@ struct detail {
     static Z opr_xor(const Z & lhs, const Z & rhs);
 
     static bool opr_eq(const Z & lhs, const Z & rhs);
-    template <typename INT>
-        requires std::is_integral_v<INT>
-    static bool opr_eq(const Z & lhs, INT rhs);
+    static bool opr_eq(const Z & lhs, std::integral auto rhs);
 
     static std::strong_ordering opr_comp(const Z & lhs, const Z & rhs);
-    template <typename INT>
-        requires std::is_integral_v<INT>
-    static std::strong_ordering opr_comp(const Z & lhs, INT rhs);
+    static std::strong_ordering opr_comp(const Z & lhs, std::integral auto rhs);
 
     static std::ostream & opr_ins(std::ostream & os, const Q & q);
     static std::istream & opr_extr(std::istream & is, Q & q);
@@ -84,14 +76,10 @@ struct detail {
     static Q opr_xor(const Q & lhs, const Q & rhs);
 
     static bool opr_eq(const Q & lhs, const Q & rhs);
-    template <typename FLOAT>
-        requires std::is_floating_point_v<FLOAT>
-    static bool opr_eq(const Q & lhs, FLOAT rhs);
+    static bool opr_eq(const Q & lhs, std::floating_point auto rhs);
 
     static std::strong_ordering opr_comp(const Q & lhs, const Q & rhs);
-    template <typename FLOAT>
-        requires std::is_floating_point_v<FLOAT>
-    static std::strong_ordering opr_comp(const Q & lhs, FLOAT rhs);
+    static std::strong_ordering opr_comp(const Q & lhs, std::floating_point auto rhs);
 };  // namespace struct detail
 
 }  // namespace jmaths

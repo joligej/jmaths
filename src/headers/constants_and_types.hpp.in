@@ -62,9 +62,7 @@ inline constexpr bit_type base_int_bits = base_int_size * bits_in_byte;
 
 }  // namespace jmaths
 
-namespace jmaths {
-
-namespace internal {
+namespace jmaths::internal {
 
 struct metadata {
     static constexpr char product_name[] = "@product_name@";
@@ -78,6 +76,4 @@ struct metadata {
     };  // namespace struct version
 };  // namespace struct metadata
 
-}  // namespace internal
-
-}  // namespace jmaths
+}  // namespace jmaths::internal

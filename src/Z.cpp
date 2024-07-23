@@ -121,8 +121,7 @@ std::size_t Z::dynamic_size_() const {
 
 Z::Z() = default;
 
-Z::Z(std::string_view num_str, unsigned base) :
-    sign_type(num_str), N(num_str, base) {
+Z::Z(std::string_view num_str, unsigned base) : sign_type(num_str), N(num_str, base) {
     FUNCTION_TO_LOG;
 
     if (is_zero()) set_sign_(positive);
@@ -192,6 +191,11 @@ std::string Z::to_hex() const {
     }
 }
 
+void Z::set_zero() {
+    N::set_zero();
+    set_sign_(positive);
+}
+
 Z & Z::operator++() {
     FUNCTION_TO_LOG;
 
@@ -232,7 +236,7 @@ Z & Z::operator+=(const Z & rhs) {
             const auto difference = detail::opr_comp(this->abs(), rhs.abs());
 
             if (difference == 0) {
-                digits_.clear();
+                N::set_zero();
             } else if (difference > 0) {
                 N::opr_subtr_assign_(rhs.abs());
             } else {
@@ -245,8 +249,7 @@ Z & Z::operator+=(const Z & rhs) {
             const auto difference = detail::opr_comp(this->abs(), rhs.abs());
 
             if (difference == 0) {
-                digits_.clear();
-                set_sign_(positive);
+                Z::set_zero();
             } else if (difference > 0) {
                 N::opr_subtr_assign_(rhs.abs());
             } else {
@@ -269,7 +272,7 @@ Z & Z::operator-=(const Z & rhs) {
             const auto difference = detail::opr_comp(this->abs(), rhs.abs());
 
             if (difference == 0) {
-                digits_.clear();
+                N::set_zero();
             } else if (difference > 0) {
                 N::opr_subtr_assign_(rhs.abs());
             } else {
@@ -286,8 +289,7 @@ Z & Z::operator-=(const Z & rhs) {
             const auto difference = detail::opr_comp(this->abs(), rhs.abs());
 
             if (difference == 0) {
-                digits_.clear();
-                set_sign_(positive);
+                Z::set_zero();
             } else if (difference > 0) {
                 N::opr_subtr_assign_(rhs.abs());
             } else {

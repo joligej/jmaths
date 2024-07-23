@@ -146,9 +146,7 @@ N calc::pow_mod(N base, N exponent, const N & mod) {
     for (;;) {
         if (exponent.front_() & 1) {
             result.opr_mult_assign_(base);
-            result =
-                detail::opr_div(result, mod)
-                    .second;  // maybe use separate function just for mod ???
+            result = detail::opr_div(result, mod).second;  // maybe use separate function just for mod ???
         }
 
         exponent.opr_bitshift_r_assign_(1);
@@ -162,9 +160,7 @@ N calc::pow_mod(N base, N exponent, const N & mod) {
 Z calc::pow(Z base, N exponent) {
     FUNCTION_TO_LOG;
 
-    const auto sign = base.is_negative() && exponent.is_odd() ?
-                          sign_type::negative :
-                          sign_type::positive;
+    const auto sign = base.is_negative() && exponent.is_odd() ? sign_type::negative : sign_type::positive;
 
     return Z(pow(std::move(std::move(base).abs()), std::move(exponent)), sign);
 }

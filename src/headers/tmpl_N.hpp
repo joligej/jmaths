@@ -20,8 +20,10 @@
 #include <cassert>
 #include <cmath>
 #include <compare>
+#include <concepts>
 #include <cstddef>
 #include <def.hh>
+#include <limits>
 #include <optional>
 #include <type_traits>
 #include <utility>
@@ -34,146 +36,45 @@
 // comparison functions for N with integral types
 namespace jmaths {
 
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-bool detail::opr_eq(const N & lhs, INT rhs) {
+bool detail::opr_eq(const N & lhs, std::integral auto rhs) {
     FUNCTION_TO_LOG;
 
-#if 0
-
-    if (rhs == 0) return lhs.is_zero();
-    if (lhs.is_zero()) return false;
-
-    if ((lhs.digits_.size() - 1) * base_int_size + 1 > sizeof(rhs))
-        return false;
-
-    if (lhs.digits_.size() * base_int_size < sizeof(rhs) &&
-        (rhs >> (base_int_bits * lhs.digits_.size())) != 0)
-        return false;
-
-    for (const auto & digit : lhs.digits_) {
-        if (digit != (base_int)rhs) return false;
-
-        if constexpr (sizeof(rhs) > base_int_size) {
-            rhs >>= base_int_bits;
-        } else {
-        }
-    }
-
-    return true;
-
-#endif
-
-    if (const auto try_and_fit = lhs.fits_into<INT>();
-        try_and_fit.has_value()) {
+    if (const auto try_and_fit = lhs.fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
         return (*try_and_fit == rhs);
-    } else {
-        return false;
     }
 
-#if 0
-
-    if constexpr (base_int_size < sizeof(rhs)) {
-        if (lhs.digits_.size() * base_int_size < sizeof(rhs)) {
-
-        } else if (lhs.digits_.size() * base_int_size > sizeof(rhs)) {
-
-        } else {
-
-        }
-    } else if constexpr (base_int_size > sizeof(rhs)) {
-        if (lhs.digits_.size() * base_int_size < sizeof(rhs)) {
-
-        } else if (lhs.digits_.size() * base_int_size > sizeof(rhs)) {
-
-        } else {
-
-        }
-    } else {
-        if (lhs.digits_.size() * base_int_size < sizeof(rhs)) {
-
-        } else if (lhs.digits_.size() * base_int_size > sizeof(rhs)) {
-
-        } else {
-            return (lhs.digits_.front() == rhs);
-        }
-    }
-
-#endif
+    return false;
 }
 
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-std::strong_ordering detail::opr_comp(const N & lhs, INT rhs) {
+std::strong_ordering detail::opr_comp(const N & lhs, std::integral auto rhs) {
     FUNCTION_TO_LOG;
 
-#if 0
-
-    if (rhs == 0)
-        return lhs.is_zero() ? std::strong_ordering::equal :
-                               std::strong_ordering::greater;
-    if (lhs.is_zero()) return std::strong_ordering::less;
-
-    if ((lhs.digits_.size() - 1) * base_int_size + 1 > sizeof(rhs))
-        return std::strong_ordering::greater;
-
-    if (lhs.digits_.size() * base_int_size < sizeof(rhs) &&
-        (rhs >> (base_int_bits * lhs.digits_.size())) != 0)
-        return std::strong_ordering::less;
-
-    std::size_t pos = 1;
-    for (auto crit = lhs.digits_.crbegin(); crit != lhs.digits_.crend();
-         ++crit) {
-        INT curr_byte = rhs;
-        REPEAT(base_int_size * (lhs.digits_.size() - pos)) {
-            curr_byte >>= bits_in_byte;
-        }
-
-        if (*crit < (base_int)curr_byte) return std::strong_ordering::less;
-        if (*crit > (base_int)curr_byte) return std::strong_ordering::greater;
-
-        ++pos;
-    }
-
-    return std::strong_ordering::equal;
-
-#endif
-
-    if (const auto try_and_fit = lhs.fits_into<INT>();
-        try_and_fit.has_value()) {
+    if (const auto try_and_fit = lhs.fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
         return (*try_and_fit <=> rhs);
-    } else {
-        return std::strong_ordering::greater;
     }
+
+    return std::strong_ordering::greater;
 }
 
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-bool operator==(const N & lhs, INT rhs) {
+bool operator==(const N & lhs, std::integral auto rhs) {
     FUNCTION_TO_LOG;
 
     return detail::opr_eq(lhs, rhs);
 }
 
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-bool operator==(INT lhs, const N & rhs) {
+bool operator==(std::integral auto lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
     return detail::opr_eq(rhs, lhs);
 }
 
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-std::strong_ordering operator<=>(const N & lhs, INT rhs) {
+std::strong_ordering operator<=>(const N & lhs, std::integral auto rhs) {
     FUNCTION_TO_LOG;
 
     return detail::opr_comp(lhs, rhs);
 }
 
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-std::strong_ordering operator<=>(INT lhs, const N & rhs) {
+std::strong_ordering operator<=>(std::integral auto lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
     return (0 <=> detail::opr_comp(rhs, lhs));
@@ -184,14 +85,11 @@ std::strong_ordering operator<=>(INT lhs, const N & rhs) {
 // member function templates of N
 namespace jmaths {
 
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-void N::handle_int_(INT num) {
+void N::handle_int_(std::integral auto num) {
     FUNCTION_TO_LOG;
 
     if constexpr (base_int_size < sizeof(num)) {
-        static constexpr std::size_t digits_needed =
-            std::ceil((long double)sizeof(num) / base_int_size);
+        static constexpr std::size_t digits_needed = std::ceil((long double)sizeof(num) / base_int_size);
 
         digits_.reserve(digits_needed);
 
@@ -202,8 +100,7 @@ void N::handle_int_(INT num) {
 
             static constexpr unsigned bitmask = ~(unsigned char)0;
 
-            digits_[curr_index] |= (num & bitmask)
-                                   << (curr_offset * bits_in_byte);
+            digits_[curr_index] |= (num & bitmask) << (curr_offset * bits_in_byte);
 
             num >>= bits_in_byte;
         }
@@ -216,10 +113,10 @@ void N::handle_int_(INT num) {
     remove_leading_zeroes_();
 }
 
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-INT N::fit_into_(std::size_t max_byte) const {
-    INT converted = 0;
+template <std::unsigned_integral T> T N::fit_into_(std::size_t max_byte) const {
+    FUNCTION_TO_LOG;
+
+    T converted = 0;
 
     for (std::size_t curr_byte = 0; curr_byte < max_byte; ++curr_byte) {
         const std::size_t curr_index = curr_byte / base_int_size;
@@ -227,59 +124,49 @@ INT N::fit_into_(std::size_t max_byte) const {
 
         static constexpr unsigned bitmask = ~(unsigned char)0;
 
-        const auto relevant_byte =
-            (digits_[curr_index] >> (curr_offset * bits_in_byte)) & bitmask;
+        const auto relevant_byte = (digits_[curr_index] >> (curr_offset * bits_in_byte)) & bitmask;
 
-        converted |= ((INT)relevant_byte << (curr_byte * bits_in_byte));
+        converted |= ((T)relevant_byte << (curr_byte * bits_in_byte));
     }
 
     return converted;
 }
 
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-void N::opr_assign_(INT rhs) {
+void N::opr_assign_(std::integral auto rhs) {
     FUNCTION_TO_LOG;
 
-    digits_.clear();
+    set_zero();
     handle_int_(rhs);
 }
 
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-N::N(INT num) {
+N::N(std::integral auto num) {
     FUNCTION_TO_LOG;
 
     handle_int_(num);
 }
 
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-std::optional<INT> N::fits_into() const {
+template <std::unsigned_integral T> std::optional<T> N::fits_into() const {
     FUNCTION_TO_LOG;
 
     if (is_zero()) return 0;
 
-    if constexpr (base_int_size < sizeof(INT)) {
-        if (digits_.size() * base_int_size < sizeof(INT)) {
-            return fit_into_<INT>(digits_.size() * base_int_size);
-        }
+    if constexpr (base_int_size < sizeof(T)) {
+        if (digits_.size() * base_int_size < sizeof(T)) { return fit_into_<T>(digits_.size() * base_int_size); }
 
-        if (digits_.size() * base_int_size > sizeof(INT)) {
+        if (digits_.size() * base_int_size > sizeof(T)) {
             if ((unsigned)std::countr_zero(digits_.back()) <
-                (digits_.size() * base_int_size - sizeof(INT)) * bits_in_byte) {
+                (digits_.size() * base_int_size - sizeof(T)) * bits_in_byte) {
                 return std::nullopt;
             }
         }
 
-        return fit_into_<INT>(sizeof(INT));
-    } else if constexpr (base_int_size > sizeof(INT)) {
+        return fit_into_<T>(sizeof(T));
+    } else if constexpr (base_int_size > sizeof(T)) {
         if (digits_.size() > 1) return std::nullopt;
 
-        static constexpr auto bitmask = ~(INT)0;
+        static constexpr auto bitmask = ~(T)0;
 
-        if (const auto masked_digit = digits_.front() & bitmask;
-            masked_digit == digits_.front()) {
+        if (const auto masked_digit = digits_.front() & bitmask; masked_digit == digits_.front()) {
             return masked_digit;
         }
 
@@ -291,9 +178,17 @@ std::optional<INT> N::fits_into() const {
     }
 }
 
-template <typename INT>
-    requires std::is_integral_v<INT> && std::is_unsigned_v<INT>
-N & N::operator=(INT rhs) {
+template <std::signed_integral T> std::optional<T> N::fits_into() const {
+    auto fits_into_unsigned = fits_into<std::make_unsigned_t<T>>();
+
+    if (!fits_into_unsigned.has_value()) { return std::nullopt; }
+
+    if (*fits_into_unsigned > std::numeric_limits<T>::max()) { return std::nullopt; }
+
+    return *fits_into_unsigned;
+}
+
+N & N::operator=(std::integral auto rhs) {
     FUNCTION_TO_LOG;
 
     opr_assign_(rhs);
@@ -306,14 +201,13 @@ N & N::operator=(INT rhs) {
 namespace jmaths {
 
 template <typename T>
-    requires std::is_same_v<N, std::decay_t<T>>
-N::bit_reference_base_<T>::bit_reference_base_(T & num, bit_type pos) :
-    num_(num), pos_(pos) {
+    requires std::same_as<N, std::decay_t<T>>
+N::bit_reference_base_<T>::bit_reference_base_(T & num, bit_type pos) : num_(num), pos_(pos) {
     FUNCTION_TO_LOG;
 }
 
 template <typename T>
-    requires std::is_same_v<N, std::decay_t<T>>
+    requires std::same_as<N, std::decay_t<T>>
 N::bit_reference_base_<T>::operator bool() const {
     FUNCTION_TO_LOG;
 
@@ -321,7 +215,7 @@ N::bit_reference_base_<T>::operator bool() const {
 }
 
 template <typename T>
-    requires std::is_same_v<N, std::decay_t<T>>
+    requires std::same_as<N, std::decay_t<T>>
 N::bit_reference_base_<T>::operator int() const {
     FUNCTION_TO_LOG;
 

@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <concepts>
 #include <string_view>
 #include <type_traits>
 
@@ -34,19 +35,12 @@ class sign_type {
     sign_type();
     sign_type(sign_bool sign);
     sign_type(std::string_view & num_str);
-    template <typename INT>
-        requires std::is_integral_v<INT>
-    sign_type(INT & num);
+    sign_type(std::integral auto & num);
 
     static sign_bool handle_string_(std::string_view & num_str);
-    static std::string_view handle_fraction_string_(std::string_view & num_str);
-    template <typename INT>
-        requires std::is_integral_v<INT>
-    static sign_bool handle_int_(INT & num);
+    static sign_bool handle_int_(std::integral auto & num);
 
-    template <typename BOOL>
-        requires std::is_convertible_v<BOOL, std::underlying_type_t<sign_bool>>
-    void set_sign_(BOOL val);
+    void set_sign_(std::convertible_to<std::underlying_type_t<sign_bool>> auto val);
 
    public:
     bool is_positive() const;

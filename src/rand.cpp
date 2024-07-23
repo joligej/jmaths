@@ -42,10 +42,7 @@ N N::rand(bit_type upper_bound_exponent) {
         random_number.digits_.emplace_back(rand_gen());
     }
 
-    if (pos_mod > 0) {
-        random_number.digits_.emplace_back(rand_gen() >>
-                                           (base_int_bits - pos_mod));
-    }
+    if (pos_mod > 0) { random_number.digits_.emplace_back(rand_gen() >> (base_int_bits - pos_mod)); }
 
     random_number.remove_leading_zeroes_();
 

@@ -130,8 +130,7 @@ Z detail::opr_mult(const Z & lhs, const Z & rhs) {
 
     if (product.is_zero()) return Z{};
 
-    return Z(std::move(product),
-             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
+    return Z(std::move(product), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
 }
 
 std::pair<Z, Z> detail::opr_div(const Z & lhs, const Z & rhs) {
@@ -147,12 +146,9 @@ std::pair<Z, Z> detail::opr_div(const Z & lhs, const Z & rhs) {
         }
     } else {
         if (remainder.is_zero()) {
-            return {Z(std::move(quotient),
-                      static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)),
-                    Z{}};
+            return {Z(std::move(quotient), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)), Z{}};
         } else {
-            return {Z(std::move(quotient),
-                      static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)),
+            return {Z(std::move(quotient), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)),
                     Z(std::move(remainder), lhs.sign_)};
         }
     }
@@ -165,8 +161,7 @@ Z detail::opr_and(const Z & lhs, const Z & rhs) {
 
     if (and_result.is_zero()) return Z{};
 
-    return Z(std::move(and_result),
-             static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_));
+    return Z(std::move(and_result), static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_));
 }
 
 Z detail::opr_or(const Z & lhs, const Z & rhs) {
@@ -176,8 +171,7 @@ Z detail::opr_or(const Z & lhs, const Z & rhs) {
 
     if (or_result.is_zero()) return Z{};
 
-    return Z(std::move(or_result),
-             static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_));
+    return Z(std::move(or_result), static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_));
 }
 
 Z detail::opr_xor(const Z & lhs, const Z & rhs) {
@@ -187,8 +181,7 @@ Z detail::opr_xor(const Z & lhs, const Z & rhs) {
 
     if (xor_result.is_zero()) return Z{};
 
-    return Z(std::move(xor_result),
-             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
+    return Z(std::move(xor_result), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
 }
 
 bool detail::opr_eq(const Z & lhs, const Z & rhs) {

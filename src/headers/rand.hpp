@@ -21,9 +21,7 @@
 
 #include "def.hh"
 
-namespace jmaths {
-
-namespace internal {
+namespace jmaths::internal {
 
 template <typename INT> class rand {
    private:
@@ -55,8 +53,6 @@ template <typename INT> class rand {
     }
 };
 
-}  // namespace internal
-
-}  // namespace jmaths
+}  // namespace jmaths::internal
 
 #include "undef.hh"

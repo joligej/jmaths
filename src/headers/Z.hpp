@@ -17,13 +17,13 @@
 #pragma once
 
 #include <compare>
+#include <concepts>
 #include <cstddef>
 #include <istream>
 #include <optional>
 #include <ostream>
 #include <string>
 #include <string_view>
-#include <type_traits>
 
 #include "N.hpp"
 #include "constants_and_types.hpp"
@@ -47,20 +47,12 @@ Z operator|(const Z & lhs, const Z & rhs);
 Z operator^(const Z & lhs, const Z & rhs);
 
 bool operator==(const Z & lhs, const Z & rhs);
-template <typename INT>
-    requires std::is_integral_v<INT>
-bool operator==(const Z & lhs, INT rhs);
-template <typename INT>
-    requires std::is_integral_v<INT>
-bool operator==(INT lhs, const Z & rhs);
+bool operator==(const Z & lhs, std::integral auto rhs);
+bool operator==(std::integral auto lhs, const Z & rhs);
 
 std::strong_ordering operator<=>(const Z & lhs, const Z & rhs);
-template <typename INT>
-    requires std::is_integral_v<INT>
-std::strong_ordering operator<=>(const Z & lhs, INT rhs);
-template <typename INT>
-    requires std::is_integral_v<INT>
-std::strong_ordering operator<=>(INT lhs, const Z & rhs);
+std::strong_ordering operator<=>(const Z & lhs, std::integral auto rhs);
+std::strong_ordering operator<=>(std::integral auto lhs, const Z & rhs);
 
 class Z : public sign_type, private N {
     friend struct detail;
@@ -82,9 +74,7 @@ class Z : public sign_type, private N {
 
     Z();
     Z(std::string_view num_str, unsigned base = default_base);
-    template <typename INT>
-        requires std::is_integral_v<INT>
-    Z(INT num);
+    Z(std::integral auto num);
 
     Z(const N & n);
     Z(N && n);
@@ -98,13 +88,13 @@ class Z : public sign_type, private N {
 
     std::size_t size() const;  // size of this object in bytes
 
-    std::string to_str(unsigned base = default_base)
-        const;                   // convert to string in any base >= 2 and <= 64
-    std::string to_hex() const;  // convert to string in base 16 (assumes base
-                                 // is an integer power of 2)
-    template <typename INT>
-        requires std::is_integral_v<INT>
-    std::optional<INT> fits_into() const;
+    std::string to_str(unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
+    std::string to_hex() const;                              // convert to string in base 16 (assumes base
+                                                             // is an integer power of 2)
+    template <std::unsigned_integral T> std::optional<T> fits_into() const;
+    template <std::signed_integral T> std::optional<T> fits_into() const;
+
+    void set_zero();
 
     Z & operator++();
     Z & operator--();
@@ -127,9 +117,7 @@ class Z : public sign_type, private N {
     Z & operator>>=(bit_type pos);
 
     Z & operator=(std::string_view num_str);
-    template <typename INT>
-        requires std::is_integral_v<INT>
-    Z & operator=(INT rhs);
+    Z & operator=(std::integral auto rhs);
 
     Z & operator=(const N & n);
     Z & operator=(N && n);
