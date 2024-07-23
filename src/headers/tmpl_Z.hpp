@@ -81,7 +81,7 @@ std::strong_ordering operator<=>(std::integral auto lhs, const Z & rhs) {
 // member function templates of Z
 namespace jmaths {
 
-Z::Z(std::integral auto num) : sign_type(num), N(num) {
+Z::Z(std::integral auto num) : sign_type(&num), N(num) {
     FUNCTION_TO_LOG;
 }
 
@@ -112,7 +112,7 @@ template <std::signed_integral T> std::optional<T> Z::fits_into() const {
 Z & Z::operator=(std::integral auto rhs) {
     FUNCTION_TO_LOG;
 
-    set_sign_(sign_type::handle_int_(rhs));
+    set_sign_(sign_type::handle_int_(&rhs));
     N::opr_assign_(rhs);
     return *this;
 }

@@ -25,18 +25,18 @@
 // member function templates of sign_type
 namespace jmaths {
 
-sign_type::sign_type(std::integral auto & num) : sign_(handle_int_(num)) {
+sign_type::sign_type(std::integral auto * num) : sign_(handle_int_(num)) {
     FUNCTION_TO_LOG;
 }
 
-sign_type::sign_bool sign_type::handle_int_(std::integral auto & num) {
+sign_type::sign_bool sign_type::handle_int_(std::integral auto * num) {
     FUNCTION_TO_LOG;
 
-    if constexpr (std::unsigned_integral<decltype(num)>) {
+    if constexpr (std::unsigned_integral<decltype(*num)>) {
         return positive;
     } else {
-        if (num < 0) {
-            num *= -1;
+        if (*num < 0) {
+            *num *= -1;
             return negative;
         } else {
             return positive;

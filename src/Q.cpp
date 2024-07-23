@@ -129,12 +129,12 @@ Q::Q(std::tuple<N, N, sign_bool> && fraction_info) :
     FUNCTION_TO_LOG;
 }
 
-std::string_view Q::handle_fraction_string_(std::string_view & num_str) {
+std::string_view Q::handle_fraction_string_(std::string_view * num_str) {
     FUNCTION_TO_LOG;
 
-    const auto fraction_bar = num_str.find(vinculum);
-    const std::string_view numerator = num_str.substr(0, fraction_bar);
-    num_str.remove_prefix(fraction_bar + 1);
+    const auto fraction_bar = num_str->find(vinculum);
+    const std::string_view numerator = num_str->substr(0, fraction_bar);
+    num_str->remove_prefix(fraction_bar + 1);
     return numerator;
 }
 
@@ -157,7 +157,7 @@ Q::Q() : denom_(1U) {
 }
 
 Q::Q(std::string_view num_str, unsigned base) :
-    sign_type(num_str), num_(handle_fraction_string_(num_str), base), denom_(num_str, base) {
+    sign_type(&num_str), num_(handle_fraction_string_(&num_str), base), denom_(num_str, base) {
     FUNCTION_TO_LOG;
 
     if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
@@ -607,8 +607,8 @@ Q & Q::operator>>=(bit_type pos) {
 Q & Q::operator=(std::string_view num_str) {
     FUNCTION_TO_LOG;
 
-    set_sign_(sign_type::handle_string_(num_str));
-    num_.opr_assign_(handle_fraction_string_(num_str));
+    set_sign_(sign_type::handle_string_(&num_str));
+    num_.opr_assign_(handle_fraction_string_(&num_str));
     denom_.opr_assign_(num_str);
     canonicalise_();
     if (is_zero()) set_sign_(positive);

@@ -34,11 +34,11 @@ class sign_type {
 
     sign_type();
     sign_type(sign_bool sign);
-    sign_type(std::string_view & num_str);
-    sign_type(std::integral auto & num);
+    sign_type(std::string_view * num_str);
+    sign_type(std::integral auto * num);
 
-    static sign_bool handle_string_(std::string_view & num_str);
-    static sign_bool handle_int_(std::integral auto & num);
+    static sign_bool handle_string_(std::string_view * num_str);
+    static sign_bool handle_int_(std::integral auto * num);
 
     void set_sign_(std::convertible_to<std::underlying_type_t<sign_bool>> auto val);
 

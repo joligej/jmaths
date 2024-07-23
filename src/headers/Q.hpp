@@ -68,7 +68,7 @@ class Q : public sign_type {
     Q(const N & num, const N & denom, sign_bool sign);
     Q(std::tuple<N, N, sign_bool> && fraction_info);
 
-    static std::string_view handle_fraction_string_(std::string_view & num_str);
+    static std::string_view handle_fraction_string_(std::string_view * num_str);
 
     void canonicalise_();
 
