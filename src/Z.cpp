@@ -233,9 +233,7 @@ Z & Z::operator+=(const Z & rhs) {
         if (rhs.is_positive()) {
             N::opr_add_assign_(rhs);
         } else {
-            const auto difference = detail::opr_comp(this->abs(), rhs.abs());
-
-            if (difference == 0) {
+            if (const auto difference = detail::opr_comp(this->abs(), rhs.abs()); difference == 0) {
                 N::set_zero();
             } else if (difference > 0) {
                 N::opr_subtr_assign_(rhs.abs());
@@ -246,9 +244,7 @@ Z & Z::operator+=(const Z & rhs) {
         }
     } else {
         if (rhs.is_positive()) {
-            const auto difference = detail::opr_comp(this->abs(), rhs.abs());
-
-            if (difference == 0) {
+            if (const auto difference = detail::opr_comp(this->abs(), rhs.abs()); difference == 0) {
                 Z::set_zero();
             } else if (difference > 0) {
                 N::opr_subtr_assign_(rhs.abs());
@@ -269,9 +265,7 @@ Z & Z::operator-=(const Z & rhs) {
 
     if (this->is_positive()) {
         if (rhs.is_positive()) {
-            const auto difference = detail::opr_comp(this->abs(), rhs.abs());
-
-            if (difference == 0) {
+            if (const auto difference = detail::opr_comp(this->abs(), rhs.abs()); difference == 0) {
                 N::set_zero();
             } else if (difference > 0) {
                 N::opr_subtr_assign_(rhs.abs());
@@ -286,9 +280,7 @@ Z & Z::operator-=(const Z & rhs) {
         if (rhs.is_positive()) {
             N::opr_add_assign_(rhs);
         } else {
-            const auto difference = detail::opr_comp(this->abs(), rhs.abs());
-
-            if (difference == 0) {
+            if (const auto difference = detail::opr_comp(this->abs(), rhs.abs()); difference == 0) {
                 Z::set_zero();
             } else if (difference > 0) {
                 N::opr_subtr_assign_(rhs.abs());

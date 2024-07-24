@@ -24,9 +24,9 @@ namespace jmaths {
 class error : public std::exception {
    private:
     const char * const message_;
-    static const char default_message_[];
 
    public:
+    static const char default_message[];
     class division_by_zero;
     class invalid_base;
 
@@ -36,19 +36,15 @@ class error : public std::exception {
 };
 
 class error::division_by_zero : public error {
-   private:
-    static const char default_message_[];
-
    public:
+    static const char default_message[];
     division_by_zero();
     explicit division_by_zero(const char * message);
 };
 
 class error::invalid_base : public error {
-   private:
-    static const char default_message_[];
-
    public:
+    static const char default_message[];
     invalid_base();
     explicit invalid_base(const char * message);
 };

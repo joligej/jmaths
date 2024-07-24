@@ -180,7 +180,7 @@ std::string N::conv_to_base_(unsigned base) const {
 
     num_str.shrink_to_fit();
 
-    std::reverse(num_str.begin(), num_str.end());
+    std::ranges::reverse(num_str);
 
     return num_str;
 }
@@ -312,9 +312,7 @@ void N::opr_subtr_assign_(const N & rhs) {
     // check for additive identity
     if (rhs.is_zero()) return;
 
-    std::size_t i = 0;
-
-    for (; i < rhs.digits_.size(); ++i) {
+    for (std::size_t i = 0; i < rhs.digits_.size(); ++i) {
         if (this->digits_[i] < rhs.digits_[i]) {
             for (std::size_t j = i + 1; j < digits_.size(); ++j) {
                 if ((digits_[j])-- > 0) break;
@@ -477,7 +475,7 @@ N N::opr_bitshift_l_(bit_type pos) const {
     shifted.digits_.insert(shifted.digits_.begin(), pos_whole, 0);
 
     if (pos_mod == 0) {
-        std::copy(digits_.cbegin(), digits_.cend(), std::back_inserter(shifted.digits_));
+        std::ranges::copy(digits_, std::back_inserter(shifted.digits_));
     } else {
         shifted.digits_.emplace_back(digits_.front() << pos_mod);
 
@@ -566,9 +564,7 @@ void N::opr_bitshift_r_assign_(bit_type pos) {
 
     digits_.erase(digits_.begin(), digits_.begin() + pos_whole);
 
-    const bit_type pos_mod = pos % base_int_bits;
-
-    if (pos_mod != 0) {
+    if (const bit_type pos_mod = pos % base_int_bits; pos_mod != 0) {
         for (std::size_t i = 0; i < digits_.size() - 1; ++i) {
             digits_[i] = ((digits_[i] >> pos_mod) + (digits_[i + 1] << (base_int_bits - pos_mod)));
         }
@@ -732,9 +728,7 @@ N & N::operator+=(const N & rhs) {
 N & N::operator-=(const N & rhs) {
     FUNCTION_TO_LOG;
 
-    const auto difference = detail::opr_comp(*this, rhs);
-
-    if (difference == 0)
+    if (const auto difference = detail::opr_comp(*this, rhs); difference == 0)
         set_zero();
     else if (difference > 0)
         opr_subtr_assign_(rhs);

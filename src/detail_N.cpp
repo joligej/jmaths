@@ -104,13 +104,13 @@ N detail::opr_add(const N & lhs, const N & rhs) {
         goto end_of_function;
     }
 
-    loop_without_carry:
+loop_without_carry:
 
     for (; i < longest->digits_.size(); ++i) {
         sum.digits_.emplace_back(longest->digits_[i]);
     }
 
-    end_of_function:
+end_of_function:
 
     assert(sum.is_zero() || sum.digits_.back() != 0);
 
@@ -333,7 +333,7 @@ std::pair<N, N> detail::opr_div(const N & lhs, const N & rhs) {
 #endif
 
         assert(lhs.digits_.size() == nlim::max() ?
-                   1 <= rhs.digits_.size() :
+                   !rhs.digits_.empty() :
                lhs.digits_.size() >= rhs.digits_.size() ?
                    lhs.digits_.size() - rhs.digits_.size() <= nlim::max() - 1 :
                    true /*-(rhs.digits_.size() - lhs.digits_.size()) <= nlim::max() - 1*/);  // assert for overflow

@@ -59,9 +59,7 @@ Z detail::opr_add(const Z & lhs, const Z & rhs) {
         if (rhs.is_positive()) {
             return Z(detail::opr_add(lhs.abs(), rhs.abs()), positive);
         } else {
-            const auto difference = detail::opr_comp(lhs.abs(), rhs.abs());
-
-            if (difference == 0) {
+            if (const auto difference = detail::opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
                 return Z{};
             } else if (difference > 0) {
                 return Z(detail::opr_subtr(lhs.abs(), rhs.abs()), positive);
@@ -71,9 +69,7 @@ Z detail::opr_add(const Z & lhs, const Z & rhs) {
         }
     } else {
         if (rhs.is_positive()) {
-            const auto difference = detail::opr_comp(lhs.abs(), rhs.abs());
-
-            if (difference == 0) {
+            if (const auto difference = detail::opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
                 return Z{};
             } else if (difference > 0) {
                 return Z(detail::opr_subtr(lhs.abs(), rhs.abs()), negative);
@@ -94,9 +90,7 @@ Z detail::opr_subtr(const Z & lhs, const Z & rhs) {
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
-            const auto difference = detail::opr_comp(lhs.abs(), rhs.abs());
-
-            if (difference == 0) {
+            if (const auto difference = detail::opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
                 return Z{};
             } else if (difference > 0) {
                 return Z(detail::opr_subtr(lhs.abs(), rhs.abs()), positive);
@@ -110,9 +104,7 @@ Z detail::opr_subtr(const Z & lhs, const Z & rhs) {
         if (rhs.is_positive()) {
             return Z(detail::opr_add(lhs.abs(), rhs.abs()), negative);
         } else {
-            const auto difference = detail::opr_comp(lhs.abs(), rhs.abs());
-
-            if (difference == 0) {
+            if (const auto difference = detail::opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
                 return Z{};
             } else if (difference > 0) {
                 return Z(detail::opr_subtr(lhs.abs(), rhs.abs()), negative);
@@ -136,9 +128,7 @@ Z detail::opr_mult(const Z & lhs, const Z & rhs) {
 std::pair<Z, Z> detail::opr_div(const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
-    auto [quotient, remainder] = lhs.abs() / rhs.abs();
-
-    if (quotient.is_zero()) {
+    if (auto [quotient, remainder] = lhs.abs() / rhs.abs(); quotient.is_zero()) {
         if (remainder.is_zero()) {
             return {Z{}, Z{}};
         } else {

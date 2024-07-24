@@ -62,9 +62,7 @@ Q detail::opr_add(const Q & lhs, const Q & rhs) {
             N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
             N second_product = detail::opr_mult(lhs.denom_, rhs.num_);
 
-            const auto difference = detail::opr_comp(first_product, second_product);
-
-            if (difference == 0) {
+            if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
                 return Q{};
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
@@ -79,9 +77,7 @@ Q detail::opr_add(const Q & lhs, const Q & rhs) {
             N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
             N second_product = detail::opr_mult(lhs.denom_, rhs.num_);
 
-            const auto difference = detail::opr_comp(first_product, second_product);
-
-            if (difference == 0) {
+            if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
                 return Q{};
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
@@ -108,9 +104,7 @@ Q detail::opr_subtr(const Q & lhs, const Q & rhs) {
             N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
             N second_product = detail::opr_mult(lhs.denom_, rhs.num_);
 
-            const auto difference = detail::opr_comp(first_product, second_product);
-
-            if (difference == 0) {
+            if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
                 return Q{};
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
@@ -133,9 +127,7 @@ Q detail::opr_subtr(const Q & lhs, const Q & rhs) {
             N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
             N second_product = detail::opr_mult(lhs.denom_, rhs.num_);
 
-            const auto difference = detail::opr_comp(first_product, second_product);
-
-            if (difference == 0) {
+            if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
                 return Q{};
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);

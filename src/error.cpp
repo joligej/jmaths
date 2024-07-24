@@ -20,13 +20,13 @@
 
 namespace jmaths {
 
-constexpr char error::default_message_[] = "No error message provided!";
+constexpr char error::default_message[] = "No error message provided!";
 
-constexpr char error::division_by_zero::default_message_[] = "You tried to divide by zero!";
+constexpr char error::division_by_zero::default_message[] = "You tried to divide by zero!";
 
-constexpr char error::invalid_base::default_message_[] = "You tried to use an invalid base!";
+constexpr char error::invalid_base::default_message[] = "You tried to use an invalid base!";
 
-error::error() : error(default_message_) {
+error::error() : error(default_message) {
     FUNCTION_TO_LOG;
 }
 
@@ -40,7 +40,7 @@ const char * error::what() const noexcept {
     return message_;
 }
 
-error::division_by_zero::division_by_zero() : error(default_message_) {
+error::division_by_zero::division_by_zero() : error(default_message) {
     FUNCTION_TO_LOG;
 }
 
@@ -48,7 +48,7 @@ error::division_by_zero::division_by_zero(const char * message) : error(message)
     FUNCTION_TO_LOG;
 };
 
-error::invalid_base::invalid_base() : error(default_message_) {
+error::invalid_base::invalid_base() : error(default_message) {
     FUNCTION_TO_LOG;
 }
 
