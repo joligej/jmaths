@@ -32,7 +32,7 @@ class error : public std::exception {
 
     error();
     explicit error(const char * message);
-    virtual const char * what() const noexcept;
+    const char * what() const noexcept override;
 };
 
 class error::division_by_zero : public error {
