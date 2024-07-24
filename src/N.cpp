@@ -674,7 +674,7 @@ std::string N::to_hex() const {
     oss << *crit;
 
     oss.setf(std::ios_base::right, std::ios_base::adjustfield);
-    constexpr auto field_width = base_int_bits / 4;
+    static constexpr auto field_width = base_int_bits / 4;
     oss.width(field_width);
     oss.fill('0');
 
