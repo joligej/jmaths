@@ -260,7 +260,7 @@ N detail::opr_mult(const N & lhs, const N & rhs) {
         N exponentiated;
         exponentiated.digits_.reserve(n.digits_.size() + exp);
         exponentiated.digits_.insert(exponentiated.digits_.begin(), exp, 0);
-        std::copy(n.digits_.begin(), n.digits_.end(), std::back_inserter(exponentiated.digits_));
+        std::ranges::copy(n.digits_, std::back_inserter(exponentiated.digits_));
         return exponentiated;
     };
 
