@@ -166,7 +166,7 @@ std::string N::conv_to_base_(unsigned base) const {
 
     std::string num_str;
 
-    const std::size_t digits_needed = ((double)base_int_bits / base) * digits_.size() + 1;
+    const std::size_t digits_needed = (base_int_bits * digits_.size()) / base + 1;
 
     num_str.reserve(digits_needed);
 
