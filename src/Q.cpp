@@ -72,7 +72,7 @@ Q operator*(const Q & lhs, const Q & rhs) {
 Q operator/(const Q & lhs, const Q & rhs) {
     FUNCTION_TO_LOG;
 
-    if (rhs.is_zero()) throw error::division_by_zero();
+    if (rhs.is_zero()) throw error::division_by_zero{};
     return detail::opr_div(lhs, rhs);
 }
 
@@ -492,7 +492,7 @@ Q & Q::operator*=(const Q & rhs) {
 Q & Q::operator/=(const Q & rhs) {
     FUNCTION_TO_LOG;
 
-    if (rhs.is_zero()) throw error::division_by_zero();
+    if (rhs.is_zero()) throw error::division_by_zero{};
 
     num_.opr_mult_assign_(rhs.denom_);
     denom_.opr_mult_assign_(rhs.num_);
@@ -505,7 +505,7 @@ Q & Q::operator&=(const Q & rhs) {
     FUNCTION_TO_LOG;
 
     denom_.opr_and_assign_(rhs.denom_);
-    if (denom_.is_zero()) throw error::division_by_zero();
+    if (denom_.is_zero()) throw error::division_by_zero{};
     num_.opr_and_assign_(rhs.num_);
     set_sign_(is_zero() ? positive : this->sign_ & rhs.sign_);
     canonicalise_();
@@ -526,7 +526,7 @@ Q & Q::operator^=(const Q & rhs) {
     FUNCTION_TO_LOG;
 
     denom_.opr_xor_assign_(rhs.denom_);
-    if (denom_.is_zero()) throw error::division_by_zero();
+    if (denom_.is_zero()) throw error::division_by_zero{};
     num_.opr_xor_assign_(rhs.num_);
     set_sign_(is_zero() ? positive : this->sign_ ^ rhs.sign_);
     canonicalise_();

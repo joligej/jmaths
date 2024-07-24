@@ -137,7 +137,7 @@ N calc::pow(N base, N exponent) {
 N calc::pow_mod(N base, N exponent, const N & mod) {
     FUNCTION_TO_LOG;
 
-    if (mod.is_zero()) throw error::division_by_zero();
+    if (mod.is_zero()) throw error::division_by_zero{};
 
     if (exponent.is_zero()) return 1U;
 

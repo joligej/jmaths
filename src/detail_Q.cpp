@@ -165,7 +165,7 @@ Q detail::opr_and(const Q & lhs, const Q & rhs) {
 
     N denominator = lhs.denom_ & rhs.denom_;
 
-    if (denominator.is_zero()) throw error::division_by_zero();
+    if (denominator.is_zero()) throw error::division_by_zero{};
 
     N numerator = lhs.num_ & rhs.num_;
 
@@ -189,7 +189,7 @@ Q detail::opr_xor(const Q & lhs, const Q & rhs) {
 
     N denominator = lhs.denom_ ^ rhs.denom_;
 
-    if (denominator.is_zero()) throw error::division_by_zero();
+    if (denominator.is_zero()) throw error::division_by_zero{};
 
     N numerator = lhs.num_ ^ rhs.num_;
 

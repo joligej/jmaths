@@ -100,7 +100,7 @@ N operator*(const N & lhs, const N & rhs) {
 std::pair<N, N> operator/(const N & lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
-    if (rhs.is_zero()) throw error::division_by_zero();
+    if (rhs.is_zero()) throw error::division_by_zero{};
     return detail::opr_div(lhs, rhs);
 }
 
