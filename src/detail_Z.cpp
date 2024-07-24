@@ -57,28 +57,28 @@ Z detail::opr_add(const Z & lhs, const Z & rhs) {
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
-            return Z(detail::opr_add(lhs.abs(), rhs.abs()), positive);
+            return Z(opr_add(lhs.abs(), rhs.abs()), positive);
         } else {
-            if (const auto difference = detail::opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
+            if (const auto difference = opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
                 return Z{};
             } else if (difference > 0) {
-                return Z(detail::opr_subtr(lhs.abs(), rhs.abs()), positive);
+                return Z(opr_subtr(lhs.abs(), rhs.abs()), positive);
             } else {
-                return Z(detail::opr_subtr(rhs.abs(), lhs.abs()), negative);
+                return Z(opr_subtr(rhs.abs(), lhs.abs()), negative);
             }
         }
     } else {
         if (rhs.is_positive()) {
-            if (const auto difference = detail::opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
+            if (const auto difference = opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
                 return Z{};
             } else if (difference > 0) {
-                return Z(detail::opr_subtr(lhs.abs(), rhs.abs()), negative);
+                return Z(opr_subtr(lhs.abs(), rhs.abs()), negative);
             } else {
-                return Z(detail::opr_subtr(rhs.abs(), lhs.abs()), positive);
+                return Z(opr_subtr(rhs.abs(), lhs.abs()), positive);
             }
 
         } else {
-            return Z(detail::opr_add(lhs.abs(), rhs.abs()), negative);
+            return Z(opr_add(lhs.abs(), rhs.abs()), negative);
         }
     }
 }
@@ -90,26 +90,26 @@ Z detail::opr_subtr(const Z & lhs, const Z & rhs) {
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
-            if (const auto difference = detail::opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
+            if (const auto difference = opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
                 return Z{};
             } else if (difference > 0) {
-                return Z(detail::opr_subtr(lhs.abs(), rhs.abs()), positive);
+                return Z(opr_subtr(lhs.abs(), rhs.abs()), positive);
             } else {
-                return Z(detail::opr_subtr(rhs.abs(), lhs.abs()), negative);
+                return Z(opr_subtr(rhs.abs(), lhs.abs()), negative);
             }
         } else {
-            return Z(detail::opr_add(lhs.abs(), rhs.abs()), positive);
+            return Z(opr_add(lhs.abs(), rhs.abs()), positive);
         }
     } else {
         if (rhs.is_positive()) {
-            return Z(detail::opr_add(lhs.abs(), rhs.abs()), negative);
+            return Z(opr_add(lhs.abs(), rhs.abs()), negative);
         } else {
-            if (const auto difference = detail::opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
+            if (const auto difference = opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
                 return Z{};
             } else if (difference > 0) {
-                return Z(detail::opr_subtr(lhs.abs(), rhs.abs()), negative);
+                return Z(opr_subtr(lhs.abs(), rhs.abs()), negative);
             } else {
-                return Z(detail::opr_subtr(rhs.abs(), lhs.abs()), positive);
+                return Z(opr_subtr(rhs.abs(), lhs.abs()), positive);
             }
         }
     }
@@ -185,7 +185,7 @@ std::strong_ordering detail::opr_comp(const Z & lhs, const Z & rhs) {
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
-            return detail::opr_comp(lhs.abs(), rhs.abs());
+            return opr_comp(lhs.abs(), rhs.abs());
         } else {
             return std::strong_ordering::greater;
         }
@@ -193,7 +193,7 @@ std::strong_ordering detail::opr_comp(const Z & lhs, const Z & rhs) {
         if (rhs.is_positive()) {
             return std::strong_ordering::less;
         } else {
-            return detail::opr_comp(rhs.abs(), lhs.abs());
+            return opr_comp(rhs.abs(), lhs.abs());
         }
     }
 }

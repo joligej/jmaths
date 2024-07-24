@@ -55,41 +55,41 @@ Q detail::opr_add(const Q & lhs, const Q & rhs) {
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
-            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
-            first_product.opr_add_assign_(detail::opr_mult(lhs.denom_, rhs.num_));
-            return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
+            N first_product = opr_mult(lhs.num_, rhs.denom_);
+            first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
+            return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive);
         } else {
-            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
-            N second_product = detail::opr_mult(lhs.denom_, rhs.num_);
+            N first_product = opr_mult(lhs.num_, rhs.denom_);
+            N second_product = opr_mult(lhs.denom_, rhs.num_);
 
             if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
                 return Q{};
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
-                return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
+                return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive);
             } else {
                 second_product.opr_subtr_assign_(first_product);
-                return Q(std::move(second_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
+                return Q(std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), negative);
             }
         }
     } else {
         if (rhs.is_positive()) {
-            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
-            N second_product = detail::opr_mult(lhs.denom_, rhs.num_);
+            N first_product = opr_mult(lhs.num_, rhs.denom_);
+            N second_product = opr_mult(lhs.denom_, rhs.num_);
 
-            if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
+            if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
                 return Q{};
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
-                return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
+                return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative);
             } else {
                 second_product.opr_subtr_assign_(first_product);
-                return Q(std::move(second_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
+                return Q(std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), positive);
             }
         } else {
-            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
-            first_product.opr_add_assign_(detail::opr_mult(lhs.denom_, rhs.num_));
-            return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
+            N first_product = opr_mult(lhs.num_, rhs.denom_);
+            first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
+            return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative);
         }
     }
 }
@@ -101,40 +101,40 @@ Q detail::opr_subtr(const Q & lhs, const Q & rhs) {
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
-            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
-            N second_product = detail::opr_mult(lhs.denom_, rhs.num_);
+            N first_product = opr_mult(lhs.num_, rhs.denom_);
+            N second_product = opr_mult(lhs.denom_, rhs.num_);
 
-            if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
+            if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
                 return Q{};
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
-                return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
+                return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive);
             } else {
                 second_product.opr_subtr_assign_(first_product);
-                return Q(std::move(second_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
+                return Q(std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), negative);
             }
         } else {
-            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
-            first_product.opr_add_assign_(detail::opr_mult(lhs.denom_, rhs.num_));
-            return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
+            N first_product = opr_mult(lhs.num_, rhs.denom_);
+            first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
+            return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive);
         }
     } else {
         if (rhs.is_positive()) {
-            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
-            first_product.opr_add_assign_(detail::opr_mult(lhs.denom_, rhs.num_));
-            return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
+            N first_product = opr_mult(lhs.num_, rhs.denom_);
+            first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
+            return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative);
         } else {
-            N first_product = detail::opr_mult(lhs.num_, rhs.denom_);
-            N second_product = detail::opr_mult(lhs.denom_, rhs.num_);
+            N first_product = opr_mult(lhs.num_, rhs.denom_);
+            N second_product = opr_mult(lhs.denom_, rhs.num_);
 
-            if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
+            if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
                 return Q{};
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
-                return Q(std::move(first_product), detail::opr_mult(lhs.denom_, rhs.denom_), negative);
+                return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative);
             } else {
                 second_product.opr_subtr_assign_(first_product);
-                return Q(std::move(second_product), detail::opr_mult(lhs.denom_, rhs.denom_), positive);
+                return Q(std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), positive);
             }
         }
     }
@@ -217,7 +217,7 @@ std::strong_ordering detail::opr_comp(const Q & lhs, const Q & rhs) {
         if (rhs.is_positive()) {
             return std::strong_ordering::less;
         } else {
-            return detail::opr_comp(rhs.num_ * lhs.denom_, lhs.num_ * rhs.denom_);
+            return opr_comp(rhs.num_ * lhs.denom_, lhs.num_ * rhs.denom_);
         }
     }
 }
