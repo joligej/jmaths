@@ -508,7 +508,7 @@ N N::opr_bitshift_r_(bit_type pos) const {
     shifted.digits_.reserve(digits_.size() - pos_whole);
 
     if (pos_mod == 0) {
-        std::ranges::copy(digits_.data() + pos_whole, digits_.data() + digits_.size(), std::back_inserter(shifted.digits_));
+        std::ranges::copy(digits_.cbegin() + pos_whole, digits_.cend(), std::back_inserter(shifted.digits_));
     } else {
         for (std::size_t i = pos_whole; i < digits_.size() - 1; ++i) {
             shifted.digits_.emplace_back((digits_[i] >> pos_mod) + (digits_[i + 1] << (base_int_bits - pos_mod)));
