@@ -292,14 +292,15 @@ void N::opr_add_assign_(const N & rhs) {
         carry = next_carry;
     }
 
-    for (; carry && i < digits_.size(); ++i) {
-        const bool next_carry = !(digits_[i] < max_digit);
+    if (carry) {
+        for (; i < digits_.size(); ++i) {
+            if (digits_[i]++ < max_digit) {
+                return;
+            }
+        }
 
-        ++digits_[i];
-        carry = next_carry;
+        digits_.emplace_back(1);
     }
-
-    if (carry) digits_.emplace_back(1);
 }
 
 void N::opr_subtr_assign_(const N & rhs) {

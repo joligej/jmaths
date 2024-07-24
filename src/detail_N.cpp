@@ -89,18 +89,28 @@ N detail::opr_add(const N & lhs, const N & rhs) {
         carry = next_carry;
     }
 
-    for (; carry && i < longest->digits_.size(); ++i) {
-        const bool next_carry = !(longest->digits_[i] < (carry ? max_digit : radix));
+    if (carry) {
+        for (; i < longest->digits_.size(); ++i) {
+            sum.digits_.emplace_back(longest->digits_[i] + 1);
 
-        sum.digits_.emplace_back(longest->digits_[i] + carry);
-        carry = next_carry;
+            if (longest->digits_[i] < max_digit) {
+                ++i;
+                goto loop_without_carry;
+            }
+        }
+
+        sum.digits_.emplace_back(1);
+
+        goto end_of_function;
     }
+
+    loop_without_carry:
 
     for (; i < longest->digits_.size(); ++i) {
         sum.digits_.emplace_back(longest->digits_[i]);
     }
 
-    if (carry) sum.digits_.emplace_back(1);
+    end_of_function:
 
     assert(sum.is_zero() || sum.digits_.back() != 0);
 
