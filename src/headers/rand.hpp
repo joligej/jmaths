@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <concepts>
 #include <limits>
 #include <random>
 
@@ -23,24 +24,31 @@
 
 namespace jmaths::internal {
 
-template <typename INT> class rand {
+template <typename T, typename... U>
+concept any_of = (std::same_as<T, U> || ...);
+
+template <typename T>
+concept standard_int_type =
+    any_of<T, short, int, long, long long, unsigned short, unsigned int, unsigned long, unsigned long long>;
+
+template <standard_int_type T> class rand {
    private:
     using seed_type = std::random_device;
 
     inline static std::mt19937 gen{seed_type{}()};
 
-    std::uniform_int_distribution<INT> distrib;
+    std::uniform_int_distribution<T> distrib;
 
    public:
-    rand(INT min, INT max) : distrib(min, max) {
+    rand(T min, T max) : distrib(min, max) {
         FUNCTION_TO_LOG;
     }
 
-    rand() : rand(0, std::numeric_limits<INT>::max()) {
+    rand() : rand(0, std::numeric_limits<T>::max()) {
         FUNCTION_TO_LOG;
     }
 
-    INT operator()() {
+    T operator()() {
         FUNCTION_TO_LOG;
 
         return distrib(gen);
