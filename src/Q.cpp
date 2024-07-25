@@ -152,7 +152,7 @@ std::size_t Q::dynamic_size_() const {
     return (num_.dynamic_size_() + denom_.dynamic_size_());
 }
 
-Q::Q() : denom_(1U) {
+Q::Q() : denom_(N::one_) {
     FUNCTION_TO_LOG;
 }
 
@@ -165,19 +165,19 @@ Q::Q(std::string_view num_str, unsigned base) :
     if (is_zero()) set_sign_(positive);
 }
 
-Q::Q(const N & n) : num_(n), denom_(1U) {
+Q::Q(const N & n) : num_(n), denom_(N::one_) {
     FUNCTION_TO_LOG;
 }
 
-Q::Q(N && n) : num_(std::move(n)), denom_(1U) {
+Q::Q(N && n) : num_(std::move(n)), denom_(N::one_) {
     FUNCTION_TO_LOG;
 }
 
-Q::Q(const Z & z) : sign_type(z.sign_), num_(z.abs()), denom_(1U) {
+Q::Q(const Z & z) : sign_type(z.sign_), num_(z.abs()), denom_(N::one_) {
     FUNCTION_TO_LOG;
 }
 
-Q::Q(Z && z) : sign_type(z.sign_), num_(std::move(std::move(z).abs())), denom_(1U) {
+Q::Q(Z && z) : sign_type(z.sign_), num_(std::move(std::move(z).abs())), denom_(N::one_) {
     FUNCTION_TO_LOG;
 }
 
@@ -381,7 +381,7 @@ Q & Q::operator+=(const Q & rhs) {
 
             if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
                 num_.set_zero();
-                denom_.opr_assign_(1U);
+                denom_ = N::one_;
                 return *this;
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
@@ -399,7 +399,7 @@ Q & Q::operator+=(const Q & rhs) {
 
             if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
                 num_.set_zero();
-                denom_.opr_assign_(1U);
+                denom_ = N::one_;
                 set_sign_(positive);
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
@@ -433,7 +433,7 @@ Q & Q::operator-=(const Q & rhs) {
 
             if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
                 num_.set_zero();
-                denom_.opr_assign_(1U);
+                denom_ = N::one_;
                 return *this;
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
@@ -459,7 +459,7 @@ Q & Q::operator-=(const Q & rhs) {
 
             if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
                 num_.set_zero();
-                denom_.opr_assign_(1U);
+                denom_ = N::one_;
                 set_sign_(positive);
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
@@ -611,7 +611,7 @@ Q & Q::operator=(const N & n) {
 
     set_sign_(positive);
     num_ = n;
-    denom_.opr_assign_(1U);
+    denom_ = N::one_;
     return *this;
 }
 
@@ -620,7 +620,7 @@ Q & Q::operator=(N && n) {
 
     set_sign_(positive);
     num_ = std::move(n);
-    denom_.opr_assign_(1U);
+    denom_ = N::one_;
     return *this;
 }
 
@@ -629,7 +629,7 @@ Q & Q::operator=(const Z & z) {
 
     set_sign_(z.sign_);
     num_ = z.abs();
-    denom_.opr_assign_(1U);
+    denom_ = N::one_;
     return *this;
 }
 
@@ -638,7 +638,7 @@ Q & Q::operator=(Z && z) {
 
     set_sign_(z.sign_);
     num_ = std::move(std::move(z).abs());
-    denom_.opr_assign_(1U);
+    denom_ = N::one_;
     return *this;
 }
 

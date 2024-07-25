@@ -122,7 +122,7 @@ N calc::pow(N base, N exponent) {
 
     if (exponent.is_zero()) return 1U;
 
-    N result(1U);
+    N result(N::one_);
 
     for (;;) {
         if (exponent.front_() & 1) result.opr_mult_assign_(base);
@@ -141,7 +141,7 @@ N calc::pow_mod(N base, N exponent, const N & mod) {
 
     if (exponent.is_zero()) return 1U;
 
-    N result(1U);
+    N result(N::one_);
 
     for (;;) {
         if (exponent.front_() & 1) {

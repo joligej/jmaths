@@ -37,6 +37,12 @@
 
 namespace jmaths {
 
+const N N::one_(1U);
+
+}  // namespace jmaths
+
+namespace jmaths {
+
 namespace {
 
 base_int base_converter(char c) noexcept;  // convert char to number for base >= 2 and <= 64
@@ -294,9 +300,7 @@ void N::opr_add_assign_(const N & rhs) {
 
     if (carry) {
         for (; i < digits_.size(); ++i) {
-            if (digits_[i]++ < max_digit) {
-                return;
-            }
+            if (digits_[i]++ < max_digit) { return; }
         }
 
         digits_.emplace_back(1);

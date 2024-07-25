@@ -161,13 +161,15 @@ class N {
     template <typename T>
         requires std::same_as<N, std::decay_t<T>>
     class bit_reference_base_;
+
+    static const N one_;
 };
 
 template <typename T>
     requires std::same_as<N, std::decay_t<T>>
 class N::bit_reference_base_ {
-    friend class N::bit_reference;
-    friend class N::const_bit_reference;
+    friend class bit_reference;
+    friend class const_bit_reference;
 
    public:
     bit_reference_base_() = delete;
