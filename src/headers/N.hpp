@@ -31,6 +31,7 @@
 #include "constants_and_types.hpp"
 #include "declarations.hpp"
 #include "hash.hpp"
+#include "rand.hpp"
 
 // declarations of N and associated functions and types
 namespace jmaths {
@@ -158,7 +159,8 @@ class N {
     N & operator=(std::string_view num_str);
     N & operator=(std::integral auto rhs);
 
-    static N rand(bit_type upper_bound_exponent);
+    static constexpr bool rand_enabled = internal::allowed_rand_type<base_int>;
+    static std::conditional_t<rand_enabled, N, void> rand(bit_type upper_bound_exponent);
 };
 
 template <typename T>

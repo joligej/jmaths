@@ -24,11 +24,13 @@
 #include <ostream>
 #include <string>
 #include <string_view>
+#include <type_traits>
 
 #include "N.hpp"
 #include "constants_and_types.hpp"
 #include "declarations.hpp"
 #include "hash.hpp"
+#include "rand.hpp"
 #include "sign_type.hpp"
 
 // declarations of Z and associated functions and types
@@ -122,7 +124,8 @@ class Z : public sign_type, private N {
     Z & operator=(const N & n);
     Z & operator=(N && n);
 
-    static Z rand(bit_type upper_bound_exponent);
+    static constexpr bool rand_enabled = N::rand_enabled;
+    static std::conditional_t<rand_enabled, Z, void> rand(bit_type upper_bound_exponent);
 };
 
 }  // namespace jmaths
