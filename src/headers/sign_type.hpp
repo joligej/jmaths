@@ -29,6 +29,13 @@ class sign_type {
     friend struct detail;
     friend struct calc;
 
+   public:
+    bool is_positive() const;
+    bool is_negative() const;
+
+    virtual bool is_zero() const = 0;
+    void flip_sign();
+
    protected:
     enum sign_bool : bool { positive = 0, negative = 1 } sign_;
 
@@ -41,13 +48,6 @@ class sign_type {
     static sign_bool handle_int_(std::integral auto * num);
 
     void set_sign_(std::convertible_to<std::underlying_type_t<sign_bool>> auto val);
-
-   public:
-    bool is_positive() const;
-    bool is_negative() const;
-
-    virtual bool is_zero() const = 0;
-    void flip_sign();
 };
 
 }  // namespace jmaths

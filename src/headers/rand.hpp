@@ -32,13 +32,6 @@ concept allowed_rand_type =
     any_of<T, short, int, long, long long, unsigned short, unsigned int, unsigned long, unsigned long long>;
 
 template <allowed_rand_type T> class rand {
-   private:
-    using seed_type = std::random_device;
-
-    inline static std::mt19937 gen{seed_type{}()};
-
-    std::uniform_int_distribution<T> distrib;
-
    public:
     rand(T min, T max) : distrib(min, max) {
         FUNCTION_TO_LOG;
@@ -59,6 +52,13 @@ template <allowed_rand_type T> class rand {
 
         gen.seed(seed);
     }
+
+   private:
+    using seed_type = std::random_device;
+
+    inline static std::mt19937 gen{seed_type{}()};
+
+    std::uniform_int_distribution<T> distrib;
 };
 
 }  // namespace jmaths::internal

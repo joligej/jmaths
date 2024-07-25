@@ -22,9 +22,6 @@
 namespace jmaths {
 
 class error : public std::exception {
-   private:
-    const char * const message_;
-
    public:
     static const char default_message[];
     class division_by_zero;
@@ -33,6 +30,9 @@ class error : public std::exception {
     error();
     explicit error(const char * message);
     const char * what() const noexcept override;
+
+   private:
+    const char * const message_;
 };
 
 class error::division_by_zero : public error {

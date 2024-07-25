@@ -61,21 +61,6 @@ class Q : public sign_type {
     friend struct calc;
     friend struct std::hash<Q>;
 
-   private:
-    N num_, denom_;
-
-    Q(N && num, N && denom, sign_bool sign);
-    Q(const N & num, const N & denom, sign_bool sign);
-    Q(std::tuple<N, N, sign_bool> && fraction_info);
-
-    static std::string_view handle_fraction_string_(std::string_view * num_str);
-
-    void canonicalise_();
-
-    static std::tuple<N, N, sign_bool> handle_float_(std::floating_point auto num);
-
-    std::size_t dynamic_size_() const;
-
    public:
     Q();
     Q(std::string_view num_str, unsigned base = default_base);
@@ -146,6 +131,21 @@ class Q : public sign_type {
 
     Q & operator=(const Z & z);
     Q & operator=(Z && z);
+
+   private:
+    N num_, denom_;
+
+    Q(N && num, N && denom, sign_bool sign);
+    Q(const N & num, const N & denom, sign_bool sign);
+    Q(std::tuple<N, N, sign_bool> && fraction_info);
+
+    static std::string_view handle_fraction_string_(std::string_view * num_str);
+
+    void canonicalise_();
+
+    static std::tuple<N, N, sign_bool> handle_float_(std::floating_point auto num);
+
+    std::size_t dynamic_size_() const;
 };
 
 }  // namespace jmaths

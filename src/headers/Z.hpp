@@ -63,12 +63,6 @@ class Z : public sign_type, private N {
 
     friend class Q;
 
-   private:
-    Z(N && n, sign_bool sign);
-    Z(const N & n, sign_bool sign);
-
-    std::size_t dynamic_size_() const;
-
    public:
     using N::bit_reference, N::const_bit_reference;
     using N::ctz, N::bits, N::operator bool, N::operator[];
@@ -126,6 +120,12 @@ class Z : public sign_type, private N {
 
     static constexpr bool rand_enabled = N::rand_enabled;
     template <bool = rand_enabled> static Z rand(bit_type upper_bound_exponent);
+
+   private:
+    Z(N && n, sign_bool sign);
+    Z(const N & n, sign_bool sign);
+
+    std::size_t dynamic_size_() const;
 };
 
 }  // namespace jmaths

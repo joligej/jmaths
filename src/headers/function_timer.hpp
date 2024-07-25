@@ -22,12 +22,6 @@
 namespace jmaths::internal {
 
 class function_timer {
-   private:
-    using clock_type = std::chrono::high_resolution_clock;
-
-    const char * const function_name_;
-    const clock_type::time_point start_time_;
-
    public:
     explicit function_timer(const char * function_name) :
         function_name_{function_name}, start_time_{clock_type::now()} {
@@ -40,6 +34,12 @@ class function_timer {
 
         std::clog << "log:time\t" << total_time.count() << "\tms\tfrom\t" << function_name_ << '\n';
     }
+
+   private:
+    using clock_type = std::chrono::high_resolution_clock;
+
+    const char * const function_name_;
+    const clock_type::time_point start_time_;
 };
 
 };  // namespace jmaths::internal

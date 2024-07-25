@@ -65,48 +65,6 @@ class N {
 
     friend class Q;
 
-   private:
-    std::vector<base_int, allocator<base_int>> digits_;
-
-    void remove_leading_zeroes_();
-    base_int front_() const;
-    std::string conv_to_base_(unsigned base) const;
-    void handle_str_(std::string_view num_str, unsigned base);
-    void handle_int_(std::integral auto num);
-
-    template <std::unsigned_integral T> T fit_into_(std::size_t max_byte) const;
-
-    bool bit_(bit_type pos) const;
-    void bit_(bit_type pos, bool val);
-
-    template <typename T>
-        requires std::same_as<N, std::decay_t<T>>
-    class bit_reference_base_;
-
-   protected:
-    std::size_t dynamic_size_() const;
-
-    void opr_incr_();
-    void opr_decr_();
-
-    void opr_add_assign_(const N & rhs);
-    void opr_subtr_assign_(const N & rhs);
-    void opr_mult_assign_(const N & rhs);
-
-    void opr_and_assign_(const N & rhs);
-    void opr_or_assign_(const N & rhs);
-    void opr_xor_assign_(const N & rhs);
-
-    N opr_compl_() const;
-    N opr_bitshift_l_(bit_type pos) const;
-    N opr_bitshift_r_(bit_type pos) const;
-
-    void opr_bitshift_l_assign_(bit_type pos);
-    void opr_bitshift_r_assign_(bit_type pos);
-
-    void opr_assign_(std::string_view num_str);
-    void opr_assign_(std::integral auto rhs);
-
    public:
     class bit_reference;
     class const_bit_reference;
@@ -161,6 +119,48 @@ class N {
 
     static constexpr bool rand_enabled = internal::allowed_rand_type<base_int>;
     template <bool = rand_enabled> static N rand(bit_type upper_bound_exponent);
+
+   protected:
+    std::size_t dynamic_size_() const;
+
+    void opr_incr_();
+    void opr_decr_();
+
+    void opr_add_assign_(const N & rhs);
+    void opr_subtr_assign_(const N & rhs);
+    void opr_mult_assign_(const N & rhs);
+
+    void opr_and_assign_(const N & rhs);
+    void opr_or_assign_(const N & rhs);
+    void opr_xor_assign_(const N & rhs);
+
+    N opr_compl_() const;
+    N opr_bitshift_l_(bit_type pos) const;
+    N opr_bitshift_r_(bit_type pos) const;
+
+    void opr_bitshift_l_assign_(bit_type pos);
+    void opr_bitshift_r_assign_(bit_type pos);
+
+    void opr_assign_(std::string_view num_str);
+    void opr_assign_(std::integral auto rhs);
+
+   private:
+    std::vector<base_int, allocator<base_int>> digits_;
+
+    void remove_leading_zeroes_();
+    base_int front_() const;
+    std::string conv_to_base_(unsigned base) const;
+    void handle_str_(std::string_view num_str, unsigned base);
+    void handle_int_(std::integral auto num);
+
+    template <std::unsigned_integral T> T fit_into_(std::size_t max_byte) const;
+
+    bool bit_(bit_type pos) const;
+    void bit_(bit_type pos, bool val);
+
+    template <typename T>
+        requires std::same_as<N, std::decay_t<T>>
+    class bit_reference_base_;
 };
 
 template <typename T>
@@ -169,10 +169,6 @@ class N::bit_reference_base_ {
     friend class N::bit_reference;
     friend class N::const_bit_reference;
 
-   private:
-    T & num_;
-    const bit_type pos_;
-
    public:
     bit_reference_base_() = delete;
     bit_reference_base_(T &&, bit_type) = delete;
@@ -180,6 +176,10 @@ class N::bit_reference_base_ {
 
     operator bool() const;
     explicit operator int() const;
+
+   private:
+    T & num_;
+    const bit_type pos_;
 };
 
 class N::bit_reference : public N::bit_reference_base_<N> {
