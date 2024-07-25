@@ -160,7 +160,7 @@ class N {
     N & operator=(std::integral auto rhs);
 
     static constexpr bool rand_enabled = internal::allowed_rand_type<base_int>;
-    static std::conditional_t<rand_enabled, N, void> rand(bit_type upper_bound_exponent);
+    template <bool = rand_enabled> static N rand(bit_type upper_bound_exponent);
 };
 
 template <typename T>

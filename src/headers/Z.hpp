@@ -125,7 +125,7 @@ class Z : public sign_type, private N {
     Z & operator=(N && n);
 
     static constexpr bool rand_enabled = N::rand_enabled;
-    static std::conditional_t<rand_enabled, Z, void> rand(bit_type upper_bound_exponent);
+    template <bool = rand_enabled> static Z rand(bit_type upper_bound_exponent);
 };
 
 }  // namespace jmaths
