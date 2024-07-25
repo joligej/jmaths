@@ -14,18 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#include <functional>
 #include <iostream>
-#include <rand.hpp>
-#include <string>
+#include <random>
 
 #include "Z.hpp"
 
 int main(int, char *[]) {
     using jmaths::Z, jmaths::bit_type;
 
-    jmaths::internal::rand<bit_type> exponent_generator(0, 32);
+    auto exponent_generator =
+        std::bind(std::uniform_int_distribution<bit_type>(0, 32), std::mt19937(std::random_device{}()));
 
-    while (std::cin.get() != 'q') {
+    while (std::cin.get() == '\n') {
         std::cout << Z::rand(exponent_generator()) << '\n';
     }
 }
