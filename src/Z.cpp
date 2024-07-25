@@ -202,8 +202,11 @@ Z & Z::operator++() {
     if (is_positive()) {
         N::opr_incr_();
     } else {
-        if (N::is_one()) set_sign_(positive);
         N::opr_decr_();
+
+        if (N::is_zero()) {
+            set_sign_(positive);
+        }
     }
 
     return *this;
