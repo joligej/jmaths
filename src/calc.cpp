@@ -125,7 +125,7 @@ N calc::pow(N base, N exponent) {
     N result(N::one_);
 
     for (;;) {
-        if (exponent.front_() & 1) { result.opr_mult_assign_(base); }
+        if (exponent.is_odd()) { result.opr_mult_assign_(base); }
         exponent.opr_bitshift_r_assign_(1);
         if (exponent.is_zero()) { break; }
         base.opr_mult_assign_(base);
@@ -144,7 +144,7 @@ N calc::pow_mod(N base, N exponent, const N & mod) {
     N result(N::one_);
 
     for (;;) {
-        if (exponent.front_() & 1) {
+        if (exponent.is_odd()) {
             result.opr_mult_assign_(base);
             result = detail::opr_div(result, mod).second;  // maybe use separate function just for mod ???
         }
