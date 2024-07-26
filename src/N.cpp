@@ -50,10 +50,10 @@ base_int base_converter(char c) noexcept;  // convert char to number for base >=
 base_int base_converter(char c) noexcept {
     FUNCTION_TO_LOG;
 
-    if (c >= '0' && c <= '9') return (c - '0');
-    if (c >= 'A' && c <= 'Z') return (c - 'A' + 10);
-    if (c >= 'a' && c <= 'z') return (c - 'a' + 10 + 26);
-    if (c == '+') return 62;
+    if (c >= '0' && c <= '9') { return (c - '0'); }
+    if (c >= 'A' && c <= 'Z') { return (c - 'A' + 10); }
+    if (c >= 'a' && c <= 'z') { return (c - 'a' + 10 + 26); }
+    if (c == '+') { return 62; }
 
     assert(c == '/');  // it is assumed that c == '/' because no other character
                        // would be valid or logical
@@ -93,7 +93,7 @@ N operator-(const N & lhs, const N & rhs) {
 
     const auto difference = detail::opr_comp(lhs, rhs);
 
-    if (difference == 0) return N{};
+    if (difference == 0) { return N{}; }
     return (difference > 0 ? detail::opr_subtr(lhs, rhs) : detail::opr_subtr(rhs, lhs));
 }
 
@@ -106,7 +106,7 @@ N operator*(const N & lhs, const N & rhs) {
 std::pair<N, N> operator/(const N & lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
-    if (rhs.is_zero()) throw error::division_by_zero{};
+    if (rhs.is_zero()) { throw error::division_by_zero{}; }
     return detail::opr_div(lhs, rhs);
 }
 
@@ -148,7 +148,7 @@ void N::remove_leading_zeroes_() {
     FUNCTION_TO_LOG;
 
     while (!digits_.empty()) {
-        if (digits_.back() != 0) break;
+        if (digits_.back() != 0) { break; }
         digits_.pop_back();
     }
 
@@ -158,7 +158,7 @@ void N::remove_leading_zeroes_() {
 base_int N::front_() const {
     FUNCTION_TO_LOG;
 
-    if (digits_.empty()) return 0;
+    if (digits_.empty()) { return 0; }
 
     return digits_.front();
 }
@@ -166,9 +166,10 @@ base_int N::front_() const {
 std::string N::conv_to_base_(unsigned base) const {
     FUNCTION_TO_LOG;
 
-    static constexpr char base_converter[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/";
+    static constexpr char base_converter[] =
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/";
 
-    if (is_zero()) return "0";
+    if (is_zero()) { return "0"; }
 
     std::string num_str;
 
@@ -194,7 +195,12 @@ std::string N::conv_to_base_(unsigned base) const {
 void N::handle_str_(std::string_view num_str, unsigned base) {
     FUNCTION_TO_LOG;
 
-    if (num_str.empty() || (num_str.size() == 1 && num_str.front() == '0')) return;
+    // the naive yet faster check:
+    // if (num_str.empty()) { return; }
+    // if (num_str.size() == 1 && num_str.front() == '0') { return; }
+
+    // the more thorough but slower check:
+    if (std::ranges::all_of(num_str, [](char c) { return c == '0'; })) { return; }
 
     for (auto cit = num_str.cbegin(); &*cit != &num_str.back(); ++cit) {
         opr_add_assign_(base_converter(*cit));
@@ -224,7 +230,7 @@ void N::bit_(bit_type pos, bool val) {
     const bit_type pos_mod = pos % base_int_bits;
 
     if (is_zero()) {
-        if (val == 0) return;
+        if (val == 0) { return; }
         digits_.reserve(pos_whole + 1);
         digits_.insert(digits_.begin(), pos_whole, 0);
         digits_.emplace_back((base_int)1 << pos_mod);
@@ -239,7 +245,7 @@ void N::bit_(bit_type pos, bool val) {
 
             remove_leading_zeroes_();
         } else {
-            if (val == 0) return;
+            if (val == 0) { return; }
             digits_.reserve(digits_.size() + pos_whole + 1);
             digits_.insert(digits_.end(), pos_whole - digits_.size(), 0);
             digits_.emplace_back((base_int)1 << pos_mod);
@@ -257,7 +263,7 @@ void N::opr_incr_() {
     FUNCTION_TO_LOG;
 
     for (auto & digit : digits_)
-        if (digit++ < max_digit) return;
+        if (digit++ < max_digit) { return; }
 
     digits_.emplace_back(1);
 }
@@ -279,8 +285,12 @@ void N::opr_add_assign_(const N & rhs) {
     FUNCTION_TO_LOG;
 
     // check for additive identity
-    if (rhs.is_zero()) return;
-    if (this->is_zero()) return (void)operator=(rhs);
+    if (rhs.is_zero()) { return; }
+
+    if (this->is_zero()) {
+        operator=(rhs);
+        return;
+    }
 
     // minimum number of digits in sum; this expression is >= number of digits
     // in rhs
@@ -314,12 +324,12 @@ void N::opr_subtr_assign_(const N & rhs) {
     // only be called when *this > rhs
 
     // check for additive identity
-    if (rhs.is_zero()) return;
+    if (rhs.is_zero()) { return; }
 
     for (std::size_t i = 0; i < rhs.digits_.size(); ++i) {
         if (this->digits_[i] < rhs.digits_[i]) {
             for (std::size_t j = i + 1; j < digits_.size(); ++j) {
-                if ((digits_[j])-- > 0) break;
+                if ((digits_[j])-- > 0) { break; }
             }
         }
 
@@ -335,12 +345,20 @@ void N::opr_mult_assign_(const N & rhs) {
     // !!! remove temporary (at least temp1) !!!
 
     // check for multiplicative identity
-    if (this->is_one()) return (void)operator=(rhs);
-    if (rhs.is_one()) return;
+    if (this->is_one()) {
+        operator=(rhs);
+        return;
+    }
+
+    if (rhs.is_one()) { return; }
 
     // check for multiplicative zero
-    if (this->is_zero()) return;
-    if (rhs.is_zero()) return (void)set_zero();
+    if (this->is_zero()) { return; }
+
+    if (rhs.is_zero()) {
+        set_zero();
+        return;
+    }
 
     N product;
 
@@ -360,7 +378,7 @@ void N::opr_mult_assign_(const N & rhs) {
             carry = (temp2 >> base_int_bits) + temp_carry;
         }
 
-        if (carry) temp1.digits_.emplace_back(carry);
+        if (carry) { temp1.digits_.emplace_back(carry); }
         product.opr_add_assign_(temp1);
     }
 
@@ -370,8 +388,12 @@ void N::opr_mult_assign_(const N & rhs) {
 void N::opr_and_assign_(const N & rhs) {
     FUNCTION_TO_LOG;
 
-    if (this->is_zero()) return;
-    if (rhs.is_zero()) return (void)set_zero();
+    if (this->is_zero()) { return; }
+
+    if (rhs.is_zero()) {
+        set_zero();
+        return;
+    }
 
     digits_.resize(std::min(this->digits_.size(), rhs.digits_.size()));
 
@@ -385,8 +407,12 @@ void N::opr_and_assign_(const N & rhs) {
 void N::opr_or_assign_(const N & rhs) {
     FUNCTION_TO_LOG;
 
-    if (this->is_zero()) return (void)operator=(rhs);
-    if (rhs.is_zero()) return;
+    if (this->is_zero()) {
+        operator=(rhs);
+        return;
+    }
+
+    if (rhs.is_zero()) { return; }
 
     const N * longest;
     const N * shortest;
@@ -407,7 +433,7 @@ void N::opr_or_assign_(const N & rhs) {
         this->digits_[i] |= rhs.digits_[i];
     }
 
-    if (longest == this) return;
+    if (longest == this) { return; }
 
     for (; i < rhs.digits_.size(); ++i) {
         this->digits_.emplace_back(rhs.digits_[i]);
@@ -417,8 +443,11 @@ void N::opr_or_assign_(const N & rhs) {
 void N::opr_xor_assign_(const N & rhs) {
     FUNCTION_TO_LOG;
 
-    if (this->is_zero()) return (void)operator=(rhs);
-    if (rhs.is_zero()) return;
+    if (this->is_zero()) {
+        operator=(rhs);
+        return;
+    }
+    if (rhs.is_zero()) { return; }
 
     const N * longest;
     const N * shortest;
@@ -439,7 +468,7 @@ void N::opr_xor_assign_(const N & rhs) {
         this->digits_[i] ^= rhs.digits_[i];
     }
 
-    if (longest == this) return;
+    if (longest == this) { return; }
 
     for (; i < rhs.digits_.size(); ++i) {
         this->digits_.emplace_back(rhs.digits_[i]);
@@ -466,8 +495,8 @@ N N::opr_compl_() const {
 N N::opr_bitshift_l_(bit_type pos) const {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) return N{};
-    if (pos == 0) return *this;
+    if (is_zero()) { return N{}; }
+    if (pos == 0) { return *this; }
 
     const std::size_t pos_whole = pos / base_int_bits;
     const bit_type pos_mod = pos % base_int_bits;
@@ -484,7 +513,8 @@ N N::opr_bitshift_l_(bit_type pos) const {
         shifted.digits_.emplace_back(digits_.front() << pos_mod);
 
         for (std::size_t i = 1; i < digits_.size(); ++i) {
-            shifted.digits_.emplace_back((digits_[i - 1] >> (base_int_bits - pos_mod)) + (digits_[i] << pos_mod));
+            shifted.digits_.emplace_back((digits_[i - 1] >> (base_int_bits - pos_mod)) +
+                                         (digits_[i] << pos_mod));
         }
 
         shifted.digits_.emplace_back(digits_.back() >> (base_int_bits - pos_mod));
@@ -498,12 +528,12 @@ N N::opr_bitshift_l_(bit_type pos) const {
 N N::opr_bitshift_r_(bit_type pos) const {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) return N{};
-    if (pos == 0) return *this;
+    if (is_zero()) { return N{}; }
+    if (pos == 0) { return *this; }
 
     const std::size_t pos_whole = pos / base_int_bits;
 
-    if (pos_whole >= digits_.size()) return N{};
+    if (pos_whole >= digits_.size()) { return N{}; }
 
     const bit_type pos_mod = pos % base_int_bits;
 
@@ -512,10 +542,13 @@ N N::opr_bitshift_r_(bit_type pos) const {
     shifted.digits_.reserve(digits_.size() - pos_whole);
 
     if (pos_mod == 0) {
-        std::ranges::copy(digits_.cbegin() + pos_whole, digits_.cend(), std::back_inserter(shifted.digits_));
+        std::ranges::copy(digits_.cbegin() + pos_whole,
+                          digits_.cend(),
+                          std::back_inserter(shifted.digits_));
     } else {
         for (std::size_t i = pos_whole; i < digits_.size() - 1; ++i) {
-            shifted.digits_.emplace_back((digits_[i] >> pos_mod) + (digits_[i + 1] << (base_int_bits - pos_mod)));
+            shifted.digits_.emplace_back((digits_[i] >> pos_mod) +
+                                         (digits_[i + 1] << (base_int_bits - pos_mod)));
         }
 
         shifted.digits_.emplace_back(digits_.back() >> pos_mod);
@@ -529,8 +562,8 @@ N N::opr_bitshift_r_(bit_type pos) const {
 void N::opr_bitshift_l_assign_(bit_type pos) {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) return;
-    if (pos == 0) return;
+    if (is_zero()) { return; }
+    if (pos == 0) { return; }
 
     const std::size_t pos_whole = pos / base_int_bits;
     const bit_type pos_mod = pos % base_int_bits;
@@ -559,12 +592,15 @@ void N::opr_bitshift_l_assign_(bit_type pos) {
 void N::opr_bitshift_r_assign_(bit_type pos) {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) return;
-    if (pos == 0) return;
+    if (is_zero()) { return; }
+    if (pos == 0) { return; }
 
     const std::size_t pos_whole = pos / base_int_bits;
 
-    if (pos_whole >= digits_.size()) return (void)set_zero();
+    if (pos_whole >= digits_.size()) {
+        set_zero();
+        return;
+    }
 
     digits_.erase(digits_.begin(), digits_.begin() + pos_whole);
 
@@ -592,7 +628,9 @@ N::N() = default;
 N::N(std::string_view num_str, unsigned base) {
     FUNCTION_TO_LOG;
 
-    if (base < 2 || base > 64) throw error::invalid_base("You need to provide a string in a base between 2 and 64!");
+    if (base < 2 || base > 64) {
+        throw error::invalid_base("You need to provide a string in a base between 2 and 64!");
+    }
 
     handle_str_(num_str, base);
 }
@@ -618,7 +656,7 @@ bool N::is_even() const {
 bool N::is_odd() const {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) return false;
+    if (is_zero()) { return false; }
 
     return (digits_.front() & 1);
 }
@@ -642,7 +680,7 @@ bit_type N::ctz() const {
 bit_type N::bits() const {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) return 1;
+    if (is_zero()) { return 1; }
     return (digits_.size() * base_int_bits - std::countl_zero(digits_.back()));
 }
 
@@ -655,7 +693,9 @@ std::size_t N::size() const {
 std::string N::to_str(unsigned base) const {
     FUNCTION_TO_LOG;
 
-    if (base < 2 || base > 64) throw error::invalid_base("You need to enter a base between 2 and 64!");
+    if (base < 2 || base > 64) {
+        throw error::invalid_base("You need to enter a base between 2 and 64!");
+    }
 
     return conv_to_base_(base);
 }
@@ -663,7 +703,7 @@ std::string N::to_str(unsigned base) const {
 std::string N::to_hex() const {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) return "0";
+    if (is_zero()) { return "0"; }
 
     std::ostringstream oss;
 
@@ -815,7 +855,8 @@ namespace jmaths {
 
 N::bit_reference::bit_reference(const bit_reference & ref) = default;
 N::const_bit_reference::const_bit_reference(const const_bit_reference & ref) = default;
-N::const_bit_reference::const_bit_reference(const bit_reference & ref) : bit_reference_base_(ref.num_, ref.pos_) {
+N::const_bit_reference::const_bit_reference(const bit_reference & ref) :
+    bit_reference_base_(ref.num_, ref.pos_) {
     FUNCTION_TO_LOG;
 }
 
