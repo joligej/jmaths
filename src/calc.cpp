@@ -32,8 +32,8 @@ namespace jmaths {
 N calc::gcd(N a, N b) {
     FUNCTION_TO_LOG;
 
-    if (a.is_zero()) return b;
-    if (b.is_zero()) return a;
+    if (a.is_zero()) { return b; }
+    if (b.is_zero()) { return a; }
 
     const bit_type i = a.ctz();
     const bit_type j = b.ctz();
@@ -60,9 +60,9 @@ N calc::gcd(N a, N b) {
 std::pair<N, N> calc::sqrt(const N & num) {
     FUNCTION_TO_LOG;
 
-    if (num.is_zero() || num.is_one()) return {num, N{}};
+    if (num.is_zero() || num.is_one()) { return {num, N{}}; }
 
-    N start = 1U, end = num.opr_bitshift_r_(1), ans;
+    N start = N::one_, end = num.opr_bitshift_r_(1), ans;
 
     while (detail::opr_comp(start, end) <= 0) {
         N mid = detail::opr_add(start, end).opr_bitshift_r_(1);
@@ -71,7 +71,7 @@ std::pair<N, N> calc::sqrt(const N & num) {
 
         const auto compared = detail::opr_comp(sqr, num);
 
-        if (compared == 0) return {std::move(mid), N{}};
+        if (compared == 0) { return {std::move(mid), N{}}; }
 
         if (compared < 0) {
             ans = mid;
@@ -91,9 +91,9 @@ std::pair<N, N> calc::sqrt(const N & num) {
 N calc::sqrt_whole(const N & num) {
     FUNCTION_TO_LOG;
 
-    if (num.is_zero() || num.is_one()) return num;
+    if (num.is_zero() || num.is_one()) { return num; }
 
-    N start = 1U, end = num.opr_bitshift_r_(1), ans;
+    N start = N::one_, end = num.opr_bitshift_r_(1), ans;
 
     while (detail::opr_comp(start, end) <= 0) {
         N mid = detail::opr_add(start, end).opr_bitshift_r_(1);
@@ -102,7 +102,7 @@ N calc::sqrt_whole(const N & num) {
 
         const auto compared = detail::opr_comp(sqr, num);
 
-        if (compared == 0) return mid;
+        if (compared == 0) { return mid; }
 
         if (compared < 0) {
             ans = mid;
@@ -120,14 +120,14 @@ N calc::sqrt_whole(const N & num) {
 N calc::pow(N base, N exponent) {
     FUNCTION_TO_LOG;
 
-    if (exponent.is_zero()) return 1U;
+    if (exponent.is_zero()) { return N::one_; }
 
     N result(N::one_);
 
     for (;;) {
-        if (exponent.front_() & 1) result.opr_mult_assign_(base);
+        if (exponent.front_() & 1) { result.opr_mult_assign_(base); }
         exponent.opr_bitshift_r_assign_(1);
-        if (exponent.is_zero()) break;
+        if (exponent.is_zero()) { break; }
         base.opr_mult_assign_(base);
     }
 
@@ -137,9 +137,9 @@ N calc::pow(N base, N exponent) {
 N calc::pow_mod(N base, N exponent, const N & mod) {
     FUNCTION_TO_LOG;
 
-    if (mod.is_zero()) throw error::division_by_zero{};
+    if (mod.is_zero()) { throw error::division_by_zero{}; }
 
-    if (exponent.is_zero()) return 1U;
+    if (exponent.is_zero()) { return N::one_; }
 
     N result(N::one_);
 
@@ -150,7 +150,7 @@ N calc::pow_mod(N base, N exponent, const N & mod) {
         }
 
         exponent.opr_bitshift_r_assign_(1);
-        if (exponent.is_zero()) break;
+        if (exponent.is_zero()) { break; }
         base.opr_mult_assign_(base);
     }
 

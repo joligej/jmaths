@@ -58,8 +58,8 @@ N detail::opr_add(const N & lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
     // check for additive identity
-    if (lhs.is_zero()) return rhs;
-    if (rhs.is_zero()) return lhs;
+    if (lhs.is_zero()) { return rhs; }
+    if (rhs.is_zero()) { return lhs; }
 
     const N * longest;
     const N * shortest;
@@ -124,7 +124,7 @@ N detail::opr_subtr(N lhs, const N & rhs) {
     // only be called when lhs > rhs
 
     // check for additive identity
-    if (rhs.is_zero()) return lhs;
+    if (rhs.is_zero()) { return lhs; }
 
     N difference;
     difference.digits_.reserve(lhs.digits_.size());
@@ -134,7 +134,7 @@ N detail::opr_subtr(N lhs, const N & rhs) {
     for (; i < rhs.digits_.size(); ++i) {
         if (lhs.digits_[i] < rhs.digits_[i]) {
             for (std::size_t j = i + 1; j < lhs.digits_.size(); ++j) {
-                if ((lhs.digits_[j])-- > 0) break;
+                if ((lhs.digits_[j])-- > 0) { break; }
             }
         }
 
@@ -276,11 +276,11 @@ N detail::opr_mult(const N & lhs, const N & rhs) {
 #else
 
     // check for multiplicative identity
-    if (lhs.is_one()) return rhs;
-    if (rhs.is_one()) return lhs;
+    if (lhs.is_one()) { return rhs; }
+    if (rhs.is_one()) { return lhs; }
 
     // check for multiplicative zero
-    if (lhs.is_zero() || rhs.is_zero()) return N{};
+    if (lhs.is_zero() || rhs.is_zero()) { return N{}; }
 
     N product;
 
@@ -300,7 +300,7 @@ N detail::opr_mult(const N & lhs, const N & rhs) {
             carry = (temp2 >> base_int_bits) + temp_carry;
         }
 
-        if (carry) temp1.digits_.emplace_back(carry);
+        if (carry != 0) { temp1.digits_.emplace_back(carry); }
         product.opr_add_assign_(temp1);
     }
 
@@ -312,7 +312,7 @@ N detail::opr_mult(const N & lhs, const N & rhs) {
 std::pair<N, N> detail::opr_div(const N & lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
-    if (lhs.is_zero()) return {N{}, N{}};
+    if (lhs.is_zero()) { return {N{}, N{}}; }
 
     // check if lhs == rhs
     if (opr_eq(lhs, rhs)) { return {N::one_, N{}}; }
@@ -360,7 +360,7 @@ std::pair<N, N> detail::opr_div(const N & lhs, const N & rhs) {
 N detail::opr_and(const N & lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
-    if (lhs.is_zero() || rhs.is_zero()) return N{};
+    if (lhs.is_zero() || rhs.is_zero()) { return N{}; }
 
     const N & shortest = (lhs.digits_.size() < rhs.digits_.size() ? lhs : rhs);
 
@@ -379,8 +379,8 @@ N detail::opr_and(const N & lhs, const N & rhs) {
 N detail::opr_or(const N & lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
-    if (lhs.is_zero()) return rhs;
-    if (rhs.is_zero()) return lhs;
+    if (lhs.is_zero()) { return rhs; }
+    if (rhs.is_zero()) { return lhs; }
 
     const N * longest;
     const N * shortest;
@@ -412,8 +412,8 @@ N detail::opr_or(const N & lhs, const N & rhs) {
 N detail::opr_xor(const N & lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
-    if (lhs.is_zero()) return rhs;
-    if (rhs.is_zero()) return lhs;
+    if (lhs.is_zero()) { return rhs; }
+    if (rhs.is_zero()) { return lhs; }
 
     const N * longest;
     const N * shortest;
@@ -453,13 +453,13 @@ bool detail::opr_eq(const N & lhs, const N & rhs) {
 std::strong_ordering detail::opr_comp(const N & lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
-    if (lhs.digits_.size() < rhs.digits_.size()) return std::strong_ordering::less;
-    if (lhs.digits_.size() > rhs.digits_.size()) return std::strong_ordering::greater;
+    if (lhs.digits_.size() < rhs.digits_.size()) { return std::strong_ordering::less; }
+    if (lhs.digits_.size() > rhs.digits_.size()) { return std::strong_ordering::greater; }
 
     for (auto crit_lhs = lhs.digits_.crbegin(), crit_rhs = rhs.digits_.crbegin(); crit_lhs != lhs.digits_.crend();
          ++crit_lhs, ++crit_rhs) {
-        if (*crit_lhs < *crit_rhs) return std::strong_ordering::less;
-        if (*crit_lhs > *crit_rhs) return std::strong_ordering::greater;
+        if (*crit_lhs < *crit_rhs) { return std::strong_ordering::less; }
+        if (*crit_lhs > *crit_rhs) { return std::strong_ordering::greater; }
     }
 
     return std::strong_ordering::equal;
