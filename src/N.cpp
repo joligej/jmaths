@@ -202,6 +202,8 @@ void N::handle_str_(std::string_view num_str, unsigned base) {
     // the more thorough but slower check:
     if (std::ranges::all_of(num_str, [](char c) { return c == '0'; })) { return; }
 
+    assert(!num_str.empty());
+
     for (auto cit = num_str.cbegin(); &*cit != &num_str.back(); ++cit) {
         opr_add_assign_(base_converter(*cit));
         opr_mult_assign_(base);
