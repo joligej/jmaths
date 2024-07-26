@@ -204,9 +204,7 @@ Z & Z::operator++() {
     } else {
         N::opr_decr_();
 
-        if (N::is_zero()) {
-            set_sign_(positive);
-        }
+        if (N::is_zero()) { set_sign_(positive); }
     }
 
     return *this;

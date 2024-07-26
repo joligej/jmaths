@@ -315,9 +315,7 @@ std::pair<N, N> detail::opr_div(const N & lhs, const N & rhs) {
     if (lhs.is_zero()) return {N{}, N{}};
 
     // check if lhs == rhs
-    if (opr_eq(lhs, rhs)) {
-        return {N::one_, N{}};
-    }
+    if (opr_eq(lhs, rhs)) { return {N::one_, N{}}; }
 
     std::pair<N, N> result;
 

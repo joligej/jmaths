@@ -552,9 +552,7 @@ Q Q::operator~() const {
 
     N num_complemented = num_.opr_compl_();
 
-    if (num_complemented.is_zero()) {
-        return Q{};
-    }
+    if (num_complemented.is_zero()) { return Q{}; }
 
     N denom_complemented = denom_.opr_compl_();
 
