@@ -24,15 +24,15 @@
 // functions for jmaths::sign_type
 namespace jmaths {
 
-sign_type::sign_type() : sign_(positive) {
+sign_type::sign_type() : sign_{positive} {
     FUNCTION_TO_LOG;
 }
 
-sign_type::sign_type(sign_bool sign) : sign_(sign) {
+sign_type::sign_type(sign_bool sign) : sign_{sign} {
     FUNCTION_TO_LOG;
 }
 
-sign_type::sign_type(std::string_view * num_str) : sign_(handle_string_(num_str)) {
+sign_type::sign_type(std::string_view * num_str) : sign_{handle_string_(num_str)} {
     FUNCTION_TO_LOG;
 }
 

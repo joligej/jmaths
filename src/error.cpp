@@ -30,7 +30,7 @@ error::error() : error(default_message) {
     FUNCTION_TO_LOG;
 }
 
-error::error(const char * message) : message_(message) {
+error::error(const char * message) : message_{message} {
     FUNCTION_TO_LOG;
 };
 

@@ -202,7 +202,7 @@ namespace jmaths {
 
 template <typename T>
     requires std::same_as<N, std::decay_t<T>>
-N::bit_reference_base_<T>::bit_reference_base_(T & num, bitpos_t pos) : num_(num), pos_(pos) {
+N::bit_reference_base_<T>::bit_reference_base_(T & num, bitpos_t pos) : num_(num), pos_{pos} {
     FUNCTION_TO_LOG;
 }
 

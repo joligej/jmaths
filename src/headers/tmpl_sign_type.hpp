@@ -25,7 +25,7 @@
 // member function templates of sign_type
 namespace jmaths {
 
-sign_type::sign_type(std::integral auto * num) : sign_(handle_int_(num)) {
+sign_type::sign_type(std::integral auto * num) : sign_{handle_int_(num)} {
     FUNCTION_TO_LOG;
 }
 
