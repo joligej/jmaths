@@ -29,7 +29,7 @@ class error : public std::exception {
 
     error();
     explicit error(const char * message);
-    const char * what() const noexcept override;
+    [[nodiscard]] const char * what() const noexcept override;
 
    private:
     const char * const message_;

@@ -30,10 +30,10 @@ class sign_type {
     friend struct calc;
 
    public:
-    bool is_positive() const;
-    bool is_negative() const;
+    [[nodiscard]] bool is_positive() const;
+    [[nodiscard]] bool is_negative() const;
 
-    virtual bool is_zero() const = 0;
+    [[nodiscard]] virtual bool is_zero() const = 0;
     void flip_sign();
 
    protected:
@@ -44,8 +44,8 @@ class sign_type {
     sign_type(std::string_view * num_str);
     sign_type(std::integral auto * num);
 
-    static sign_bool handle_string_(std::string_view * num_str);
-    static sign_bool handle_int_(std::integral auto * num);
+    [[nodiscard]] static sign_bool handle_string_(std::string_view * num_str);
+    [[nodiscard]] static sign_bool handle_int_(std::integral auto * num);
 
     void set_sign_(std::convertible_to<std::underlying_type_t<sign_bool>> auto val);
 };

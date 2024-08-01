@@ -75,21 +75,21 @@ class Z : public sign_type, private N {
     Z(const N & n);
     Z(N && n);
 
-    const N & abs() const &;
-    N && abs() &&;
+    [[nodiscard]] const N & abs() const &;
+    [[nodiscard]] N && abs() &&;
 
-    bool is_zero() const override;
-    bool is_one() const;
-    bool is_neg_one() const;
+    [[nodiscard]] bool is_zero() const override;
+    [[nodiscard]] bool is_one() const;
+    [[nodiscard]] bool is_neg_one() const;
 
-    std::size_t size() const;  // size of this object in bytes
+    [[nodiscard]] std::size_t size() const;  // size of this object in bytes
 
-    std::string to_str(
+    [[nodiscard]] std::string to_str(
         unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
-    std::string to_hex() const;               // convert to string in base 16 (assumes base
+    [[nodiscard]] std::string to_hex() const;               // convert to string in base 16 (assumes base
                                               // is an integer power of 2)
-    template <std::unsigned_integral T> std::optional<T> fits_into() const;
-    template <std::signed_integral T> std::optional<T> fits_into() const;
+    template <std::unsigned_integral T> [[nodiscard]] std::optional<T> fits_into() const;
+    template <std::signed_integral T> [[nodiscard]] std::optional<T> fits_into() const;
 
     void set_zero();
 
@@ -104,11 +104,11 @@ class Z : public sign_type, private N {
     Z & operator|=(const Z & rhs);
     Z & operator^=(const Z & rhs);
 
-    Z operator-() const &;
-    Z && operator-() &&;
-    Z operator~() const;
-    Z operator<<(bitcount_t pos) const;
-    Z operator>>(bitcount_t pos) const;
+    [[nodiscard]] Z operator-() const &;
+    [[nodiscard]] Z && operator-() &&;
+    [[nodiscard]] Z operator~() const;
+    [[nodiscard]] Z operator<<(bitcount_t pos) const;
+    [[nodiscard]] Z operator>>(bitcount_t pos) const;
 
     Z & operator<<=(bitcount_t pos);
     Z & operator>>=(bitcount_t pos);
@@ -120,13 +120,13 @@ class Z : public sign_type, private N {
     Z & operator=(N && n);
 
     static constexpr bool rand_enabled = N::rand_enabled;
-    template <bool = rand_enabled> static Z rand(bitcount_t upper_bound_exponent);
+    template <bool = rand_enabled> [[nodiscard]] static Z rand(bitcount_t upper_bound_exponent);
 
    private:
     Z(N && n, sign_bool sign);
     Z(const N & n, sign_bool sign);
 
-    std::size_t dynamic_size_() const;
+    [[nodiscard]] std::size_t dynamic_size_() const;
 };
 
 }  // namespace jmaths

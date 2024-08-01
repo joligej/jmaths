@@ -73,27 +73,27 @@ class N {
     N(std::string_view num_str, unsigned base = default_base);
     N(std::integral auto num);
 
-    bool is_zero() const;
-    bool is_one() const;
+    [[nodiscard]] bool is_zero() const;
+    [[nodiscard]] bool is_one() const;
 
-    bool is_even() const;
-    bool is_odd() const;
+    [[nodiscard]] bool is_even() const;
+    [[nodiscard]] bool is_odd() const;
 
-    bitcount_t ctz() const;   // count trailing zeroes
-    bitcount_t bits() const;  // count number of base 2 digits
+    [[nodiscard]] bitcount_t ctz() const;   // count trailing zeroes
+    [[nodiscard]] bitcount_t bits() const;  // count number of base 2 digits
 
-    std::size_t size() const;  // size of this object in bytes
+    [[nodiscard]] std::size_t size() const;  // size of this object in bytes
 
-    std::string to_str(
+    [[nodiscard]] std::string to_str(
         unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
-    std::string to_hex() const;               // convert to string in base 16 (assumes base
+    [[nodiscard]] std::string to_hex() const;               // convert to string in base 16 (assumes base
                                               // is an integer power of 2)
     explicit operator bool() const;
-    template <std::unsigned_integral T> std::optional<T> fits_into() const;
-    template <std::signed_integral T> std::optional<T> fits_into() const;
+    template <std::unsigned_integral T> [[nodiscard]] std::optional<T> fits_into() const;
+    template <std::signed_integral T> [[nodiscard]] std::optional<T> fits_into() const;
 
-    bit_reference operator[](bitpos_t pos);
-    const_bit_reference operator[](bitpos_t pos) const;
+    [[nodiscard]] bit_reference operator[](bitpos_t pos);
+    [[nodiscard]] const_bit_reference operator[](bitpos_t pos) const;
 
     void set_zero();
 
@@ -108,9 +108,9 @@ class N {
     N & operator|=(const N & rhs);
     N & operator^=(const N & rhs);
 
-    N operator~() const;
-    N operator<<(bitcount_t pos) const;
-    N operator>>(bitcount_t pos) const;
+    [[nodiscard]] N operator~() const;
+    [[nodiscard]] N operator<<(bitcount_t pos) const;
+    [[nodiscard]] N operator>>(bitcount_t pos) const;
 
     N & operator<<=(bitcount_t pos);
     N & operator>>=(bitcount_t pos);
@@ -119,10 +119,10 @@ class N {
     N & operator=(std::integral auto rhs);
 
     static constexpr bool rand_enabled = internal::allowed_rand_type<base_int>;
-    template <bool = rand_enabled> static N rand(bitcount_t upper_bound_exponent);
+    template <bool = rand_enabled> [[nodiscard]] static N rand(bitcount_t upper_bound_exponent);
 
    protected:
-    std::size_t dynamic_size_() const;
+    [[nodiscard]] std::size_t dynamic_size_() const;
 
     void opr_incr_();
     void opr_decr_();
@@ -135,9 +135,9 @@ class N {
     void opr_or_assign_(const N & rhs);
     void opr_xor_assign_(const N & rhs);
 
-    N opr_compl_() const;
-    N opr_bitshift_l_(bitcount_t pos) const;
-    N opr_bitshift_r_(bitcount_t pos) const;
+    [[nodiscard]] N opr_compl_() const;
+    [[nodiscard]] N opr_bitshift_l_(bitcount_t pos) const;
+    [[nodiscard]] N opr_bitshift_r_(bitcount_t pos) const;
 
     void opr_bitshift_l_assign_(bitcount_t pos);
     void opr_bitshift_r_assign_(bitcount_t pos);
@@ -149,14 +149,14 @@ class N {
     std::vector<base_int, allocator<base_int>> digits_;
 
     void remove_leading_zeroes_();
-    base_int front_() const;
-    std::string conv_to_base_(unsigned base) const;
+    [[nodiscard]] base_int front_() const;
+    [[nodiscard]] std::string conv_to_base_(unsigned base) const;
     void handle_str_(std::string_view num_str, unsigned base);
     void handle_int_(std::integral auto num);
 
-    template <std::unsigned_integral T> T fit_into_(std::size_t max_byte) const;
+    template <std::unsigned_integral T> [[nodiscard]] T fit_into_(std::size_t max_byte) const;
 
-    bool bit_(bitpos_t pos) const;
+    [[nodiscard]] bool bit_(bitpos_t pos) const;
     void bit_(bitpos_t pos, bool val);
 
     template <typename T>

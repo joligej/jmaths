@@ -82,25 +82,25 @@ class Q : public sign_type {
     Q(Z && num, const Z & denom);
     Q(Z && num, Z && denom);
 
-    bool is_zero() const override;
-    bool is_one() const;
-    bool is_neg_one() const;
+    [[nodiscard]] bool is_zero() const override;
+    [[nodiscard]] bool is_one() const;
+    [[nodiscard]] bool is_neg_one() const;
 
-    Q abs() const &;
-    Q && abs() &&;
+    [[nodiscard]] Q abs() const &;
+    [[nodiscard]] Q && abs() &&;
 
-    Q inverse() const &;
-    Q && inverse() &&;
+    [[nodiscard]] Q inverse() const &;
+    [[nodiscard]] Q && inverse() &&;
 
-    std::size_t size() const;  // size of this object in bytes
+    [[nodiscard]] std::size_t size() const;  // size of this object in bytes
 
-    std::string to_str(unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
-    std::string to_hex() const;                              // convert to string in base 16 (assumes base
+    [[nodiscard]] std::string to_str(unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
+    [[nodiscard]] std::string to_hex() const;                              // convert to string in base 16 (assumes base
                                                              // is an integer power of 2)
     explicit operator bool() const;
     template <std::floating_point T>
         requires std::numeric_limits<T>::is_iec559
-    std::optional<T> fits_into() const;
+    [[nodiscard]] std::optional<T> fits_into() const;
 
     Q & operator++();
     Q & operator--();
@@ -114,11 +114,11 @@ class Q : public sign_type {
     Q & operator|=(const Q & rhs);
     Q & operator^=(const Q & rhs);
 
-    Q operator-() const &;
-    Q && operator-() &&;
-    Q operator~() const;
-    Q operator<<(bitcount_t pos) const;
-    Q operator>>(bitcount_t pos) const;
+    [[nodiscard]] Q operator-() const &;
+    [[nodiscard]] Q && operator-() &&;
+    [[nodiscard]] Q operator~() const;
+    [[nodiscard]] Q operator<<(bitcount_t pos) const;
+    [[nodiscard]] Q operator>>(bitcount_t pos) const;
 
     Q & operator<<=(bitcount_t pos);
     Q & operator>>=(bitcount_t pos);
@@ -139,13 +139,13 @@ class Q : public sign_type {
     Q(const N & num, const N & denom, sign_bool sign);
     Q(std::tuple<N, N, sign_bool> && fraction_info);
 
-    static std::string_view handle_fraction_string_(std::string_view * num_str);
+    [[nodiscard]] static std::string_view handle_fraction_string_(std::string_view * num_str);
 
     void canonicalise_();
 
-    static std::tuple<N, N, sign_bool> handle_float_(std::floating_point auto num);
+    [[nodiscard]] static std::tuple<N, N, sign_bool> handle_float_(std::floating_point auto num);
 
-    std::size_t dynamic_size_() const;
+    [[nodiscard]] std::size_t dynamic_size_() const;
 };
 
 }  // namespace jmaths
