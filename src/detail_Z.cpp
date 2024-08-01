@@ -55,24 +55,24 @@ Z detail::opr_add(const Z & lhs, const Z & rhs) {
     using sign_type::positive, sign_type::negative;
 
     if (lhs.is_positive()) {
-        if (rhs.is_positive()) { return Z(opr_add(lhs.abs(), rhs.abs()), positive); }
+        if (rhs.is_positive()) { return {opr_add(lhs.abs(), rhs.abs()), positive}; }
 
         if (const auto difference = opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
             return Z{};
         } else if (difference > 0) {
-            return Z(opr_subtr(lhs.abs(), rhs.abs()), positive);
+            return {opr_subtr(lhs.abs(), rhs.abs()), positive};
         } else {
-            return Z(opr_subtr(rhs.abs(), lhs.abs()), negative);
+            return {opr_subtr(rhs.abs(), lhs.abs()), negative};
         }
     } else {
-        if (rhs.is_negative()) { return Z(opr_add(lhs.abs(), rhs.abs()), negative); }
+        if (rhs.is_negative()) { return {opr_add(lhs.abs(), rhs.abs()), negative}; }
 
         if (const auto difference = opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
             return Z{};
         } else if (difference > 0) {
-            return Z(opr_subtr(lhs.abs(), rhs.abs()), negative);
+            return {opr_subtr(lhs.abs(), rhs.abs()), negative};
         } else {
-            return Z(opr_subtr(rhs.abs(), lhs.abs()), positive);
+            return {opr_subtr(rhs.abs(), lhs.abs()), positive};
         }
     }
 }
@@ -83,24 +83,24 @@ Z detail::opr_subtr(const Z & lhs, const Z & rhs) {
     using sign_type::positive, sign_type::negative;
 
     if (lhs.is_positive()) {
-        if (rhs.is_negative()) { return Z(opr_add(lhs.abs(), rhs.abs()), positive); }
+        if (rhs.is_negative()) { return {opr_add(lhs.abs(), rhs.abs()), positive}; }
 
         if (const auto difference = opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
             return Z{};
         } else if (difference > 0) {
-            return Z(opr_subtr(lhs.abs(), rhs.abs()), positive);
+            return {opr_subtr(lhs.abs(), rhs.abs()), positive};
         } else {
-            return Z(opr_subtr(rhs.abs(), lhs.abs()), negative);
+            return {opr_subtr(rhs.abs(), lhs.abs()), negative};
         }
     } else {
-        if (rhs.is_positive()) { return Z(opr_add(lhs.abs(), rhs.abs()), negative); }
+        if (rhs.is_positive()) { return {opr_add(lhs.abs(), rhs.abs()), negative}; }
 
         if (const auto difference = opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
             return Z{};
         } else if (difference > 0) {
-            return Z(opr_subtr(lhs.abs(), rhs.abs()), negative);
+            return {opr_subtr(lhs.abs(), rhs.abs()), negative};
         } else {
-            return Z(opr_subtr(rhs.abs(), lhs.abs()), positive);
+            return {opr_subtr(rhs.abs(), lhs.abs()), positive};
         }
     }
 }
@@ -112,7 +112,7 @@ Z detail::opr_mult(const Z & lhs, const Z & rhs) {
 
     if (product.is_zero()) { return Z{}; }
 
-    return Z(std::move(product), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
+    return {std::move(product), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
 std::pair<Z, Z> detail::opr_div(const Z & lhs, const Z & rhs) {
@@ -142,7 +142,7 @@ Z detail::opr_and(const Z & lhs, const Z & rhs) {
 
     if (and_result.is_zero()) { return Z{}; }
 
-    return Z(std::move(and_result), static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_));
+    return {std::move(and_result), static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_)};
 }
 
 Z detail::opr_or(const Z & lhs, const Z & rhs) {
@@ -152,7 +152,7 @@ Z detail::opr_or(const Z & lhs, const Z & rhs) {
 
     if (or_result.is_zero()) { return Z{}; }
 
-    return Z(std::move(or_result), static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_));
+    return {std::move(or_result), static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_)};
 }
 
 Z detail::opr_xor(const Z & lhs, const Z & rhs) {
@@ -162,7 +162,7 @@ Z detail::opr_xor(const Z & lhs, const Z & rhs) {
 
     if (xor_result.is_zero()) { return Z{}; }
 
-    return Z(std::move(xor_result), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
+    return {std::move(xor_result), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
 bool detail::opr_eq(const Z & lhs, const Z & rhs) {

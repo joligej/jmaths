@@ -79,20 +79,21 @@ class N {
     bool is_even() const;
     bool is_odd() const;
 
-    bit_type ctz() const;   // count trailing zeroes
-    bit_type bits() const;  // count number of base 2 digits
+    bitcount_t ctz() const;   // count trailing zeroes
+    bitcount_t bits() const;  // count number of base 2 digits
 
     std::size_t size() const;  // size of this object in bytes
 
-    std::string to_str(unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
-    std::string to_hex() const;                              // convert to string in base 16 (assumes base
-                                                             // is an integer power of 2)
+    std::string to_str(
+        unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
+    std::string to_hex() const;               // convert to string in base 16 (assumes base
+                                              // is an integer power of 2)
     explicit operator bool() const;
     template <std::unsigned_integral T> std::optional<T> fits_into() const;
     template <std::signed_integral T> std::optional<T> fits_into() const;
 
-    bit_reference operator[](bit_type pos);
-    const_bit_reference operator[](bit_type pos) const;
+    bit_reference operator[](bitpos_t pos);
+    const_bit_reference operator[](bitpos_t pos) const;
 
     void set_zero();
 
@@ -108,17 +109,17 @@ class N {
     N & operator^=(const N & rhs);
 
     N operator~() const;
-    N operator<<(bit_type pos) const;
-    N operator>>(bit_type pos) const;
+    N operator<<(bitcount_t pos) const;
+    N operator>>(bitcount_t pos) const;
 
-    N & operator<<=(bit_type pos);
-    N & operator>>=(bit_type pos);
+    N & operator<<=(bitcount_t pos);
+    N & operator>>=(bitcount_t pos);
 
     N & operator=(std::string_view num_str);
     N & operator=(std::integral auto rhs);
 
     static constexpr bool rand_enabled = internal::allowed_rand_type<base_int>;
-    template <bool = rand_enabled> static N rand(bit_type upper_bound_exponent);
+    template <bool = rand_enabled> static N rand(bitcount_t upper_bound_exponent);
 
    protected:
     std::size_t dynamic_size_() const;
@@ -135,11 +136,11 @@ class N {
     void opr_xor_assign_(const N & rhs);
 
     N opr_compl_() const;
-    N opr_bitshift_l_(bit_type pos) const;
-    N opr_bitshift_r_(bit_type pos) const;
+    N opr_bitshift_l_(bitcount_t pos) const;
+    N opr_bitshift_r_(bitcount_t pos) const;
 
-    void opr_bitshift_l_assign_(bit_type pos);
-    void opr_bitshift_r_assign_(bit_type pos);
+    void opr_bitshift_l_assign_(bitcount_t pos);
+    void opr_bitshift_r_assign_(bitcount_t pos);
 
     void opr_assign_(std::string_view num_str);
     void opr_assign_(std::integral auto rhs);
@@ -155,8 +156,8 @@ class N {
 
     template <std::unsigned_integral T> T fit_into_(std::size_t max_byte) const;
 
-    bool bit_(bit_type pos) const;
-    void bit_(bit_type pos, bool val);
+    bool bit_(bitpos_t pos) const;
+    void bit_(bitpos_t pos, bool val);
 
     template <typename T>
         requires std::same_as<N, std::decay_t<T>>
@@ -173,15 +174,15 @@ class N::bit_reference_base_ {
 
    public:
     bit_reference_base_() = delete;
-    bit_reference_base_(T &&, bit_type) = delete;
-    bit_reference_base_(T & num, bit_type pos);
+    bit_reference_base_(T &&, bitpos_t) = delete;
+    bit_reference_base_(T & num, bitpos_t pos);
 
     operator bool() const;
     explicit operator int() const;
 
    private:
     T & num_;
-    const bit_type pos_;
+    const bitpos_t pos_;
 };
 
 class N::bit_reference : public N::bit_reference_base_<N> {

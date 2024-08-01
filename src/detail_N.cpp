@@ -75,11 +75,11 @@ N detail::opr_add(const N & lhs, const N & rhs) {
     assert(longest && shortest);
 
     N sum;
-    sum.digits_.reserve(longest->digits_.size() + 1);
+    sum.digits_.reserve(longest->digits_.size() + 1U);
 
     bool carry = false;
 
-    std::size_t i = 0;
+    std::size_t i = 0U;
 
     for (; i < shortest->digits_.size(); ++i) {
         // checks if lhs + rhs + carry < base
@@ -91,7 +91,7 @@ N detail::opr_add(const N & lhs, const N & rhs) {
 
     if (carry) {
         for (; i < longest->digits_.size(); ++i) {
-            sum.digits_.emplace_back(longest->digits_[i] + 1);
+            sum.digits_.emplace_back(longest->digits_[i] + 1U);
 
             if (longest->digits_[i] < max_digit) {
                 ++i;
@@ -112,7 +112,7 @@ loop_without_carry:
 
 end_of_function:
 
-    assert(sum.is_zero() || sum.digits_.back() != 0);
+    assert(sum.is_zero() || sum.digits_.back() != 0U);
 
     return sum;
 }
@@ -129,12 +129,12 @@ N detail::opr_subtr(N lhs, const N & rhs) {
     N difference;
     difference.digits_.reserve(lhs.digits_.size());
 
-    std::size_t i = 0;
+    std::size_t i = 0U;
 
     for (; i < rhs.digits_.size(); ++i) {
         if (lhs.digits_[i] < rhs.digits_[i]) {
-            for (std::size_t j = i + 1; j < lhs.digits_.size(); ++j) {
-                if ((lhs.digits_[j])-- > 0) { break; }
+            for (std::size_t j = i + 1U; j < lhs.digits_.size(); ++j) {
+                if ((lhs.digits_[j])-- > 0U) { break; }
             }
         }
 
@@ -147,7 +147,7 @@ N detail::opr_subtr(N lhs, const N & rhs) {
 
     difference.remove_leading_zeroes_();
 
-    assert(difference.is_zero() || difference.digits_.back() != 0);
+    assert(difference.is_zero() || difference.digits_.back() != 0U);
 
     return difference;
 }
@@ -195,11 +195,11 @@ N detail::opr_mult(const N & lhs, const N & rhs) {
 
         auto cit = longest->digits_.cbegin();
 
-        for (std::size_t i = 0; i < longest_digits_right; ++cit, ++i) {
+        for (std::size_t i = 0U; i < longest_digits_right; ++cit, ++i) {
             longest_num_r.digits_.emplace_back(*cit);
         }
 
-        for (std::size_t i = 0; i < longest_digits_left; ++cit, ++i) {
+        for (std::size_t i = 0U; i < longest_digits_left; ++cit, ++i) {
             assert((cit != longest->digits_.cend()));
             longest_num_l.digits_.emplace_back(*cit);
         }
@@ -212,13 +212,15 @@ N detail::opr_mult(const N & lhs, const N & rhs) {
 
         auto cit = shortest->digits_.cbegin();
 
-        for (std::size_t i = 0; i < longest_digits_right && cit != shortest->digits_.cend(); ++cit, ++i) {
+        for (std::size_t i = 0U; i < longest_digits_right && cit != shortest->digits_.cend();
+             ++cit, ++i) {
             shortest_num_r.digits_.emplace_back(*cit);
         }
 
         if (cit != shortest->digits_.cend()) { shortest_num_l.digits_.reserve(longest_digits_left); }
 
-        for (std::size_t i = 0; i < longest_digits_left && cit != shortest->digits_.cend(); ++cit, ++i) {
+        for (std::size_t i = 0U; i < longest_digits_left && cit != shortest->digits_.cend();
+             ++cit, ++i) {
             shortest_num_l.digits_.emplace_back(*cit);
         }
     }
@@ -236,16 +238,18 @@ N detail::opr_mult(const N & lhs, const N & rhs) {
         // max overhead would be base_int_size
         product.digits_.reserve(lhs.digits_.size() + rhs.digits_.size() + exp);
 
-        for (std::size_t i = 0; i < lhs.digits_.size(); ++i) {
+        for (std::size_t i = 0U; i < lhs.digits_.size(); ++i) {
             N temp1;
             temp1.digits_.reserve(i + rhs.digits_.size() + 1);
             temp1.digits_.insert(temp1.digits_.begin(), i, 0);
             base_int carry = 0;
             for (std::size_t j = 0; j < rhs.digits_.size(); ++j) {
-                const base_int_big temp2 = (base_int_big)lhs.digits_[i] * (base_int_big)rhs.digits_[j];
+                const base_int_big temp2 =
+                    (base_int_big)lhs.digits_[i] * (base_int_big)rhs.digits_[j];
                 const base_int temp3 = (base_int)temp2;
                 temp1.digits_.emplace_back(carry + temp3);
-                const base_int temp_carry = ((base_int_big)carry + (base_int_big)temp3) >> base_int_bits;
+                const base_int temp_carry =
+                    ((base_int_big)carry + (base_int_big)temp3) >> base_int_bits;
                 carry = (temp2 >> base_int_bits) + temp_carry;
             }
 
@@ -269,8 +273,11 @@ N detail::opr_mult(const N & lhs, const N & rhs) {
                                0);  // should this really be 0 ???
 
     return insert_front(XlYl, 2 * longest_digits_right) +
-           insert_front(((multiply(shortest_num_l + shortest_num_r, longest_num_l + longest_num_r, 0) - XlYl) - XrYr),
-                        longest_digits_right) +
+           insert_front(
+               ((multiply(shortest_num_l + shortest_num_r, longest_num_l + longest_num_r, 0) -
+                 XlYl) -
+                XrYr),
+               longest_digits_right) +
            XrYr;
 
 #else
@@ -287,20 +294,21 @@ N detail::opr_mult(const N & lhs, const N & rhs) {
     // max overhead would be base_int_size
     product.digits_.reserve(lhs.digits_.size() + rhs.digits_.size());
 
-    for (std::size_t i = 0; i < lhs.digits_.size(); ++i) {
+    for (std::size_t i = 0U; i < lhs.digits_.size(); ++i) {
         N temp1;
-        temp1.digits_.reserve(i + rhs.digits_.size() + 1);
-        temp1.digits_.insert(temp1.digits_.begin(), i, 0);
-        base_int carry = 0;
-        for (std::size_t j = 0; j < rhs.digits_.size(); ++j) {
+        temp1.digits_.reserve(i + rhs.digits_.size() + 1U);
+        temp1.digits_.insert(temp1.digits_.begin(), i, 0U);
+        base_int carry = 0U;
+        for (std::size_t j = 0U; j < rhs.digits_.size(); ++j) {
             const base_int_big temp2 = (base_int_big)lhs.digits_[i] * (base_int_big)rhs.digits_[j];
             const base_int temp3 = (base_int)temp2;
             temp1.digits_.emplace_back(carry + temp3);
-            const base_int temp_carry = ((base_int_big)carry + (base_int_big)temp3) >> base_int_bits;
-            carry = (temp2 >> base_int_bits) + temp_carry;
+            const base_int temp_carry =
+                (base_int)(((base_int_big)carry + (base_int_big)temp3) >> base_int_bits);
+            carry = (base_int)((temp2 >> base_int_bits) + temp_carry);
         }
 
-        if (carry != 0) { temp1.digits_.emplace_back(carry); }
+        if (carry != 0U) { temp1.digits_.emplace_back(carry); }
         product.opr_add_assign_(temp1);
     }
 
@@ -321,31 +329,36 @@ std::pair<N, N> detail::opr_div(const N & lhs, const N & rhs) {
 
     auto & [q, r] = result;
 
-    if (const auto max_size = lhs.digits_.size() - rhs.digits_.size() + 1;
-        lhs.digits_.size() + 1 >= rhs.digits_.size()) {
+    if (const auto max_size = lhs.digits_.size() - rhs.digits_.size() + 1U;
+        lhs.digits_.size() + 1U >= rhs.digits_.size()) {
         // rhs.digits_.size() is always >= 1 so even if lhs.digits_.size() + 1
         // overflows to 0 no errors shall occur
 #ifndef NDEBUG
         using nlim = std::numeric_limits<decltype(lhs.digits_.size())>;
 #endif
 
-        assert(lhs.digits_.size() == nlim::max() ?
-                   !rhs.digits_.empty() :
-               lhs.digits_.size() >= rhs.digits_.size() ?
-                   lhs.digits_.size() - rhs.digits_.size() <= nlim::max() - 1 :
-                   true /*-(rhs.digits_.size() - lhs.digits_.size()) <= nlim::max() - 1*/);  // assert for overflow
+        assert(
+            lhs.digits_.size() == nlim::max() ?
+                !rhs.digits_.empty() :
+            lhs.digits_.size() >= rhs.digits_.size() ?
+                lhs.digits_.size() - rhs.digits_.size() <= nlim::max() - 1U :
+                true /*-(rhs.digits_.size() - lhs.digits_.size()) <= nlim::max() - 1*/);  // assert
+                                                                                          // for
+                                                                                          // overflow
         assert(lhs.digits_.size() == nlim::max() ?
                    true :
-                   lhs.digits_.size() + 1 >= rhs.digits_.size());  // assert for overflow to 0
+                   lhs.digits_.size() + 1U >= rhs.digits_.size());  // assert for overflow to 0
 
         q.digits_.reserve(max_size);
     }
 
     r.digits_.reserve(rhs.digits_.size());
 
-    for (bit_type i = lhs.digits_.size() * base_int_bits - std::countl_zero(lhs.digits_.back()); i-- > 0;) {
-        r.opr_bitshift_l_assign_(1);
-        r.bit_(0, lhs.bit_(i));
+    for (bitpos_t i =
+             lhs.digits_.size() * base_int_bits - (bitcount_t)std::countl_zero(lhs.digits_.back());
+         i-- > 0U;) {
+        r.opr_bitshift_l_assign_(1U);
+        r.bit_(0U, lhs.bit_(i));
         if (opr_comp(r, rhs) >= 0) {
             r.opr_subtr_assign_(rhs);
             q.bit_(i, 1);
@@ -367,7 +380,7 @@ N detail::opr_and(const N & lhs, const N & rhs) {
     N and_result;
     and_result.digits_.reserve(shortest.digits_.size());
 
-    for (std::size_t i = 0; i < shortest.digits_.size(); ++i) {
+    for (std::size_t i = 0U; i < shortest.digits_.size(); ++i) {
         and_result.digits_.emplace_back(lhs.digits_[i] & rhs.digits_[i]);
     }
 
@@ -396,7 +409,7 @@ N detail::opr_or(const N & lhs, const N & rhs) {
     N or_result;
     or_result.digits_.reserve(longest->digits_.size());
 
-    std::size_t i = 0;
+    std::size_t i = 0U;
 
     for (; i < shortest->digits_.size(); ++i) {
         or_result.digits_.emplace_back(lhs.digits_[i] | rhs.digits_[i]);
@@ -429,7 +442,7 @@ N detail::opr_xor(const N & lhs, const N & rhs) {
     N xor_result;
     xor_result.digits_.reserve(longest->digits_.size());
 
-    std::size_t i = 0;
+    std::size_t i = 0U;
 
     for (; i < shortest->digits_.size(); ++i) {
         xor_result.digits_.emplace_back(lhs.digits_[i] ^ rhs.digits_[i]);
@@ -456,7 +469,8 @@ std::strong_ordering detail::opr_comp(const N & lhs, const N & rhs) {
     if (lhs.digits_.size() < rhs.digits_.size()) { return std::strong_ordering::less; }
     if (lhs.digits_.size() > rhs.digits_.size()) { return std::strong_ordering::greater; }
 
-    for (auto crit_lhs = lhs.digits_.crbegin(), crit_rhs = rhs.digits_.crbegin(); crit_lhs != lhs.digits_.crend();
+    for (auto crit_lhs = lhs.digits_.crbegin(), crit_rhs = rhs.digits_.crbegin();
+         crit_lhs != lhs.digits_.crend();
          ++crit_lhs, ++crit_rhs) {
         if (*crit_lhs < *crit_rhs) { return std::strong_ordering::less; }
         if (*crit_lhs > *crit_rhs) { return std::strong_ordering::greater; }

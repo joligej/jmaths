@@ -35,13 +35,13 @@ N calc::gcd(N a, N b) {
     if (a.is_zero()) { return b; }
     if (b.is_zero()) { return a; }
 
-    const bit_type i = a.ctz();
-    const bit_type j = b.ctz();
+    const bitcount_t i = a.ctz();
+    const bitcount_t j = b.ctz();
 
     a.opr_bitshift_r_assign_(i);
     b.opr_bitshift_r_assign_(j);
 
-    const bit_type k = std::min(i, j);
+    const bitcount_t k = std::min(i, j);
 
     for (;;) {
         assert(a.is_odd());
@@ -62,10 +62,10 @@ std::pair<N, N> calc::sqrt(const N & num) {
 
     if (num.is_zero() || num.is_one()) { return {num, N{}}; }
 
-    N start = N::one_, end = num.opr_bitshift_r_(1), ans;
+    N start = N::one_, end = num.opr_bitshift_r_(1U), ans;
 
     while (detail::opr_comp(start, end) <= 0) {
-        N mid = detail::opr_add(start, end).opr_bitshift_r_(1);
+        N mid = detail::opr_add(start, end).opr_bitshift_r_(1U);
 
         const N sqr = detail::opr_mult(mid, mid);
 
@@ -93,10 +93,10 @@ N calc::sqrt_whole(const N & num) {
 
     if (num.is_zero() || num.is_one()) { return num; }
 
-    N start = N::one_, end = num.opr_bitshift_r_(1), ans;
+    N start = N::one_, end = num.opr_bitshift_r_(1U), ans;
 
     while (detail::opr_comp(start, end) <= 0) {
-        N mid = detail::opr_add(start, end).opr_bitshift_r_(1);
+        N mid = detail::opr_add(start, end).opr_bitshift_r_(1U);
 
         const N sqr = detail::opr_mult(mid, mid);
 
@@ -126,7 +126,7 @@ N calc::pow(N base, N exponent) {
 
     for (;;) {
         if (exponent.is_odd()) { result.opr_mult_assign_(base); }
-        exponent.opr_bitshift_r_assign_(1);
+        exponent.opr_bitshift_r_assign_(1U);
         if (exponent.is_zero()) { break; }
         base.opr_mult_assign_(base);
     }
@@ -149,7 +149,7 @@ N calc::pow_mod(N base, N exponent, const N & mod) {
             result = detail::opr_div(result, mod).second;  // maybe use separate function just for mod ???
         }
 
-        exponent.opr_bitshift_r_assign_(1);
+        exponent.opr_bitshift_r_assign_(1U);
         if (exponent.is_zero()) { break; }
         base.opr_mult_assign_(base);
     }
@@ -162,7 +162,7 @@ Z calc::pow(Z base, N exponent) {
 
     const auto sign = base.is_negative() && exponent.is_odd() ? sign_type::negative : sign_type::positive;
 
-    return Z(pow(std::move(std::move(base).abs()), std::move(exponent)), sign);
+    return {pow(std::move(std::move(base).abs()), std::move(exponent)), sign};
 }
 
 }  // namespace jmaths

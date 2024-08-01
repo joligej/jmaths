@@ -84,9 +84,10 @@ class Z : public sign_type, private N {
 
     std::size_t size() const;  // size of this object in bytes
 
-    std::string to_str(unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
-    std::string to_hex() const;                              // convert to string in base 16 (assumes base
-                                                             // is an integer power of 2)
+    std::string to_str(
+        unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
+    std::string to_hex() const;               // convert to string in base 16 (assumes base
+                                              // is an integer power of 2)
     template <std::unsigned_integral T> std::optional<T> fits_into() const;
     template <std::signed_integral T> std::optional<T> fits_into() const;
 
@@ -106,11 +107,11 @@ class Z : public sign_type, private N {
     Z operator-() const &;
     Z && operator-() &&;
     Z operator~() const;
-    Z operator<<(bit_type pos) const;
-    Z operator>>(bit_type pos) const;
+    Z operator<<(bitcount_t pos) const;
+    Z operator>>(bitcount_t pos) const;
 
-    Z & operator<<=(bit_type pos);
-    Z & operator>>=(bit_type pos);
+    Z & operator<<=(bitcount_t pos);
+    Z & operator>>=(bitcount_t pos);
 
     Z & operator=(std::string_view num_str);
     Z & operator=(std::integral auto rhs);
@@ -119,7 +120,7 @@ class Z : public sign_type, private N {
     Z & operator=(N && n);
 
     static constexpr bool rand_enabled = N::rand_enabled;
-    template <bool = rand_enabled> static Z rand(bit_type upper_bound_exponent);
+    template <bool = rand_enabled> static Z rand(bitcount_t upper_bound_exponent);
 
    private:
     Z(N && n, sign_bool sign);

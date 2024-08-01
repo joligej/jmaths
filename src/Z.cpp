@@ -124,7 +124,7 @@ Z::Z() = default;
 Z::Z(std::string_view num_str, unsigned base) : sign_type(&num_str), N(num_str, base) {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) set_sign_(positive);
+    if (is_zero()) { set_sign_(positive); }
 }
 
 Z::Z(const N & n) : N(n) {
@@ -330,8 +330,8 @@ Z & Z::operator^=(const Z & rhs) {
 Z Z::operator-() const & {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) return *this;
-    return Z(abs(), static_cast<sign_bool>(!sign_));
+    if (is_zero()) {return *this;}
+    return {abs(), static_cast<sign_bool>(!sign_)};
 }
 
 Z && Z::operator-() && {
@@ -346,35 +346,35 @@ Z Z::operator~() const {
 
     N complemented = N::opr_compl_();
 
-    if (complemented.is_zero()) return Z{};
+    if (complemented.is_zero()) {return Z{};}
 
-    return Z(std::move(complemented), static_cast<sign_bool>(!sign_));
+    return {std::move(complemented), static_cast<sign_bool>(!sign_)};
 }
 
-Z Z::operator<<(bit_type pos) const {
+Z Z::operator<<(bitcount_t pos) const {
     FUNCTION_TO_LOG;
 
-    return Z(N::opr_bitshift_l_(pos), sign_);
+    return {N::opr_bitshift_l_(pos), sign_};
 }
 
-Z Z::operator>>(bit_type pos) const {
+Z Z::operator>>(bitcount_t pos) const {
     FUNCTION_TO_LOG;
 
     N shifted = N::opr_bitshift_r_(pos);
 
-    if (shifted.is_zero()) return Z{};
+    if (shifted.is_zero()) {return Z{};}
 
-    return Z(std::move(shifted), sign_);
+    return {std::move(shifted), sign_};
 }
 
-Z & Z::operator<<=(bit_type pos) {
+Z & Z::operator<<=(bitcount_t pos) {
     FUNCTION_TO_LOG;
 
     N::opr_bitshift_l_assign_(pos);
     return *this;
 }
 
-Z & Z::operator>>=(bit_type pos) {
+Z & Z::operator>>=(bitcount_t pos) {
     FUNCTION_TO_LOG;
 
     N::opr_bitshift_r_assign_(pos);
@@ -389,7 +389,7 @@ Z & Z::operator=(std::string_view num_str) {
 
     set_sign_(sign_type::handle_string_(&num_str));
     N::opr_assign_(num_str);
-    if (is_zero()) set_sign_(positive);
+    if (is_zero()) {set_sign_(positive);}
     return *this;
 }
 

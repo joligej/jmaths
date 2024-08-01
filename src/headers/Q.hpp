@@ -117,11 +117,11 @@ class Q : public sign_type {
     Q operator-() const &;
     Q && operator-() &&;
     Q operator~() const;
-    Q operator<<(bit_type pos) const;
-    Q operator>>(bit_type pos) const;
+    Q operator<<(bitcount_t pos) const;
+    Q operator>>(bitcount_t pos) const;
 
-    Q & operator<<=(bit_type pos);
-    Q & operator>>=(bit_type pos);
+    Q & operator<<=(bitcount_t pos);
+    Q & operator>>=(bitcount_t pos);
 
     Q & operator=(std::string_view num_str);
     Q & operator=(std::floating_point auto rhs);

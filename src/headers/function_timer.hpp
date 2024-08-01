@@ -42,4 +42,4 @@ class function_timer {
     const clock_type::time_point start_time_;
 };
 
-};  // namespace jmaths::internal
+}  // namespace jmaths::internal

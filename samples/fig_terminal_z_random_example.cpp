@@ -21,10 +21,10 @@
 #include "Z.hpp"
 
 int main(int, char *[]) {
-    using jmaths::Z, jmaths::bit_type;
+    using jmaths::Z, jmaths::bitcount_t;
 
     auto exponent_generator =
-        std::bind(std::uniform_int_distribution<bit_type>(0, 32), std::mt19937(std::random_device{}()));
+        std::bind(std::uniform_int_distribution<bitcount_t>(0, 32), std::mt19937(std::random_device{}()));
 
     while (std::cin.get() == '\n') {
         std::cout << Z::rand(exponent_generator()) << '\n';

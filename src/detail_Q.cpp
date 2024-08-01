@@ -57,7 +57,7 @@ Q detail::opr_add(const Q & lhs, const Q & rhs) {
         if (rhs.is_positive()) {
             N first_product = opr_mult(lhs.num_, rhs.denom_);
             first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
-            return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive);
+            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive};
         }
 
         N first_product = opr_mult(lhs.num_, rhs.denom_);
@@ -67,16 +67,18 @@ Q detail::opr_add(const Q & lhs, const Q & rhs) {
             return Q{};
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
-            return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive);
+            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive};
         } else {
             second_product.opr_subtr_assign_(first_product);
-            return Q(std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), negative);
+            return {std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), negative};
         }
     } else {
         if (rhs.is_negative()) {
             N first_product = opr_mult(lhs.num_, rhs.denom_);
             first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
-            return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative);
+            return {
+                std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative
+            }
         }
 
         N first_product = opr_mult(lhs.num_, rhs.denom_);
@@ -86,10 +88,10 @@ Q detail::opr_add(const Q & lhs, const Q & rhs) {
             return Q{};
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
-            return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative);
+            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative};
         } else {
             second_product.opr_subtr_assign_(first_product);
-            return Q(std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), positive);
+            return {std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), positive};
         }
     }
 }
@@ -103,7 +105,7 @@ Q detail::opr_subtr(const Q & lhs, const Q & rhs) {
         if (rhs.is_negative()) {
             N first_product = opr_mult(lhs.num_, rhs.denom_);
             first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
-            return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive);
+            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive};
         }
 
         N first_product = opr_mult(lhs.num_, rhs.denom_);
@@ -113,16 +115,16 @@ Q detail::opr_subtr(const Q & lhs, const Q & rhs) {
             return Q{};
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
-            return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive);
+            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive};
         } else {
             second_product.opr_subtr_assign_(first_product);
-            return Q(std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), negative);
+            return {std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), negative};
         }
     } else {
         if (rhs.is_positive()) {
             N first_product = opr_mult(lhs.num_, rhs.denom_);
             first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
-            return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative);
+            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative};
         }
 
         N first_product = opr_mult(lhs.num_, rhs.denom_);
@@ -132,10 +134,10 @@ Q detail::opr_subtr(const Q & lhs, const Q & rhs) {
             return Q{};
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
-            return Q(std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative);
+            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative};
         } else {
             second_product.opr_subtr_assign_(first_product);
-            return Q(std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), positive);
+            return {std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), positive};
         }
     }
 }
@@ -147,9 +149,9 @@ Q detail::opr_mult(const Q & lhs, const Q & rhs) {
 
     if (numerator.is_zero()) { return Q{}; }
 
-    return Q(std::move(numerator),
-             lhs.denom_ * rhs.denom_,
-             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
+    return {std::move(numerator),
+            lhs.denom_ * rhs.denom_,
+            static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
 Q detail::opr_div(const Q & lhs, const Q & rhs) {
@@ -159,9 +161,9 @@ Q detail::opr_div(const Q & lhs, const Q & rhs) {
 
     if (numerator.is_zero()) { return Q{}; }
 
-    return Q(std::move(numerator),
-             lhs.denom_ * rhs.num_,
-             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
+    return {std::move(numerator),
+            lhs.denom_ * rhs.num_,
+            static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
 Q detail::opr_and(const Q & lhs, const Q & rhs) {
@@ -175,9 +177,9 @@ Q detail::opr_and(const Q & lhs, const Q & rhs) {
 
     if (numerator.is_zero()) { return Q{}; }
 
-    return Q(std::move(numerator),
-             std::move(denominator),
-             static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_));
+    return {std::move(numerator),
+            std::move(denominator),
+            static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_)};
 }
 
 Q detail::opr_or(const Q & lhs, const Q & rhs) {
@@ -187,9 +189,9 @@ Q detail::opr_or(const Q & lhs, const Q & rhs) {
 
     if (numerator.is_zero()) { return Q{}; }
 
-    return Q(std::move(numerator),
-             lhs.denom_ | rhs.denom_,
-             static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_));
+    return {std::move(numerator),
+            lhs.denom_ | rhs.denom_,
+            static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_)};
 }
 
 Q detail::opr_xor(const Q & lhs, const Q & rhs) {
@@ -203,9 +205,9 @@ Q detail::opr_xor(const Q & lhs, const Q & rhs) {
 
     if (numerator.is_zero()) { return Q{}; }
 
-    return Q(std::move(numerator),
-             std::move(denominator),
-             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_));
+    return {std::move(numerator),
+            std::move(denominator),
+            static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
 bool detail::opr_eq(const Q & lhs, const Q & rhs) {

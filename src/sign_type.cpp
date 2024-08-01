@@ -40,7 +40,7 @@ sign_type::sign_bool sign_type::handle_string_(std::string_view * num_str) {
     FUNCTION_TO_LOG;
 
     if (!num_str->empty() && num_str->front() == negative_sign) {
-        num_str->remove_prefix(1);
+        num_str->remove_prefix(1U);
         return num_str->empty() ? positive : negative;
     } else {
         return positive;
@@ -62,7 +62,7 @@ bool sign_type::is_negative() const {
 void sign_type::flip_sign() {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) return;
+    if (is_zero()) { return; }
     set_sign_(!sign_);
 }
 

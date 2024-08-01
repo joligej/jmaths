@@ -137,7 +137,7 @@ std::optional<T> Q::fits_into() const {
                   "Mixed endianness is not supported. Unclear how to implement floating point manipulation.");
 
     struct float_sizes {
-        enum : bit_type { sign = 1, exponent = 8, mantissa = 23 };
+        enum : bitcount_t { sign = 1, exponent = 8, mantissa = 23 };
 
         struct big_endian {
             std::uint32_t sign : float_sizes::sign;
@@ -153,7 +153,7 @@ std::optional<T> Q::fits_into() const {
     };
 
     struct double_sizes {
-        enum : bit_type { sign = 1, exponent = 11, mantissa = 52 };
+        enum : bitcount_t { sign = 1, exponent = 11, mantissa = 52 };
 
         struct big_endian {
             std::uint64_t sign : double_sizes::sign;
@@ -219,7 +219,7 @@ std::optional<T> Q::fits_into() const {
     T numerator{};
 
     {
-        std::size_t i = 0;
+        std::size_t i = 0U;
 
         for (auto crit = num_.digits_.crbegin(); crit != num_.digits_.crend() && i < sizeof(T) / base_int_size;
              ++crit, ++i) {

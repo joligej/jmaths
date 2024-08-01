@@ -72,7 +72,7 @@ Q operator*(const Q & lhs, const Q & rhs) {
 Q operator/(const Q & lhs, const Q & rhs) {
     FUNCTION_TO_LOG;
 
-    if (rhs.is_zero()) throw error::division_by_zero{};
+    if (rhs.is_zero()) { throw error::division_by_zero{}; }
     return detail::opr_div(lhs, rhs);
 }
 
@@ -110,7 +110,8 @@ std::strong_ordering operator<=>(const Q & lhs, const Q & rhs) {
 
 namespace jmaths {
 
-Q::Q(N && num, N && denom, sign_bool sign) : sign_type(sign), num_(std::move(num)), denom_(std::move(denom)) {
+Q::Q(N && num, N && denom, sign_bool sign) :
+    sign_type(sign), num_(std::move(num)), denom_(std::move(denom)) {
     FUNCTION_TO_LOG;
 
     canonicalise_();
@@ -125,7 +126,7 @@ Q::Q(const N & num, const N & denom, sign_bool sign) : sign_type(sign), num_(num
 Q::Q(std::tuple<N, N, sign_bool> && fraction_info) :
     Q(std::move(std::get<0>(fraction_info)),
       std::move(std::get<1>(fraction_info)),
-      std::move(std::get<2>(fraction_info))) {
+      std::get<2>(fraction_info)) {
     FUNCTION_TO_LOG;
 }
 
@@ -133,8 +134,8 @@ std::string_view Q::handle_fraction_string_(std::string_view * num_str) {
     FUNCTION_TO_LOG;
 
     const auto fraction_bar = num_str->find(vinculum);
-    const std::string_view numerator = num_str->substr(0, fraction_bar);
-    num_str->remove_prefix(fraction_bar + 1);
+    const std::string_view numerator = num_str->substr(0U, fraction_bar);
+    num_str->remove_prefix(fraction_bar + 1U);
     return numerator;
 }
 
@@ -160,9 +161,10 @@ Q::Q(std::string_view num_str, unsigned base) :
     sign_type(&num_str), num_(handle_fraction_string_(&num_str), base), denom_(num_str, base) {
     FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
+    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+
     canonicalise_();
-    if (is_zero()) set_sign_(positive);
+    if (is_zero()) { set_sign_(positive); }
 }
 
 Q::Q(const N & n) : num_(n), denom_(N::one_) {
@@ -184,28 +186,32 @@ Q::Q(Z && z) : sign_type(z.sign_), num_(std::move(std::move(z).abs())), denom_(N
 Q::Q(const N & num, const N & denom) : num_(num), denom_(denom) {
     FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
+    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+
     canonicalise_();
 }
 
 Q::Q(const N & num, N && denom) : num_(num), denom_(std::move(denom)) {
     FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
+    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+
     canonicalise_();
 }
 
 Q::Q(N && num, const N & denom) : num_(std::move(num)), denom_(denom) {
     FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
+    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+
     canonicalise_();
 }
 
 Q::Q(N && num, N && denom) : num_(std::move(num)), denom_(std::move(denom)) {
     FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
+    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+
     canonicalise_();
 }
 
@@ -215,7 +221,8 @@ Q::Q(const Z & num, const Z & denom) :
     denom_(denom.abs()) {
     FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
+    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+
     canonicalise_();
 }
 
@@ -225,7 +232,8 @@ Q::Q(const Z & num, Z && denom) :
     denom_(std::move(std::move(denom).abs())) {
     FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
+    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+
     canonicalise_();
 }
 
@@ -235,7 +243,8 @@ Q::Q(Z && num, const Z & denom) :
     denom_(denom.abs()) {
     FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
+    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+
     canonicalise_();
 }
 
@@ -245,7 +254,8 @@ Q::Q(Z && num, Z && denom) :
     denom_(std::move(std::move(denom).abs())) {
     FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
+    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+
     canonicalise_();
 }
 
@@ -270,7 +280,7 @@ bool Q::is_neg_one() const {
 Q Q::abs() const & {
     FUNCTION_TO_LOG;
 
-    return Q(num_, denom_, positive);
+    return {num_, denom_, positive};
 }
 
 Q && Q::abs() && {
@@ -283,14 +293,16 @@ Q && Q::abs() && {
 Q Q::inverse() const & {
     FUNCTION_TO_LOG;
 
-    if (num_.is_zero()) throw error::division_by_zero("Cannot take the inverse of zero!");
-    return Q(denom_, num_, sign_);
+    if (num_.is_zero()) { throw error::division_by_zero("Cannot take the inverse of zero!"); }
+
+    return {denom_, num_, sign_};
 }
 
 Q && Q::inverse() && {
     FUNCTION_TO_LOG;
 
-    if (num_.is_zero()) throw error::division_by_zero("Denominator cannot be zero!");
+    if (num_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+
     std::swap(num_, denom_);
     return std::move(*this);
 }
@@ -304,21 +316,17 @@ std::size_t Q::size() const {
 std::string Q::to_str(unsigned base) const {
     FUNCTION_TO_LOG;
 
-    if (is_negative()) {
-        return (negative_sign + num_.to_str(base) + vinculum + denom_.to_str(base));
-    } else {
-        return (num_.to_str(base) + vinculum + denom_.to_str(base));
-    }
+    if (is_positive()) { return (num_.to_str(base) + vinculum + denom_.to_str(base)); }
+
+    return (negative_sign + num_.to_str(base) + vinculum + denom_.to_str(base));
 }
 
 std::string Q::to_hex() const {
     FUNCTION_TO_LOG;
 
-    if (is_negative()) {
-        return (negative_sign + num_.to_hex() + vinculum + denom_.to_hex());
-    } else {
-        return (num_.to_hex() + vinculum + denom_.to_hex());
-    }
+    if (is_positive()) { return (num_.to_hex() + vinculum + denom_.to_hex()); }
+
+    return (negative_sign + num_.to_hex() + vinculum + denom_.to_hex());
 }
 
 Q::operator bool() const {
@@ -379,7 +387,8 @@ Q & Q::operator+=(const Q & rhs) {
             N first_product = detail::opr_mult(num_, rhs.denom_);
             N second_product = detail::opr_mult(denom_, rhs.num_);
 
-            if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
+            if (const auto difference = detail::opr_comp(first_product, second_product);
+                difference == 0) {
                 num_.set_zero();
                 denom_ = N::one_;
                 return *this;
@@ -397,7 +406,8 @@ Q & Q::operator+=(const Q & rhs) {
             N first_product = detail::opr_mult(num_, rhs.denom_);
             N second_product = detail::opr_mult(denom_, rhs.num_);
 
-            if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
+            if (const auto difference = detail::opr_comp(first_product, second_product);
+                difference == 0) {
                 num_.set_zero();
                 denom_ = N::one_;
                 set_sign_(positive);
@@ -431,7 +441,8 @@ Q & Q::operator-=(const Q & rhs) {
             N first_product = detail::opr_mult(num_, rhs.denom_);
             N second_product = detail::opr_mult(denom_, rhs.num_);
 
-            if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
+            if (const auto difference = detail::opr_comp(first_product, second_product);
+                difference == 0) {
                 num_.set_zero();
                 denom_ = N::one_;
                 return *this;
@@ -457,7 +468,8 @@ Q & Q::operator-=(const Q & rhs) {
             N first_product = detail::opr_mult(num_, rhs.denom_);
             N second_product = detail::opr_mult(denom_, rhs.num_);
 
-            if (const auto difference = detail::opr_comp(first_product, second_product); difference == 0) {
+            if (const auto difference = detail::opr_comp(first_product, second_product);
+                difference == 0) {
                 num_.set_zero();
                 denom_ = N::one_;
                 set_sign_(positive);
@@ -484,20 +496,26 @@ Q & Q::operator*=(const Q & rhs) {
 
     num_.opr_mult_assign_(rhs.num_);
     denom_.opr_mult_assign_(rhs.denom_);
+
     set_sign_(is_zero() ? positive : this->sign_ ^ rhs.sign_);
+
     canonicalise_();
+
     return *this;
 }
 
 Q & Q::operator/=(const Q & rhs) {
     FUNCTION_TO_LOG;
 
-    if (rhs.is_zero()) throw error::division_by_zero{};
+    if (rhs.is_zero()) { throw error::division_by_zero{}; }
 
     num_.opr_mult_assign_(rhs.denom_);
     denom_.opr_mult_assign_(rhs.num_);
+
     set_sign_(is_zero() ? positive : this->sign_ ^ rhs.sign_);
+
     canonicalise_();
+
     return *this;
 }
 
@@ -505,10 +523,15 @@ Q & Q::operator&=(const Q & rhs) {
     FUNCTION_TO_LOG;
 
     denom_.opr_and_assign_(rhs.denom_);
-    if (denom_.is_zero()) throw error::division_by_zero{};
+
+    if (denom_.is_zero()) { throw error::division_by_zero{}; }
+
     num_.opr_and_assign_(rhs.num_);
+
     set_sign_(is_zero() ? positive : this->sign_ & rhs.sign_);
+
     canonicalise_();
+
     return *this;
 }
 
@@ -517,8 +540,11 @@ Q & Q::operator|=(const Q & rhs) {
 
     num_.opr_or_assign_(rhs.num_);
     denom_.opr_or_assign_(rhs.denom_);
+
     set_sign_(is_zero() ? positive : this->sign_ | rhs.sign_);
+
     canonicalise_();
+
     return *this;
 }
 
@@ -526,18 +552,23 @@ Q & Q::operator^=(const Q & rhs) {
     FUNCTION_TO_LOG;
 
     denom_.opr_xor_assign_(rhs.denom_);
-    if (denom_.is_zero()) throw error::division_by_zero{};
+
+    if (denom_.is_zero()) { throw error::division_by_zero{}; }
+
     num_.opr_xor_assign_(rhs.num_);
+
     set_sign_(is_zero() ? positive : this->sign_ ^ rhs.sign_);
+
     canonicalise_();
+
     return *this;
 }
 
 Q Q::operator-() const & {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) return *this;
-    return Q(num_, denom_, static_cast<sign_bool>(!sign_));
+    if (is_zero()) { return *this; }
+    return {num_, denom_, static_cast<sign_bool>(!sign_)};
 }
 
 Q && Q::operator-() && {
@@ -560,23 +591,25 @@ Q Q::operator~() const {
         throw error::division_by_zero("Denominator of complemented fraction cannot be zero!");
     }
 
-    return Q(std::move(num_complemented), std::move(denom_complemented), static_cast<sign_bool>(!sign_));
+    return {std::move(num_complemented),
+            std::move(denom_complemented),
+            static_cast<sign_bool>(!sign_)};
 }
 
-Q Q::operator<<(bit_type pos) const {
+Q Q::operator<<(bitcount_t pos) const {
     FUNCTION_TO_LOG;
 
-    return Q(num_.opr_bitshift_l_(pos), denom_, sign_);
+    return {num_.opr_bitshift_l_(pos), denom_, sign_};
 }
 
-Q Q::operator>>(bit_type pos) const {
+Q Q::operator>>(bitcount_t pos) const {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) return Q{};
-    return Q(num_, denom_.opr_bitshift_l_(pos), sign_);
+    if (is_zero()) { return Q{}; }
+    return {num_, denom_.opr_bitshift_l_(pos), sign_};
 }
 
-Q & Q::operator<<=(bit_type pos) {
+Q & Q::operator<<=(bitcount_t pos) {
     FUNCTION_TO_LOG;
 
     num_.opr_bitshift_l_assign_(pos);
@@ -584,10 +617,10 @@ Q & Q::operator<<=(bit_type pos) {
     return *this;
 }
 
-Q & Q::operator>>=(bit_type pos) {
+Q & Q::operator>>=(bitcount_t pos) {
     FUNCTION_TO_LOG;
 
-    if (is_zero()) return *this;
+    if (is_zero()) { return *this; }
     denom_.opr_bitshift_l_assign_(pos);
     canonicalise_();
     return *this;
@@ -597,10 +630,14 @@ Q & Q::operator=(std::string_view num_str) {
     FUNCTION_TO_LOG;
 
     set_sign_(sign_type::handle_string_(&num_str));
+
     num_.opr_assign_(handle_fraction_string_(&num_str));
     denom_.opr_assign_(num_str);
+
     canonicalise_();
-    if (is_zero()) set_sign_(positive);
+
+    if (is_zero()) { set_sign_(positive); }
+
     return *this;
 }
 
