@@ -85,7 +85,8 @@ std::tuple<N, N, sign_type::sign_bool> Q::handle_float_(std::floating_point auto
 
     int exponent;
     floating_point_type significant_part = std::frexp(num, &exponent);
-    significant_part = std::scalbn(significant_part, std::numeric_limits<floating_point_type>::digits);
+    significant_part =
+        std::scalbn(significant_part, std::numeric_limits<floating_point_type>::digits);
     exponent -= std::numeric_limits<floating_point_type>::digits;
 
     auto numerator = std::llrint(significant_part);
@@ -126,15 +127,16 @@ std::optional<T> Q::fits_into() const {
     static_assert(is_allowed_type,
                   "Template type parameter is not one of the allowed types: "
                   "float and double.");
-    static_assert(
-        nlf::radix == 2,
-        "The radix of the floating point type is currently not supported. Please make sure it is equal to 2.");
+    static_assert(nlf::radix == 2,
+                  "The radix of the floating point type is currently not supported. Please make "
+                  "sure it is equal to 2.");
 
     static constexpr bool is_big_endian = std::endian::native == std::endian::big;
     static constexpr bool is_little_endian = std::endian::native == std::endian::little;
 
-    static_assert(is_big_endian || is_little_endian,
-                  "Mixed endianness is not supported. Unclear how to implement floating point manipulation.");
+    static_assert(
+        is_big_endian || is_little_endian,
+        "Mixed endianness is not supported. Unclear how to implement floating point manipulation.");
 
     struct float_sizes {
         enum : bitcount_t { sign = 1, exponent = 8, mantissa = 23 };
@@ -171,13 +173,18 @@ std::optional<T> Q::fits_into() const {
     union float_access {
         float val;
 
-        std::conditional_t<is_big_endian, typename float_sizes::big_endian, typename float_sizes::little_endian> fields;
+        std::conditional_t<is_big_endian,
+                           typename float_sizes::big_endian,
+                           typename float_sizes::little_endian>
+            fields;
     };
 
     union double_access {
         double val;
 
-        std::conditional_t<is_big_endian, typename double_sizes::big_endian, typename double_sizes::little_endian>
+        std::conditional_t<is_big_endian,
+                           typename double_sizes::big_endian,
+                           typename double_sizes::little_endian>
             fields;
     };
 
@@ -198,12 +205,14 @@ std::optional<T> Q::fits_into() const {
   };
 #endif
 
-    static_assert(sizeof(float_access) == sizeof(float) && sizeof(float_access) == sizeof(std::uint32_t[1]),
-                  "There seems to be a problem with the padding bits for type: "
-                  "float_access.");
-    static_assert(sizeof(double_access) == sizeof(double) && sizeof(double_access) == sizeof(std::uint64_t[1]),
-                  "There seems to be a problem with the padding bits for type: "
-                  "double_access.");
+    static_assert(
+        sizeof(float_access) == sizeof(float) && sizeof(float_access) == sizeof(std::uint32_t[1]),
+        "There seems to be a problem with the padding bits for type: "
+        "float_access.");
+    static_assert(
+        sizeof(double_access) == sizeof(double) && sizeof(double_access) == sizeof(std::uint64_t[1]),
+        "There seems to be a problem with the padding bits for type: "
+        "double_access.");
 
 #if 0
   static_assert(sizeof(long_double_access) == sizeof(long double) && sizeof(long_double_access) == sizeof(std::uint64_t[2]), "There seems to be a problem with the padding bits for type: long_double_access.");
@@ -221,7 +230,8 @@ std::optional<T> Q::fits_into() const {
     {
         std::size_t i = 0U;
 
-        for (auto crit = num_.digits_.crbegin(); crit != num_.digits_.crend() && i < sizeof(T) / base_int_size;
+        for (auto crit = num_.digits_.crbegin();
+             crit != num_.digits_.crend() && i < sizeof(T) / base_int_size;
              ++crit, ++i) {
             numerator = numerator * radix + *crit;
         }
@@ -236,7 +246,8 @@ std::optional<T> Q::fits_into() const {
     {
         std::size_t j = 0;
 
-        for (auto crit = denom_.digits_.crbegin(); crit != denom_.digits_.crend() && j < sizeof(T) / base_int_size;
+        for (auto crit = denom_.digits_.crbegin();
+             crit != denom_.digits_.crend() && j < sizeof(T) / base_int_size;
              ++crit, ++j) {
             denominator = denominator * radix + *crit;
         }
@@ -251,7 +262,8 @@ std::optional<T> Q::fits_into() const {
     if (num_.digits_.size() < denom_.digits_.size()) {
         static constexpr std::uint16_t min_exponent = (std::uint16_t)1;
 
-        if (result.fields.exponent < min_exponent + (denom_.digits_.size() - num_.digits_.size()) * base_int_bits) {
+        if (result.fields.exponent <
+            min_exponent + (denom_.digits_.size() - num_.digits_.size()) * base_int_bits) {
 #if 0
   if (*this >= Q{nlf::min()}) {
   return nlf::min();
@@ -265,9 +277,11 @@ std::optional<T> Q::fits_into() const {
 
         result.fields.exponent -= (denom_.digits_.size() - num_.digits_.size()) * base_int_bits;
     } else {
-        static constexpr std::uint32_t max_exponent = ~(~(std::uint32_t)0 << sizes_type::exponent) - 1;
+        static constexpr std::uint32_t max_exponent =
+            ~(~(std::uint32_t)0 << sizes_type::exponent) - 1;
 
-        if ((num_.digits_.size() - denom_.digits_.size()) * base_int_bits > max_exponent - result.fields.exponent) {
+        if ((num_.digits_.size() - denom_.digits_.size()) * base_int_bits >
+            max_exponent - result.fields.exponent) {
             if constexpr (nlf::has_infinity) {
                 return nlf::infinity();
             } else {

@@ -94,9 +94,10 @@ class Q : public sign_type {
 
     [[nodiscard]] std::size_t size() const;  // size of this object in bytes
 
-    [[nodiscard]] std::string to_str(unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
-    [[nodiscard]] std::string to_hex() const;                              // convert to string in base 16 (assumes base
-                                                             // is an integer power of 2)
+    [[nodiscard]] std::string to_str(
+        unsigned base = default_base) const;   // convert to string in any base >= 2 and <= 64
+    [[nodiscard]] std::string to_hex() const;  // convert to string in base 16 (assumes base
+                                               // is an integer power of 2)
     explicit operator bool() const;
     template <std::floating_point T>
         requires std::numeric_limits<T>::is_iec559

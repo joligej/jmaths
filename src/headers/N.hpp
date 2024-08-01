@@ -85,9 +85,9 @@ class N {
     [[nodiscard]] std::size_t size() const;  // size of this object in bytes
 
     [[nodiscard]] std::string to_str(
-        unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
-    [[nodiscard]] std::string to_hex() const;               // convert to string in base 16 (assumes base
-                                              // is an integer power of 2)
+        unsigned base = default_base) const;   // convert to string in any base >= 2 and <= 64
+    [[nodiscard]] std::string to_hex() const;  // convert to string in base 16 (assumes base
+                                               // is an integer power of 2)
     explicit operator bool() const;
     template <std::unsigned_integral T> [[nodiscard]] std::optional<T> fits_into() const;
     template <std::signed_integral T> [[nodiscard]] std::optional<T> fits_into() const;

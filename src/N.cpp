@@ -378,8 +378,9 @@ void N::opr_mult_assign_(const N & rhs) {
                                        static_cast<base_int_big>(this->digits_[j]);
             const base_int temp3 = static_cast<base_int>(temp2);
             temp1.digits_.emplace_back(carry + temp3);
-            const base_int temp_carry =
-                static_cast<base_int>((static_cast<base_int_big>(carry) + static_cast<base_int_big>(temp3)) >> base_int_bits);
+            const base_int temp_carry = static_cast<base_int>(
+                (static_cast<base_int_big>(carry) + static_cast<base_int_big>(temp3)) >>
+                base_int_bits);
             carry = static_cast<base_int>((temp2 >> base_int_bits) + temp_carry);
         }
 
@@ -690,7 +691,7 @@ bitcount_t N::bits() const {
 
     if (is_zero()) { return 1U; }
     return digits_.size() * base_int_bits -
-            static_cast<bitcount_t>(std::countl_zero(digits_.back()));
+           static_cast<bitcount_t>(std::countl_zero(digits_.back()));
 }
 
 std::size_t N::size() const {
