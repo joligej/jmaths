@@ -65,7 +65,8 @@ std::pair<N, N> calc::sqrt(const N & num) {
     N start = N::one_, end = num.opr_bitshift_r_(1U), ans;
 
     while (detail::opr_comp(start, end) <= 0) {
-        N mid = detail::opr_add(start, end).opr_bitshift_r_(1U);
+        N mid = detail::opr_add(start, end);
+        mid.opr_bitshift_r_assign_(1U);
 
         const N sqr = detail::opr_mult(mid, mid);
 
@@ -146,7 +147,8 @@ N calc::pow_mod(N base, N exponent, const N & mod) {
     for (;;) {
         if (exponent.is_odd()) {
             result.opr_mult_assign_(base);
-            result = detail::opr_div(result, mod).second;  // maybe use separate function just for mod ???
+            result =
+                detail::opr_div(result, mod).second;  // maybe use separate function just for mod ???
         }
 
         exponent.opr_bitshift_r_assign_(1U);
@@ -160,7 +162,8 @@ N calc::pow_mod(N base, N exponent, const N & mod) {
 Z calc::pow(Z base, N exponent) {
     FUNCTION_TO_LOG;
 
-    const auto sign = base.is_negative() && exponent.is_odd() ? sign_type::negative : sign_type::positive;
+    const auto sign =
+        base.is_negative() && exponent.is_odd() ? sign_type::negative : sign_type::positive;
 
     return {pow(std::move(std::move(base).abs()), std::move(exponent)), sign};
 }
