@@ -122,15 +122,15 @@ std::pair<Z, Z> detail::opr_div(const Z & lhs, const Z & rhs) {
         if (remainder.is_zero()) {
             return {Z{}, Z{}};
         } else {
-            return {Z{}, Z(std::move(remainder), lhs.sign_)};
+            return {Z{}, Z{std::move(remainder), lhs.sign_}};
         }
     } else {
         if (remainder.is_zero()) {
-            return {Z(std::move(quotient), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)),
+            return {Z{std::move(quotient), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)},
                     Z{}};
         } else {
-            return {Z(std::move(quotient), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)),
-                    Z(std::move(remainder), lhs.sign_)};
+            return {Z{std::move(quotient), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)},
+                    Z{std::move(remainder), lhs.sign_}};
         }
     }
 }

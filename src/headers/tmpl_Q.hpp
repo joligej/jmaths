@@ -40,13 +40,13 @@ namespace jmaths {
 bool detail::opr_eq(const Q & lhs, std::floating_point auto rhs) {
     FUNCTION_TO_LOG;
 
-    return (lhs == Q(rhs));
+    return (lhs == Q{rhs});
 }
 
 std::strong_ordering detail::opr_comp(const Q & lhs, std::floating_point auto rhs) {
     FUNCTION_TO_LOG;
 
-    return (lhs <=> Q(rhs));
+    return (lhs <=> Q{rhs});
 }
 
 bool operator==(const Q & lhs, std::floating_point auto rhs) {
@@ -253,7 +253,7 @@ std::optional<T> Q::fits_into() const {
 
         if (result.fields.exponent < min_exponent + (denom_.digits_.size() - num_.digits_.size()) * base_int_bits) {
 #if 0
-  if (*this >= Q(nlf::min())) {
+  if (*this >= Q{nlf::min()}) {
   return nlf::min();
   } else {
   return std::nullopt;

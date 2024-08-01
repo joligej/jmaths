@@ -49,7 +49,7 @@ std::istream & detail::opr_extr(std::istream & is, N & n) {
     is >> num_str;
     n.opr_assign_(num_str);
 
-    assert(n == N(num_str));
+    assert(n == N{num_str});
 
     return is;
 }
