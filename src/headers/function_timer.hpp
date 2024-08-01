@@ -18,21 +18,31 @@
 
 #include <chrono>
 #include <iostream>
+#include <memory>
+#include <ostream>
 
 namespace jmaths::internal {
 
 class function_timer {
    public:
     explicit function_timer(const char * function_name) :
-        function_name_{function_name}, start_time_{clock_type::now()} {
-        std::clog << "log:call\t" << function_name_ << '\n';
+        function_name_{function_name}, start_time_(clock_type::now()) {
+        if (ostream_ == nullptr) { return; }
+
+        *ostream_ << "log:call\t" << function_name_ << '\n';
     }
 
     ~function_timer() {
+        if (ostream_ == nullptr) { return; }
+
         const clock_type::time_point end_time = clock_type::now();
         const std::chrono::duration<double, std::milli> total_time = end_time - start_time_;
 
-        std::clog << "log:time\t" << total_time.count() << "\tms\tfrom\t" << function_name_ << '\n';
+        *ostream_ << "log:time\t" << total_time.count() << "\tms\tfrom\t" << function_name_ << '\n';
+    }
+
+    static void set_ostream(std::ostream * ostream) {
+        ostream_ = ostream;
     }
 
    private:
@@ -40,6 +50,8 @@ class function_timer {
 
     const char * const function_name_;
     const clock_type::time_point start_time_;
+
+    inline static std::ostream * ostream_ = &std::clog;
 };
 
 }  // namespace jmaths::internal
