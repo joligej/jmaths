@@ -78,7 +78,7 @@ Q detail::opr_add(const Q & lhs, const Q & rhs) {
             first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
             return {
                 std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative
-            }
+            };
         }
 
         N first_product = opr_mult(lhs.num_, rhs.denom_);
