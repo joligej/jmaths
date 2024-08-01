@@ -300,12 +300,14 @@ N detail::opr_mult(const N & lhs, const N & rhs) {
         temp1.digits_.insert(temp1.digits_.begin(), i, 0U);
         base_int carry = 0U;
         for (std::size_t j = 0U; j < rhs.digits_.size(); ++j) {
-            const base_int_big temp2 = (base_int_big)lhs.digits_[i] * (base_int_big)rhs.digits_[j];
-            const base_int temp3 = (base_int)temp2;
+            const base_int_big temp2 = static_cast<base_int_big>(lhs.digits_[i]) *
+                                       static_cast<base_int_big>(rhs.digits_[j]);
+            const base_int temp3 = static_cast<base_int>(temp2);
             temp1.digits_.emplace_back(carry + temp3);
-            const base_int temp_carry =
-                (base_int)(((base_int_big)carry + (base_int_big)temp3) >> base_int_bits);
-            carry = (base_int)((temp2 >> base_int_bits) + temp_carry);
+            const base_int temp_carry = static_cast<base_int>(
+                (static_cast<base_int_big>(carry) + static_cast<base_int_big>(temp3)) >>
+                base_int_bits);
+            carry = static_cast<base_int>((temp2 >> base_int_bits) + temp_carry);
         }
 
         if (carry != 0U) { temp1.digits_.emplace_back(carry); }
@@ -354,8 +356,8 @@ std::pair<N, N> detail::opr_div(const N & lhs, const N & rhs) {
 
     r.digits_.reserve(rhs.digits_.size());
 
-    for (bitpos_t i =
-             lhs.digits_.size() * base_int_bits - (bitcount_t)std::countl_zero(lhs.digits_.back());
+    for (bitpos_t i = lhs.digits_.size() * base_int_bits -
+                      static_cast<bitcount_t>(std::countl_zero(lhs.digits_.back()));
          i-- > 0U;) {
         r.opr_bitshift_l_assign_(1U);
         r.bit_(0U, lhs.bit_(i));

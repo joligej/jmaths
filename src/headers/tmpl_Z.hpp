@@ -104,7 +104,7 @@ template <std::signed_integral T> std::optional<T> Z::fits_into() const {
 
     if (!fits_into_unsigned.has_value()) { return std::nullopt; }
 
-    if (*fits_into_unsigned > (std::make_unsigned_t<T>)std::numeric_limits<T>::max() + 1) { return std::nullopt; }
+    if (*fits_into_unsigned > static_cast<std::make_unsigned_t<T>>(std::numeric_limits<T>::max()) + 1) { return std::nullopt; }
 
     return -*fits_into_unsigned;
 }

@@ -35,23 +35,23 @@ size_t hash<jmaths::N>::operator()(const jmaths::N & n) const {
         return empty_hash;
     }
 
-    return hash<string_view>{}(
-        string_view((const char *)n.digits_.data(), n.digits_.size() * jmaths::base_int_size));
+    return hash<string_view>{}(string_view(reinterpret_cast<const char *>(n.digits_.data()),
+                                           n.digits_.size() * jmaths::base_int_size));
 }
 
 size_t hash<jmaths::Z>::operator()(const jmaths::Z & z) const {
     FUNCTION_TO_LOG;
 
     return hash<jmaths::N>{}(z) ^
-           ((size_t)z.sign_ << (z.front_() % (sizeof(size_t) * jmaths::bits_in_byte)));
+           (static_cast<size_t>(z.sign_) << (z.front_() % (sizeof(size_t) * jmaths::bits_in_byte)));
 }
 
 size_t hash<jmaths::Q>::operator()(const jmaths::Q & q) const {
     FUNCTION_TO_LOG;
 
     return (hash<jmaths::N>{}(q.num_) ^ hash<jmaths::N>{}(q.denom_)) ^
-           ((size_t)q.sign_ << ((q.num_.front_() ^ q.denom_.front_()) %
-                                (sizeof(size_t) * jmaths::bits_in_byte)));
+           (static_cast<size_t>(q.sign_)
+            << ((q.num_.front_() ^ q.denom_.front_()) % (sizeof(size_t) * jmaths::bits_in_byte)));
 }
 
 }  // namespace std

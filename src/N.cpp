@@ -50,9 +50,9 @@ base_int base_converter(char c) noexcept;  // convert char to number for base >=
 base_int base_converter(char c) noexcept {
     FUNCTION_TO_LOG;
 
-    if (c >= '0' && c <= '9') { return (unsigned char)(c - '0'); }
-    if (c >= 'A' && c <= 'Z') { return (unsigned char)(c - 'A' + 10); }
-    if (c >= 'a' && c <= 'z') { return (unsigned char)(c - 'a' + 10 + 26); }
+    if (c >= '0' && c <= '9') { return static_cast<unsigned char>(c - '0'); }
+    if (c >= 'A' && c <= 'Z') { return static_cast<unsigned char>(c - 'A' + 10); }
+    if (c >= 'a' && c <= 'z') { return static_cast<unsigned char>(c - 'a' + 10 + 26); }
     if (c == '+') { return 62U; }
 
     assert(c == '/');  // it is assumed that c == '/' because no other character
@@ -235,10 +235,10 @@ void N::bit_(bitpos_t pos, bool val) {
         if (val == 0) { return; }
         digits_.reserve(pos_whole + 1U);
         digits_.insert(digits_.begin(), pos_whole, 0U);
-        digits_.emplace_back((base_int)1 << pos_mod);
+        digits_.emplace_back(static_cast<base_int>(1) << pos_mod);
     } else {
         if (pos_whole < digits_.size()) {
-            const base_int bitmask = (base_int)1 << pos_mod;
+            const base_int bitmask = static_cast<base_int>(1) << pos_mod;
             if (val) {
                 digits_[pos_whole] |= bitmask;
             } else {
@@ -250,7 +250,7 @@ void N::bit_(bitpos_t pos, bool val) {
             if (val == 0) { return; }
             digits_.reserve(digits_.size() + pos_whole + 1U);
             digits_.insert(digits_.end(), pos_whole - digits_.size(), 0U);
-            digits_.emplace_back((base_int)1 << pos_mod);
+            digits_.emplace_back(static_cast<base_int>(1) << pos_mod);
         }
     }
 }
@@ -374,12 +374,13 @@ void N::opr_mult_assign_(const N & rhs) {
         temp1.digits_.insert(temp1.digits_.begin(), i, 0U);
         base_int carry = 0U;
         for (std::size_t j = 0U; j < this->digits_.size(); ++j) {
-            const base_int_big temp2 = (base_int_big)rhs.digits_[i] * (base_int_big)this->digits_[j];
-            const base_int temp3 = (base_int)temp2;
+            const base_int_big temp2 = static_cast<base_int_big>(rhs.digits_[i]) *
+                                       static_cast<base_int_big>(this->digits_[j]);
+            const base_int temp3 = static_cast<base_int>(temp2);
             temp1.digits_.emplace_back(carry + temp3);
             const base_int temp_carry =
-                (base_int)(((base_int_big)carry + (base_int_big)temp3) >> base_int_bits);
-            carry = (base_int)((temp2 >> base_int_bits) + temp_carry);
+                static_cast<base_int>((static_cast<base_int_big>(carry) + static_cast<base_int_big>(temp3)) >> base_int_bits);
+            carry = static_cast<base_int>((temp2 >> base_int_bits) + temp_carry);
         }
 
         if (carry != 0U) { temp1.digits_.emplace_back(carry); }
@@ -547,9 +548,10 @@ N N::opr_bitshift_r_(bitcount_t pos) const {
     shifted.digits_.reserve(digits_.size() - pos_whole);
 
     if (pos_mod == 0U) {
-        shifted.digits_.insert(shifted.digits_.end(),
-                               digits_.cbegin() + (decltype(digits_)::difference_type)pos_whole,
-                               digits_.cend());
+        shifted.digits_.insert(
+            shifted.digits_.end(),
+            digits_.cbegin() + static_cast<decltype(digits_)::difference_type>(pos_whole),
+            digits_.cend());
     } else {
         for (std::size_t i = pos_whole; i < digits_.size() - 1U; ++i) {
             shifted.digits_.emplace_back((digits_[i] >> pos_mod) +
@@ -607,7 +609,8 @@ void N::opr_bitshift_r_assign_(bitcount_t pos) {
         return;
     }
 
-    digits_.erase(digits_.begin(), digits_.begin() + (decltype(digits_)::difference_type)pos_whole);
+    digits_.erase(digits_.begin(),
+                  digits_.begin() + static_cast<decltype(digits_)::difference_type>(pos_whole));
 
     if (const bitpos_t pos_mod = pos % base_int_bits; pos_mod != 0U) {
         for (std::size_t i = 0U; i < digits_.size() - 1U; ++i) {
@@ -672,7 +675,7 @@ bitcount_t N::ctz() const {
     bitcount_t tz = 0U;
     for (const auto & digit : digits_) {
         if (digit != 0U) {
-            tz += (bitcount_t)std::countr_zero(digit);
+            tz += static_cast<bitcount_t>(std::countr_zero(digit));
             break;
         }
 
@@ -686,7 +689,8 @@ bitcount_t N::bits() const {
     FUNCTION_TO_LOG;
 
     if (is_zero()) { return 1U; }
-    return (digits_.size() * base_int_bits - (bitcount_t)std::countl_zero(digits_.back()));
+    return (digits_.size() * base_int_bits -
+            static_cast<bitcount_t>(std::countl_zero(digits_.back())));
 }
 
 std::size_t N::size() const {
