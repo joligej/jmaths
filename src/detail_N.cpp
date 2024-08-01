@@ -134,7 +134,7 @@ N detail::opr_subtr(N lhs, const N & rhs) {
     for (; i < rhs.digits_.size(); ++i) {
         if (lhs.digits_[i] < rhs.digits_[i]) {
             for (std::size_t j = i + 1U; j < lhs.digits_.size(); ++j) {
-                if ((lhs.digits_[j])-- > 0U) { break; }
+                if (lhs.digits_[j]-- > 0U) { break; }
             }
         }
 
@@ -377,7 +377,7 @@ N detail::opr_and(const N & lhs, const N & rhs) {
 
     if (lhs.is_zero() || rhs.is_zero()) { return N{}; }
 
-    const N & shortest = (lhs.digits_.size() < rhs.digits_.size() ? lhs : rhs);
+    const N & shortest = lhs.digits_.size() < rhs.digits_.size() ? lhs : rhs;
 
     N and_result;
     and_result.digits_.reserve(shortest.digits_.size());
@@ -462,7 +462,7 @@ N detail::opr_xor(const N & lhs, const N & rhs) {
 bool detail::opr_eq(const N & lhs, const N & rhs) {
     FUNCTION_TO_LOG;
 
-    return (lhs.digits_ == rhs.digits_);
+    return lhs.digits_ == rhs.digits_;
 }
 
 std::strong_ordering detail::opr_comp(const N & lhs, const N & rhs) {

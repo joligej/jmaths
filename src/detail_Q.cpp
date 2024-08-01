@@ -213,7 +213,7 @@ Q detail::opr_xor(const Q & lhs, const Q & rhs) {
 bool detail::opr_eq(const Q & lhs, const Q & rhs) {
     FUNCTION_TO_LOG;
 
-    return (lhs.sign_ == rhs.sign_ && lhs.num_ == rhs.num_ && lhs.denom_ == rhs.denom_);
+    return lhs.sign_ == rhs.sign_ && lhs.num_ == rhs.num_ && lhs.denom_ == rhs.denom_;
 }
 
 std::strong_ordering detail::opr_comp(const Q & lhs, const Q & rhs) {

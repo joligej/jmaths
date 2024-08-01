@@ -168,7 +168,7 @@ Z detail::opr_xor(const Z & lhs, const Z & rhs) {
 bool detail::opr_eq(const Z & lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
-    return (lhs.sign_ == rhs.sign_ && lhs.abs() == rhs.abs());
+    return lhs.sign_ == rhs.sign_ && lhs.abs() == rhs.abs();
 }
 
 std::strong_ordering detail::opr_comp(const Z & lhs, const Z & rhs) {

@@ -36,7 +36,7 @@ bool detail::opr_eq(const Z & lhs, std::integral auto rhs) {
     FUNCTION_TO_LOG;
 
     if (const auto try_and_fit = lhs.fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
-        return (*try_and_fit == rhs);
+        return *try_and_fit == rhs;
     }
 
     return false;
@@ -46,10 +46,10 @@ std::strong_ordering detail::opr_comp(const Z & lhs, std::integral auto rhs) {
     FUNCTION_TO_LOG;
 
     if (const auto try_and_fit = lhs.fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
-        return (*try_and_fit <=> rhs);
+        return *try_and_fit <=> rhs;
     }
 
-    return (lhs.is_negative() ? std::strong_ordering::less : std::strong_ordering::greater);
+    return lhs.is_negative() ? std::strong_ordering::less : std::strong_ordering::greater;
 }
 
 bool operator==(const Z & lhs, std::integral auto rhs) {
@@ -73,7 +73,7 @@ std::strong_ordering operator<=>(const Z & lhs, std::integral auto rhs) {
 std::strong_ordering operator<=>(std::integral auto lhs, const Z & rhs) {
     FUNCTION_TO_LOG;
 
-    return (0 <=> detail::opr_comp(rhs, lhs));
+    return 0 <=> detail::opr_comp(rhs, lhs);
 }
 
 }  // namespace jmaths

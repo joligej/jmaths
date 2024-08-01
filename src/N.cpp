@@ -94,7 +94,7 @@ N operator-(const N & lhs, const N & rhs) {
     const auto difference = detail::opr_comp(lhs, rhs);
 
     if (difference == 0) { return N{}; }
-    return (difference > 0 ? detail::opr_subtr(lhs, rhs) : detail::opr_subtr(rhs, lhs));
+    return difference > 0 ? detail::opr_subtr(lhs, rhs) : detail::opr_subtr(rhs, lhs);
 }
 
 N operator*(const N & lhs, const N & rhs) {
@@ -258,7 +258,7 @@ void N::bit_(bitpos_t pos, bool val) {
 std::size_t N::dynamic_size_() const {
     FUNCTION_TO_LOG;
 
-    return (digits_.size() * base_int_size);
+    return digits_.size() * base_int_size;
 }
 
 void N::opr_incr_() {
@@ -332,7 +332,7 @@ void N::opr_subtr_assign_(const N & rhs) {
     for (std::size_t i = 0U; i < rhs.digits_.size(); ++i) {
         if (this->digits_[i] < rhs.digits_[i]) {
             for (std::size_t j = i + 1U; j < digits_.size(); ++j) {
-                if ((digits_[j])-- > 0U) { break; }
+                if (digits_[j]-- > 0U) { break; }
             }
         }
 
@@ -614,7 +614,7 @@ void N::opr_bitshift_r_assign_(bitcount_t pos) {
 
     if (const bitpos_t pos_mod = pos % base_int_bits; pos_mod != 0U) {
         for (std::size_t i = 0U; i < digits_.size() - 1U; ++i) {
-            digits_[i] = ((digits_[i] >> pos_mod) + (digits_[i + 1U] << (base_int_bits - pos_mod)));
+            digits_[i] = (digits_[i] >> pos_mod) + (digits_[i + 1U] << (base_int_bits - pos_mod));
         }
 
         digits_.back() >>= pos_mod;
@@ -652,7 +652,7 @@ bool N::is_zero() const {
 bool N::is_one() const {
     FUNCTION_TO_LOG;
 
-    return (digits_.size() == 1U && digits_.front() == 1U);
+    return digits_.size() == 1U && digits_.front() == 1U;
 }
 
 bool N::is_even() const {
@@ -666,7 +666,7 @@ bool N::is_odd() const {
 
     if (is_zero()) { return false; }
 
-    return (digits_.front() & 1U);
+    return digits_.front() & 1U;
 }
 
 bitcount_t N::ctz() const {
@@ -689,14 +689,14 @@ bitcount_t N::bits() const {
     FUNCTION_TO_LOG;
 
     if (is_zero()) { return 1U; }
-    return (digits_.size() * base_int_bits -
-            static_cast<bitcount_t>(std::countl_zero(digits_.back())));
+    return digits_.size() * base_int_bits -
+            static_cast<bitcount_t>(std::countl_zero(digits_.back()));
 }
 
 std::size_t N::size() const {
     FUNCTION_TO_LOG;
 
-    return (sizeof(*this) + dynamic_size_());
+    return sizeof(*this) + dynamic_size_();
 }
 
 std::string N::to_str(unsigned base) const {

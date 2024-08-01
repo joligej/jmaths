@@ -150,7 +150,7 @@ void Q::canonicalise_() {
 std::size_t Q::dynamic_size_() const {
     FUNCTION_TO_LOG;
 
-    return (num_.dynamic_size_() + denom_.dynamic_size_());
+    return num_.dynamic_size_() + denom_.dynamic_size_();
 }
 
 Q::Q() : denom_(N::one_) {
@@ -268,13 +268,13 @@ bool Q::is_zero() const {
 bool Q::is_one() const {
     FUNCTION_TO_LOG;
 
-    return (is_positive() && num_.is_one() && denom_.is_one());
+    return is_positive() && num_.is_one() && denom_.is_one();
 }
 
 bool Q::is_neg_one() const {
     FUNCTION_TO_LOG;
 
-    return (is_negative() && num_.is_one() && denom_.is_one());
+    return is_negative() && num_.is_one() && denom_.is_one();
 }
 
 Q Q::abs() const & {
@@ -310,23 +310,23 @@ Q && Q::inverse() && {
 std::size_t Q::size() const {
     FUNCTION_TO_LOG;
 
-    return (sizeof(*this) + dynamic_size_());
+    return sizeof(*this) + dynamic_size_();
 }
 
 std::string Q::to_str(unsigned base) const {
     FUNCTION_TO_LOG;
 
-    if (is_positive()) { return (num_.to_str(base) + vinculum + denom_.to_str(base)); }
+    if (is_positive()) { return num_.to_str(base) + vinculum + denom_.to_str(base); }
 
-    return (negative_sign + num_.to_str(base) + vinculum + denom_.to_str(base));
+    return negative_sign + num_.to_str(base) + vinculum + denom_.to_str(base);
 }
 
 std::string Q::to_hex() const {
     FUNCTION_TO_LOG;
 
-    if (is_positive()) { return (num_.to_hex() + vinculum + denom_.to_hex()); }
+    if (is_positive()) { return num_.to_hex() + vinculum + denom_.to_hex(); }
 
-    return (negative_sign + num_.to_hex() + vinculum + denom_.to_hex());
+    return negative_sign + num_.to_hex() + vinculum + denom_.to_hex();
 }
 
 Q::operator bool() const {

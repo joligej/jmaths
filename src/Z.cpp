@@ -156,19 +156,19 @@ bool Z::is_zero() const {
 bool Z::is_one() const {
     FUNCTION_TO_LOG;
 
-    return (is_positive() && N::is_one());
+    return is_positive() && N::is_one();
 }
 
 bool Z::is_neg_one() const {
     FUNCTION_TO_LOG;
 
-    return (is_negative() && N::is_one());
+    return is_negative() && N::is_one();
 }
 
 std::size_t Z::size() const {
     FUNCTION_TO_LOG;
 
-    return (sizeof(*this) + dynamic_size_());
+    return sizeof(*this) + dynamic_size_();
 }
 
 std::string Z::to_str(unsigned base) const {
