@@ -23,14 +23,14 @@ target_compile_options(compilation_flags INTERFACE
         # what about -Wconversion ?
         "$<${msvc_cxx}:$<BUILD_INTERFACE:-W4;-WX>>")
 
-if(NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm" OR NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
+if (NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm" OR NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
     message(STATUS "Using address sanitizer with ${CMAKE_CXX_COMPILER_ID} on ${CMAKE_SYSTEM_PROCESSOR}")
-    target_compile_options(compilation_flags INTERFACE "$<$<CONFIG:Debug>:-fsanitize=address>")
-    target_link_options(compilation_flags INTERFACE "$<$<CONFIG:Debug>:-fsanitize=address>")
-    target_link_libraries(compilation_flags INTERFACE "$<$<CONFIG:Debug>:-fsanitize=address>")
-else()
+    target_compile_options(compilation_flags INTERFACE "$<$<CONFIG:Debug>:-fsanitize=address;-fsanitize=undefined>")
+    target_link_options(compilation_flags INTERFACE "$<$<CONFIG:Debug>:-fsanitize=address;-fsanitize=undefined>")
+    target_link_libraries(compilation_flags INTERFACE "$<$<CONFIG:Debug>:-fsanitize=address;-fsanitize=undefined>")
+else ()
     message(STATUS "Not using address sanitizer with ${CMAKE_CXX_COMPILER_ID} on ${CMAKE_SYSTEM_PROCESSOR}")
-endif()
+endif ()
 
 #include(CheckIPOSupported)
 #check_ipo_supported(RESULT ipo_supported OUTPUT ipo_error)
