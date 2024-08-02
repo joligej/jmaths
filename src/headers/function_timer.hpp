@@ -51,7 +51,7 @@ class function_timer {
     const char * const function_name_;
     const clock_type::time_point start_time_;
 
-    inline static std::ostream * ostream_ = &std::clog;
+    inline static std::ostream * ostream_ = std::addressof(std::clog);
 };
 
 }  // namespace jmaths::internal

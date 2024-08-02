@@ -73,6 +73,8 @@ class N {
     N(std::string_view num_str, unsigned base = default_base);
     N(std::integral auto num);
 
+    N(const N &) = default;
+
     [[nodiscard]] bool is_zero() const;
     [[nodiscard]] bool is_one() const;
 

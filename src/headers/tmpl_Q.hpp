@@ -98,8 +98,8 @@ std::tuple<N, N, sign_type::sign_bool> Q::handle_float_(std::floating_point auto
 
     // it is assumed here that exponent is negative at this point
 
-    return {(std::make_unsigned_t<decltype(numerator)>)numerator,
-            (std::make_unsigned_t<decltype(denominator)>)denominator,
+    return {static_cast<std::make_unsigned_t<decltype(numerator)>>(numerator),
+            static_cast<std::make_unsigned_t<decltype(denominator)>>(denominator),
             sign};
 }
 
@@ -260,7 +260,7 @@ std::optional<T> Q::fits_into() const {
     access_type result = {.val = numerator / denominator};
 
     if (num_.digits_.size() < denom_.digits_.size()) {
-        static constexpr std::uint16_t min_exponent = (std::uint16_t)1;
+        static constexpr std::uint16_t min_exponent = 1U;
 
         if (result.fields.exponent <
             min_exponent + (denom_.digits_.size() - num_.digits_.size()) * base_int_bits) {
@@ -278,7 +278,7 @@ std::optional<T> Q::fits_into() const {
         result.fields.exponent -= (denom_.digits_.size() - num_.digits_.size()) * base_int_bits;
     } else {
         static constexpr std::uint32_t max_exponent =
-            ~(~(std::uint32_t)0 << sizes_type::exponent) - 1;
+            ~(~static_cast<std::uint32_t>(0) << sizes_type::exponent) - 1;
 
         if ((num_.digits_.size() - denom_.digits_.size()) * base_int_bits >
             max_exponent - result.fields.exponent) {

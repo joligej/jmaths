@@ -44,6 +44,8 @@ class sign_type {
     sign_type(std::string_view * num_str);
     sign_type(std::integral auto * num);
 
+    sign_type(const sign_type &) = default;
+
     [[nodiscard]] static sign_bool handle_string_(std::string_view * num_str);
     [[nodiscard]] static sign_bool handle_int_(std::integral auto * num);
 
