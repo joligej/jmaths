@@ -75,8 +75,6 @@ class Z : public sign_type, private N {
     Z(const N & n);
     Z(N && n);
 
-    Z(const Z &) = default;
-
     [[nodiscard]] const N & abs() const &;
     [[nodiscard]] N && abs() &&;
 
