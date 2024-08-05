@@ -16,42 +16,54 @@
 
 #pragma once
 
+#include <concepts>
 #include <limits>
 #include <random>
+#include <type_traits>
 
 #include "TMP.hpp"
 #include "def.hh"
 
 namespace jmaths::internal {
 
-template <typename T>
-concept allowed_rand_type = TMP::any_of<T,
-                                        short,
-                                        int,
-                                        long,
-                                        long long,
-                                        unsigned short,
-                                        unsigned int,
-                                        unsigned long,
-                                        unsigned long long>;
+template <typename T> class rand_gen {
+    using allowed_types = TMP::pack_container<short,
+                                              int,
+                                              long,
+                                              long long,
+                                              unsigned short,
+                                              unsigned int,
+                                              unsigned long,
+                                              unsigned long long>;
 
-template <allowed_rand_type T> class rand {
+    template <typename U, typename R> struct result_type_requirements {
+        static constexpr bool value =
+            std::unsigned_integral<R> &&
+            std::numeric_limits<R>::max() >= std::numeric_limits<U>::max() &&
+            std::numeric_limits<R>::min() <= std::numeric_limits<U>::min();
+    };
+
    public:
-    rand(T min, T max) : distrib(min, max) {
+    using result_type =
+        std::conditional_t<TMP::matches_any_v<T, std::is_same, allowed_types>,
+                           T,
+                           TMP::matches_which_t<T, result_type_requirements, allowed_types>>;
+
+    rand_gen(T min, T max) : distrib(min, max) {
         FUNCTION_TO_LOG;
     }
 
-    rand() : rand(0, std::numeric_limits<T>::max()) {
+    rand_gen() : rand_gen(0, std::numeric_limits<T>::max()) {
         FUNCTION_TO_LOG;
     }
 
-    T operator()() {
+    result_type operator()() {
         FUNCTION_TO_LOG;
 
         return distrib(gen);
     }
 
-    template <typename SEED> static void reseed(SEED seed = seed_type{}()) {
+    template <typename SeedType> static void reseed(SeedType seed = seed_type{}()) {
         FUNCTION_TO_LOG;
 
         gen.seed(seed);
@@ -62,7 +74,7 @@ template <allowed_rand_type T> class rand {
 
     inline static std::mt19937 gen{seed_type{}()};
 
-    std::uniform_int_distribution<T> distrib;
+    std::uniform_int_distribution<result_type> distrib;
 };
 
 }  // namespace jmaths::internal
@@ -74,8 +86,8 @@ template <TMP::any_of<N, Z> T> class rand {
     [[nodiscard]] static T generate(bitcount_t upper_bound_exponent);
 
    private:
-    inline static internal::rand<base_int> random_base_int{};
-    inline static internal::rand<unsigned int> random_bool{0U, 1U};
+    inline static internal::rand_gen<base_int> random_base_int{};
+    inline static internal::rand_gen<unsigned int> random_bool{0U, 1U};
 };
 
 }  // namespace jmaths

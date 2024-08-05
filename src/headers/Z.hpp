@@ -30,7 +30,6 @@
 #include "constants_and_types.hpp"
 #include "declarations.hpp"
 #include "hash.hpp"
-#include "rand.hpp"
 #include "sign_type.hpp"
 
 // declarations of Z and associated functions and types

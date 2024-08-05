@@ -19,6 +19,7 @@
 #include <random>
 
 #include "Z.hpp"
+#include "rand.hpp"
 
 int main(int, char *[]) {
     using jmaths::Z, jmaths::rand, jmaths::bitcount_t;
@@ -29,6 +30,8 @@ int main(int, char *[]) {
     while (std::cin.get() == '\n') {
         std::cout << rand<Z>::generate(exponent_generator()) << '\n';
     }
+
+    return 0;
 }
 
 #include "undef.hh"

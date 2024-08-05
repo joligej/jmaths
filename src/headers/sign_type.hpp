@@ -21,7 +21,6 @@
 #include <type_traits>
 
 #include "declarations.hpp"
-#include "rand.hpp"
 
 // declarations of sign_type and associated functions and types
 namespace jmaths {

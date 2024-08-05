@@ -25,4 +25,5 @@
 #include "error.hpp"
 #include "hash.hpp"
 #include "literals.hpp"
+#include "rand.hpp"
 #include "sign_type.hpp"

@@ -16,9 +16,9 @@
 
 #pragma once
 
+#include <concepts>
 #include <cstddef>
 #include <type_traits>
-#include <concepts>
 
 namespace jmaths::TMP {
 
@@ -78,7 +78,7 @@ using primitive_types = for_all_types_ts<all_cv_qualifications,
                                                         signed long long int,
                                                         float,
                                                         double,
-                                                        long double/*,void, std::nullptr_t*/>>;
+                                                        long double /*,void, std::nullptr_t*/>>;
 
 template <typename T, template <typename, typename> class Op, typename... U> struct matches_which {
     using type = typename matches_which<T, Op, pack_container<U...>>::type;
@@ -99,6 +99,25 @@ struct matches_which<T, Op, pack_container<U>> {
 
 template <typename T, template <typename, typename> class Op, typename... U>
 using matches_which_t = typename matches_which<T, Op, U...>::type;
+
+template <typename T, template <typename, typename> class Op, typename... U> struct matches_any {
+    static constexpr bool value = matches_any<T, Op, pack_container<U...>>::value;
+};
+
+template <typename T, template <typename, typename> class Op, typename... U>
+struct matches_any<T, Op, pack_container<U...>> {
+    static constexpr bool value = Op<T, typename unpack<U...>::first_type>::value ?
+                                      true :
+                                      matches_any<T, Op, typename unpack<U...>::other_types>::value;
+};
+
+template <typename T, template <typename, typename> class Op, typename U>
+struct matches_any<T, Op, pack_container<U>> {
+    static constexpr bool value = Op<T, U>::value ? true : false;
+};
+
+template <typename T, template <typename, typename> class Op, typename... U>
+inline static constexpr bool matches_any_v = matches_any<T, Op, U...>::value;
 
 template <typename T, typename U>
 struct equal_size : std::conditional_t<(sizeof(T) == sizeof(U)), std::true_type, std::false_type> {};
@@ -130,11 +149,17 @@ template <typename T>
 concept primitive_type =
     !std::is_same_v<typename matches_which<T, std::is_same, primitive_types>::type, empty_t>;
 
-//static_assert(primitive_type<int> && primitive_type<char> && primitive_type<const volatile void>);
+// static_assert(primitive_type<int> && primitive_type<char> && primitive_type<const volatile void>);
 static_assert(primitive_type<int> && primitive_type<char>);
 static_assert(primitive_type<char>);
 
 template <typename T, typename... U>
 concept any_of = (std::same_as<T, U> || ...);
+
+template <typename T, typename...> struct fake_dependency {
+    using type = T;
+};
+
+template <typename T, typename... Ts> using fake_dependency_t = fake_dependency<T, Ts...>;
 
 }  // namespace jmaths::TMP

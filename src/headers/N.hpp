@@ -31,7 +31,6 @@
 #include "constants_and_types.hpp"
 #include "declarations.hpp"
 #include "hash.hpp"
-#include "rand.hpp"
 
 // declarations of N and associated functions and types
 namespace jmaths {

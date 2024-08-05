@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include "TMP.hpp"
+
 // all the types
 namespace jmaths {
 
@@ -27,5 +29,7 @@ class sign_type;
 class Z;
 class Q;
 class error;
+
+template <TMP::any_of<N, Z> T> class rand;
 
 }  // namespace jmaths
