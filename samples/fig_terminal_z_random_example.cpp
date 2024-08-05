@@ -21,13 +21,13 @@
 #include "Z.hpp"
 
 int main(int, char *[]) {
-    using jmaths::Z, jmaths::bitcount_t;
+    using jmaths::Z, jmaths::rand, jmaths::bitcount_t;
 
     auto exponent_generator =
         std::bind(std::uniform_int_distribution<bitcount_t>(0, 32), std::mt19937(std::random_device{}()));
 
     while (std::cin.get() == '\n') {
-        std::cout << Z::rand(exponent_generator()) << '\n';
+        std::cout << rand<Z>::generate(exponent_generator()) << '\n';
     }
 }
 
