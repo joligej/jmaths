@@ -63,6 +63,9 @@ class Z : public sign_type, private N {
 
     friend class Q;
 
+    friend class rand<N>;
+    friend class rand<Z>;
+
    public:
     using N::bit_reference, N::const_bit_reference;
     using N::ctz, N::bits, N::operator bool, N::operator[];
@@ -118,9 +121,6 @@ class Z : public sign_type, private N {
 
     Z & operator=(const N & n);
     Z & operator=(N && n);
-
-    static constexpr bool rand_enabled = N::rand_enabled;
-    template <bool = rand_enabled> [[nodiscard]] static Z rand(bitcount_t upper_bound_exponent);
 
    private:
     Z(N && n, sign_bool sign);

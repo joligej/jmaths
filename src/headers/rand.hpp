@@ -16,27 +16,24 @@
 
 #pragma once
 
-#include <concepts>
 #include <limits>
 #include <random>
 
+#include "TMP.hpp"
 #include "def.hh"
 
 namespace jmaths::internal {
 
-template <typename T, typename... U>
-concept any_of = (std::same_as<T, U> || ...);
-
 template <typename T>
-concept allowed_rand_type = any_of<T,
-                                   short,
-                                   int,
-                                   long,
-                                   long long,
-                                   unsigned short,
-                                   unsigned int,
-                                   unsigned long,
-                                   unsigned long long>;
+concept allowed_rand_type = TMP::any_of<T,
+                                        short,
+                                        int,
+                                        long,
+                                        long long,
+                                        unsigned short,
+                                        unsigned int,
+                                        unsigned long,
+                                        unsigned long long>;
 
 template <allowed_rand_type T> class rand {
    public:
@@ -69,5 +66,18 @@ template <allowed_rand_type T> class rand {
 };
 
 }  // namespace jmaths::internal
+
+namespace jmaths {
+
+template <TMP::any_of<N, Z> T> class rand {
+   public:
+    [[nodiscard]] static T generate(bitcount_t upper_bound_exponent);
+
+   private:
+    inline static internal::rand<base_int> random_base_int{};
+    inline static internal::rand<unsigned int> random_bool{0U, 1U};
+};
+
+}  // namespace jmaths
 
 #include "undef.hh"

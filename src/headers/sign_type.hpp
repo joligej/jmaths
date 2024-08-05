@@ -21,6 +21,7 @@
 #include <type_traits>
 
 #include "declarations.hpp"
+#include "rand.hpp"
 
 // declarations of sign_type and associated functions and types
 namespace jmaths {
@@ -28,6 +29,9 @@ namespace jmaths {
 class sign_type {
     friend struct detail;
     friend struct calc;
+
+    friend class rand<N>;
+    friend class rand<Z>;
 
    public:
     [[nodiscard]] bool is_positive() const;

@@ -65,6 +65,9 @@ class N {
 
     friend class Q;
 
+    friend class rand<N>;
+    friend class rand<Z>;
+
    public:
     class bit_reference;
     class const_bit_reference;
@@ -117,9 +120,6 @@ class N {
 
     N & operator=(std::string_view num_str);
     N & operator=(std::integral auto rhs);
-
-    static constexpr bool rand_enabled = internal::allowed_rand_type<base_int>;
-    template <bool = rand_enabled> [[nodiscard]] static N rand(bitcount_t upper_bound_exponent);
 
    protected:
     [[nodiscard]] std::size_t dynamic_size_() const;

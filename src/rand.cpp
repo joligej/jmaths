@@ -27,14 +27,8 @@
 
 namespace jmaths {
 
-template N N::rand<true>(bitcount_t upper_bound_exponent);
-template Z Z::rand<true>(bitcount_t upper_bound_exponent);
-
-template <bool> N N::rand(bitcount_t upper_bound_exponent) {
+template <> N rand<N>::generate(bitcount_t upper_bound_exponent) {
     FUNCTION_TO_LOG;
-
-    using rand_type = std::conditional_t<rand_enabled, base_int, int>;
-    static internal::rand<rand_type> rand_gen;
 
     const std::size_t pos_whole = upper_bound_exponent / base_int_bits;
 
@@ -44,11 +38,11 @@ template <bool> N N::rand(bitcount_t upper_bound_exponent) {
     const bitpos_t pos_mod = upper_bound_exponent % base_int_bits;
 
     for (std::size_t i = 0U; i < pos_whole; ++i) {
-        random_number.digits_.emplace_back(rand_gen());
+        random_number.digits_.emplace_back(random_base_int());
     }
 
     if (pos_mod > 0U) {
-        random_number.digits_.emplace_back(rand_gen() >> (base_int_bits - pos_mod));
+        random_number.digits_.emplace_back(random_base_int() >> (base_int_bits - pos_mod));
     }
 
     random_number.remove_leading_zeroes_();
@@ -56,16 +50,14 @@ template <bool> N N::rand(bitcount_t upper_bound_exponent) {
     return random_number;
 }
 
-template <bool> Z Z::rand(bitcount_t upper_bound_exponent) {
+template <> Z rand<Z>::generate(bitcount_t upper_bound_exponent) {
     FUNCTION_TO_LOG;
 
-    static internal::rand<unsigned int> rand_gen(0U, 1U);
-
-    N random_number = N::rand<true>(upper_bound_exponent);
+    N random_number = rand<N>::generate(upper_bound_exponent);
 
     if (random_number.is_zero()) { return Z{}; }
 
-    return {std::move(random_number), static_cast<sign_bool>(rand_gen())};
+    return {std::move(random_number), static_cast<sign_type::sign_bool>(random_bool())};
 }
 
 }  // namespace jmaths
