@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <concepts>
 #include <limits>
 #include <random>
 #include <type_traits>
@@ -36,20 +35,8 @@ template <typename T> class rand_gen {
                                               unsigned long,
                                               unsigned long long>;
 
-    template <typename U, typename R> struct result_type_requirements {
-        static constexpr bool value =
-            std::unsigned_integral<R> &&
-            std::numeric_limits<R>::max() >= std::numeric_limits<U>::max() &&
-            std::numeric_limits<R>::min() <= std::numeric_limits<U>::min();
-    };
-
    public:
-    using result_type =
-        std::conditional_t<TMP::matches_any_v<T, std::is_same, allowed_types>,
-                           T,
-                           TMP::matches_which_t<T, result_type_requirements, allowed_types>>;
-
-    rand_gen(T min, T max) : distrib(min, max) {
+    rand_gen(T min, T max) : distrib_(min, max) {
         FUNCTION_TO_LOG;
     }
 
@@ -57,37 +44,34 @@ template <typename T> class rand_gen {
         FUNCTION_TO_LOG;
     }
 
-    result_type operator()() {
+    T operator()() {
         FUNCTION_TO_LOG;
 
-        return distrib(gen);
+        return distrib_(gen_);
     }
 
     template <typename SeedType> static void reseed(SeedType seed = seed_type{}()) {
         FUNCTION_TO_LOG;
 
-        gen.seed(seed);
+        gen_.seed(seed);
     }
 
    private:
     using seed_type = std::random_device;
 
-    inline static std::mt19937 gen{seed_type{}()};
+    inline static std::mt19937 gen_{seed_type{}()};
 
-    std::uniform_int_distribution<result_type> distrib;
+    std::uniform_int_distribution<
+        std::conditional_t<TMP::matches_any_v<T, std::is_same, allowed_types>, T, unsigned int>>
+        distrib_;
 };
 
 }  // namespace jmaths::internal
 
 namespace jmaths {
 
-template <TMP::any_of<N, Z> T> class rand {
-   public:
+template <TMP::any_of<N, Z> T> struct rand {
     [[nodiscard]] static T generate(bitcount_t upper_bound_exponent);
-
-   private:
-    inline static internal::rand_gen<base_int> random_base_int{};
-    inline static internal::rand_gen<unsigned int> random_bool{0U, 1U};
 };
 
 }  // namespace jmaths

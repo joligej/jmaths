@@ -64,8 +64,8 @@ class N {
 
     friend class Q;
 
-    friend class rand<N>;
-    friend class rand<Z>;
+    friend struct rand<N>;
+    friend struct rand<Z>;
 
    public:
     class bit_reference;

@@ -62,8 +62,8 @@ class Z : public sign_type, private N {
 
     friend class Q;
 
-    friend class rand<N>;
-    friend class rand<Z>;
+    friend struct rand<N>;
+    friend struct rand<Z>;
 
    public:
     using N::bit_reference, N::const_bit_reference;

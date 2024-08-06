@@ -18,7 +18,7 @@
 
 #include <cstddef>
 #include <random>
-#include <type_traits>
+#include <utility>
 
 #include "N.hpp"
 #include "Z.hpp"
@@ -29,6 +29,8 @@ namespace jmaths {
 
 template <> N rand<N>::generate(bitcount_t upper_bound_exponent) {
     FUNCTION_TO_LOG;
+
+    static internal::rand_gen<base_int> random_base_int;
 
     const std::size_t pos_whole = upper_bound_exponent / base_int_bits;
 
@@ -52,6 +54,8 @@ template <> N rand<N>::generate(bitcount_t upper_bound_exponent) {
 
 template <> Z rand<Z>::generate(bitcount_t upper_bound_exponent) {
     FUNCTION_TO_LOG;
+
+    static internal::rand_gen<bool> random_bool;
 
     N random_number = rand<N>::generate(upper_bound_exponent);
 

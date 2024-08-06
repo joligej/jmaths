@@ -85,7 +85,7 @@ N detail::opr_add(const N & lhs, const N & rhs) {
         // checks if lhs + rhs + carry < base
         const bool next_carry = !(lhs.digits_[i] < (carry ? max_digit : radix) - rhs.digits_[i]);
 
-        sum.digits_.emplace_back(lhs.digits_[i] + rhs.digits_[i] + carry);
+        sum.digits_.emplace_back(lhs.digits_[i] + rhs.digits_[i] + static_cast<base_int>(carry));
         carry = next_carry;
     }
 

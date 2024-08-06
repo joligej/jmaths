@@ -30,6 +30,6 @@ class Z;
 class Q;
 class error;
 
-template <TMP::any_of<N, Z> T> class rand;
+template <TMP::any_of<N, Z> T> struct rand;
 
 }  // namespace jmaths

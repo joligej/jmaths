@@ -29,8 +29,8 @@ class sign_type {
     friend struct detail;
     friend struct calc;
 
-    friend class rand<N>;
-    friend class rand<Z>;
+    friend struct rand<N>;
+    friend struct rand<Z>;
 
    public:
     [[nodiscard]] bool is_positive() const;
