@@ -896,5 +896,3 @@ N::bit_reference & N::bit_reference::operator=(const const_bit_reference & ref) 
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

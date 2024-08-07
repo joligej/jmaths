@@ -51,5 +51,3 @@ void sign_type::set_sign_(std::convertible_to<std::underlying_type_t<sign_bool>>
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

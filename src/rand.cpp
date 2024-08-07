@@ -59,9 +59,8 @@ template <typename T> T rand_gen<T>::operator()() {
 template <typename T> void rand_gen<T>::update_() {
     JMATHS_FUNCTION_TO_LOG;
 
-    const auto current_time = clock_type::now();
-
-    if (current_time - last_seed_time_ > max_unseeded_duration) {
+    if (const auto current_time = clock_type::now();
+        current_time - last_seed_time_ > max_unseeded_duration) {
         reseed_();
         last_seed_time_ = current_time;
     }
@@ -115,5 +114,3 @@ template <> Z rand<Z>::generate(bitcount_t upper_bound_exponent) {
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

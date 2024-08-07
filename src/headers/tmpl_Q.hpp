@@ -311,5 +311,3 @@ Q & Q::operator=(std::floating_point auto rhs) {
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

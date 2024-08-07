@@ -190,5 +190,3 @@ std::strong_ordering detail::opr_comp(const Z & lhs, const Z & rhs) {
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

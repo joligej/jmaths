@@ -410,5 +410,3 @@ Z & Z::operator=(N && n) {
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

@@ -169,5 +169,3 @@ Z calc::pow(Z base, N exponent) {
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

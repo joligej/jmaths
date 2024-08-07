@@ -67,5 +67,3 @@ void sign_type::flip_sign() {
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

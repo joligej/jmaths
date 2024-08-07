@@ -35,5 +35,3 @@ Z operator""_Z(const char * num_str) {
 }
 
 }  // namespace jmaths::inline literals
-
-#include "undef.hh"

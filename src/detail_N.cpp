@@ -482,5 +482,3 @@ std::strong_ordering detail::opr_comp(const N & lhs, const N & rhs) {
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

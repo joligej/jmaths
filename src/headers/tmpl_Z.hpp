@@ -121,5 +121,3 @@ Z & Z::operator=(std::integral auto rhs) {
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

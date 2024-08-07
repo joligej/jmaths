@@ -678,5 +678,3 @@ Q & Q::operator=(Z && z) {
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

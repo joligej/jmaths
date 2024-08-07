@@ -55,5 +55,3 @@ size_t hash<jmaths::Q>::operator()(const jmaths::Q & q) const {
 }
 
 }  // namespace std
-
-#include "undef.hh"

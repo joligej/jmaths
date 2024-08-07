@@ -223,5 +223,3 @@ N::bit_reference_base_<T>::operator int() const {
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

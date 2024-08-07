@@ -51,5 +51,3 @@ uint<V>::uint(std::integral auto num) : digits_{} {
 }
 
 }  // namespace jmaths
-
-#include "undef.hh"

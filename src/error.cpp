@@ -57,5 +57,3 @@ error::invalid_base::invalid_base(const char * message) : error(message) {
 };
 
 }  // namespace jmaths
-
-#include "undef.hh"
