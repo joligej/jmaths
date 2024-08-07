@@ -16,12 +16,11 @@
 
 #pragma once
 
-#include <limits>
+#include <chrono>
 #include <random>
 #include <type_traits>
 
 #include "TMP.hpp"
-#include "def.hh"
 
 namespace jmaths::internal {
 
@@ -35,35 +34,29 @@ template <typename T> class rand_gen {
                                               unsigned long,
                                               unsigned long long>;
 
+    using seed_type = std::random_device;
+    using generator_type = std::mt19937_64;
+    using clock_type = std::chrono::high_resolution_clock;
+    using distribution_type = std::uniform_int_distribution<
+        std::conditional_t<TMP::matches_any_v<T, std::is_same, allowed_types>, T, unsigned int>>;
+
+    static constexpr auto max_unseeded_duration = std::chrono::months(2);
+
    public:
-    rand_gen(T min, T max) : distrib_(min, max) {
-        JMATHS_FUNCTION_TO_LOG;
-    }
+    rand_gen(T min, T max);
 
-    rand_gen() : rand_gen(0, std::numeric_limits<T>::max()) {
-        JMATHS_FUNCTION_TO_LOG;
-    }
+    rand_gen();
 
-    T operator()() {
-        JMATHS_FUNCTION_TO_LOG;
-
-        return distrib_(gen_);
-    }
-
-    template <typename SeedType> static void reseed(SeedType seed = seed_type{}()) {
-        JMATHS_FUNCTION_TO_LOG;
-
-        gen_.seed(seed);
-    }
+    T operator()();
 
    private:
-    using seed_type = std::random_device;
+    distribution_type distrib_;
 
-    inline static std::mt19937 gen_{seed_type{}()};
+    static generator_type gen_;
+    static clock_type::time_point last_seed_time_;
 
-    std::uniform_int_distribution<
-        std::conditional_t<TMP::matches_any_v<T, std::is_same, allowed_types>, T, unsigned int>>
-        distrib_;
+    static void update_();
+    static void reseed_(generator_type::result_type seed = seed_type{}());
 };
 
 }  // namespace jmaths::internal
@@ -75,5 +68,3 @@ template <TMP::any_of<N, Z> T> struct rand {
 };
 
 }  // namespace jmaths
-
-#include "undef.hh"

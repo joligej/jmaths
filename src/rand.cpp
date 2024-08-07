@@ -16,7 +16,9 @@
 
 #include "rand.hpp"
 
+#include <chrono>
 #include <cstddef>
+#include <limits>
 #include <random>
 #include <utility>
 
@@ -24,6 +26,54 @@
 #include "Z.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
+
+namespace jmaths::internal {
+
+template <typename T> typename rand_gen<T>::generator_type rand_gen<T>::gen_(seed_type{}());
+
+template <typename T>
+typename rand_gen<T>::clock_type::time_point rand_gen<T>::last_seed_time_(clock_type::now());
+
+template <typename T> rand_gen<T>::rand_gen(T min, T max) : distrib_(min, max) {
+    JMATHS_FUNCTION_TO_LOG;
+}
+
+template <typename T> rand_gen<T>::rand_gen() : rand_gen(0, std::numeric_limits<T>::max()) {
+    JMATHS_FUNCTION_TO_LOG;
+}
+
+template <typename T> T rand_gen<T>::operator()() {
+    JMATHS_FUNCTION_TO_LOG;
+
+#ifndef PERIODICALLY_RESEED_RAND
+    #error "PERIODICALLY_RESEED_RAND is not defined, please define it when compiling!"
+#endif
+
+#if PERIODICALLY_RESEED_RAND
+    update_();
+#endif
+
+    return distrib_(gen_);
+}
+
+template <typename T> void rand_gen<T>::update_() {
+    JMATHS_FUNCTION_TO_LOG;
+
+    const auto current_time = clock_type::now();
+
+    if (current_time - last_seed_time_ > max_unseeded_duration) {
+        reseed_();
+        last_seed_time_ = current_time;
+    }
+}
+
+template <typename T> void rand_gen<T>::reseed_(generator_type::result_type seed) {
+    JMATHS_FUNCTION_TO_LOG;
+
+    gen_.seed(seed);
+}
+
+}  // namespace jmaths::internal
 
 namespace jmaths {
 
