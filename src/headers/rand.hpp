@@ -35,7 +35,7 @@ template <typename T> class rand_gen {
                                               unsigned long long>;
 
     using seed_type = std::random_device;
-    using generator_type = std::mt19937_64;
+    using generator_type = std::mt19937;
     using clock_type = std::chrono::high_resolution_clock;
     using distribution_type = std::uniform_int_distribution<
         std::conditional_t<TMP::matches_any_v<T, std::is_same, allowed_types>, T, unsigned int>>;
