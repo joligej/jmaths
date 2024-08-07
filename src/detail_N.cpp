@@ -37,13 +37,13 @@ namespace jmaths {
 // implementation functions
 
 std::ostream & detail::opr_ins(std::ostream & os, const N & n) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return os << n.to_str();
 }
 
 std::istream & detail::opr_extr(std::istream & is, N & n) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     std::string num_str;
     is >> num_str;
@@ -55,7 +55,7 @@ std::istream & detail::opr_extr(std::istream & is, N & n) {
 }
 
 N detail::opr_add(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     // check for additive identity
     if (lhs.is_zero()) { return rhs; }
@@ -118,7 +118,7 @@ end_of_function:
 }
 
 N detail::opr_subtr(N lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     // this functions assumes that lhs >= rhs and for effiency reasons should
     // only be called when lhs > rhs
@@ -153,7 +153,7 @@ N detail::opr_subtr(N lhs, const N & rhs) {
 }
 
 N detail::opr_mult(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
 #ifndef KARATSUBA
     #error "KARATSUBA is not defined, please define it when compiling!"
@@ -320,7 +320,7 @@ N detail::opr_mult(const N & lhs, const N & rhs) {
 }
 
 std::pair<N, N> detail::opr_div(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_zero()) { return {N{}, N{}}; }
 
@@ -373,7 +373,7 @@ std::pair<N, N> detail::opr_div(const N & lhs, const N & rhs) {
 }
 
 N detail::opr_and(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_zero() || rhs.is_zero()) { return N{}; }
 
@@ -392,7 +392,7 @@ N detail::opr_and(const N & lhs, const N & rhs) {
 }
 
 N detail::opr_or(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_zero()) { return rhs; }
     if (rhs.is_zero()) { return lhs; }
@@ -425,7 +425,7 @@ N detail::opr_or(const N & lhs, const N & rhs) {
 }
 
 N detail::opr_xor(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_zero()) { return rhs; }
     if (rhs.is_zero()) { return lhs; }
@@ -460,13 +460,13 @@ N detail::opr_xor(const N & lhs, const N & rhs) {
 }
 
 bool detail::opr_eq(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return lhs.digits_ == rhs.digits_;
 }
 
 std::strong_ordering detail::opr_comp(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.digits_.size() < rhs.digits_.size()) { return std::strong_ordering::less; }
     if (lhs.digits_.size() > rhs.digits_.size()) { return std::strong_ordering::greater; }

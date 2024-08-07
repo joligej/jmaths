@@ -37,21 +37,21 @@ template <typename T> class rand_gen {
 
    public:
     rand_gen(T min, T max) : distrib_(min, max) {
-        FUNCTION_TO_LOG;
+        JMATHS_FUNCTION_TO_LOG;
     }
 
     rand_gen() : rand_gen(0, std::numeric_limits<T>::max()) {
-        FUNCTION_TO_LOG;
+        JMATHS_FUNCTION_TO_LOG;
     }
 
     T operator()() {
-        FUNCTION_TO_LOG;
+        JMATHS_FUNCTION_TO_LOG;
 
         return distrib_(gen_);
     }
 
     template <typename SeedType> static void reseed(SeedType seed = seed_type{}()) {
-        FUNCTION_TO_LOG;
+        JMATHS_FUNCTION_TO_LOG;
 
         gen_.seed(seed);
     }

@@ -18,20 +18,24 @@
     #include <source_location>
 
     #include "function_timer.hpp"
-    #define FUNCTION_TO_LOG \
-        static constexpr const char * FUNCTION_NAME = ::std::source_location::current().function_name(); \
-        ::jmaths::internal::function_timer \
-        TIME_THIS_FUNCTION{FUNCTION_NAME}
+    #define JMATHS_FUNCTION_TO_LOG                                                \
+        static constexpr const char * JMATHS_MACRO_IMPL_FUNCTION_NAME =           \
+            ::std::source_location::current().function_name();                    \
+        ::jmaths::internal::function_timer JMATHS_MACRO_IMPL_TIME_THIS_FUNCTION { \
+            JMATHS_MACRO_IMPL_FUNCTION_NAME                                       \
+        }
 #else
-    #define FUNCTION_TO_LOG ((void)0)
+    #define JMATHS_FUNCTION_TO_LOG ((void)0)
 #endif
 
 #include <type_traits>
 
-#define CONCAT2HELP(x, y) x##y
-#define CONCAT2(x, y) CONCAT2HELP(x, y)
+#define JMATHS_MACRO_IMPL_CONCAT2HELP(x, y) x##y
+#define JMATHS_CONCAT2(x, y) JMATHS_MACRO_IMPL_CONCAT2HELP(x, y)
 
-#define REPEAT(x)                                                                             \
-    for (::std::remove_cvref_t<decltype(x)> CONCAT2(FOR_LOOP_REPETITION_COUNTER, __LINE__){}; \
-         CONCAT2(FOR_LOOP_REPETITION_COUNTER, __LINE__) < x;                                  \
-         ++CONCAT2(FOR_LOOP_REPETITION_COUNTER, __LINE__))
+#define JMATHS_REPEAT(x)                                                                     \
+    for (::std::remove_cvref_t<decltype(x)> JMATHS_CONCAT2(                           \
+             JMATHS_MACRO_IMPL_FOR_LOOP_REPETITION_COUNTER,                           \
+             __LINE__){};                                                             \
+         JMATHS_CONCAT2(JMATHS_MACRO_IMPL_FOR_LOOP_REPETITION_COUNTER, __LINE__) < x; \
+         ++JMATHS_CONCAT2(JMATHS_MACRO_IMPL_FOR_LOOP_REPETITION_COUNTER, __LINE__))

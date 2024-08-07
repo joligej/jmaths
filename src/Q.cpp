@@ -40,68 +40,68 @@ namespace jmaths {
 // forwarding functions
 
 std::ostream & operator<<(std::ostream & os, const Q & q) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_ins(os, q);
 }
 
 std::istream & operator>>(std::istream & is, Q & q) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_extr(is, q);
 }
 
 Q operator+(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_add(lhs, rhs);
 }
 
 Q operator-(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_subtr(lhs, rhs);
 }
 
 Q operator*(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_mult(lhs, rhs);
 }
 
 Q operator/(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (rhs.is_zero()) { throw error::division_by_zero{}; }
     return detail::opr_div(lhs, rhs);
 }
 
 Q operator&(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_and(lhs, rhs);
 }
 
 Q operator|(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_or(lhs, rhs);
 }
 
 Q operator^(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_xor(lhs, rhs);
 }
 
 bool operator==(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_eq(lhs, rhs);
 }
 
 std::strong_ordering operator<=>(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_comp(lhs, rhs);
 }
@@ -112,13 +112,13 @@ namespace jmaths {
 
 Q::Q(N && num, N && denom, sign_bool sign) :
     sign_type(sign), num_(std::move(num)), denom_(std::move(denom)) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     canonicalise_();
 }
 
 Q::Q(const N & num, const N & denom, sign_bool sign) : sign_type(sign), num_(num), denom_(denom) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     canonicalise_();
 }
@@ -127,11 +127,11 @@ Q::Q(std::tuple<N, N, sign_bool> && fraction_info) :
     Q(std::move(std::get<0>(fraction_info)),
       std::move(std::get<1>(fraction_info)),
       std::get<2>(fraction_info)) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 std::string_view Q::handle_fraction_string_(std::string_view * num_str) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     const auto fraction_bar = num_str->find(vinculum);
     const std::string_view numerator = num_str->substr(0U, fraction_bar);
@@ -140,7 +140,7 @@ std::string_view Q::handle_fraction_string_(std::string_view * num_str) {
 }
 
 void Q::canonicalise_() {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     const N gcd = calc::gcd(num_, denom_);
     num_ = detail::opr_div(num_, gcd).first;
@@ -148,18 +148,18 @@ void Q::canonicalise_() {
 }
 
 std::size_t Q::dynamic_size_() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return num_.dynamic_size_() + denom_.dynamic_size_();
 }
 
 Q::Q() : denom_(N::one_) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 Q::Q(std::string_view num_str, unsigned base) :
     sign_type(&num_str), num_(handle_fraction_string_(&num_str), base), denom_(num_str, base) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
 
@@ -168,23 +168,23 @@ Q::Q(std::string_view num_str, unsigned base) :
 }
 
 Q::Q(const N & n) : num_(n), denom_(N::one_) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 Q::Q(N && n) : num_(std::move(n)), denom_(N::one_) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 Q::Q(const Z & z) : sign_type(z.sign_), num_(z.abs()), denom_(N::one_) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 Q::Q(Z && z) : sign_type(z.sign_), num_(std::move(std::move(z).abs())), denom_(N::one_) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 Q::Q(const N & num, const N & denom) : num_(num), denom_(denom) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
 
@@ -192,7 +192,7 @@ Q::Q(const N & num, const N & denom) : num_(num), denom_(denom) {
 }
 
 Q::Q(const N & num, N && denom) : num_(num), denom_(std::move(denom)) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
 
@@ -200,7 +200,7 @@ Q::Q(const N & num, N && denom) : num_(num), denom_(std::move(denom)) {
 }
 
 Q::Q(N && num, const N & denom) : num_(std::move(num)), denom_(denom) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
 
@@ -208,7 +208,7 @@ Q::Q(N && num, const N & denom) : num_(std::move(num)), denom_(denom) {
 }
 
 Q::Q(N && num, N && denom) : num_(std::move(num)), denom_(std::move(denom)) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
 
@@ -219,7 +219,7 @@ Q::Q(const Z & num, const Z & denom) :
     sign_type(num.is_zero() ? positive : static_cast<sign_bool>(num.sign_ ^ denom.sign_)),
     num_(num.abs()),
     denom_(denom.abs()) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
 
@@ -230,7 +230,7 @@ Q::Q(const Z & num, Z && denom) :
     sign_type(num.is_zero() ? positive : static_cast<sign_bool>(num.sign_ ^ denom.sign_)),
     num_(num.abs()),
     denom_(std::move(std::move(denom).abs())) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
 
@@ -241,7 +241,7 @@ Q::Q(Z && num, const Z & denom) :
     sign_type(num.is_zero() ? positive : static_cast<sign_bool>(num.sign_ ^ denom.sign_)),
     num_(std::move(std::move(num).abs())),
     denom_(denom.abs()) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
 
@@ -252,7 +252,7 @@ Q::Q(Z && num, Z && denom) :
     sign_type(num.is_zero() ? positive : static_cast<sign_bool>(num.sign_ ^ denom.sign_)),
     num_(std::move(std::move(num).abs())),
     denom_(std::move(std::move(denom).abs())) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
 
@@ -260,38 +260,38 @@ Q::Q(Z && num, Z && denom) :
 }
 
 bool Q::is_zero() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return num_.is_zero();
 }
 
 bool Q::is_one() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return is_positive() && num_.is_one() && denom_.is_one();
 }
 
 bool Q::is_neg_one() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return is_negative() && num_.is_one() && denom_.is_one();
 }
 
 Q Q::abs() const & {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return {num_, denom_, positive};
 }
 
 Q && Q::abs() && {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(positive);
     return std::move(*this);
 }
 
 Q Q::inverse() const & {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (num_.is_zero()) { throw error::division_by_zero("Cannot take the inverse of zero!"); }
 
@@ -299,7 +299,7 @@ Q Q::inverse() const & {
 }
 
 Q && Q::inverse() && {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (num_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
 
@@ -308,13 +308,13 @@ Q && Q::inverse() && {
 }
 
 std::size_t Q::size() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return sizeof(*this) + dynamic_size_();
 }
 
 std::string Q::to_str(unsigned base) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_positive()) { return num_.to_str(base) + vinculum + denom_.to_str(base); }
 
@@ -322,7 +322,7 @@ std::string Q::to_str(unsigned base) const {
 }
 
 std::string Q::to_hex() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_positive()) { return num_.to_hex() + vinculum + denom_.to_hex(); }
 
@@ -330,13 +330,13 @@ std::string Q::to_hex() const {
 }
 
 Q::operator bool() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return !is_zero();
 }
 
 Q & Q::operator++() {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_positive()) {
         num_.opr_add_assign_(denom_);
@@ -356,7 +356,7 @@ Q & Q::operator++() {
 }
 
 Q & Q::operator--() {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_positive()) {
         if (const auto difference = detail::opr_comp(num_, denom_); difference == 0) {
@@ -376,7 +376,7 @@ Q & Q::operator--() {
 }
 
 Q & Q::operator+=(const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (this->is_positive()) {
         if (rhs.is_positive()) {
@@ -434,7 +434,7 @@ Q & Q::operator+=(const Q & rhs) {
 }
 
 Q & Q::operator-=(const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (this->is_positive()) {
         if (rhs.is_positive()) {
@@ -492,7 +492,7 @@ Q & Q::operator-=(const Q & rhs) {
 }
 
 Q & Q::operator*=(const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     num_.opr_mult_assign_(rhs.num_);
     denom_.opr_mult_assign_(rhs.denom_);
@@ -505,7 +505,7 @@ Q & Q::operator*=(const Q & rhs) {
 }
 
 Q & Q::operator/=(const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (rhs.is_zero()) { throw error::division_by_zero{}; }
 
@@ -520,7 +520,7 @@ Q & Q::operator/=(const Q & rhs) {
 }
 
 Q & Q::operator&=(const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     denom_.opr_and_assign_(rhs.denom_);
 
@@ -536,7 +536,7 @@ Q & Q::operator&=(const Q & rhs) {
 }
 
 Q & Q::operator|=(const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     num_.opr_or_assign_(rhs.num_);
     denom_.opr_or_assign_(rhs.denom_);
@@ -549,7 +549,7 @@ Q & Q::operator|=(const Q & rhs) {
 }
 
 Q & Q::operator^=(const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     denom_.opr_xor_assign_(rhs.denom_);
 
@@ -565,21 +565,21 @@ Q & Q::operator^=(const Q & rhs) {
 }
 
 Q Q::operator-() const & {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return *this; }
     return {num_, denom_, static_cast<sign_bool>(!sign_)};
 }
 
 Q && Q::operator-() && {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     flip_sign();
     return std::move(*this);
 }
 
 Q Q::operator~() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N num_complemented = num_.opr_compl_();
 
@@ -597,20 +597,20 @@ Q Q::operator~() const {
 }
 
 Q Q::operator<<(bitcount_t pos) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return {num_.opr_bitshift_l_(pos), denom_, sign_};
 }
 
 Q Q::operator>>(bitcount_t pos) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return Q{}; }
     return {num_, denom_.opr_bitshift_l_(pos), sign_};
 }
 
 Q & Q::operator<<=(bitcount_t pos) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     num_.opr_bitshift_l_assign_(pos);
     canonicalise_();
@@ -618,7 +618,7 @@ Q & Q::operator<<=(bitcount_t pos) {
 }
 
 Q & Q::operator>>=(bitcount_t pos) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return *this; }
     denom_.opr_bitshift_l_assign_(pos);
@@ -627,7 +627,7 @@ Q & Q::operator>>=(bitcount_t pos) {
 }
 
 Q & Q::operator=(std::string_view num_str) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(sign_type::handle_string_(&num_str));
 
@@ -642,7 +642,7 @@ Q & Q::operator=(std::string_view num_str) {
 }
 
 Q & Q::operator=(const N & n) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(positive);
     num_ = n;
@@ -651,7 +651,7 @@ Q & Q::operator=(const N & n) {
 }
 
 Q & Q::operator=(N && n) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(positive);
     num_ = std::move(n);
@@ -660,7 +660,7 @@ Q & Q::operator=(N && n) {
 }
 
 Q & Q::operator=(const Z & z) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(z.sign_);
     num_ = z.abs();
@@ -669,7 +669,7 @@ Q & Q::operator=(const Z & z) {
 }
 
 Q & Q::operator=(Z && z) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(z.sign_);
     num_ = std::move(std::move(z).abs());

@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#undef FUNCTION_TO_LOG
+#undef JMATHS_FUNCTION_TO_LOG
 
-#undef CONCAT2HELP
-#undef CONCAT2
-#undef REPEAT
+#undef JMATHS_MACRO_IMPL_CONCAT2HELP
+#undef JMATHS_CONCAT2
+#undef JMATHS_REPEAT

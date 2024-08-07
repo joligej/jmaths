@@ -48,7 +48,7 @@ namespace {
 base_int base_converter(char c) noexcept;  // convert char to number for base >= 2 and <= 64
 
 base_int base_converter(char c) noexcept {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (c >= '0' && c <= '9') { return static_cast<unsigned char>(c - '0'); }
     if (c >= 'A' && c <= 'Z') { return static_cast<unsigned char>(c - 'A' + 10); }
@@ -71,25 +71,25 @@ namespace jmaths {
 // forwarding functions
 
 std::ostream & operator<<(std::ostream & os, const N & n) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_ins(os, n);
 }
 
 std::istream & operator>>(std::istream & is, N & n) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_extr(is, n);
 }
 
 N operator+(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_add(lhs, rhs);
 }
 
 N operator-(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     const auto difference = detail::opr_comp(lhs, rhs);
 
@@ -98,44 +98,44 @@ N operator-(const N & lhs, const N & rhs) {
 }
 
 N operator*(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_mult(lhs, rhs);
 }
 
 std::pair<N, N> operator/(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (rhs.is_zero()) { throw error::division_by_zero{}; }
     return detail::opr_div(lhs, rhs);
 }
 
 N operator&(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_and(lhs, rhs);
 }
 
 N operator|(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_or(lhs, rhs);
 }
 
 N operator^(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_xor(lhs, rhs);
 }
 
 bool operator==(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_eq(lhs, rhs);
 }
 
 std::strong_ordering operator<=>(const N & lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_comp(lhs, rhs);
 }
@@ -145,7 +145,7 @@ std::strong_ordering operator<=>(const N & lhs, const N & rhs) {
 namespace jmaths {
 
 void N::remove_leading_zeroes_() {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     while (!digits_.empty()) {
         if (digits_.back() != 0U) { break; }
@@ -156,7 +156,7 @@ void N::remove_leading_zeroes_() {
 }
 
 base_int N::front_() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (digits_.empty()) { return 0U; }
 
@@ -164,7 +164,7 @@ base_int N::front_() const {
 }
 
 std::string N::conv_to_base_(unsigned base) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     static constexpr char base_converter[] =
         "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/";
@@ -193,7 +193,7 @@ std::string N::conv_to_base_(unsigned base) const {
 }
 
 void N::handle_str_(std::string_view num_str, unsigned base) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     // the naive yet faster check:
     // if (num_str.empty()) { return; }
@@ -213,7 +213,7 @@ void N::handle_str_(std::string_view num_str, unsigned base) {
 }
 
 bool N::bit_(bitpos_t pos) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     const std::size_t pos_whole = pos / base_int_bits;
     const bitpos_t pos_mod = pos % base_int_bits;
@@ -226,7 +226,7 @@ bool N::bit_(bitpos_t pos) const {
 }
 
 void N::bit_(bitpos_t pos, bool val) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     const std::size_t pos_whole = pos / base_int_bits;
     const bitpos_t pos_mod = pos % base_int_bits;
@@ -256,13 +256,13 @@ void N::bit_(bitpos_t pos, bool val) {
 }
 
 std::size_t N::dynamic_size_() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return digits_.size() * base_int_size;
 }
 
 void N::opr_incr_() {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     for (auto & digit : digits_) {
         if (digit++ < max_digit) { return; }
@@ -272,7 +272,7 @@ void N::opr_incr_() {
 }
 
 void N::opr_decr_() {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     for (auto & digit : digits_) {
         if (digit-- > 0U) {
@@ -285,7 +285,7 @@ void N::opr_decr_() {
 }
 
 void N::opr_add_assign_(const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     // check for additive identity
     if (rhs.is_zero()) { return; }
@@ -321,7 +321,7 @@ void N::opr_add_assign_(const N & rhs) {
 }
 
 void N::opr_subtr_assign_(const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     // this functions assumes that *this >= rhs and for effiency reasons should
     // only be called when *this > rhs
@@ -343,7 +343,7 @@ void N::opr_subtr_assign_(const N & rhs) {
 }
 
 void N::opr_mult_assign_(const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     // !!! remove temporary (at least temp1) !!!
 
@@ -392,7 +392,7 @@ void N::opr_mult_assign_(const N & rhs) {
 }
 
 void N::opr_and_assign_(const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (this->is_zero()) { return; }
 
@@ -411,7 +411,7 @@ void N::opr_and_assign_(const N & rhs) {
 }
 
 void N::opr_or_assign_(const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (this->is_zero()) {
         operator=(rhs);
@@ -447,7 +447,7 @@ void N::opr_or_assign_(const N & rhs) {
 }
 
 void N::opr_xor_assign_(const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (this->is_zero()) {
         operator=(rhs);
@@ -482,7 +482,7 @@ void N::opr_xor_assign_(const N & rhs) {
 }
 
 N N::opr_compl_() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     // this function returns 0 if *this == 0
 
@@ -500,7 +500,7 @@ N N::opr_compl_() const {
 }
 
 N N::opr_bitshift_l_(bitcount_t pos) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return N{}; }
     if (pos == 0U) { return *this; }
@@ -533,7 +533,7 @@ N N::opr_bitshift_l_(bitcount_t pos) const {
 }
 
 N N::opr_bitshift_r_(bitcount_t pos) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return N{}; }
     if (pos == 0U) { return *this; }
@@ -568,7 +568,7 @@ N N::opr_bitshift_r_(bitcount_t pos) const {
 }
 
 void N::opr_bitshift_l_assign_(bitcount_t pos) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return; }
     if (pos == 0U) { return; }
@@ -598,7 +598,7 @@ void N::opr_bitshift_l_assign_(bitcount_t pos) {
 }
 
 void N::opr_bitshift_r_assign_(bitcount_t pos) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return; }
     if (pos == 0U) { return; }
@@ -625,7 +625,7 @@ void N::opr_bitshift_r_assign_(bitcount_t pos) {
 }
 
 void N::opr_assign_(std::string_view num_str) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     set_zero();
 
@@ -635,7 +635,7 @@ void N::opr_assign_(std::string_view num_str) {
 N::N() = default;
 
 N::N(std::string_view num_str, unsigned base) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (base < 2U || base > 64U) {
         throw error::invalid_base("You need to provide a string in a base between 2 and 64!");
@@ -645,25 +645,25 @@ N::N(std::string_view num_str, unsigned base) {
 }
 
 bool N::is_zero() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return digits_.empty();
 }
 
 bool N::is_one() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return digits_.size() == 1U && digits_.front() == 1U;
 }
 
 bool N::is_even() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return !is_odd();
 }
 
 bool N::is_odd() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return false; }
 
@@ -671,7 +671,7 @@ bool N::is_odd() const {
 }
 
 bitcount_t N::ctz() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     bitcount_t tz = 0U;
     for (const auto & digit : digits_) {
@@ -687,7 +687,7 @@ bitcount_t N::ctz() const {
 }
 
 bitcount_t N::bits() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return 1U; }
     return digits_.size() * base_int_bits -
@@ -695,13 +695,13 @@ bitcount_t N::bits() const {
 }
 
 std::size_t N::size() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return sizeof(*this) + dynamic_size_();
 }
 
 std::string N::to_str(unsigned base) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (base < 2U || base > 64U) {
         throw error::invalid_base("You need to enter a base between 2 and 64!");
@@ -711,7 +711,7 @@ std::string N::to_str(unsigned base) const {
 }
 
 std::string N::to_hex() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return "0"; }
 
@@ -737,19 +737,19 @@ std::string N::to_hex() const {
 }
 
 N::operator bool() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return !is_zero();
 }
 
 N::bit_reference N::operator[](bitpos_t pos) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return {*this, pos};
 }
 
 N::const_bit_reference N::operator[](bitpos_t pos) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return {*this, pos};
 }
@@ -759,28 +759,28 @@ void N::set_zero() {
 }
 
 N & N::operator++() {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     opr_incr_();
     return *this;
 }
 
 N & N::operator--() {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     opr_decr_();
     return *this;
 }
 
 N & N::operator+=(const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     opr_add_assign_(rhs);
     return *this;
 }
 
 N & N::operator-=(const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (const auto difference = detail::opr_comp(*this, rhs); difference == 0) {
         set_zero();
@@ -794,67 +794,67 @@ N & N::operator-=(const N & rhs) {
 }
 
 N & N::operator*=(const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     opr_mult_assign_(rhs);
     return *this;
 }
 
 N & N::operator&=(const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     opr_and_assign_(rhs);
     return *this;
 }
 
 N & N::operator|=(const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     opr_or_assign_(rhs);
     return *this;
 }
 
 N & N::operator^=(const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     opr_xor_assign_(rhs);
     return *this;
 }
 
 N N::operator~() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return opr_compl_();
 }
 
 N N::operator<<(bitcount_t pos) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return opr_bitshift_l_(pos);
 }
 
 N N::operator>>(bitcount_t pos) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return opr_bitshift_r_(pos);
 }
 
 N & N::operator<<=(bitcount_t pos) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     opr_bitshift_l_assign_(pos);
     return *this;
 }
 
 N & N::operator>>=(bitcount_t pos) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     opr_bitshift_r_assign_(pos);
     return *this;
 }
 
 N & N::operator=(std::string_view num_str) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     opr_assign_(num_str);
     return *this;
@@ -868,11 +868,11 @@ N::bit_reference::bit_reference(const bit_reference & ref) = default;
 N::const_bit_reference::const_bit_reference(const const_bit_reference & ref) = default;
 N::const_bit_reference::const_bit_reference(const bit_reference & ref) :
     bit_reference_base_(ref.num_, ref.pos_) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 N::bit_reference & N::bit_reference::operator=(bool val) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     num_.bit_(pos_, val);
     num_.remove_leading_zeroes_();
@@ -880,7 +880,7 @@ N::bit_reference & N::bit_reference::operator=(bool val) {
 }
 
 N::bit_reference & N::bit_reference::operator=(const bit_reference & ref) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     num_.bit_(pos_, ref.num_.bit_(ref.pos_));
     num_.remove_leading_zeroes_();
@@ -888,7 +888,7 @@ N::bit_reference & N::bit_reference::operator=(const bit_reference & ref) {
 }
 
 N::bit_reference & N::bit_reference::operator=(const const_bit_reference & ref) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     num_.bit_(pos_, ref.num_.bit_(ref.pos_));
     num_.remove_leading_zeroes_();

@@ -26,11 +26,11 @@
 namespace jmaths {
 
 sign_type::sign_type(std::integral auto * num) : sign_{handle_int_(num)} {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 sign_type::sign_bool sign_type::handle_int_(std::integral auto * num) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if constexpr (std::unsigned_integral<decltype(*num)>) {
         return positive;
@@ -45,7 +45,7 @@ sign_type::sign_bool sign_type::handle_int_(std::integral auto * num) {
 }
 
 void sign_type::set_sign_(std::convertible_to<std::underlying_type_t<sign_bool>> auto val) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     sign_ = static_cast<sign_bool>(val);
 }

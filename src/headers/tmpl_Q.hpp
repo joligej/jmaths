@@ -38,37 +38,37 @@
 namespace jmaths {
 
 bool detail::opr_eq(const Q & lhs, std::floating_point auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return lhs == Q{rhs};
 }
 
 std::strong_ordering detail::opr_comp(const Q & lhs, std::floating_point auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return lhs <=> Q{rhs};
 }
 
 bool operator==(const Q & lhs, std::floating_point auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_eq(lhs, rhs);
 }
 
 bool operator==(std::floating_point auto lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_eq(rhs, lhs);
 }
 
 std::strong_ordering operator<=>(const Q & lhs, std::floating_point auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_comp(lhs, rhs);
 }
 
 std::strong_ordering operator<=>(std::floating_point auto lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return 0 <=> detail::opr_comp(rhs, lhs);
 }
@@ -79,7 +79,7 @@ std::strong_ordering operator<=>(std::floating_point auto lhs, const Q & rhs) {
 namespace jmaths {
 
 std::tuple<N, N, sign_type::sign_bool> Q::handle_float_(std::floating_point auto num) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     using floating_point_type = decltype(num);
 
@@ -104,14 +104,14 @@ std::tuple<N, N, sign_type::sign_bool> Q::handle_float_(std::floating_point auto
 }
 
 Q::Q(std::floating_point auto num) : Q(handle_float_(num)) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 // FIXME:
 template <std::floating_point T>
     requires std::numeric_limits<T>::is_iec559
 std::optional<T> Q::fits_into() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     using nlf = std::numeric_limits<T>;
 
@@ -298,7 +298,7 @@ std::optional<T> Q::fits_into() const {
 }
 
 Q & Q::operator=(std::floating_point auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     auto fraction_info = handle_float_(rhs);
     num_ = std::move(std::get<0>(fraction_info));

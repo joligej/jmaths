@@ -24,17 +24,22 @@
 
 #include "TMP.hpp"
 #include "constants_and_types.hpp"
+#include "def.hh"
 #include "uint.hpp"
 
 namespace jmaths {
 
 template <bitcount_t V>
     requires TMP::is_power_of_2<V>
-uint<V>::uint() : digits_{} {}
+uint<V>::uint() : digits_{} {
+    JMATHS_FUNCTION_TO_LOG;
+}
 
 template <bitcount_t V>
     requires TMP::is_power_of_2<V>
 uint<V>::uint(std::integral auto num) : digits_{} {
+    JMATHS_FUNCTION_TO_LOG;
+
     if constexpr (std::endian::native == std::endian::little) {
         std::memcpy(digits_, &num, std::min(sizeof(num), std::size(digits_)));
     } else if constexpr (std::endian::native == std::endian::big) {
@@ -46,3 +51,5 @@ uint<V>::uint(std::integral auto num) : digits_{} {
 }
 
 }  // namespace jmaths
+
+#include "undef.hh"

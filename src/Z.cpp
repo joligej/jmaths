@@ -36,67 +36,67 @@ namespace jmaths {
 // forwarding functions
 
 std::ostream & operator<<(std::ostream & os, const Z & z) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_ins(os, z);
 }
 
 std::istream & operator>>(std::istream & is, Z & z) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_extr(is, z);
 }
 
 Z operator+(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_add(lhs, rhs);
 }
 
 Z operator-(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_subtr(lhs, rhs);
 }
 
 Z operator*(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_mult(lhs, rhs);
 }
 
 std::pair<Z, Z> operator/(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_div(lhs, rhs);
 }
 
 Z operator&(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_and(lhs, rhs);
 }
 
 Z operator|(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_or(lhs, rhs);
 }
 
 Z operator^(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_xor(lhs, rhs);
 }
 
 bool operator==(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_eq(lhs, rhs);
 }
 
 std::strong_ordering operator<=>(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_comp(lhs, rhs);
 }
@@ -106,15 +106,15 @@ std::strong_ordering operator<=>(const Z & lhs, const Z & rhs) {
 namespace jmaths {
 
 Z::Z(N && n, sign_bool sign) : sign_type(sign), N(std::move(n)) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 Z::Z(const N & n, sign_bool sign) : sign_type(sign), N(n) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 std::size_t Z::dynamic_size_() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return N::dynamic_size_();
 }
@@ -122,57 +122,57 @@ std::size_t Z::dynamic_size_() const {
 Z::Z() = default;
 
 Z::Z(std::string_view num_str, unsigned base) : sign_type(&num_str), N(num_str, base) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { set_sign_(positive); }
 }
 
 Z::Z(const N & n) : N(n) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 Z::Z(N && n) : N(std::move(n)) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 const N & Z::abs() const & {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return static_cast<const N &>(*this);
 }
 
 N && Z::abs() && {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return static_cast<N &&>(*this);
 }
 
 bool Z::is_zero() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return N::is_zero();
 }
 
 bool Z::is_one() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return is_positive() && N::is_one();
 }
 
 bool Z::is_neg_one() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return is_negative() && N::is_one();
 }
 
 std::size_t Z::size() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return sizeof(*this) + dynamic_size_();
 }
 
 std::string Z::to_str(unsigned base) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_negative()) {
         return negative_sign + N::to_str(base);
@@ -182,7 +182,7 @@ std::string Z::to_str(unsigned base) const {
 }
 
 std::string Z::to_hex() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_negative()) {
         return negative_sign + N::to_hex();
@@ -197,7 +197,7 @@ void Z::set_zero() {
 }
 
 Z & Z::operator++() {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_positive()) {
         N::opr_incr_();
@@ -211,7 +211,7 @@ Z & Z::operator++() {
 }
 
 Z & Z::operator--() {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_positive()) {
         if (N::is_zero()) {
@@ -228,7 +228,7 @@ Z & Z::operator--() {
 }
 
 Z & Z::operator+=(const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (this->is_positive()) {
         if (rhs.is_positive()) {
@@ -262,7 +262,7 @@ Z & Z::operator+=(const Z & rhs) {
 }
 
 Z & Z::operator-=(const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (this->is_positive()) {
         if (rhs.is_positive()) {
@@ -296,7 +296,7 @@ Z & Z::operator-=(const Z & rhs) {
 }
 
 Z & Z::operator*=(const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N::opr_mult_assign_(rhs);
     set_sign_(is_zero() ? positive : this->sign_ ^ rhs.sign_);
@@ -304,7 +304,7 @@ Z & Z::operator*=(const Z & rhs) {
 }
 
 Z & Z::operator&=(const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N::opr_and_assign_(rhs);
     set_sign_(is_zero() ? positive : this->sign_ & rhs.sign_);
@@ -312,7 +312,7 @@ Z & Z::operator&=(const Z & rhs) {
 }
 
 Z & Z::operator|=(const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N::opr_or_assign_(rhs);
     set_sign_(is_zero() ? positive : this->sign_ | rhs.sign_);
@@ -320,7 +320,7 @@ Z & Z::operator|=(const Z & rhs) {
 }
 
 Z & Z::operator^=(const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N::opr_xor_assign_(rhs);
     set_sign_(is_zero() ? positive : this->sign_ ^ rhs.sign_);
@@ -328,21 +328,21 @@ Z & Z::operator^=(const Z & rhs) {
 }
 
 Z Z::operator-() const & {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) {return *this;}
     return {abs(), static_cast<sign_bool>(!sign_)};
 }
 
 Z && Z::operator-() && {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     flip_sign();
     return std::move(*this);
 }
 
 Z Z::operator~() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N complemented = N::opr_compl_();
 
@@ -352,13 +352,13 @@ Z Z::operator~() const {
 }
 
 Z Z::operator<<(bitcount_t pos) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return {N::opr_bitshift_l_(pos), sign_};
 }
 
 Z Z::operator>>(bitcount_t pos) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N shifted = N::opr_bitshift_r_(pos);
 
@@ -368,14 +368,14 @@ Z Z::operator>>(bitcount_t pos) const {
 }
 
 Z & Z::operator<<=(bitcount_t pos) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N::opr_bitshift_l_assign_(pos);
     return *this;
 }
 
 Z & Z::operator>>=(bitcount_t pos) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N::opr_bitshift_r_assign_(pos);
 
@@ -385,7 +385,7 @@ Z & Z::operator>>=(bitcount_t pos) {
 }
 
 Z & Z::operator=(std::string_view num_str) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(sign_type::handle_string_(&num_str));
     N::opr_assign_(num_str);
@@ -394,7 +394,7 @@ Z & Z::operator=(std::string_view num_str) {
 }
 
 Z & Z::operator=(const N & n) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N::operator=(n);
     set_sign_(positive);
@@ -402,7 +402,7 @@ Z & Z::operator=(const N & n) {
 }
 
 Z & Z::operator=(N && n) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N::operator=(std::move(n));
     set_sign_(positive);

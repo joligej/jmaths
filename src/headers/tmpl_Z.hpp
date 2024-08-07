@@ -33,7 +33,7 @@
 namespace jmaths {
 
 bool detail::opr_eq(const Z & lhs, std::integral auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (const auto try_and_fit = lhs.fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
         return *try_and_fit == rhs;
@@ -43,7 +43,7 @@ bool detail::opr_eq(const Z & lhs, std::integral auto rhs) {
 }
 
 std::strong_ordering detail::opr_comp(const Z & lhs, std::integral auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (const auto try_and_fit = lhs.fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
         return *try_and_fit <=> rhs;
@@ -53,25 +53,25 @@ std::strong_ordering detail::opr_comp(const Z & lhs, std::integral auto rhs) {
 }
 
 bool operator==(const Z & lhs, std::integral auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_eq(lhs, rhs);
 }
 
 bool operator==(std::integral auto lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_eq(rhs, lhs);
 }
 
 std::strong_ordering operator<=>(const Z & lhs, std::integral auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_comp(lhs, rhs);
 }
 
 std::strong_ordering operator<=>(std::integral auto lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return 0 <=> detail::opr_comp(rhs, lhs);
 }
@@ -82,11 +82,11 @@ std::strong_ordering operator<=>(std::integral auto lhs, const Z & rhs) {
 namespace jmaths {
 
 Z::Z(std::integral auto num) : sign_type(&num), N(num) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 template <std::unsigned_integral T> std::optional<T> Z::fits_into() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_negative()) { return std::nullopt; }
 
@@ -94,7 +94,7 @@ template <std::unsigned_integral T> std::optional<T> Z::fits_into() const {
 }
 
 template <std::signed_integral T> std::optional<T> Z::fits_into() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     static_assert(-1 == ~0, "Two's complement architecture required.");
 
@@ -113,7 +113,7 @@ template <std::signed_integral T> std::optional<T> Z::fits_into() const {
 }
 
 Z & Z::operator=(std::integral auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(sign_type::handle_int_(&rhs));
     N::opr_assign_(rhs);

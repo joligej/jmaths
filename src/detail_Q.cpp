@@ -34,13 +34,13 @@ namespace jmaths {
 // implementation functions
 
 std::ostream & detail::opr_ins(std::ostream & os, const Q & q) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return os << q.to_str();
 }
 
 std::istream & detail::opr_extr(std::istream & is, Q & q) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     std::string num_str;
     is >> num_str;
@@ -49,7 +49,7 @@ std::istream & detail::opr_extr(std::istream & is, Q & q) {
 }
 
 Q detail::opr_add(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
 
@@ -95,7 +95,7 @@ Q detail::opr_add(const Q & lhs, const Q & rhs) {
 }
 
 Q detail::opr_subtr(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
 
@@ -141,7 +141,7 @@ Q detail::opr_subtr(const Q & lhs, const Q & rhs) {
 }
 
 Q detail::opr_mult(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N numerator = lhs.num_ * rhs.num_;
 
@@ -153,7 +153,7 @@ Q detail::opr_mult(const Q & lhs, const Q & rhs) {
 }
 
 Q detail::opr_div(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N numerator = lhs.num_ * rhs.denom_;
 
@@ -165,7 +165,7 @@ Q detail::opr_div(const Q & lhs, const Q & rhs) {
 }
 
 Q detail::opr_and(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N denominator = lhs.denom_ & rhs.denom_;
 
@@ -181,7 +181,7 @@ Q detail::opr_and(const Q & lhs, const Q & rhs) {
 }
 
 Q detail::opr_or(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N numerator = lhs.num_ | rhs.num_;
 
@@ -193,7 +193,7 @@ Q detail::opr_or(const Q & lhs, const Q & rhs) {
 }
 
 Q detail::opr_xor(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N denominator = lhs.denom_ ^ rhs.denom_;
 
@@ -209,13 +209,13 @@ Q detail::opr_xor(const Q & lhs, const Q & rhs) {
 }
 
 bool detail::opr_eq(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return lhs.sign_ == rhs.sign_ && lhs.num_ == rhs.num_ && lhs.denom_ == rhs.denom_;
 }
 
 std::strong_ordering detail::opr_comp(const Q & lhs, const Q & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {

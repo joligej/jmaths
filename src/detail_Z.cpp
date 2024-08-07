@@ -33,7 +33,7 @@ namespace jmaths {
 // implementation functions
 
 std::ostream & detail::opr_ins(std::ostream & os, const Z & z) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (z.is_positive()) { return os << z.abs(); }
 
@@ -41,7 +41,7 @@ std::ostream & detail::opr_ins(std::ostream & os, const Z & z) {
 }
 
 std::istream & detail::opr_extr(std::istream & is, Z & z) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     std::string num_str;
     is >> num_str;
@@ -50,7 +50,7 @@ std::istream & detail::opr_extr(std::istream & is, Z & z) {
 }
 
 Z detail::opr_add(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
 
@@ -78,7 +78,7 @@ Z detail::opr_add(const Z & lhs, const Z & rhs) {
 }
 
 Z detail::opr_subtr(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
 
@@ -106,7 +106,7 @@ Z detail::opr_subtr(const Z & lhs, const Z & rhs) {
 }
 
 Z detail::opr_mult(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N product = lhs.abs() * rhs.abs();
 
@@ -116,7 +116,7 @@ Z detail::opr_mult(const Z & lhs, const Z & rhs) {
 }
 
 std::pair<Z, Z> detail::opr_div(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (auto [quotient, remainder] = lhs.abs() / rhs.abs(); quotient.is_zero()) {
         if (remainder.is_zero()) {
@@ -136,7 +136,7 @@ std::pair<Z, Z> detail::opr_div(const Z & lhs, const Z & rhs) {
 }
 
 Z detail::opr_and(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N and_result = lhs.abs() & rhs.abs();
 
@@ -146,7 +146,7 @@ Z detail::opr_and(const Z & lhs, const Z & rhs) {
 }
 
 Z detail::opr_or(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N or_result = lhs.abs() | rhs.abs();
 
@@ -156,7 +156,7 @@ Z detail::opr_or(const Z & lhs, const Z & rhs) {
 }
 
 Z detail::opr_xor(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     N xor_result = lhs.abs() ^ rhs.abs();
 
@@ -166,13 +166,13 @@ Z detail::opr_xor(const Z & lhs, const Z & rhs) {
 }
 
 bool detail::opr_eq(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return lhs.sign_ == rhs.sign_ && lhs.abs() == rhs.abs();
 }
 
 std::strong_ordering detail::opr_comp(const Z & lhs, const Z & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {

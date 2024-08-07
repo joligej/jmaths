@@ -28,7 +28,7 @@
 namespace std {
 
 size_t hash<jmaths::N>::operator()(const jmaths::N & n) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (n.digits_.empty()) {
         static const auto empty_hash = hash<string_view>{}(string_view{});
@@ -40,14 +40,14 @@ size_t hash<jmaths::N>::operator()(const jmaths::N & n) const {
 }
 
 size_t hash<jmaths::Z>::operator()(const jmaths::Z & z) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return hash<jmaths::N>{}(z) ^
            (static_cast<size_t>(z.sign_) << (z.front_() % (sizeof(size_t) * jmaths::bits_in_byte)));
 }
 
 size_t hash<jmaths::Q>::operator()(const jmaths::Q & q) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return (hash<jmaths::N>{}(q.num_) ^ hash<jmaths::N>{}(q.denom_)) ^
            (static_cast<size_t>(q.sign_)

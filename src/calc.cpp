@@ -30,7 +30,7 @@
 namespace jmaths {
 
 N calc::gcd(N a, N b) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (a.is_zero()) { return b; }
     if (b.is_zero()) { return a; }
@@ -58,7 +58,7 @@ N calc::gcd(N a, N b) {
 }
 
 std::pair<N, N> calc::sqrt(const N & num) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (num.is_zero() || num.is_one()) { return {num, N{}}; }
 
@@ -90,7 +90,7 @@ std::pair<N, N> calc::sqrt(const N & num) {
 }
 
 N calc::sqrt_whole(const N & num) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (num.is_zero() || num.is_one()) { return num; }
 
@@ -119,7 +119,7 @@ N calc::sqrt_whole(const N & num) {
 }
 
 N calc::pow(N base, N exponent) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (exponent.is_zero()) { return N::one_; }
 
@@ -136,7 +136,7 @@ N calc::pow(N base, N exponent) {
 }
 
 N calc::pow_mod(N base, N exponent, const N & mod) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (mod.is_zero()) { throw error::division_by_zero{}; }
 
@@ -160,7 +160,7 @@ N calc::pow_mod(N base, N exponent, const N & mod) {
 }
 
 Z calc::pow(Z base, N exponent) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     const auto sign =
         base.is_negative() && exponent.is_odd() ? sign_type::negative : sign_type::positive;

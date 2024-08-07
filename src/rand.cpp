@@ -28,7 +28,7 @@
 namespace jmaths {
 
 template <> N rand<N>::generate(bitcount_t upper_bound_exponent) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     static internal::rand_gen<base_int> random_base_int;
 
@@ -53,7 +53,7 @@ template <> N rand<N>::generate(bitcount_t upper_bound_exponent) {
 }
 
 template <> Z rand<Z>::generate(bitcount_t upper_bound_exponent) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     static internal::rand_gen<bool> random_bool;
 

@@ -37,7 +37,7 @@
 namespace jmaths {
 
 bool detail::opr_eq(const N & lhs, std::integral auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (const auto try_and_fit = lhs.fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
         return *try_and_fit == rhs;
@@ -47,7 +47,7 @@ bool detail::opr_eq(const N & lhs, std::integral auto rhs) {
 }
 
 std::strong_ordering detail::opr_comp(const N & lhs, std::integral auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (const auto try_and_fit = lhs.fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
         return *try_and_fit <=> rhs;
@@ -57,25 +57,25 @@ std::strong_ordering detail::opr_comp(const N & lhs, std::integral auto rhs) {
 }
 
 bool operator==(const N & lhs, std::integral auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_eq(lhs, rhs);
 }
 
 bool operator==(std::integral auto lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_eq(rhs, lhs);
 }
 
 std::strong_ordering operator<=>(const N & lhs, std::integral auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return detail::opr_comp(lhs, rhs);
 }
 
 std::strong_ordering operator<=>(std::integral auto lhs, const N & rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return 0 <=> detail::opr_comp(rhs, lhs);
 }
@@ -86,7 +86,7 @@ std::strong_ordering operator<=>(std::integral auto lhs, const N & rhs) {
 namespace jmaths {
 
 void N::handle_int_(std::integral auto num) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if constexpr (base_int_size < sizeof(num)) {
         static constexpr std::size_t digits_needed = std::ceil((long double)sizeof(num) / base_int_size);
@@ -114,7 +114,7 @@ void N::handle_int_(std::integral auto num) {
 }
 
 template <std::unsigned_integral T> T N::fit_into_(std::size_t max_byte) const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     T converted = 0;
 
@@ -133,20 +133,20 @@ template <std::unsigned_integral T> T N::fit_into_(std::size_t max_byte) const {
 }
 
 void N::opr_assign_(std::integral auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     set_zero();
     handle_int_(rhs);
 }
 
 N::N(std::integral auto num) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     handle_int_(num);
 }
 
 template <std::unsigned_integral T> std::optional<T> N::fits_into() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) return 0;
 
@@ -189,7 +189,7 @@ template <std::signed_integral T> std::optional<T> N::fits_into() const {
 }
 
 N & N::operator=(std::integral auto rhs) {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     opr_assign_(rhs);
     return *this;
@@ -203,13 +203,13 @@ namespace jmaths {
 template <typename T>
     requires std::same_as<N, std::decay_t<T>>
 N::bit_reference_base_<T>::bit_reference_base_(T & num, bitpos_t pos) : num_(num), pos_{pos} {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 }
 
 template <typename T>
     requires std::same_as<N, std::decay_t<T>>
 N::bit_reference_base_<T>::operator bool() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return num_.bit_(pos_);
 }
@@ -217,7 +217,7 @@ N::bit_reference_base_<T>::operator bool() const {
 template <typename T>
     requires std::same_as<N, std::decay_t<T>>
 N::bit_reference_base_<T>::operator int() const {
-    FUNCTION_TO_LOG;
+    JMATHS_FUNCTION_TO_LOG;
 
     return operator bool();
 }
