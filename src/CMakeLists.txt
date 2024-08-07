@@ -15,7 +15,6 @@ set_target_properties(jmaths PROPERTIES UNITY_BUILD ON UNITY_BUILD_MODE GROUP)
 
 option(use_karatsuba "Use Karatsuba algorithm to multiply 2 numbers (this option is defective, please do not use it)" OFF)
 option(periodically_reseed_rand "Periodically reseed the random number generator" ON)
-
 option(enable_benchmarking "Enable benchmarking for functions in the library" OFF)
 
 if (use_karatsuba)

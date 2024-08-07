@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <bit>
 #include <cassert>
+#include <cmath> // only for karatsuba
 #include <compare>
 #include <cstddef>
 #include <istream>
@@ -164,121 +165,36 @@ N detail::opr_mult(const N & lhs, const N & rhs) {
     #error "The Karatsuba algorithm is still a work in progress, please define KARATSUBA as 0"
 
     // check for multiplicative identity
-    if (lhs.is_one()) return rhs;
-    if (rhs.is_one()) return lhs;
+    if (lhs.is_one()) { return rhs; }
+    if (rhs.is_one()) { return lhs; }
 
     // check for multiplicative zero
-    if (lhs.is_zero() || rhs.is_zero()) return N{};
+    if (lhs.is_zero() || rhs.is_zero()) { return N{}; }
 
-    const N * longest;
-    const N * shortest;
+    const N & longest = lhs.digits_.size() > rhs.digits_.size() ? lhs : rhs;
 
-    if (lhs.digits_.size() < rhs.digits_.size()) {
-        longest = &rhs;
-        shortest = &lhs;
-    } else {
-        longest = &lhs;
-        shortest = &rhs;
-    }
+    const std::size_t number_of_digits = std::ceil(longest.digits_.size() / 2.0L);
 
-    assert(longest && shortest);
+    const N lhs_l = lhs.opr_bitshift_r_(number_of_digits * base_int_bits);
+    const N rhs_l = rhs.opr_bitshift_r_(number_of_digits * base_int_bits);
 
-    const std::size_t longest_digits_count = longest->digits_.size();
-    const std::size_t longest_digits_left = longest_digits_count / 2;
-    const std::size_t longest_digits_right = (longest_digits_count / 2) + 0.999;
+    const N lhs_l_rhs_l = opr_mult(lhs_l, rhs_l);
 
-    N longest_num_r, longest_num_l;
+    const auto right_side_mask =
+        --(N(N::one_) <<= (longest.digits_.size() - number_of_digits) * base_int_bits);
 
-    {
-        longest_num_r.digits_.reserve(longest_digits_right);
-        longest_num_l.digits_.reserve(longest_digits_left);
+    const N lhs_r = opr_and(lhs, right_side_mask);
+    const N rhs_r = opr_and(rhs, right_side_mask);
 
-        auto cit = longest->digits_.cbegin();
+    const N lhs_r_rhs_r = opr_mult(lhs_r, rhs_r);
 
-        for (std::size_t i = 0U; i < longest_digits_right; ++cit, ++i) {
-            longest_num_r.digits_.emplace_back(*cit);
-        }
+    static const N N_radix(radix);
 
-        for (std::size_t i = 0U; i < longest_digits_left; ++cit, ++i) {
-            assert((cit != longest->digits_.cend()));
-            longest_num_l.digits_.emplace_back(*cit);
-        }
-    }
+    const auto power = calc::pow(N_radix, number_of_digits);
 
-    N shortest_num_r, shortest_num_l;
-
-    {
-        shortest_num_r.digits_.reserve(longest_digits_right);
-
-        auto cit = shortest->digits_.cbegin();
-
-        for (std::size_t i = 0U; i < longest_digits_right && cit != shortest->digits_.cend();
-             ++cit, ++i) {
-            shortest_num_r.digits_.emplace_back(*cit);
-        }
-
-        if (cit != shortest->digits_.cend()) { shortest_num_l.digits_.reserve(longest_digits_left); }
-
-        for (std::size_t i = 0U; i < longest_digits_left && cit != shortest->digits_.cend();
-             ++cit, ++i) {
-            shortest_num_l.digits_.emplace_back(*cit);
-        }
-    }
-
-    const auto multiply = [](const N & lhs, const N & rhs, std::size_t exp) -> N {
-        // check for multiplicative identity
-        if (lhs.is_one()) return rhs;
-        if (rhs.is_one()) return lhs;
-
-        // check for multiplicative zero
-        if (lhs.is_zero() || rhs.is_zero()) return N{};
-
-        N product;
-
-        // max overhead would be base_int_size
-        product.digits_.reserve(lhs.digits_.size() + rhs.digits_.size() + exp);
-
-        for (std::size_t i = 0U; i < lhs.digits_.size(); ++i) {
-            N temp1;
-            temp1.digits_.reserve(i + rhs.digits_.size() + 1);
-            temp1.digits_.insert(temp1.digits_.begin(), i, 0);
-            base_int carry = 0;
-            for (std::size_t j = 0; j < rhs.digits_.size(); ++j) {
-                const base_int_big temp2 =
-                    (base_int_big)lhs.digits_[i] * (base_int_big)rhs.digits_[j];
-                const base_int temp3 = (base_int)temp2;
-                temp1.digits_.emplace_back(carry + temp3);
-                const base_int temp_carry =
-                    ((base_int_big)carry + (base_int_big)temp3) >> base_int_bits;
-                carry = (temp2 >> base_int_bits) + temp_carry;
-            }
-
-            if (carry) temp1.digits_.emplace_back(carry);
-            product.opr_add_assign_(temp1);
-        }
-
-        return product;
-    };
-
-    const auto insert_front = [](const N & n, std::size_t exp) -> N {
-        N exponentiated;
-        exponentiated.digits_.reserve(n.digits_.size() + exp);
-        exponentiated.digits_.insert(exponentiated.digits_.begin(), exp, 0);
-        std::ranges::copy(n.digits_, std::back_inserter(exponentiated.digits_));
-        return exponentiated;
-    };
-
-    const auto XlYl = multiply(shortest_num_l, longest_num_l, 2 * longest_digits_right);
-    const auto XrYr = multiply(shortest_num_r, longest_num_r,
-                               0);  // should this really be 0 ???
-
-    return insert_front(XlYl, 2 * longest_digits_right) +
-           insert_front(
-               ((multiply(shortest_num_l + shortest_num_r, longest_num_l + longest_num_r, 0) -
-                 XlYl) -
-                XrYr),
-               longest_digits_right) +
-           XrYr;
+    return power * (power * lhs_l_rhs_l +
+                    ((lhs_l + lhs_r) * (rhs_l + rhs_r) - lhs_l_rhs_l - lhs_r_rhs_r)) +
+           lhs_r_rhs_r;
 
 #else
 
