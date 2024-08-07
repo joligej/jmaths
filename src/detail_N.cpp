@@ -155,13 +155,13 @@ N detail::opr_subtr(N lhs, const N & rhs) {
 N detail::opr_mult(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-#ifndef KARATSUBA
-    #error "KARATSUBA is not defined, please define it when compiling!"
+#ifndef JMATHS_KARATSUBA
+    #error "JMATHS_KARATSUBA is not defined, please define it when compiling!"
 #endif
 
-#if KARATSUBA
+#if JMATHS_KARATSUBA
 
-    #error "The KARATSUBA algorithm is still a work in progress, please define KARATSUBA as 0"
+    #error "The Karatsuba algorithm is still a work in progress, please define KARATSUBA as 0"
 
     // check for multiplicative identity
     if (lhs.is_one()) return rhs;

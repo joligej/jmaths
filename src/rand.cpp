@@ -45,11 +45,11 @@ template <typename T> rand_gen<T>::rand_gen() : rand_gen(0, std::numeric_limits<
 template <typename T> T rand_gen<T>::operator()() {
     JMATHS_FUNCTION_TO_LOG;
 
-#ifndef PERIODICALLY_RESEED_RAND
-    #error "PERIODICALLY_RESEED_RAND is not defined, please define it when compiling!"
+#ifndef JMATHS_PERIODICALLY_RESEED_RAND
+    #error "JMATHS_PERIODICALLY_RESEED_RAND is not defined, please define it when compiling!"
 #endif
 
-#if PERIODICALLY_RESEED_RAND
+#if JMATHS_PERIODICALLY_RESEED_RAND
     update_();
 #endif
 
