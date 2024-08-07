@@ -41,7 +41,7 @@ uint<V>::uint(std::integral auto num) : digits_{} {
     JMATHS_FUNCTION_TO_LOG;
 
     if constexpr (std::endian::native == std::endian::little) {
-        std::memcpy(digits_, &num, std::min(sizeof(num), std::size(digits_)));
+        std::memcpy(static_cast<void*>(digits_), &num, std::min(sizeof(num), std::size(digits_)));
     } else if constexpr (std::endian::native == std::endian::big) {
         std::ranges::reverse_copy(reinterpret_cast<unsigned char *>(&num) + sizeof(num) -
                                       std::min(sizeof(num), std::size(digits_)),
