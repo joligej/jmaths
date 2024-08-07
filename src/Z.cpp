@@ -124,7 +124,7 @@ Z::Z() = default;
 Z::Z(std::string_view num_str, unsigned base) : sign_type(&num_str), N(num_str, base) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (is_zero()) { set_sign_(positive); }
+    if (Z::is_zero()) { set_sign_(positive); }
 }
 
 Z::Z(const N & n) : N(n) {

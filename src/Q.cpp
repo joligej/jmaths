@@ -164,7 +164,7 @@ Q::Q(std::string_view num_str, unsigned base) :
     if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
 
     canonicalise_();
-    if (is_zero()) { set_sign_(positive); }
+    if (Q::is_zero()) { set_sign_(positive); }
 }
 
 Q::Q(const N & n) : num_(n), denom_(N::one_) {
