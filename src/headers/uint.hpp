@@ -16,23 +16,28 @@
 
 #pragma once
 
+#include <concepts>
+#include <cstddef>
+
 #include "TMP.hpp"
 #include "constants_and_types.hpp"
 
-// all the types
 namespace jmaths {
 
-struct calc;
-struct detail;
+template <bitcount_t V>
+    requires TMP::is_power_of_2<V>
+class uint {
+    using element_type = unsigned char;  // base_int_big ???
 
-class N;
-class sign_type;
-class Z;
-class Q;
-class error;
+   public:
+    uint();
 
-template <TMP::any_of<N, Z> T> struct rand;
+    uint(std::integral auto num);
 
-template <bitcount_t V> requires TMP::is_power_of_2<V> class uint;
+   private:
+    element_type digits_[V / (sizeof(element_type) * bits_in_byte)];
+};
 
 }  // namespace jmaths
+
+#include "tmpl_uint.hpp"

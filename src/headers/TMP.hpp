@@ -162,4 +162,7 @@ template <typename T, typename...> struct fake_dependency {
 
 template <typename T, typename... Ts> using fake_dependency_t = fake_dependency<T, Ts...>;
 
+template <auto n>
+concept is_power_of_2 = n != 0 && (n & (n - 1)) == 0;
+
 }  // namespace jmaths::TMP
