@@ -42,5 +42,5 @@
     for (::std::remove_cvref_t<decltype(x)> JMATHS_CONCAT2(                           \
              JMATHS_MACRO_IMPL_FOR_LOOP_REPETITION_COUNTER,                           \
              __LINE__){};                                                             \
-         JMATHS_CONCAT2(JMATHS_MACRO_IMPL_FOR_LOOP_REPETITION_COUNTER, __LINE__) < x; \
+         JMATHS_CONCAT2(JMATHS_MACRO_IMPL_FOR_LOOP_REPETITION_COUNTER, __LINE__) < (x); \
          ++JMATHS_CONCAT2(JMATHS_MACRO_IMPL_FOR_LOOP_REPETITION_COUNTER, __LINE__))
