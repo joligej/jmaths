@@ -35,8 +35,8 @@
 
 #include <type_traits>
 
-#define JMATHS_MACRO_IMPL_CONCAT2HELP(x, y) x##y
-#define JMATHS_CONCAT2(x, y) JMATHS_MACRO_IMPL_CONCAT2HELP(x, y)
+#define JMATHS_MACRO_IMPL_CONCAT2_HELP(x, y) x##y
+#define JMATHS_CONCAT2(x, y) JMATHS_MACRO_IMPL_CONCAT2_HELP(x, y)
 
 #define JMATHS_REPEAT(x)                                                              \
     for (::std::remove_cvref_t<decltype(x)> JMATHS_CONCAT2(                           \
