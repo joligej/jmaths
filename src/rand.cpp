@@ -59,6 +59,8 @@ template <typename T> T rand_gen<T>::operator()() {
 template <typename T> void rand_gen<T>::update_() {
     JMATHS_FUNCTION_TO_LOG;
 
+    static constexpr auto max_unseeded_duration = std::chrono::months(2);
+
     if (const auto current_time = clock_type::now();
         current_time - last_seed_time_ > max_unseeded_duration) {
         reseed_();

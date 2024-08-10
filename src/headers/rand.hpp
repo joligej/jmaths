@@ -40,8 +40,6 @@ template <typename T> class rand_gen {
     using distribution_type = std::uniform_int_distribution<
         std::conditional_t<TMP::matches_any_v<T, std::is_same, allowed_types>, T, unsigned int>>;
 
-    static constexpr auto max_unseeded_duration = std::chrono::months(2);
-
    public:
     rand_gen(T min, T max);
 
