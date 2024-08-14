@@ -19,9 +19,6 @@
 #include <algorithm>
 #include <format>
 
-#include "N.hpp"
-#include "Q.hpp"
-#include "Z.hpp"
 #include "constants_and_types.hpp"
 #include "error.hpp"
 
@@ -68,9 +65,3 @@ template <typename T> struct format_output : format_parser {
 };
 
 }  // namespace jmaths
-
-template <> struct std::formatter<jmaths::N> : jmaths::format_output<jmaths::N> {};
-
-template <> struct std::formatter<jmaths::Z> : jmaths::format_output<jmaths::Z> {};
-
-template <> struct std::formatter<jmaths::Q> : jmaths::format_output<jmaths::Q> {};

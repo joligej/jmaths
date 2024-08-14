@@ -19,6 +19,7 @@
 #include <compare>
 #include <concepts>
 #include <cstddef>
+#include <format>
 #include <istream>
 #include <limits>
 #include <optional>
@@ -30,6 +31,7 @@
 #include "N.hpp"
 #include "constants_and_types.hpp"
 #include "declarations.hpp"
+#include "formatter.hpp"
 #include "hash.hpp"
 #include "sign_type.hpp"
 
@@ -150,5 +152,7 @@ class Q : public sign_type {
 };
 
 }  // namespace jmaths
+
+template <> struct std::formatter<jmaths::Q> : jmaths::format_output<jmaths::Q> {};
 
 #include "tmpl_Q.hpp"

@@ -19,6 +19,7 @@
 #include <compare>
 #include <concepts>
 #include <cstddef>
+#include <format>
 #include <istream>
 #include <optional>
 #include <ostream>
@@ -30,6 +31,7 @@
 
 #include "constants_and_types.hpp"
 #include "declarations.hpp"
+#include "formatter.hpp"
 #include "hash.hpp"
 
 // declarations of N and associated functions and types
@@ -208,5 +210,7 @@ class N::const_bit_reference : public bit_reference_base_<const N> {
 };
 
 }  // namespace jmaths
+
+template <> struct std::formatter<jmaths::N> : jmaths::format_output<jmaths::N> {};
 
 #include "tmpl_N.hpp"

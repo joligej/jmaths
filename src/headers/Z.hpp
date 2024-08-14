@@ -19,16 +19,17 @@
 #include <compare>
 #include <concepts>
 #include <cstddef>
+#include <format>
 #include <istream>
 #include <optional>
 #include <ostream>
 #include <string>
 #include <string_view>
-#include <type_traits>
 
 #include "N.hpp"
 #include "constants_and_types.hpp"
 #include "declarations.hpp"
+#include "formatter.hpp"
 #include "hash.hpp"
 #include "sign_type.hpp"
 
@@ -129,5 +130,7 @@ class Z : public sign_type, private N {
 };
 
 }  // namespace jmaths
+
+template <> struct std::formatter<jmaths::Z> : jmaths::format_output<jmaths::Z> {};
 
 #include "tmpl_Z.hpp"
