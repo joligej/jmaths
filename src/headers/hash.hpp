@@ -22,18 +22,15 @@
 #include "declarations.hpp"
 
 // declarations of std::hash specialisations
-namespace std {
 
-template <> struct hash<jmaths::N> {
-    size_t operator()(const jmaths::N & n) const;
+template <> struct std::hash<jmaths::N> {
+    std::size_t operator()(const jmaths::N & n) const;
 };
 
-template <> struct hash<jmaths::Z> {
-    size_t operator()(const jmaths::Z & z) const;
+template <> struct std::hash<jmaths::Z> {
+    std::size_t operator()(const jmaths::Z & z) const;
 };
 
-template <> struct hash<jmaths::Q> {
-    size_t operator()(const jmaths::Q & q) const;
+template <> struct std::hash<jmaths::Q> {
+    std::size_t operator()(const jmaths::Q & q) const;
 };
-
-}  // namespace std

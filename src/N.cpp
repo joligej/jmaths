@@ -55,7 +55,7 @@ base_int base_converter(char c) noexcept {
     if (c >= 'a' && c <= 'z') { return static_cast<unsigned char>(c - 'a' + 10 + 26); }
     if (c == '+') { return 62U; }
 
-    assert(c == '/');  // it is assumed that c == '/' because no other character
+    assert(c == '~');  // it is assumed that c == '~' because no other character
                        // would be valid or logical
 
     return 63U;
@@ -167,7 +167,7 @@ std::string N::conv_to_base_(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
     static constexpr char base_converter[] =
-        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/";
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+~";
 
     if (is_zero()) { return "0"; }
 

@@ -25,33 +25,29 @@
 #include "constants_and_types.hpp"
 #include "def.hh"
 
-namespace std {
-
-size_t hash<jmaths::N>::operator()(const jmaths::N & n) const {
+std::size_t std::hash<jmaths::N>::operator()(const jmaths::N & n) const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (n.digits_.empty()) {
-        static const auto empty_hash = hash<string_view>{}(string_view{});
+        static const auto empty_hash = std::hash<std::string_view>{}(std::string_view{});
         return empty_hash;
     }
 
-    return hash<string_view>{}(string_view(reinterpret_cast<const char *>(n.digits_.data()),
+    return std::hash<std::string_view>{}(std::string_view(reinterpret_cast<const char *>(n.digits_.data()),
                                            n.digits_.size() * jmaths::base_int_size));
 }
 
-size_t hash<jmaths::Z>::operator()(const jmaths::Z & z) const {
+std::size_t std::hash<jmaths::Z>::operator()(const jmaths::Z & z) const {
     JMATHS_FUNCTION_TO_LOG;
 
-    return hash<jmaths::N>{}(z) ^
-           (static_cast<size_t>(z.sign_) << (z.front_() % (sizeof(size_t) * jmaths::bits_in_byte)));
+    return std::hash<jmaths::N>{}(z) ^
+           (static_cast<std::size_t>(z.sign_) << (z.front_() % (sizeof(std::size_t) * jmaths::bits_in_byte)));
 }
 
-size_t hash<jmaths::Q>::operator()(const jmaths::Q & q) const {
+std::size_t std::hash<jmaths::Q>::operator()(const jmaths::Q & q) const {
     JMATHS_FUNCTION_TO_LOG;
 
-    return (hash<jmaths::N>{}(q.num_) ^ hash<jmaths::N>{}(q.denom_)) ^
-           (static_cast<size_t>(q.sign_)
-            << ((q.num_.front_() ^ q.denom_.front_()) % (sizeof(size_t) * jmaths::bits_in_byte)));
+    return (std::hash<jmaths::N>{}(q.num_) ^ std::hash<jmaths::N>{}(q.denom_)) ^
+           (static_cast<std::size_t>(q.sign_)
+            << ((q.num_.front_() ^ q.denom_.front_()) % (sizeof(std::size_t) * jmaths::bits_in_byte)));
 }
-
-}  // namespace std
