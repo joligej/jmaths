@@ -17,7 +17,7 @@
 #include <algorithm>
 #include <bit>
 #include <cassert>
-#include <cmath> // only for karatsuba
+#include <cmath>  // only for karatsuba
 #include <compare>
 #include <cstddef>
 #include <istream>

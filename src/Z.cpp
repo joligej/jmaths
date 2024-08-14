@@ -192,6 +192,8 @@ std::string Z::to_hex() const {
 }
 
 void Z::set_zero() {
+    JMATHS_FUNCTION_TO_LOG;
+
     N::set_zero();
     set_sign_(positive);
 }
@@ -330,7 +332,7 @@ Z & Z::operator^=(const Z & rhs) {
 Z Z::operator-() const & {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (is_zero()) {return *this;}
+    if (is_zero()) { return *this; }
     return {abs(), static_cast<sign_bool>(!sign_)};
 }
 
@@ -346,7 +348,7 @@ Z Z::operator~() const {
 
     N complemented = N::opr_compl_();
 
-    if (complemented.is_zero()) {return Z{};}
+    if (complemented.is_zero()) { return Z{}; }
 
     return {std::move(complemented), static_cast<sign_bool>(!sign_)};
 }
@@ -362,7 +364,7 @@ Z Z::operator>>(bitcount_t pos) const {
 
     N shifted = N::opr_bitshift_r_(pos);
 
-    if (shifted.is_zero()) {return Z{};}
+    if (shifted.is_zero()) { return Z{}; }
 
     return {std::move(shifted), sign_};
 }
@@ -389,7 +391,7 @@ Z & Z::operator=(std::string_view num_str) {
 
     set_sign_(sign_type::handle_string_(&num_str));
     N::opr_assign_(num_str);
-    if (is_zero()) {set_sign_(positive);}
+    if (is_zero()) { set_sign_(positive); }
     return *this;
 }
 

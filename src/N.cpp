@@ -755,6 +755,8 @@ N::const_bit_reference N::operator[](bitpos_t pos) const {
 }
 
 void N::set_zero() {
+    JMATHS_FUNCTION_TO_LOG;
+
     digits_.clear();
 }
 

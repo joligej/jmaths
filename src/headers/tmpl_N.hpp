@@ -89,7 +89,8 @@ void N::handle_int_(std::integral auto num) {
     JMATHS_FUNCTION_TO_LOG;
 
     if constexpr (base_int_size < sizeof(num)) {
-        static constexpr std::size_t digits_needed = std::ceil((long double)sizeof(num) / base_int_size);
+        static constexpr std::size_t digits_needed =
+            std::ceil((long double)sizeof(num) / base_int_size);
 
         digits_.reserve(digits_needed);
 
@@ -151,7 +152,9 @@ template <std::unsigned_integral T> std::optional<T> N::fits_into() const {
     if (is_zero()) return 0;
 
     if constexpr (base_int_size < sizeof(T)) {
-        if (digits_.size() * base_int_size < sizeof(T)) { return fit_into_<T>(digits_.size() * base_int_size); }
+        if (digits_.size() * base_int_size < sizeof(T)) {
+            return fit_into_<T>(digits_.size() * base_int_size);
+        }
 
         if (digits_.size() * base_int_size > sizeof(T)) {
             if ((unsigned)std::countr_zero(digits_.back()) <
@@ -179,6 +182,8 @@ template <std::unsigned_integral T> std::optional<T> N::fits_into() const {
 }
 
 template <std::signed_integral T> std::optional<T> N::fits_into() const {
+    JMATHS_FUNCTION_TO_LOG;
+
     auto fits_into_unsigned = fits_into<std::make_unsigned_t<T>>();
 
     if (!fits_into_unsigned.has_value()) { return std::nullopt; }

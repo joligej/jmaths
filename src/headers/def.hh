@@ -38,9 +38,9 @@
 #define JMATHS_MACRO_IMPL_CONCAT2_HELP(x, y) x##y
 #define JMATHS_CONCAT2(x, y) JMATHS_MACRO_IMPL_CONCAT2_HELP(x, y)
 
-#define JMATHS_REPEAT(x)                                                              \
-    for (::std::remove_cvref_t<decltype(x)> JMATHS_CONCAT2(                           \
-             JMATHS_MACRO_IMPL_FOR_LOOP_REPETITION_COUNTER,                           \
-             __LINE__){};                                                             \
+#define JMATHS_REPEAT(x)                                                                \
+    for (::std::enable_if_t<not ::std::is_pointer_v<::std::decay_t<decltype(x)>>,       \
+                            ::std::decay_t<decltype(x)>>                                \
+             JMATHS_CONCAT2(JMATHS_MACRO_IMPL_FOR_LOOP_REPETITION_COUNTER, __LINE__){}; \
          JMATHS_CONCAT2(JMATHS_MACRO_IMPL_FOR_LOOP_REPETITION_COUNTER, __LINE__) < (x); \
          ++JMATHS_CONCAT2(JMATHS_MACRO_IMPL_FOR_LOOP_REPETITION_COUNTER, __LINE__))
