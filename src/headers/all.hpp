@@ -18,6 +18,7 @@
 
 #include "N.hpp"
 #include "Q.hpp"
+#include "TMP.hpp"
 #include "Z.hpp"
 #include "calc.hpp"
 #include "constants_and_types.hpp"
@@ -26,4 +27,4 @@
 #include "hash.hpp"
 #include "literals.hpp"
 #include "rand.hpp"
-#include "sign_type.hpp"
+#include "uint.hpp"
