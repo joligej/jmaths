@@ -20,6 +20,7 @@
 #include <format>
 
 #include "constants_and_types.hpp"
+#include "def.hh"
 #include "error.hpp"
 
 namespace jmaths {
@@ -56,6 +57,8 @@ struct format_parser {
 
 template <typename T> struct format_output : format_parser {
     auto format(const T & obj, auto & ctx) const {
+        JMATHS_FUNCTION_TO_LOG;
+
         return std::ranges::copy(obj.conv_to_base_(base), ctx.out()).out;
     }
 };
