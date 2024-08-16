@@ -16,14 +16,16 @@
 
 #pragma once
 
+#include <cstring>
 #include <exception>
+#include <format>
 
 // definitions of error and associated types
 namespace jmaths {
 
 class error : public std::exception {
    public:
-    static const char default_message[];
+    static constexpr char default_message[] = "No error message provided!";
     class division_by_zero;
     class invalid_base;
 
@@ -37,14 +39,14 @@ class error : public std::exception {
 
 class error::division_by_zero : public error {
    public:
-    static const char default_message[];
+    static constexpr char default_message[] = "You tried to divide by zero!";
     division_by_zero();
     explicit division_by_zero(const char * message);
 };
 
 class error::invalid_base : public error {
    public:
-    static const char default_message[];
+    static constexpr char default_message[] = "You need to enter a base between 2 and 64!";
     invalid_base();
     explicit invalid_base(const char * message);
 
@@ -56,7 +58,27 @@ class error::invalid_base : public error {
 
 constexpr void error::invalid_base::check(unsigned base) {
     if (base < minimum_base || base > maximum_base) {
-        throw invalid_base("You need to enter a base between 2 and 64!");
+#if 0
+        static struct message_t {
+            char buffer[std::size(default_message) + 50];
+
+            message_t() {
+                std::memcpy(buffer, default_message, std::size(default_message) - 1);
+            }
+        } message;
+
+        std::format_to(message.buffer + std::size(default_message) - 1,
+                       " The base you entered was: {}.",
+                       base);
+
+        throw invalid_base(message.buffer);
+#endif
+
+#if 1
+        static char message_buffer[std::size(default_message) + 50];
+        std::format_to(message_buffer, "{} The base you entered was: {}.", default_message, base);
+        throw invalid_base(message_buffer);
+#endif
     }
 }
 

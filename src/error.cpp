@@ -20,12 +20,6 @@
 
 namespace jmaths {
 
-constexpr char error::default_message[] = "No error message provided!";
-
-constexpr char error::division_by_zero::default_message[] = "You tried to divide by zero!";
-
-constexpr char error::invalid_base::default_message[] = "You tried to use an invalid base!";
-
 error::error() : error(default_message) {
     JMATHS_FUNCTION_TO_LOG;
 }
