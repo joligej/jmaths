@@ -47,6 +47,17 @@ class error::invalid_base : public error {
     static const char default_message[];
     invalid_base();
     explicit invalid_base(const char * message);
+
+    static constexpr void check(unsigned base);
+
+    static constexpr unsigned minimum_base = 2;
+    static constexpr unsigned maximum_base = 64;
 };
+
+constexpr void error::invalid_base::check(unsigned base) {
+    if (base < minimum_base || base > maximum_base) {
+        throw invalid_base("You need to enter a base between 2 and 64!");
+    }
+}
 
 }  // namespace jmaths

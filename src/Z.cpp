@@ -185,9 +185,7 @@ std::size_t Z::size() const {
 std::string Z::to_str(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (base < 2U || base > 64U) {
-        throw error::invalid_base("You need to enter a base between 2 and 64!");
-    }
+    error::invalid_base::check(base);
 
     return conv_to_base_(base);
 }

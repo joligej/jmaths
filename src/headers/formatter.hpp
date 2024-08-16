@@ -48,9 +48,7 @@ struct format_parser {
             ++it;
         } while (*it != '}');
 
-        if (base < 2U || base > 64U) {
-            throw error::invalid_base("You need to enter a base between 2 and 64!");
-        }
+        error::invalid_base::check(base);
 
         return it;
     }

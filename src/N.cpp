@@ -637,9 +637,7 @@ N::N() = default;
 N::N(std::string_view num_str, unsigned base) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (base < 2U || base > 64U) {
-        throw error::invalid_base("You need to provide a string in a base between 2 and 64!");
-    }
+    error::invalid_base::check(base);
 
     handle_str_(num_str, base);
 }
@@ -703,9 +701,7 @@ std::size_t N::size() const {
 std::string N::to_str(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (base < 2U || base > 64U) {
-        throw error::invalid_base("You need to enter a base between 2 and 64!");
-    }
+    error::invalid_base::check(base);
 
     return conv_to_base_(base);
 }
