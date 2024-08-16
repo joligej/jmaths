@@ -66,6 +66,8 @@ class Z : public sign_type, private N {
     friend struct rand<N>;
     friend struct rand<Z>;
 
+    friend struct format_output<Z>;
+
    public:
     using N::bit_reference, N::const_bit_reference;
     using N::ctz, N::bits, N::operator bool, N::operator[];
@@ -125,6 +127,8 @@ class Z : public sign_type, private N {
    private:
     Z(N && n, sign_bool sign);
     Z(const N & n, sign_bool sign);
+
+    [[nodiscard]] std::string conv_to_base_(unsigned base = default_base) const;
 
     [[nodiscard]] std::size_t dynamic_size_() const;
 };

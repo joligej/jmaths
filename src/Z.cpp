@@ -113,6 +113,16 @@ Z::Z(const N & n, sign_bool sign) : sign_type(sign), N(n) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
+std::string Z::conv_to_base_(unsigned base) const {
+    JMATHS_FUNCTION_TO_LOG;
+
+    if (is_negative()) {
+        return negative_sign + N::conv_to_base_(base);
+    } else {
+        return N::conv_to_base_(base);
+    }
+}
+
 std::size_t Z::dynamic_size_() const {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -174,11 +184,11 @@ std::size_t Z::size() const {
 std::string Z::to_str(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (is_negative()) {
-        return negative_sign + N::to_str(base);
-    } else {
-        return N::to_str(base);
+    if (base < 2U || base > 64U) {
+        throw error::invalid_base("You need to enter a base between 2 and 64!");
     }
+
+    return conv_to_base_(base);
 }
 
 std::string Z::to_hex() const {

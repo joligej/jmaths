@@ -144,25 +144,6 @@ std::strong_ordering operator<=>(const N & lhs, const N & rhs) {
 
 namespace jmaths {
 
-void N::remove_leading_zeroes_() {
-    JMATHS_FUNCTION_TO_LOG;
-
-    while (!digits_.empty()) {
-        if (digits_.back() != 0U) { break; }
-        digits_.pop_back();
-    }
-
-    assert(digits_.empty() || digits_.back() != 0U);
-}
-
-base_int N::front_() const {
-    JMATHS_FUNCTION_TO_LOG;
-
-    if (digits_.empty()) { return 0U; }
-
-    return digits_.front();
-}
-
 std::string N::conv_to_base_(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -190,6 +171,25 @@ std::string N::conv_to_base_(unsigned base) const {
     std::ranges::reverse(num_str);
 
     return num_str;
+}
+
+void N::remove_leading_zeroes_() {
+    JMATHS_FUNCTION_TO_LOG;
+
+    while (!digits_.empty()) {
+        if (digits_.back() != 0U) { break; }
+        digits_.pop_back();
+    }
+
+    assert(digits_.empty() || digits_.back() != 0U);
+}
+
+base_int N::front_() const {
+    JMATHS_FUNCTION_TO_LOG;
+
+    if (digits_.empty()) { return 0U; }
+
+    return digits_.front();
 }
 
 void N::handle_str_(std::string_view num_str, unsigned base) {

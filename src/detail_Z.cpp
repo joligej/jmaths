@@ -35,9 +35,7 @@ namespace jmaths {
 std::ostream & detail::opr_ins(std::ostream & os, const Z & z) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (z.is_positive()) { return os << z.abs(); }
-
-    return os << negative_sign << z.abs();
+    return os << z.conv_to_base_();
 }
 
 std::istream & detail::opr_extr(std::istream & is, Z & z) {

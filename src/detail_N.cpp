@@ -40,7 +40,7 @@ namespace jmaths {
 std::ostream & detail::opr_ins(std::ostream & os, const N & n) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return os << n.to_str();
+    return os << n.conv_to_base_();
 }
 
 std::istream & detail::opr_extr(std::istream & is, N & n) {

@@ -48,10 +48,8 @@ struct format_parser {
             ++it;
         } while (*it != '}');
 
-        if consteval {
-            if (base < 2U || base > 64U) {
-                throw error::invalid_base("You need to enter a base between 2 and 64!");
-            }
+        if (base < 2U || base > 64U) {
+            throw error::invalid_base("You need to enter a base between 2 and 64!");
         }
 
         return it;
@@ -60,7 +58,7 @@ struct format_parser {
 
 template <typename T> struct format_output : format_parser {
     auto format(const T & obj, auto & ctx) const {
-        return std::ranges::copy(obj.to_str(base), ctx.out()).out;
+        return std::ranges::copy(obj.conv_to_base_(base), ctx.out()).out;
     }
 };
 

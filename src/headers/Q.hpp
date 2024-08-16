@@ -63,6 +63,8 @@ class Q : public sign_type {
     friend struct calc;
     friend struct std::hash<Q>;
 
+    friend struct format_output<Q>;
+
    public:
     Q();
     Q(std::string_view num_str, unsigned base = default_base);
@@ -145,6 +147,7 @@ class Q : public sign_type {
     [[nodiscard]] static std::string_view handle_fraction_string_(std::string_view * num_str);
 
     void canonicalise_();
+    [[nodiscard]] std::string conv_to_base_(unsigned base = default_base) const;
 
     [[nodiscard]] static std::tuple<N, N, sign_bool> handle_float_(std::floating_point auto num);
 

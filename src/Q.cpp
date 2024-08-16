@@ -147,6 +147,14 @@ void Q::canonicalise_() {
     denom_ = detail::opr_div(denom_, gcd).first;
 }
 
+std::string Q::conv_to_base_(unsigned base) const {
+    JMATHS_FUNCTION_TO_LOG;
+
+    if (is_positive()) { return num_.conv_to_base_(base) + vinculum + denom_.conv_to_base_(base); }
+
+    return negative_sign + num_.conv_to_base_(base) + vinculum + denom_.conv_to_base_(base);
+}
+
 std::size_t Q::dynamic_size_() const {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -316,9 +324,11 @@ std::size_t Q::size() const {
 std::string Q::to_str(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (is_positive()) { return num_.to_str(base) + vinculum + denom_.to_str(base); }
+    if (base < 2U || base > 64U) {
+        throw error::invalid_base("You need to enter a base between 2 and 64!");
+    }
 
-    return negative_sign + num_.to_str(base) + vinculum + denom_.to_str(base);
+    return conv_to_base_(base);
 }
 
 std::string Q::to_hex() const {

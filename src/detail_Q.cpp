@@ -36,7 +36,7 @@ namespace jmaths {
 std::ostream & detail::opr_ins(std::ostream & os, const Q & q) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return os << q.to_str();
+    return os << q.conv_to_base_();
 }
 
 std::istream & detail::opr_extr(std::istream & is, Q & q) {

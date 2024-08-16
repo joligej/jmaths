@@ -69,6 +69,8 @@ class N {
     friend struct rand<N>;
     friend struct rand<Z>;
 
+    friend struct format_output<N>;
+
    public:
     class bit_reference;
     class const_bit_reference;
@@ -146,12 +148,13 @@ class N {
     void opr_assign_(std::string_view num_str);
     void opr_assign_(std::integral auto rhs);
 
+    [[nodiscard]] std::string conv_to_base_(unsigned base = default_base) const;
+
    private:
     std::vector<base_int, allocator<base_int>> digits_;
 
     void remove_leading_zeroes_();
     [[nodiscard]] base_int front_() const;
-    [[nodiscard]] std::string conv_to_base_(unsigned base) const;
     void handle_str_(std::string_view num_str, unsigned base);
     void handle_int_(std::integral auto num);
 
