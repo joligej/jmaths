@@ -28,6 +28,7 @@
 #include "constants_and_types.hpp"
 #include "def.hh"
 #include "detail.hpp"
+#include "error.hpp"
 #include "sign_type.hpp"
 
 namespace jmaths {
