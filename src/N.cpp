@@ -200,7 +200,7 @@ void N::handle_str_(std::string_view num_str, unsigned base) {
     // if (num_str.size() == 1U && num_str.front() == '0') { return; }
 
     // the more thorough but slower check:
-    if (std::ranges::all_of(num_str, [](char c) { return c == '0'; })) { return; }
+    if (std::ranges::all_of(num_str, [](char c) static noexcept { return c == '0'; })) { return; }
 
     assert(!num_str.empty());
 
