@@ -44,7 +44,7 @@ struct format_parser {
                 throw std::format_error("Invalid format arguments.");
             }
 
-            base += *it - '0';
+            base += static_cast<unsigned>(*it - '0');
 
             ++it;
         } while (*it != '}');

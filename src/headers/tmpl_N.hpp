@@ -90,25 +90,46 @@ void N::handle_int_(std::integral auto num) {
 
     if constexpr (base_int_size < sizeof(num)) {
         static constexpr std::size_t digits_needed =
-            std::ceil((long double)sizeof(num) / base_int_size);
+            std::ceil(static_cast<long double>(sizeof(num)) / base_int_size);
 
         digits_.reserve(digits_needed);
-
+#if 0
         for (std::size_t curr_byte = 0; curr_byte < sizeof(num); ++curr_byte) {
             const std::size_t curr_index = curr_byte / base_int_size;
             const std::size_t curr_offset = curr_byte % base_int_size;
             if (curr_offset == 0) { digits_.emplace_back(); }
 
-            static constexpr unsigned bitmask = ~(unsigned char)0;
+            static constexpr auto bitmask = static_cast<unsigned>(~std::byte{0});
 
             digits_[curr_index] |= (num & bitmask) << (curr_offset * bits_in_byte);
 
             num >>= bits_in_byte;
         }
+#else
+        for (std::size_t curr_base_int_part = 0; curr_base_int_part < sizeof(num) / base_int_size;
+             ++curr_base_int_part) {
+            digits_.emplace_back(static_cast<base_int>(num));
+            num >>= base_int_bits;
+        }
+
+        if constexpr (sizeof(num) % base_int_size > 0) {
+    #if 0
+            digits_.emplace_back();
+
+            for (std::size_t curr_byte = 0; curr_byte < sizeof(num) % base_int_size; ++curr_byte) {
+                static constexpr auto bitmask = static_cast<unsigned>(~std::byte{0});
+                digits_[sizeof(num) / base_int_size] |= (num & bitmask) << (curr_byte * bits_in_byte);
+                num >>= bits_in_byte;
+            }
+    #else
+            digits_.emplace_back(static_cast<base_int>(num));
+    #endif
+        }
+#endif
 
         assert(num == 0);
     } else {
-        digits_.emplace_back((base_int)num);
+        digits_.emplace_back(static_cast<base_int>(num));
     }
 
     remove_leading_zeroes_();
@@ -123,11 +144,11 @@ template <std::unsigned_integral T> T N::fit_into_(std::size_t max_byte) const {
         const std::size_t curr_index = curr_byte / base_int_size;
         const std::size_t curr_offset = curr_byte % base_int_size;
 
-        static constexpr unsigned bitmask = ~(unsigned char)0;
+        static constexpr auto bitmask = static_cast<unsigned>(~std::byte{0});
 
         const auto relevant_byte = (digits_[curr_index] >> (curr_offset * bits_in_byte)) & bitmask;
 
-        converted |= ((T)relevant_byte << (curr_byte * bits_in_byte));
+        converted |= (static_cast<T>(relevant_byte) << (curr_byte * bits_in_byte));
     }
 
     return converted;
@@ -149,7 +170,7 @@ N::N(std::integral auto num) {
 template <std::unsigned_integral T> std::optional<T> N::fits_into() const {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (is_zero()) return 0;
+    if (is_zero()) { return 0; }
 
     if constexpr (base_int_size < sizeof(T)) {
         if (digits_.size() * base_int_size < sizeof(T)) {
@@ -157,7 +178,7 @@ template <std::unsigned_integral T> std::optional<T> N::fits_into() const {
         }
 
         if (digits_.size() * base_int_size > sizeof(T)) {
-            if ((unsigned)std::countr_zero(digits_.back()) <
+            if (static_cast<unsigned>(std::countr_zero(digits_.back())) <
                 (digits_.size() * base_int_size - sizeof(T)) * bits_in_byte) {
                 return std::nullopt;
             }
@@ -167,7 +188,7 @@ template <std::unsigned_integral T> std::optional<T> N::fits_into() const {
     } else if constexpr (base_int_size > sizeof(T)) {
         if (digits_.size() > 1) return std::nullopt;
 
-        static constexpr auto bitmask = ~(T)0;
+        static constexpr auto bitmask = ~static_cast<T>(0);
 
         if (const auto masked_digit = digits_.front() & bitmask; masked_digit == digits_.front()) {
             return masked_digit;
