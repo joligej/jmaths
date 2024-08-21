@@ -58,7 +58,7 @@ std::strong_ordering operator<=>(const Q & lhs, const Q & rhs);
 std::strong_ordering operator<=>(const Q & lhs, std::floating_point auto rhs);
 std::strong_ordering operator<=>(std::floating_point auto lhs, const Q & rhs);
 
-class Q : public sign_type {
+class Q final : public sign_type {
     friend struct detail;
     friend struct calc;
     friend struct std::hash<Q>;

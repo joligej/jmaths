@@ -56,7 +56,7 @@ std::strong_ordering operator<=>(const Z & lhs, const Z & rhs);
 std::strong_ordering operator<=>(const Z & lhs, std::integral auto rhs);
 std::strong_ordering operator<=>(std::integral auto lhs, const Z & rhs);
 
-class Z : public sign_type, private N {
+class Z final : public sign_type, private N {
     friend struct detail;
     friend struct calc;
     friend struct std::hash<Z>;
