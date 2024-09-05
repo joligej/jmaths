@@ -76,7 +76,7 @@ class N {
     class const_bit_reference;
 
     N();
-    N(std::string_view num_str, unsigned base = default_base);
+    explicit N(std::string_view num_str, unsigned base = default_base);
     N(std::integral auto num);
 
     [[nodiscard]] bool is_zero() const;

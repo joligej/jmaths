@@ -74,7 +74,7 @@ class Z final : public sign_type, private N {
     using N::is_even, N::is_odd;
 
     Z();
-    Z(std::string_view num_str, unsigned base = default_base);
+    explicit Z(std::string_view num_str, unsigned base = default_base);
     Z(std::integral auto num);
 
     Z(const N & n);

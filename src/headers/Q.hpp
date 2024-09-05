@@ -67,7 +67,7 @@ class Q final : public sign_type {
 
    public:
     Q();
-    Q(std::string_view num_str, unsigned base = default_base);
+    explicit Q(std::string_view num_str, unsigned base = default_base);
     Q(std::floating_point auto num);
 
     Q(const N & n);

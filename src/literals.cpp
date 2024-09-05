@@ -25,13 +25,13 @@ namespace jmaths::inline literals {
 N operator""_N(const char * num_str) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return {num_str};
+    return N{num_str};
 }
 
 Z operator""_Z(const char * num_str) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return {num_str};
+    return Z{num_str};
 }
 
 }  // namespace jmaths::inline literals
