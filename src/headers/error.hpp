@@ -16,9 +16,10 @@
 
 #pragma once
 
-#include <cstring>
 #include <exception>
 #include <format>
+#include <string>
+#include <string_view>
 
 // definitions of error and associated types
 namespace jmaths {
@@ -26,29 +27,32 @@ namespace jmaths {
 class error : public std::exception {
    public:
     static constexpr char default_message[] = "No error message provided!";
+
     class division_by_zero;
     class invalid_base;
 
     error();
-    explicit error(const char * message);
+    explicit error(std::string_view message);
     [[nodiscard]] const char * what() const noexcept override;
 
    private:
-    const char * const message_;
+    const std::string message_;
 };
 
 class error::division_by_zero : public error {
    public:
     static constexpr char default_message[] = "You tried to divide by zero!";
+
     division_by_zero();
-    explicit division_by_zero(const char * message);
+    explicit division_by_zero(std::string_view message);
 };
 
 class error::invalid_base : public error {
    public:
     static constexpr char default_message[] = "You need to enter a base between 2 and 64!";
+
     invalid_base();
-    explicit invalid_base(const char * message);
+    explicit invalid_base(std::string_view message);
 
     static constexpr void check(unsigned base);
 
@@ -57,29 +61,9 @@ class error::invalid_base : public error {
 };
 
 constexpr void error::invalid_base::check(unsigned base) {
-    if (base < minimum_base || base > maximum_base) {
-#if 0
-        static struct message_t {
-            char buffer[std::size(default_message) + 50];
+    if (base >= minimum_base && base <= maximum_base) { return; }
 
-            message_t() {
-                std::memcpy(buffer, default_message, std::size(default_message) - 1);
-            }
-        } message;
-
-        std::format_to(message.buffer + std::size(default_message) - 1,
-                       " The base you entered was: {}.",
-                       base);
-
-        throw invalid_base(message.buffer);
-#endif
-
-#if 1
-        static char message_buffer[std::size(default_message) + 50];
-        std::format_to(message_buffer, "{} The base you entered was: {}.", default_message, base);
-        throw invalid_base(message_buffer);
-#endif
-    }
+    throw invalid_base(std::format("{} The base you entered was: {}.", default_message, base));
 }
 
 }  // namespace jmaths
