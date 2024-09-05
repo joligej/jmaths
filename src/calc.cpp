@@ -29,31 +29,34 @@
 
 namespace jmaths {
 
-N calc::gcd(N a, N b) {
+N calc::gcd(const N & a, const N & b) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (a.is_zero()) { return b; }
     if (b.is_zero()) { return a; }
 
-    const bitcount_t i = a.ctz();
-    const bitcount_t j = b.ctz();
+    N num1 = a;
+    N num2 = b;
 
-    a.opr_bitshift_r_assign_(i);
-    b.opr_bitshift_r_assign_(j);
+    const bitcount_t i = num1.ctz();
+    const bitcount_t j = num2.ctz();
+
+    num1.opr_bitshift_r_assign_(i);
+    num2.opr_bitshift_r_assign_(j);
 
     const bitcount_t k = std::min(i, j);
 
     for (;;) {
-        assert(a.is_odd());
-        assert(b.is_odd());
+        assert(num1.is_odd());
+        assert(num2.is_odd());
 
-        if (detail::opr_comp(a, b) > 0) { a.digits_.swap(b.digits_); }
+        if (detail::opr_comp(num1, num2) > 0) { num1.digits_.swap(num2.digits_); }
 
-        b.opr_subtr_assign_(a);
+        num2.opr_subtr_assign_(num1);
 
-        if (b.is_zero()) { return a.opr_bitshift_l_(k); }
+        if (num2.is_zero()) { return num1.opr_bitshift_l_(k); }
 
-        b.opr_bitshift_r_assign_(b.ctz());
+        num2.opr_bitshift_r_assign_(num2.ctz());
     }
 }
 
@@ -118,54 +121,60 @@ N calc::sqrt_whole(const N & num) {
     return ans;
 }
 
-N calc::pow(N base, N exponent) {
+N calc::pow(const N & base, const N & exponent) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (exponent.is_zero()) { return N::one_; }
 
+    N base_num = base;
+    N exponent_num = exponent;
+
     N result(N::one_);
 
     for (;;) {
-        if (exponent.is_odd()) { result.opr_mult_assign_(base); }
-        exponent.opr_bitshift_r_assign_(1U);
-        if (exponent.is_zero()) { break; }
-        base.opr_mult_assign_(base);
+        if (exponent_num.is_odd()) { result.opr_mult_assign_(base_num); }
+        exponent_num.opr_bitshift_r_assign_(1U);
+        if (exponent_num.is_zero()) { break; }
+        base_num.opr_mult_assign_(base_num);
     }
 
     return result;
 }
 
-N calc::pow_mod(N base, N exponent, const N & mod) {
+N calc::pow_mod(const N & base, const N & exponent, const N & mod) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (mod.is_zero()) { throw error::division_by_zero{}; }
 
     if (exponent.is_zero()) { return N::one_; }
 
+    N base_num = base;
+    N exponent_num = exponent;
+
     N result(N::one_);
 
     for (;;) {
-        if (exponent.is_odd()) {
-            result.opr_mult_assign_(base);
+        if (exponent_num.is_odd()) {
+            result.opr_mult_assign_(base_num);
             result =
                 detail::opr_div(result, mod).second;  // maybe use separate function just for mod ???
         }
 
-        exponent.opr_bitshift_r_assign_(1U);
-        if (exponent.is_zero()) { break; }
-        base.opr_mult_assign_(base);
+        exponent_num.opr_bitshift_r_assign_(1U);
+        if (exponent_num.is_zero()) { break; }
+        base_num.opr_mult_assign_(base_num);
     }
 
     return result;
 }
 
-Z calc::pow(Z base, N exponent) {
+Z calc::pow(const Z & base, const N & exponent) {
     JMATHS_FUNCTION_TO_LOG;
 
     const auto sign =
         base.is_negative() && exponent.is_odd() ? sign_type::negative : sign_type::positive;
 
-    return {pow(std::move(std::move(base).abs()), std::move(exponent)), sign};
+    return {pow(base.abs(), exponent), sign};
 }
 
 }  // namespace jmaths
