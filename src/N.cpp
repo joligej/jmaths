@@ -709,7 +709,10 @@ std::string N::to_str(unsigned base) const {
 std::string N::to_hex() const {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (is_zero()) { return "0"; }
+    if (is_zero()) {
+        static constexpr std::string zero = "0";
+        return zero;
+    }
 
     std::ostringstream oss;
 
