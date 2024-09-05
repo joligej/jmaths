@@ -18,6 +18,7 @@
 
 #include <algorithm>
 #include <bit>
+#include <bitset>
 #include <cassert>
 #include <compare>
 #include <cstddef>
@@ -150,7 +151,10 @@ std::string N::conv_to_base_(unsigned base) const {
     static constexpr char base_converter[] =
         "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+~";
 
-    if (is_zero()) { return "0"; }
+    if (is_zero()) {
+        static constexpr std::string zero = "0";
+        return zero;
+    }
 
     std::string num_str;
 
@@ -730,6 +734,33 @@ std::string N::to_hex() const {
 
     while (++crit != digits_.crend()) {
         oss << *crit;
+    }
+
+    return std::move(oss).str();
+}
+
+std::string N::to_bin() const {
+    JMATHS_FUNCTION_TO_LOG;
+
+    if (is_zero()) {
+        static constexpr std::string zero = "0";
+        return zero;
+    }
+
+    using bitset_type = std::bitset<sizeof(base_int) * bits_in_byte>;
+
+    std::ostringstream oss;
+
+    auto crit = digits_.crbegin();
+
+    std::string first_digit = bitset_type(*crit).to_string();
+    const auto first_non_zero = first_digit.find_first_not_of('0');
+    first_digit.erase(0U, first_non_zero);
+
+    oss << first_digit;
+
+    while (++crit != digits_.crend()) {
+        oss << bitset_type(*crit);
     }
 
     return std::move(oss).str();

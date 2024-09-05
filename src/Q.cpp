@@ -337,6 +337,14 @@ std::string Q::to_hex() const {
     return negative_sign + num_.to_hex() + vinculum + denom_.to_hex();
 }
 
+std::string Q::to_bin() const {
+    JMATHS_FUNCTION_TO_LOG;
+
+    if (is_positive()) { return num_.to_bin() + vinculum + denom_.to_bin(); }
+
+    return negative_sign + num_.to_bin() + vinculum + denom_.to_bin();
+}
+
 Q::operator bool() const {
     JMATHS_FUNCTION_TO_LOG;
 

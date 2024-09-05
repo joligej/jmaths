@@ -200,6 +200,16 @@ std::string Z::to_hex() const {
     }
 }
 
+std::string Z::to_bin() const {
+    JMATHS_FUNCTION_TO_LOG;
+
+    if (is_negative()) {
+        return negative_sign + N::to_bin();
+    } else {
+        return N::to_bin();
+    }
+}
+
 void Z::set_zero() {
     JMATHS_FUNCTION_TO_LOG;
 

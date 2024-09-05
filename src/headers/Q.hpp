@@ -102,6 +102,8 @@ class Q final : public sign_type {
         unsigned base = default_base) const;   // convert to string in any base >= 2 and <= 64
     [[nodiscard]] std::string to_hex() const;  // convert to string in base 16 (assumes base
                                                // is an integer power of 2)
+    [[nodiscard]] std::string to_bin() const;  // convert to string in base 2
+
     explicit operator bool() const;
     template <std::floating_point T>
         requires std::numeric_limits<T>::is_iec559

@@ -59,7 +59,14 @@ template <typename T> struct format_output : format_parser {
     auto format(const T & obj, auto & ctx) const {
         JMATHS_FUNCTION_TO_LOG;
 
-        return std::ranges::copy(obj.conv_to_base_(base), ctx.out()).out;
+        switch (base) {
+            case 2:
+                return std::ranges::copy(obj.to_bin(), ctx.out()).out;
+            case 16:
+                return std::ranges::copy(obj.to_hex(), ctx.out()).out;
+            default:
+                return std::ranges::copy(obj.conv_to_base_(base), ctx.out()).out;
+        }
     }
 };
 

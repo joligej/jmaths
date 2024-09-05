@@ -93,6 +93,8 @@ class Z final : public sign_type, private N {
         unsigned base = default_base) const;   // convert to string in any base >= 2 and <= 64
     [[nodiscard]] std::string to_hex() const;  // convert to string in base 16 (assumes base
                                                // is an integer power of 2)
+    [[nodiscard]] std::string to_bin() const;  // convert to string in base 2
+
     template <std::unsigned_integral T> [[nodiscard]] std::optional<T> fits_into() const;
     template <std::signed_integral T> [[nodiscard]] std::optional<T> fits_into() const;
 
