@@ -274,8 +274,11 @@ std::optional<T> Q::fits_into() const {
             // ^^^ doesn't yet take care of subnormals
             return std::nullopt;
         }
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
         result.fields.exponent -= (denom_.digits_.size() - num_.digits_.size()) * base_int_bits;
+#pragma GCC diagnostic pop
+
     } else {
         static constexpr std::uint32_t max_exponent =
             ~(~static_cast<std::uint32_t>(0) << sizes_type::exponent) - 1;
@@ -289,7 +292,10 @@ std::optional<T> Q::fits_into() const {
             }
         }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
         result.fields.exponent += (num_.digits_.size() - denom_.digits_.size()) * base_int_bits;
+#pragma GCC diagnostic pop
     }
 
     result.fields.sign = is_negative();
