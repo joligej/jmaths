@@ -80,6 +80,9 @@ using primitive_types = for_all_types_ts<all_cv_qualifications,
                                                         double,
                                                         long double /*,void, std::nullptr_t*/>>;
 
+using unsigned_integral_types =
+    pack_container<unsigned char, unsigned short, unsigned int, unsigned long, unsigned long long>;
+
 template <typename T, template <typename, typename> class Op, typename... U> struct matches_which {
     using type = typename matches_which<T, Op, pack_container<U...>>::type;
 };
@@ -117,7 +120,7 @@ struct matches_any<T, Op, pack_container<U>> {
 };
 
 template <typename T, template <typename, typename> class Op, typename... U>
-inline static constexpr bool matches_any_v = matches_any<T, Op, U...>::value;
+inline constexpr bool matches_any_v = matches_any<T, Op, U...>::value;
 
 template <typename T, typename U>
 struct equal_size : std::conditional_t<(sizeof(T) == sizeof(U)), std::true_type, std::false_type> {};
@@ -164,5 +167,9 @@ template <typename T, typename... Ts> using fake_dependency_t = fake_dependency<
 
 template <auto n>
 concept is_power_of_2 = n != 0 && (n & (n - 1)) == 0;
+
+template <auto size> struct type_size {
+    char _[size];
+};
 
 }  // namespace jmaths::TMP
