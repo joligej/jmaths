@@ -20,7 +20,6 @@ set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
 
 target_compile_options(compilation_flags INTERFACE
         "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wpedantic;-Wshadow;-Werror;-Wuninitialized;-Winit-self;-Wconversion;-Wsign-conversion;-Wsign-compare>>"
-        # what about -Wconversion ?
         "$<${msvc_cxx}:$<BUILD_INTERFACE:-W4;-WX>>")
 
 if (NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm" OR NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
