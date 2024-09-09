@@ -230,15 +230,13 @@ N::bit_reference_base_<T>::bit_reference_base_(T & num, bitpos_t pos) : num_(num
     JMATHS_FUNCTION_TO_LOG;
 }
 
-template <TMP::decays_to<N> T>
-N::bit_reference_base_<T>::operator bool() const {
+template <TMP::decays_to<N> T> N::bit_reference_base_<T>::operator bool() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return num_.bit_(pos_);
 }
 
-template <TMP::decays_to<N> T>
-N::bit_reference_base_<T>::operator int() const {
+template <TMP::decays_to<N> T> N::bit_reference_base_<T>::operator int() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return operator bool();
