@@ -19,6 +19,7 @@
 #include <concepts>
 #include <cstddef>
 #include <type_traits>
+#include <utility>
 
 namespace jmaths::TMP {
 
@@ -170,6 +171,20 @@ concept is_power_of_2 = n != 0 && (n & (n - 1)) == 0;
 
 template <typename T, typename U>
 concept decays_to = std::same_as<std::decay_t<T>, std::decay_t<U>>;
+
+template <template <typename...> class T, typename... Ts>
+concept valid_template_params = requires { std::ignore = std::declval<T<Ts...>>(); };
+
+template <template <typename...> class, typename> struct same_template_helper;
+
+template <template <typename...> class U, template <typename...> class T, typename... Ts>
+struct same_template_helper<U, T<Ts...>> {
+    static constexpr bool value =
+        valid_template_params<U, Ts...> && std::same_as<T<Ts...>, U<Ts...>>;
+};
+
+template <typename T, template <typename...> class U>
+concept same_template = same_template_helper<U, T>::value;
 
 template <auto size> struct type_size {
     char _[size];
