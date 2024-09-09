@@ -71,7 +71,7 @@ Q operator*(const Q & lhs, const Q & rhs) {
 Q operator/(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (rhs.is_zero()) { throw error::division_by_zero{}; }
+    error::division_by_zero::check(rhs);
     return Q::detail::opr_div(lhs, rhs);
 }
 
@@ -168,7 +168,7 @@ Q::Q(std::string_view num_str, unsigned base) :
     sign_type(&num_str), num_(handle_fraction_string_(&num_str), base), denom_(num_str, base) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
 
     canonicalise_();
     if (Q::is_zero()) { set_sign_(positive); }
@@ -193,7 +193,7 @@ Q::Q(Z && z) : sign_type(z.sign_), num_(std::move(std::move(z).abs())), denom_(N
 Q::Q(const N & num, const N & denom) : num_(num), denom_(denom) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
 
     canonicalise_();
 }
@@ -201,7 +201,7 @@ Q::Q(const N & num, const N & denom) : num_(num), denom_(denom) {
 Q::Q(const N & num, N && denom) : num_(num), denom_(std::move(denom)) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
 
     canonicalise_();
 }
@@ -209,7 +209,7 @@ Q::Q(const N & num, N && denom) : num_(num), denom_(std::move(denom)) {
 Q::Q(N && num, const N & denom) : num_(std::move(num)), denom_(denom) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
 
     canonicalise_();
 }
@@ -217,7 +217,7 @@ Q::Q(N && num, const N & denom) : num_(std::move(num)), denom_(denom) {
 Q::Q(N && num, N && denom) : num_(std::move(num)), denom_(std::move(denom)) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
 
     canonicalise_();
 }
@@ -228,7 +228,7 @@ Q::Q(const Z & num, const Z & denom) :
     denom_(denom.abs()) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
 
     canonicalise_();
 }
@@ -239,7 +239,7 @@ Q::Q(const Z & num, Z && denom) :
     denom_(std::move(std::move(denom).abs())) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
 
     canonicalise_();
 }
@@ -250,7 +250,7 @@ Q::Q(Z && num, const Z & denom) :
     denom_(denom.abs()) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
 
     canonicalise_();
 }
@@ -261,7 +261,7 @@ Q::Q(Z && num, Z && denom) :
     denom_(std::move(std::move(denom).abs())) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (denom_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
 
     canonicalise_();
 }
@@ -300,7 +300,7 @@ Q && Q::abs() && {
 Q Q::inverse() const & {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (num_.is_zero()) { throw error::division_by_zero("Cannot take the inverse of zero!"); }
+    error::division_by_zero::check(num_, "Cannot take the inverse of zero!");
 
     return {denom_, num_, sign_};
 }
@@ -308,7 +308,7 @@ Q Q::inverse() const & {
 Q && Q::inverse() && {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (num_.is_zero()) { throw error::division_by_zero("Denominator cannot be zero!"); }
+    error::division_by_zero::check(num_, "Cannot take the inverse of zero!");
 
     std::swap(num_, denom_);
     return std::move(*this);
@@ -522,7 +522,7 @@ Q & Q::operator*=(const Q & rhs) {
 Q & Q::operator/=(const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (rhs.is_zero()) { throw error::division_by_zero{}; }
+    error::division_by_zero::check(rhs);
 
     num_.opr_mult_assign_(rhs.denom_);
     denom_.opr_mult_assign_(rhs.num_);
@@ -539,7 +539,7 @@ Q & Q::operator&=(const Q & rhs) {
 
     denom_.opr_and_assign_(rhs.denom_);
 
-    if (denom_.is_zero()) { throw error::division_by_zero{}; }
+    error::division_by_zero::check(denom_);
 
     num_.opr_and_assign_(rhs.num_);
 
@@ -568,7 +568,7 @@ Q & Q::operator^=(const Q & rhs) {
 
     denom_.opr_xor_assign_(rhs.denom_);
 
-    if (denom_.is_zero()) { throw error::division_by_zero{}; }
+    error::division_by_zero::check(denom_);
 
     num_.opr_xor_assign_(rhs.num_);
 
@@ -602,9 +602,8 @@ Q Q::operator~() const {
 
     N denom_complemented = denom_.opr_compl_();
 
-    if (denom_complemented.is_zero()) {
-        throw error::division_by_zero("Denominator of complemented fraction cannot be zero!");
-    }
+    error::division_by_zero::check(denom_complemented,
+                                   "Denominator of complemented fraction cannot be zero!");
 
     return {std::move(num_complemented),
             std::move(denom_complemented),

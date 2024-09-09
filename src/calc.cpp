@@ -296,7 +296,7 @@ N calc::pow(N && base, N && exponent) {
 N calc::pow_mod(const N & base, const N & exponent, const N & mod) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (mod.is_zero()) { throw error::division_by_zero{}; }
+    error::division_by_zero::check(mod);
 
     if (exponent.is_zero()) { return N::one_; }
 
@@ -323,7 +323,7 @@ N calc::pow_mod(const N & base, const N & exponent, const N & mod) {
 N calc::pow_mod(const N & base, N && exponent, const N & mod) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (mod.is_zero()) { throw error::division_by_zero{}; }
+    error::division_by_zero::check(mod);
 
     if (exponent.is_zero()) { return N::one_; }
 
@@ -350,7 +350,7 @@ N calc::pow_mod(const N & base, N && exponent, const N & mod) {
 N calc::pow_mod(N && base, const N & exponent, const N & mod) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (mod.is_zero()) { throw error::division_by_zero{}; }
+    error::division_by_zero::check(mod);
 
     if (exponent.is_zero()) { return N::one_; }
 
@@ -377,7 +377,7 @@ N calc::pow_mod(N && base, const N & exponent, const N & mod) {
 N calc::pow_mod(N && base, N && exponent, const N & mod) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (mod.is_zero()) { throw error::division_by_zero{}; }
+    error::division_by_zero::check(mod);
 
     if (exponent.is_zero()) { return N::one_; }
 

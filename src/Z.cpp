@@ -68,7 +68,7 @@ Z operator*(const Z & lhs, const Z & rhs) {
 std::pair<Z, Z> operator/(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (rhs.is_zero()) { throw error::division_by_zero{}; }
+    error::division_by_zero::check(rhs);
     return Z::detail::opr_div(lhs, rhs);
 }
 

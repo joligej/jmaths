@@ -45,7 +45,19 @@ class error::division_by_zero : public error {
 
     division_by_zero();
     explicit division_by_zero(std::string_view message);
+
+    static constexpr void check(const auto & num, std::string_view message = default_message);
 };
+
+constexpr void error::division_by_zero::check(const auto & num, std::string_view message) {
+    if constexpr (requires { num.is_zero(); }) {
+        if (!num.is_zero()) { return; }
+    } else {
+        if (num != 0) { return; }
+    }
+
+    throw division_by_zero(message);
+}
 
 class error::invalid_base : public error {
    public:

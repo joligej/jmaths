@@ -106,7 +106,7 @@ N operator*(const N & lhs, const N & rhs) {
 std::pair<N, N> operator/(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (rhs.is_zero()) { throw error::division_by_zero{}; }
+    error::division_by_zero::check(rhs);
     return N::detail::opr_div(lhs, rhs);
 }
 
