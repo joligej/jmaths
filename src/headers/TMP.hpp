@@ -168,6 +168,9 @@ template <typename T, typename... Ts> using fake_dependency_t = fake_dependency<
 template <auto n>
 concept is_power_of_2 = n != 0 && (n & (n - 1)) == 0;
 
+template <typename T, typename U>
+concept decays_to = std::same_as<std::decay_t<T>, std::decay_t<U>>;
+
 template <auto size> struct type_size {
     char _[size];
 };

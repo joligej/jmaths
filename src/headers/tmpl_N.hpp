@@ -225,22 +225,19 @@ N & N::operator=(std::integral auto rhs) {
 // functions for N::bit_reference_base_
 namespace jmaths {
 
-template <typename T>
-    requires std::same_as<N, std::decay_t<T>>
+template <TMP::decays_to<N> T>
 N::bit_reference_base_<T>::bit_reference_base_(T & num, bitpos_t pos) : num_(num), pos_{pos} {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-template <typename T>
-    requires std::same_as<N, std::decay_t<T>>
+template <TMP::decays_to<N> T>
 N::bit_reference_base_<T>::operator bool() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return num_.bit_(pos_);
 }
 
-template <typename T>
-    requires std::same_as<N, std::decay_t<T>>
+template <TMP::decays_to<N> T>
 N::bit_reference_base_<T>::operator int() const {
     JMATHS_FUNCTION_TO_LOG;
 

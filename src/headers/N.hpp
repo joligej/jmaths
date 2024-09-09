@@ -29,6 +29,7 @@
 #include <utility>
 #include <vector>
 
+#include "TMP.hpp"
 #include "constants_and_types.hpp"
 #include "declarations.hpp"
 #include "formatter.hpp"
@@ -166,15 +167,13 @@ class N {
     [[nodiscard]] bool bit_(bitpos_t pos) const;
     void bit_(bitpos_t pos, bool val);
 
-    template <typename T>
-        requires std::same_as<N, std::decay_t<T>>
+    template <TMP::decays_to<N> T>
     class bit_reference_base_;
 
     static const N one_;
 };
 
-template <typename T>
-    requires std::same_as<N, std::decay_t<T>>
+template <TMP::decays_to<N> T>
 class N::bit_reference_base_ {
     friend class bit_reference;
     friend class const_bit_reference;
