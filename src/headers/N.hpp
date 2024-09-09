@@ -58,7 +58,6 @@ std::strong_ordering operator<=>(const N & lhs, std::integral auto rhs);
 std::strong_ordering operator<=>(std::integral auto lhs, const N & rhs);
 
 class N {
-    friend struct detail;
     friend struct calc;
     friend struct std::hash<N>;
     friend struct std::hash<Z>;
@@ -74,6 +73,8 @@ class N {
    public:
     class bit_reference;
     class const_bit_reference;
+
+    struct detail;
 
     N();
     explicit N(std::string_view num_str, unsigned base = default_base);
@@ -212,6 +213,30 @@ class N::const_bit_reference : public bit_reference_base_<const N> {
     auto operator=(bool) = delete;
     auto operator=(const bit_reference &) = delete;
     auto operator=(const const_bit_reference &) = delete;
+};
+
+}  // namespace jmaths
+
+namespace jmaths {
+
+struct N::detail {
+    static std::ostream & opr_ins(std::ostream & os, const N & n);
+    static std::istream & opr_extr(std::istream & is, N & n);
+
+    static N opr_add(const N & lhs, const N & rhs);
+    static N opr_subtr(N lhs, const N & rhs);
+    static N opr_mult(const N & lhs, const N & rhs);
+    static std::pair<N, N> opr_div(const N & lhs, const N & rhs);
+
+    static N opr_and(const N & lhs, const N & rhs);
+    static N opr_or(const N & lhs, const N & rhs);
+    static N opr_xor(const N & lhs, const N & rhs);
+
+    static bool opr_eq(const N & lhs, const N & rhs);
+    static bool opr_eq(const N & lhs, std::integral auto rhs);
+
+    static std::strong_ordering opr_comp(const N & lhs, const N & rhs);
+    static std::strong_ordering opr_comp(const N & lhs, std::integral auto rhs);
 };
 
 }  // namespace jmaths

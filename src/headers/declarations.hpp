@@ -23,7 +23,6 @@
 namespace jmaths {
 
 struct calc;
-struct detail;
 
 class N;
 class sign_type;

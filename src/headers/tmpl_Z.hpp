@@ -26,13 +26,12 @@
 #include "Z.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
-#include "detail.hpp"
 #include "sign_type.hpp"
 
 // comparison functions for Z with integral types
 namespace jmaths {
 
-bool detail::opr_eq(const Z & lhs, std::integral auto rhs) {
+bool Z::detail::opr_eq(const Z & lhs, std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (const auto try_and_fit = lhs.fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
@@ -42,7 +41,7 @@ bool detail::opr_eq(const Z & lhs, std::integral auto rhs) {
     return false;
 }
 
-std::strong_ordering detail::opr_comp(const Z & lhs, std::integral auto rhs) {
+std::strong_ordering Z::detail::opr_comp(const Z & lhs, std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (const auto try_and_fit = lhs.fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
@@ -55,25 +54,25 @@ std::strong_ordering detail::opr_comp(const Z & lhs, std::integral auto rhs) {
 bool operator==(const Z & lhs, std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_eq(lhs, rhs);
+    return Z::detail::opr_eq(lhs, rhs);
 }
 
 bool operator==(std::integral auto lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_eq(rhs, lhs);
+    return Z::detail::opr_eq(rhs, lhs);
 }
 
 std::strong_ordering operator<=>(const Z & lhs, std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_comp(lhs, rhs);
+    return Z::detail::opr_comp(lhs, rhs);
 }
 
 std::strong_ordering operator<=>(std::integral auto lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return 0 <=> detail::opr_comp(rhs, lhs);
+    return 0 <=> Z::detail::opr_comp(rhs, lhs);
 }
 
 }  // namespace jmaths

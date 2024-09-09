@@ -31,19 +31,18 @@
 #include "Q.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
-#include "detail.hpp"
 #include "sign_type.hpp"
 
 // comparison functions for Q with floating point types
 namespace jmaths {
 
-bool detail::opr_eq(const Q & lhs, std::floating_point auto rhs) {
+bool Q::detail::opr_eq(const Q & lhs, std::floating_point auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return lhs == Q{rhs};
 }
 
-std::strong_ordering detail::opr_comp(const Q & lhs, std::floating_point auto rhs) {
+std::strong_ordering Q::detail::opr_comp(const Q & lhs, std::floating_point auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return lhs <=> Q{rhs};
@@ -52,25 +51,25 @@ std::strong_ordering detail::opr_comp(const Q & lhs, std::floating_point auto rh
 bool operator==(const Q & lhs, std::floating_point auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_eq(lhs, rhs);
+    return Q::detail::opr_eq(lhs, rhs);
 }
 
 bool operator==(std::floating_point auto lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_eq(rhs, lhs);
+    return Q::detail::opr_eq(rhs, lhs);
 }
 
 std::strong_ordering operator<=>(const Q & lhs, std::floating_point auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_comp(lhs, rhs);
+    return Q::detail::opr_comp(lhs, rhs);
 }
 
 std::strong_ordering operator<=>(std::floating_point auto lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return 0 <=> detail::opr_comp(rhs, lhs);
+    return 0 <=> Q::detail::opr_comp(rhs, lhs);
 }
 
 }  // namespace jmaths

@@ -24,7 +24,6 @@
 #include "Z.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
-#include "detail.hpp"
 #include "sign_type.hpp"
 
 namespace jmaths {
@@ -32,13 +31,13 @@ namespace jmaths {
 /**********************************************************/
 // implementation functions
 
-std::ostream & detail::opr_ins(std::ostream & os, const Z & z) {
+std::ostream & Z::detail::opr_ins(std::ostream & os, const Z & z) {
     JMATHS_FUNCTION_TO_LOG;
 
     return os << z.conv_to_base_();
 }
 
-std::istream & detail::opr_extr(std::istream & is, Z & z) {
+std::istream & Z::detail::opr_extr(std::istream & is, Z & z) {
     JMATHS_FUNCTION_TO_LOG;
 
     std::string num_str;
@@ -47,76 +46,76 @@ std::istream & detail::opr_extr(std::istream & is, Z & z) {
     return is;
 }
 
-Z detail::opr_add(const Z & lhs, const Z & rhs) {
+Z Z::detail::opr_add(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
 
     if (lhs.is_positive()) {
-        if (rhs.is_positive()) { return {opr_add(lhs.abs(), rhs.abs()), positive}; }
+        if (rhs.is_positive()) { return {N::detail::opr_add(lhs.abs(), rhs.abs()), positive}; }
 
-        if (const auto difference = opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
+        if (const auto difference = N::detail::opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
             return Z{};
         } else if (difference > 0) {
-            return {opr_subtr(lhs.abs(), rhs.abs()), positive};
+            return {N::detail::opr_subtr(lhs.abs(), rhs.abs()), positive};
         } else {
-            return {opr_subtr(rhs.abs(), lhs.abs()), negative};
+            return {N::detail::opr_subtr(rhs.abs(), lhs.abs()), negative};
         }
     } else {
-        if (rhs.is_negative()) { return {opr_add(lhs.abs(), rhs.abs()), negative}; }
+        if (rhs.is_negative()) { return {N::detail::opr_add(lhs.abs(), rhs.abs()), negative}; }
 
-        if (const auto difference = opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
+        if (const auto difference = N::detail::opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
             return Z{};
         } else if (difference > 0) {
-            return {opr_subtr(lhs.abs(), rhs.abs()), negative};
+            return {N::detail::opr_subtr(lhs.abs(), rhs.abs()), negative};
         } else {
-            return {opr_subtr(rhs.abs(), lhs.abs()), positive};
+            return {N::detail::opr_subtr(rhs.abs(), lhs.abs()), positive};
         }
     }
 }
 
-Z detail::opr_subtr(const Z & lhs, const Z & rhs) {
+Z Z::detail::opr_subtr(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
 
     if (lhs.is_positive()) {
-        if (rhs.is_negative()) { return {opr_add(lhs.abs(), rhs.abs()), positive}; }
+        if (rhs.is_negative()) { return {N::detail::opr_add(lhs.abs(), rhs.abs()), positive}; }
 
-        if (const auto difference = opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
+        if (const auto difference = N::detail::opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
             return Z{};
         } else if (difference > 0) {
-            return {opr_subtr(lhs.abs(), rhs.abs()), positive};
+            return {N::detail::opr_subtr(lhs.abs(), rhs.abs()), positive};
         } else {
-            return {opr_subtr(rhs.abs(), lhs.abs()), negative};
+            return {N::detail::opr_subtr(rhs.abs(), lhs.abs()), negative};
         }
     } else {
-        if (rhs.is_positive()) { return {opr_add(lhs.abs(), rhs.abs()), negative}; }
+        if (rhs.is_positive()) { return {N::detail::opr_add(lhs.abs(), rhs.abs()), negative}; }
 
-        if (const auto difference = opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
+        if (const auto difference = N::detail::opr_comp(lhs.abs(), rhs.abs()); difference == 0) {
             return Z{};
         } else if (difference > 0) {
-            return {opr_subtr(lhs.abs(), rhs.abs()), negative};
+            return {N::detail::opr_subtr(lhs.abs(), rhs.abs()), negative};
         } else {
-            return {opr_subtr(rhs.abs(), lhs.abs()), positive};
+            return {N::detail::opr_subtr(rhs.abs(), lhs.abs()), positive};
         }
     }
 }
 
-Z detail::opr_mult(const Z & lhs, const Z & rhs) {
+Z Z::detail::opr_mult(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    N product = lhs.abs() * rhs.abs();
+    N product = N::detail::opr_mult(lhs.abs(), rhs.abs());
 
     if (product.is_zero()) { return Z{}; }
 
     return {std::move(product), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
-std::pair<Z, Z> detail::opr_div(const Z & lhs, const Z & rhs) {
+std::pair<Z, Z> Z::detail::opr_div(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (auto [quotient, remainder] = lhs.abs() / rhs.abs(); quotient.is_zero()) {
+    if (auto [quotient, remainder] = N::detail::opr_div(lhs.abs(), rhs.abs()); quotient.is_zero()) {
         if (remainder.is_zero()) {
             return {Z{}, Z{}};
         } else {
@@ -133,48 +132,48 @@ std::pair<Z, Z> detail::opr_div(const Z & lhs, const Z & rhs) {
     }
 }
 
-Z detail::opr_and(const Z & lhs, const Z & rhs) {
+Z Z::detail::opr_and(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    N and_result = lhs.abs() & rhs.abs();
+    N and_result = N::detail::opr_and(lhs.abs(), rhs.abs());
 
     if (and_result.is_zero()) { return Z{}; }
 
     return {std::move(and_result), static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_)};
 }
 
-Z detail::opr_or(const Z & lhs, const Z & rhs) {
+Z Z::detail::opr_or(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    N or_result = lhs.abs() | rhs.abs();
+    N or_result = N::detail::opr_or(lhs.abs(), rhs.abs());
 
     if (or_result.is_zero()) { return Z{}; }
 
     return {std::move(or_result), static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_)};
 }
 
-Z detail::opr_xor(const Z & lhs, const Z & rhs) {
+Z Z::detail::opr_xor(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    N xor_result = lhs.abs() ^ rhs.abs();
+    N xor_result = N::detail::opr_xor(lhs.abs(), rhs.abs());
 
     if (xor_result.is_zero()) { return Z{}; }
 
     return {std::move(xor_result), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
-bool detail::opr_eq(const Z & lhs, const Z & rhs) {
+bool Z::detail::opr_eq(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return lhs.sign_ == rhs.sign_ && lhs.abs() == rhs.abs();
 }
 
-std::strong_ordering detail::opr_comp(const Z & lhs, const Z & rhs) {
+std::strong_ordering Z::detail::opr_comp(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
-            return opr_comp(lhs.abs(), rhs.abs());
+            return N::detail::opr_comp(lhs.abs(), rhs.abs());
         } else {
             return std::strong_ordering::greater;
         }
@@ -182,7 +181,7 @@ std::strong_ordering detail::opr_comp(const Z & lhs, const Z & rhs) {
         if (rhs.is_positive()) {
             return std::strong_ordering::less;
         } else {
-            return opr_comp(rhs.abs(), lhs.abs());
+            return N::detail::opr_comp(rhs.abs(), lhs.abs());
         }
     }
 }

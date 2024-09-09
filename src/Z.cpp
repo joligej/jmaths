@@ -27,7 +27,6 @@
 #include "N.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
-#include "detail.hpp"
 #include "error.hpp"
 #include "sign_type.hpp"
 
@@ -39,67 +38,68 @@ namespace jmaths {
 std::ostream & operator<<(std::ostream & os, const Z & z) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_ins(os, z);
+    return Z::detail::opr_ins(os, z);
 }
 
 std::istream & operator>>(std::istream & is, Z & z) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_extr(is, z);
+    return Z::detail::opr_extr(is, z);
 }
 
 Z operator+(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_add(lhs, rhs);
+    return Z::detail::opr_add(lhs, rhs);
 }
 
 Z operator-(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_subtr(lhs, rhs);
+    return Z::detail::opr_subtr(lhs, rhs);
 }
 
 Z operator*(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_mult(lhs, rhs);
+    return Z::detail::opr_mult(lhs, rhs);
 }
 
 std::pair<Z, Z> operator/(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_div(lhs, rhs);
+    if (rhs.is_zero()) { throw error::division_by_zero{}; }
+    return Z::detail::opr_div(lhs, rhs);
 }
 
 Z operator&(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_and(lhs, rhs);
+    return Z::detail::opr_and(lhs, rhs);
 }
 
 Z operator|(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_or(lhs, rhs);
+    return Z::detail::opr_or(lhs, rhs);
 }
 
 Z operator^(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_xor(lhs, rhs);
+    return Z::detail::opr_xor(lhs, rhs);
 }
 
 bool operator==(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_eq(lhs, rhs);
+    return Z::detail::opr_eq(lhs, rhs);
 }
 
 std::strong_ordering operator<=>(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_comp(lhs, rhs);
+    return Z::detail::opr_comp(lhs, rhs);
 }
 
 }  // namespace jmaths
@@ -255,23 +255,25 @@ Z & Z::operator+=(const Z & rhs) {
         if (rhs.is_positive()) {
             N::opr_add_assign_(rhs);
         } else {
-            if (const auto difference = detail::opr_comp(this->abs(), rhs.abs()); difference == 0) {
+            if (const auto difference = N::detail::opr_comp(this->abs(), rhs.abs());
+                difference == 0) {
                 N::set_zero();
             } else if (difference > 0) {
                 N::opr_subtr_assign_(rhs.abs());
             } else {
-                N::operator=(detail::opr_subtr(rhs.abs(), this->abs()));
+                N::operator=(N::detail::opr_subtr(rhs.abs(), this->abs()));
                 set_sign_(negative);
             }
         }
     } else {
         if (rhs.is_positive()) {
-            if (const auto difference = detail::opr_comp(this->abs(), rhs.abs()); difference == 0) {
+            if (const auto difference = N::detail::opr_comp(this->abs(), rhs.abs());
+                difference == 0) {
                 Z::set_zero();
             } else if (difference > 0) {
                 N::opr_subtr_assign_(rhs.abs());
             } else {
-                N::operator=(detail::opr_subtr(rhs.abs(), this->abs()));
+                N::operator=(N::detail::opr_subtr(rhs.abs(), this->abs()));
                 set_sign_(positive);
             }
         } else {
@@ -287,12 +289,13 @@ Z & Z::operator-=(const Z & rhs) {
 
     if (this->is_positive()) {
         if (rhs.is_positive()) {
-            if (const auto difference = detail::opr_comp(this->abs(), rhs.abs()); difference == 0) {
+            if (const auto difference = N::detail::opr_comp(this->abs(), rhs.abs());
+                difference == 0) {
                 N::set_zero();
             } else if (difference > 0) {
                 N::opr_subtr_assign_(rhs.abs());
             } else {
-                N::operator=(detail::opr_subtr(rhs.abs(), this->abs()));
+                N::operator=(N::detail::opr_subtr(rhs.abs(), this->abs()));
                 set_sign_(negative);
             }
         } else {
@@ -302,12 +305,13 @@ Z & Z::operator-=(const Z & rhs) {
         if (rhs.is_positive()) {
             N::opr_add_assign_(rhs);
         } else {
-            if (const auto difference = detail::opr_comp(this->abs(), rhs.abs()); difference == 0) {
+            if (const auto difference = N::detail::opr_comp(this->abs(), rhs.abs());
+                difference == 0) {
                 Z::set_zero();
             } else if (difference > 0) {
                 N::opr_subtr_assign_(rhs.abs());
             } else {
-                N::operator=(detail::opr_subtr(rhs.abs(), this->abs()));
+                N::operator=(N::detail::opr_subtr(rhs.abs(), this->abs()));
                 set_sign_(positive);
             }
         }

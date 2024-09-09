@@ -33,7 +33,6 @@
 
 #include "constants_and_types.hpp"
 #include "def.hh"
-#include "detail.hpp"
 #include "error.hpp"
 
 namespace jmaths {
@@ -74,71 +73,71 @@ namespace jmaths {
 std::ostream & operator<<(std::ostream & os, const N & n) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_ins(os, n);
+    return N::detail::opr_ins(os, n);
 }
 
 std::istream & operator>>(std::istream & is, N & n) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_extr(is, n);
+    return N::detail::opr_extr(is, n);
 }
 
 N operator+(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_add(lhs, rhs);
+    return N::detail::opr_add(lhs, rhs);
 }
 
 N operator-(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    const auto difference = detail::opr_comp(lhs, rhs);
+    const auto difference = N::detail::opr_comp(lhs, rhs);
 
     if (difference == 0) { return N{}; }
-    return difference > 0 ? detail::opr_subtr(lhs, rhs) : detail::opr_subtr(rhs, lhs);
+    return difference > 0 ? N::detail::opr_subtr(lhs, rhs) : N::detail::opr_subtr(rhs, lhs);
 }
 
 N operator*(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_mult(lhs, rhs);
+    return N::detail::opr_mult(lhs, rhs);
 }
 
 std::pair<N, N> operator/(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (rhs.is_zero()) { throw error::division_by_zero{}; }
-    return detail::opr_div(lhs, rhs);
+    return N::detail::opr_div(lhs, rhs);
 }
 
 N operator&(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_and(lhs, rhs);
+    return N::detail::opr_and(lhs, rhs);
 }
 
 N operator|(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_or(lhs, rhs);
+    return N::detail::opr_or(lhs, rhs);
 }
 
 N operator^(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_xor(lhs, rhs);
+    return N::detail::opr_xor(lhs, rhs);
 }
 
 bool operator==(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_eq(lhs, rhs);
+    return N::detail::opr_eq(lhs, rhs);
 }
 
 std::strong_ordering operator<=>(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_comp(lhs, rhs);
+    return N::detail::opr_comp(lhs, rhs);
 }
 
 }  // namespace jmaths

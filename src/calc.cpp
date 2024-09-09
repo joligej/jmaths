@@ -24,7 +24,6 @@
 #include "Z.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
-#include "detail.hpp"
 #include "error.hpp"
 
 namespace jmaths {
@@ -50,7 +49,7 @@ N calc::gcd(const N & a, const N & b) {
         assert(num1.is_odd());
         assert(num2.is_odd());
 
-        if (detail::opr_comp(num1, num2) > 0) { num1.digits_.swap(num2.digits_); }
+        if (N::detail::opr_comp(num1, num2) > 0) { num1.digits_.swap(num2.digits_); }
 
         num2.opr_subtr_assign_(num1);
 
@@ -81,7 +80,7 @@ N calc::gcd(const N & a, N && b) {
         assert(num1.is_odd());
         assert(num2.is_odd());
 
-        if (detail::opr_comp(num1, num2) > 0) { num1.digits_.swap(num2.digits_); }
+        if (N::detail::opr_comp(num1, num2) > 0) { num1.digits_.swap(num2.digits_); }
 
         num2.opr_subtr_assign_(num1);
 
@@ -112,7 +111,7 @@ N calc::gcd(N && a, const N & b) {
         assert(num1.is_odd());
         assert(num2.is_odd());
 
-        if (detail::opr_comp(num1, num2) > 0) { num1.digits_.swap(num2.digits_); }
+        if (N::detail::opr_comp(num1, num2) > 0) { num1.digits_.swap(num2.digits_); }
 
         num2.opr_subtr_assign_(num1);
 
@@ -143,7 +142,7 @@ N calc::gcd(N && a, N && b) {
         assert(num1.is_odd());
         assert(num2.is_odd());
 
-        if (detail::opr_comp(num1, num2) > 0) { num1.digits_.swap(num2.digits_); }
+        if (N::detail::opr_comp(num1, num2) > 0) { num1.digits_.swap(num2.digits_); }
 
         num2.opr_subtr_assign_(num1);
 
@@ -160,13 +159,13 @@ std::pair<N, N> calc::sqrt(const N & num) {
 
     N start = N::one_, end = num.opr_bitshift_r_(1U), ans;
 
-    while (detail::opr_comp(start, end) <= 0) {
-        N mid = detail::opr_add(start, end);
+    while (N::detail::opr_comp(start, end) <= 0) {
+        N mid = N::detail::opr_add(start, end);
         mid.opr_bitshift_r_assign_(1U);
 
-        const N sqr = detail::opr_mult(mid, mid);
+        const N sqr = N::detail::opr_mult(mid, mid);
 
-        const auto compared = detail::opr_comp(sqr, num);
+        const auto compared = N::detail::opr_comp(sqr, num);
 
         if (compared == 0) { return {std::move(mid), N{}}; }
 
@@ -180,7 +179,7 @@ std::pair<N, N> calc::sqrt(const N & num) {
         }
     }
 
-    N remainder = detail::opr_subtr(num, detail::opr_mult(ans, ans));
+    N remainder = N::detail::opr_subtr(num, N::detail::opr_mult(ans, ans));
 
     return {std::move(ans), std::move(remainder)};
 }
@@ -192,12 +191,12 @@ N calc::sqrt_whole(const N & num) {
 
     N start = N::one_, end = num.opr_bitshift_r_(1U), ans;
 
-    while (detail::opr_comp(start, end) <= 0) {
-        N mid = detail::opr_add(start, end).opr_bitshift_r_(1U);
+    while (N::detail::opr_comp(start, end) <= 0) {
+        N mid = N::detail::opr_add(start, end).opr_bitshift_r_(1U);
 
-        const N sqr = detail::opr_mult(mid, mid);
+        const N sqr = N::detail::opr_mult(mid, mid);
 
-        const auto compared = detail::opr_comp(sqr, num);
+        const auto compared = N::detail::opr_comp(sqr, num);
 
         if (compared == 0) { return mid; }
 
@@ -309,8 +308,8 @@ N calc::pow_mod(const N & base, const N & exponent, const N & mod) {
     for (;;) {
         if (exponent_num.is_odd()) {
             result.opr_mult_assign_(base_num);
-            result =
-                detail::opr_div(result, mod).second;  // maybe use separate function just for mod ???
+            result = N::detail::opr_div(result, mod)
+                         .second;  // maybe use separate function just for mod ???
         }
 
         exponent_num.opr_bitshift_r_assign_(1U);
@@ -336,8 +335,8 @@ N calc::pow_mod(const N & base, N && exponent, const N & mod) {
     for (;;) {
         if (exponent_num.is_odd()) {
             result.opr_mult_assign_(base_num);
-            result =
-                detail::opr_div(result, mod).second;  // maybe use separate function just for mod ???
+            result = N::detail::opr_div(result, mod)
+                         .second;  // maybe use separate function just for mod ???
         }
 
         exponent_num.opr_bitshift_r_assign_(1U);
@@ -363,8 +362,8 @@ N calc::pow_mod(N && base, const N & exponent, const N & mod) {
     for (;;) {
         if (exponent_num.is_odd()) {
             result.opr_mult_assign_(base_num);
-            result =
-                detail::opr_div(result, mod).second;  // maybe use separate function just for mod ???
+            result = N::detail::opr_div(result, mod)
+                         .second;  // maybe use separate function just for mod ???
         }
 
         exponent_num.opr_bitshift_r_assign_(1U);
@@ -390,8 +389,8 @@ N calc::pow_mod(N && base, N && exponent, const N & mod) {
     for (;;) {
         if (exponent_num.is_odd()) {
             result.opr_mult_assign_(base_num);
-            result =
-                detail::opr_div(result, mod).second;  // maybe use separate function just for mod ???
+            result = N::detail::opr_div(result, mod)
+                         .second;  // maybe use separate function just for mod ???
         }
 
         exponent_num.opr_bitshift_r_assign_(1U);

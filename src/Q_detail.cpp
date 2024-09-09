@@ -24,7 +24,6 @@
 #include "Q.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
-#include "detail.hpp"
 #include "error.hpp"
 #include "sign_type.hpp"
 
@@ -33,13 +32,13 @@ namespace jmaths {
 /**********************************************************/
 // implementation functions
 
-std::ostream & detail::opr_ins(std::ostream & os, const Q & q) {
+std::ostream & Q::detail::opr_ins(std::ostream & os, const Q & q) {
     JMATHS_FUNCTION_TO_LOG;
 
     return os << q.conv_to_base_();
 }
 
-std::istream & detail::opr_extr(std::istream & is, Q & q) {
+std::istream & Q::detail::opr_extr(std::istream & is, Q & q) {
     JMATHS_FUNCTION_TO_LOG;
 
     std::string num_str;
@@ -48,99 +47,107 @@ std::istream & detail::opr_extr(std::istream & is, Q & q) {
     return is;
 }
 
-Q detail::opr_add(const Q & lhs, const Q & rhs) {
+Q Q::detail::opr_add(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
-            N first_product = opr_mult(lhs.num_, rhs.denom_);
-            first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
-            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive};
+            N first_product = N::detail::opr_mult(lhs.num_, rhs.denom_);
+            first_product.opr_add_assign_(N::detail::opr_mult(lhs.denom_, rhs.num_));
+            return {std::move(first_product), N::detail::opr_mult(lhs.denom_, rhs.denom_), positive};
         }
 
-        N first_product = opr_mult(lhs.num_, rhs.denom_);
-        N second_product = opr_mult(lhs.denom_, rhs.num_);
+        N first_product = N::detail::opr_mult(lhs.num_, rhs.denom_);
+        N second_product = N::detail::opr_mult(lhs.denom_, rhs.num_);
 
         if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
             return Q{};
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
-            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive};
+            return {std::move(first_product), N::detail::opr_mult(lhs.denom_, rhs.denom_), positive};
         } else {
             second_product.opr_subtr_assign_(first_product);
-            return {std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), negative};
+            return {std::move(second_product),
+                    N::detail::opr_mult(lhs.denom_, rhs.denom_),
+                    negative};
         }
     } else {
         if (rhs.is_negative()) {
-            N first_product = opr_mult(lhs.num_, rhs.denom_);
-            first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
-            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative};
+            N first_product = N::detail::opr_mult(lhs.num_, rhs.denom_);
+            first_product.opr_add_assign_(N::detail::opr_mult(lhs.denom_, rhs.num_));
+            return {std::move(first_product), N::detail::opr_mult(lhs.denom_, rhs.denom_), negative};
         }
 
-        N first_product = opr_mult(lhs.num_, rhs.denom_);
-        N second_product = opr_mult(lhs.denom_, rhs.num_);
+        N first_product = N::detail::opr_mult(lhs.num_, rhs.denom_);
+        N second_product = N::detail::opr_mult(lhs.denom_, rhs.num_);
 
         if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
             return Q{};
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
-            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative};
+            return {std::move(first_product), N::detail::opr_mult(lhs.denom_, rhs.denom_), negative};
         } else {
             second_product.opr_subtr_assign_(first_product);
-            return {std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), positive};
+            return {std::move(second_product),
+                    N::detail::opr_mult(lhs.denom_, rhs.denom_),
+                    positive};
         }
     }
 }
 
-Q detail::opr_subtr(const Q & lhs, const Q & rhs) {
+Q Q::detail::opr_subtr(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
 
     if (lhs.is_positive()) {
         if (rhs.is_negative()) {
-            N first_product = opr_mult(lhs.num_, rhs.denom_);
-            first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
-            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive};
+            N first_product = N::detail::opr_mult(lhs.num_, rhs.denom_);
+            first_product.opr_add_assign_(N::detail::opr_mult(lhs.denom_, rhs.num_));
+            return {std::move(first_product), N::detail::opr_mult(lhs.denom_, rhs.denom_), positive};
         }
 
-        N first_product = opr_mult(lhs.num_, rhs.denom_);
-        N second_product = opr_mult(lhs.denom_, rhs.num_);
+        N first_product = N::detail::opr_mult(lhs.num_, rhs.denom_);
+        N second_product = N::detail::opr_mult(lhs.denom_, rhs.num_);
 
         if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
             return Q{};
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
-            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), positive};
+            return {std::move(first_product), N::detail::opr_mult(lhs.denom_, rhs.denom_), positive};
         } else {
             second_product.opr_subtr_assign_(first_product);
-            return {std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), negative};
+            return {std::move(second_product),
+                    N::detail::opr_mult(lhs.denom_, rhs.denom_),
+                    negative};
         }
     } else {
         if (rhs.is_positive()) {
-            N first_product = opr_mult(lhs.num_, rhs.denom_);
-            first_product.opr_add_assign_(opr_mult(lhs.denom_, rhs.num_));
-            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative};
+            N first_product = N::detail::opr_mult(lhs.num_, rhs.denom_);
+            first_product.opr_add_assign_(N::detail::opr_mult(lhs.denom_, rhs.num_));
+            return {std::move(first_product), N::detail::opr_mult(lhs.denom_, rhs.denom_), negative};
         }
 
-        N first_product = opr_mult(lhs.num_, rhs.denom_);
-        N second_product = opr_mult(lhs.denom_, rhs.num_);
+        N first_product = N::detail::opr_mult(lhs.num_, rhs.denom_);
+        N second_product = N::detail::opr_mult(lhs.denom_, rhs.num_);
 
         if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
             return Q{};
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
-            return {std::move(first_product), opr_mult(lhs.denom_, rhs.denom_), negative};
+            return {std::move(first_product), N::detail::opr_mult(lhs.denom_, rhs.denom_), negative};
         } else {
             second_product.opr_subtr_assign_(first_product);
-            return {std::move(second_product), opr_mult(lhs.denom_, rhs.denom_), positive};
+            return {std::move(second_product),
+                    N::detail::opr_mult(lhs.denom_, rhs.denom_),
+                    positive};
         }
     }
 }
 
-Q detail::opr_mult(const Q & lhs, const Q & rhs) {
+Q Q::detail::opr_mult(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N numerator = lhs.num_ * rhs.num_;
@@ -152,7 +159,7 @@ Q detail::opr_mult(const Q & lhs, const Q & rhs) {
             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
-Q detail::opr_div(const Q & lhs, const Q & rhs) {
+Q Q::detail::opr_div(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N numerator = lhs.num_ * rhs.denom_;
@@ -164,7 +171,7 @@ Q detail::opr_div(const Q & lhs, const Q & rhs) {
             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
-Q detail::opr_and(const Q & lhs, const Q & rhs) {
+Q Q::detail::opr_and(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N denominator = lhs.denom_ & rhs.denom_;
@@ -180,7 +187,7 @@ Q detail::opr_and(const Q & lhs, const Q & rhs) {
             static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_)};
 }
 
-Q detail::opr_or(const Q & lhs, const Q & rhs) {
+Q Q::detail::opr_or(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N numerator = lhs.num_ | rhs.num_;
@@ -192,7 +199,7 @@ Q detail::opr_or(const Q & lhs, const Q & rhs) {
             static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_)};
 }
 
-Q detail::opr_xor(const Q & lhs, const Q & rhs) {
+Q Q::detail::opr_xor(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N denominator = lhs.denom_ ^ rhs.denom_;
@@ -208,13 +215,13 @@ Q detail::opr_xor(const Q & lhs, const Q & rhs) {
             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
-bool detail::opr_eq(const Q & lhs, const Q & rhs) {
+bool Q::detail::opr_eq(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return lhs.sign_ == rhs.sign_ && lhs.num_ == rhs.num_ && lhs.denom_ == rhs.denom_;
 }
 
-std::strong_ordering detail::opr_comp(const Q & lhs, const Q & rhs) {
+std::strong_ordering Q::detail::opr_comp(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_positive()) {

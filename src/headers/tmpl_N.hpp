@@ -31,12 +31,11 @@
 #include "N.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
-#include "detail.hpp"
 
 // comparison functions for N with integral types
 namespace jmaths {
 
-bool detail::opr_eq(const N & lhs, std::integral auto rhs) {
+bool N::detail::opr_eq(const N & lhs, std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (const auto try_and_fit = lhs.fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
@@ -46,7 +45,7 @@ bool detail::opr_eq(const N & lhs, std::integral auto rhs) {
     return false;
 }
 
-std::strong_ordering detail::opr_comp(const N & lhs, std::integral auto rhs) {
+std::strong_ordering N::detail::opr_comp(const N & lhs, std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (const auto try_and_fit = lhs.fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
@@ -59,25 +58,25 @@ std::strong_ordering detail::opr_comp(const N & lhs, std::integral auto rhs) {
 bool operator==(const N & lhs, std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_eq(lhs, rhs);
+    return N::detail::opr_eq(lhs, rhs);
 }
 
 bool operator==(std::integral auto lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_eq(rhs, lhs);
+    return N::detail::opr_eq(rhs, lhs);
 }
 
 std::strong_ordering operator<=>(const N & lhs, std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return detail::opr_comp(lhs, rhs);
+    return N::detail::opr_comp(lhs, rhs);
 }
 
 std::strong_ordering operator<=>(std::integral auto lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return 0 <=> detail::opr_comp(rhs, lhs);
+    return 0 <=> N::detail::opr_comp(rhs, lhs);
 }
 
 }  // namespace jmaths

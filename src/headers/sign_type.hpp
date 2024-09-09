@@ -26,7 +26,6 @@
 namespace jmaths {
 
 class sign_type {
-    friend struct detail;
     friend struct calc;
 
     friend struct rand<N>;

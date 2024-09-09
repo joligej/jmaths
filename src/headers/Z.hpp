@@ -25,6 +25,7 @@
 #include <ostream>
 #include <string>
 #include <string_view>
+#include <utility>
 
 #include "N.hpp"
 #include "constants_and_types.hpp"
@@ -57,7 +58,6 @@ std::strong_ordering operator<=>(const Z & lhs, std::integral auto rhs);
 std::strong_ordering operator<=>(std::integral auto lhs, const Z & rhs);
 
 class Z final : public sign_type, private N {
-    friend struct detail;
     friend struct calc;
     friend struct std::hash<Z>;
 
@@ -72,6 +72,8 @@ class Z final : public sign_type, private N {
     using N::bit_reference, N::const_bit_reference;
     using N::ctz, N::bits, N::operator bool, N::operator[];
     using N::is_even, N::is_odd;
+
+    struct detail;
 
     Z();
     explicit Z(std::string_view num_str, unsigned base = default_base);
@@ -133,6 +135,30 @@ class Z final : public sign_type, private N {
     [[nodiscard]] std::string conv_to_base_(unsigned base = default_base) const;
 
     [[nodiscard]] std::size_t dynamic_size_() const;
+};
+
+}  // namespace jmaths
+
+namespace jmaths {
+
+struct Z::detail {
+    static std::ostream & opr_ins(std::ostream & os, const Z & z);
+    static std::istream & opr_extr(std::istream & is, Z & z);
+
+    static Z opr_add(const Z & lhs, const Z & rhs);
+    static Z opr_subtr(const Z & lhs, const Z & rhs);
+    static Z opr_mult(const Z & lhs, const Z & rhs);
+    static std::pair<Z, Z> opr_div(const Z & lhs, const Z & rhs);
+
+    static Z opr_and(const Z & lhs, const Z & rhs);
+    static Z opr_or(const Z & lhs, const Z & rhs);
+    static Z opr_xor(const Z & lhs, const Z & rhs);
+
+    static bool opr_eq(const Z & lhs, const Z & rhs);
+    static bool opr_eq(const Z & lhs, std::integral auto rhs);
+
+    static std::strong_ordering opr_comp(const Z & lhs, const Z & rhs);
+    static std::strong_ordering opr_comp(const Z & lhs, std::integral auto rhs);
 };
 
 }  // namespace jmaths

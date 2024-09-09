@@ -59,13 +59,14 @@ std::strong_ordering operator<=>(const Q & lhs, std::floating_point auto rhs);
 std::strong_ordering operator<=>(std::floating_point auto lhs, const Q & rhs);
 
 class Q final : public sign_type {
-    friend struct detail;
     friend struct calc;
     friend struct std::hash<Q>;
 
     friend struct format_output<Q>;
 
    public:
+    struct detail;
+
     Q();
     explicit Q(std::string_view num_str, unsigned base = default_base);
     Q(std::floating_point auto num);
@@ -154,6 +155,30 @@ class Q final : public sign_type {
     [[nodiscard]] static std::tuple<N, N, sign_bool> handle_float_(std::floating_point auto num);
 
     [[nodiscard]] std::size_t dynamic_size_() const;
+};
+
+}  // namespace jmaths
+
+namespace jmaths {
+
+struct Q::detail {
+    static std::ostream & opr_ins(std::ostream & os, const Q & q);
+    static std::istream & opr_extr(std::istream & is, Q & q);
+
+    static Q opr_add(const Q & lhs, const Q & rhs);
+    static Q opr_subtr(const Q & lhs, const Q & rhs);
+    static Q opr_mult(const Q & lhs, const Q & rhs);
+    static Q opr_div(const Q & lhs, const Q & rhs);
+
+    static Q opr_and(const Q & lhs, const Q & rhs);
+    static Q opr_or(const Q & lhs, const Q & rhs);
+    static Q opr_xor(const Q & lhs, const Q & rhs);
+
+    static bool opr_eq(const Q & lhs, const Q & rhs);
+    static bool opr_eq(const Q & lhs, std::floating_point auto rhs);
+
+    static std::strong_ordering opr_comp(const Q & lhs, const Q & rhs);
+    static std::strong_ordering opr_comp(const Q & lhs, std::floating_point auto rhs);
 };
 
 }  // namespace jmaths
