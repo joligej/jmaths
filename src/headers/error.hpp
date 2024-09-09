@@ -50,7 +50,7 @@ class error::division_by_zero : public error {
 };
 
 constexpr void error::division_by_zero::check(const auto & num, std::string_view message) {
-    if constexpr (requires { num.is_zero(); }) {
+    if constexpr (requires { !num.is_zero(); }) {
         if (!num.is_zero()) { return; }
     } else {
         if (num != 0) { return; }
