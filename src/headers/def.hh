@@ -21,14 +21,14 @@
 #if JMATHS_BENCHMARKING
     #include <source_location>
 
-    #include "function_timer.hpp"
+    #include "scoped_timer.hpp"
 
     #define JMATHS_FUNCTION_TO_LOG                                                \
         static constexpr const char * JMATHS_MACRO_IMPL_FUNCTION_NAME =           \
             ::std::source_location::current().function_name();                    \
-        ::jmaths::internal::function_timer JMATHS_MACRO_IMPL_TIME_THIS_FUNCTION { \
+        ::jmaths::internal::scoped_timer JMATHS_MACRO_IMPL_TIME_THIS_FUNCTION (   \
             JMATHS_MACRO_IMPL_FUNCTION_NAME                                       \
-        }
+        )
 #else
     #define JMATHS_FUNCTION_TO_LOG ((void)0)
 #endif
