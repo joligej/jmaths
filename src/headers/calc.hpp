@@ -18,34 +18,27 @@
 
 #include <utility>
 
+#include "TMP.hpp"
 #include "declarations.hpp"
 
 namespace jmaths {
 
 struct calc {
-    static N gcd(const N & a, const N & b);
-    static N gcd(const N & a, N && b);
-    static N gcd(N && a, const N & b);
-    static N gcd(N && a, N && b);
+    static N gcd(TMP::decays_to<N> auto && a, TMP::decays_to<N> auto && b);
 
-    static std::pair<N, N> sqrt(const N & num);
+    static std::pair<N, N> sqrt(TMP::decays_to<N> auto && num);
 
-    static N sqrt_whole(const N & num);
+    static N sqrt_whole(TMP::decays_to<N> auto && num);
 
-    static N pow(const N & base, const N & exponent);
-    static N pow(const N & base, N && exponent);
-    static N pow(N && base, const N & exponent);
-    static N pow(N && base, N && exponent);
+    static N pow(TMP::decays_to<N> auto && base, TMP::decays_to<N> auto && exponent);
 
-    static N pow_mod(const N & base, const N & exponent, const N & mod);
-    static N pow_mod(const N & base, N && exponent, const N & mod);
-    static N pow_mod(N && base, const N & exponent, const N & mod);
-    static N pow_mod(N && base, N && exponent, const N & mod);
+    static N pow_mod(TMP::decays_to<N> auto && base,
+                     TMP::decays_to<N> auto && exponent,
+                     const N & mod);
 
-    static Z pow(const Z & base, const N & exponent);
-    static Z pow(const Z & base, N && exponent);
-    static Z pow(Z && base, const N & exponent);
-    static Z pow(Z && base, N && exponent);
+    static Z pow(TMP::decays_to<Z> auto && base, TMP::decays_to<N> auto && exponent);
 };  // namespace struct calc
 
 }  // namespace jmaths
+
+#include "calc_impl.hpp"

@@ -17,8 +17,10 @@
 #pragma once
 
 #include <concepts>
+#include <string_view>
 #include <type_traits>
 
+#include "constants_and_types.hpp"
 #include "def.hh"
 #include "sign_type.hpp"
 
@@ -36,7 +38,10 @@ sign_type::sign_bool sign_type::handle_int_(std::integral auto * num) {
         return positive;
     } else {
         if (*num < 0) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
             *num *= -1;
+#pragma GCC diagnostic pop
             return negative;
         } else {
             return positive;
@@ -48,6 +53,53 @@ void sign_type::set_sign_(std::convertible_to<std::underlying_type_t<sign_bool>>
     JMATHS_FUNCTION_TO_LOG;
 
     sign_ = static_cast<sign_bool>(val);
+}
+
+}  // namespace jmaths
+
+// member functions of sign_type
+namespace jmaths {
+
+inline sign_type::sign_type() : sign_{positive} {
+    JMATHS_FUNCTION_TO_LOG;
+}
+
+inline sign_type::sign_type(sign_bool sign) : sign_{sign} {
+    JMATHS_FUNCTION_TO_LOG;
+}
+
+inline sign_type::sign_type(std::string_view * num_str) : sign_{handle_string_(num_str)} {
+    JMATHS_FUNCTION_TO_LOG;
+}
+
+inline sign_type::sign_bool sign_type::handle_string_(std::string_view * num_str) {
+    JMATHS_FUNCTION_TO_LOG;
+
+    if (!num_str->empty() && num_str->front() == negative_sign) {
+        num_str->remove_prefix(1U);
+        return num_str->empty() ? positive : negative;
+    } else {
+        return positive;
+    }
+}
+
+inline bool sign_type::is_positive() const {
+    JMATHS_FUNCTION_TO_LOG;
+
+    return sign_ == positive;
+}
+
+inline bool sign_type::is_negative() const {
+    JMATHS_FUNCTION_TO_LOG;
+
+    return sign_ == negative;
+}
+
+inline void sign_type::flip_sign() {
+    JMATHS_FUNCTION_TO_LOG;
+
+    if (is_zero()) { return; }
+    set_sign_(!sign_);
 }
 
 }  // namespace jmaths

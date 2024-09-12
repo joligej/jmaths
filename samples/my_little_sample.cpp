@@ -9,6 +9,8 @@
 #include "Q.hpp"
 #include "Z.hpp"
 #include "calc.hpp"
+#include "rand.hpp"
+#include "literals.hpp"
 
 using namespace jmaths;
 
@@ -238,5 +240,21 @@ int main(int, char *[]) {
     Z some_Z(-193);
     std::println("{}", ~~some_Z);
 
-    conversion_test((N&)some_Z);
+    conversion_test((N &)some_Z);
+
+    N * ptr_Z = (N *)new Z(-19879878);
+    ((Z *)ptr_Z)->flip_sign();
+    std::println("ptr_Z: {}", *(Z *)ptr_Z);
+
+    std::println("Random N: {}", jmaths::rand<N>::generate(3));
+
+    std::println("Literals: {}, {}, {}", -11_Z, 12_N, 144_N);
+
+    std::println("Sqrt whole: {}", calc::sqrt_whole(15_N));
+    std::println("Pow: {}", calc::pow(15_N, 3_N));
+    std::println("Sqrt whole: {}", calc::sqrt_whole(15_N));
+
+    auto pow1 = static_cast<N(*)(N&&, N&&)>(calc::pow);
+    N n123(13);
+    std::println("Pow: {}", pow1(std::move(n123), 2));
 }

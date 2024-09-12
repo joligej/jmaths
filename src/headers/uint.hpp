@@ -27,10 +27,9 @@ namespace jmaths {
 template <bitcount_t V>
     requires TMP::is_power_of_2<V>
 class uint {
-    //using element_type = unsigned char;  // base_int_big ???
+    // using element_type = unsigned char;  // base_int_big ???
 
-public:
-
+   public:
     using element_type = TMP::matches_which_t<TMP::type_size<V / bits_in_byte>,
                                               TMP::leq_size,
                                               TMP::unsigned_integral_types>;
@@ -46,4 +45,4 @@ public:
 
 }  // namespace jmaths
 
-#include "tmpl_uint.hpp"
+#include "uint_impl.hpp"

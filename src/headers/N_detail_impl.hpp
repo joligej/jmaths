@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#pragma once
+
 #include <algorithm>
 #include <bit>
 #include <cassert>
@@ -31,18 +33,19 @@
 #include "constants_and_types.hpp"
 #include "def.hh"
 
+// member functions of N::detail
 namespace jmaths {
 
 /**********************************************************/
 // implementation functions
 
-std::ostream & N::detail::opr_ins(std::ostream & os, const N & n) {
+inline std::ostream & N::detail::opr_ins(std::ostream & os, const N & n) {
     JMATHS_FUNCTION_TO_LOG;
 
     return os << n.conv_to_base_();
 }
 
-std::istream & N::detail::opr_extr(std::istream & is, N & n) {
+inline std::istream & N::detail::opr_extr(std::istream & is, N & n) {
     JMATHS_FUNCTION_TO_LOG;
 
     std::string num_str;
@@ -54,7 +57,7 @@ std::istream & N::detail::opr_extr(std::istream & is, N & n) {
     return is;
 }
 
-N N::detail::opr_add(const N & lhs, const N & rhs) {
+inline N N::detail::opr_add(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     // check for additive identity
@@ -117,7 +120,7 @@ end_of_function:
     return sum;
 }
 
-N N::detail::opr_subtr(N lhs, const N & rhs) {
+inline N N::detail::opr_subtr(N lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     // this functions assumes that lhs >= rhs and for effiency reasons should
@@ -152,7 +155,7 @@ N N::detail::opr_subtr(N lhs, const N & rhs) {
     return difference;
 }
 
-N N::detail::opr_mult(const N & lhs, const N & rhs) {
+inline N N::detail::opr_mult(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
 #ifndef JMATHS_KARATSUBA
@@ -234,7 +237,7 @@ N N::detail::opr_mult(const N & lhs, const N & rhs) {
 #endif
 }
 
-std::pair<N, N> N::detail::opr_div(const N & lhs, const N & rhs) {
+inline std::pair<N, N> N::detail::opr_div(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_zero()) { return {N{}, N{}}; }
@@ -287,7 +290,7 @@ std::pair<N, N> N::detail::opr_div(const N & lhs, const N & rhs) {
     return result;
 }
 
-N N::detail::opr_and(const N & lhs, const N & rhs) {
+inline N N::detail::opr_and(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_zero() || rhs.is_zero()) { return N{}; }
@@ -306,7 +309,7 @@ N N::detail::opr_and(const N & lhs, const N & rhs) {
     return and_result;
 }
 
-N N::detail::opr_or(const N & lhs, const N & rhs) {
+inline N N::detail::opr_or(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_zero()) { return rhs; }
@@ -339,7 +342,7 @@ N N::detail::opr_or(const N & lhs, const N & rhs) {
     return or_result;
 }
 
-N N::detail::opr_xor(const N & lhs, const N & rhs) {
+inline N N::detail::opr_xor(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_zero()) { return rhs; }
@@ -374,13 +377,13 @@ N N::detail::opr_xor(const N & lhs, const N & rhs) {
     return xor_result;
 }
 
-bool N::detail::opr_eq(const N & lhs, const N & rhs) {
+inline bool N::detail::opr_eq(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return lhs.digits_ == rhs.digits_;
 }
 
-std::strong_ordering N::detail::opr_comp(const N & lhs, const N & rhs) {
+inline std::strong_ordering N::detail::opr_comp(const N & lhs, const N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.digits_.size() < rhs.digits_.size()) { return std::strong_ordering::less; }

@@ -31,7 +31,6 @@
 #include "constants_and_types.hpp"
 #include "declarations.hpp"
 #include "formatter.hpp"
-#include "hash.hpp"
 #include "sign_type.hpp"
 
 // declarations of Z and associated functions and types
@@ -165,4 +164,5 @@ struct Z::detail {
 
 template <> struct std::formatter<jmaths::Z> : jmaths::format_output<jmaths::Z> {};
 
-#include "tmpl_Z.hpp"
+#include "Z_detail_impl.hpp"
+#include "Z_impl.hpp"

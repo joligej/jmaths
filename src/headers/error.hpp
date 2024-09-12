@@ -49,16 +49,6 @@ class error::division_by_zero : public error {
     static constexpr void check(const auto & num, std::string_view message = default_message);
 };
 
-constexpr void error::division_by_zero::check(const auto & num, std::string_view message) {
-    if constexpr (requires { !num.is_zero(); }) {
-        if (!num.is_zero()) { return; }
-    } else {
-        if (num != 0) { return; }
-    }
-
-    throw division_by_zero(message);
-}
-
 class error::invalid_base : public error {
    public:
     static constexpr char default_message[] = "You need to enter a base between 2 and 64!";
@@ -68,14 +58,10 @@ class error::invalid_base : public error {
 
     static constexpr void check(unsigned base);
 
-    static constexpr unsigned minimum_base = 2;
-    static constexpr unsigned maximum_base = 64;
+    static constexpr unsigned minimum_base = 2U;
+    static constexpr unsigned maximum_base = 64U;
 };
 
-constexpr void error::invalid_base::check(unsigned base) {
-    if (base >= minimum_base && base <= maximum_base) { return; }
-
-    throw invalid_base(std::format("{} The base you entered was: {}.", default_message, base));
-}
-
 }  // namespace jmaths
+
+#include "error_impl.hpp"

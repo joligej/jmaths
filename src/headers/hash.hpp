@@ -34,3 +34,5 @@ template <> struct std::hash<jmaths::Z> {
 template <> struct std::hash<jmaths::Q> {
     std::size_t operator()(const jmaths::Q & q) const;
 };
+
+#include "hash_impl.hpp"

@@ -54,4 +54,4 @@ class sign_type {
 
 }  // namespace jmaths
 
-#include "tmpl_sign_type.hpp"
+#include "sign_type_impl.hpp"

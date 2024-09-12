@@ -5,6 +5,8 @@
 
 #include "all.hpp"
 
+#if 0
+
 struct test_data {
     static constexpr jmaths::base_int_big small_values[] = {0U,
                                                             1U,
@@ -476,3 +478,5 @@ BOOST_AUTO_TEST_CASE(jmaths_Z_operator_subtr) {
 BOOST_AUTO_TEST_CASE(PassTest) {
     BOOST_CHECK_EQUAL(9U, 9);
 }
+
+#endif

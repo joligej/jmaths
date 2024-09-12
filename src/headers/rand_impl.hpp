@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "rand.hpp"
+#pragma once
 
 #include <chrono>
 #include <cstddef>
@@ -26,7 +26,9 @@
 #include "Z.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
+#include "rand.hpp"
 
+// member functions of internal::rand_gen
 namespace jmaths::internal {
 
 template <typename T> typename rand_gen<T>::generator_type rand_gen<T>::gen_(seed_type{}());
@@ -38,7 +40,7 @@ template <typename T> rand_gen<T>::rand_gen(T min, T max) : distrib_(min, max) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-template <typename T> rand_gen<T>::rand_gen() : rand_gen(0, std::numeric_limits<T>::max()) {
+template <typename T> rand_gen<T>::rand_gen() : rand_gen(0U, std::numeric_limits<T>::max()) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
@@ -76,9 +78,10 @@ template <typename T> void rand_gen<T>::reseed_(generator_type::result_type seed
 
 }  // namespace jmaths::internal
 
+// member functions of rand
 namespace jmaths {
 
-template <> N rand<N>::generate(bitcount_t upper_bound_exponent) {
+template <> inline N rand<N>::generate(bitcount_t upper_bound_exponent) {
     JMATHS_FUNCTION_TO_LOG;
 
     static internal::rand_gen<base_int> random_base_int;
@@ -103,7 +106,7 @@ template <> N rand<N>::generate(bitcount_t upper_bound_exponent) {
     return random_number;
 }
 
-template <> Z rand<Z>::generate(bitcount_t upper_bound_exponent) {
+template <> inline Z rand<Z>::generate(bitcount_t upper_bound_exponent) {
     JMATHS_FUNCTION_TO_LOG;
 
     static internal::rand_gen<bool> random_bool;

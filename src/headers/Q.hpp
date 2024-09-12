@@ -32,7 +32,6 @@
 #include "constants_and_types.hpp"
 #include "declarations.hpp"
 #include "formatter.hpp"
-#include "hash.hpp"
 #include "sign_type.hpp"
 
 // declarations of Q and associated functions and types
@@ -185,4 +184,5 @@ struct Q::detail {
 
 template <> struct std::formatter<jmaths::Q> : jmaths::format_output<jmaths::Q> {};
 
-#include "tmpl_Q.hpp"
+#include "Q_detail_impl.hpp"
+#include "Q_impl.hpp"

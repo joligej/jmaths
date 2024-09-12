@@ -33,7 +33,6 @@
 #include "constants_and_types.hpp"
 #include "declarations.hpp"
 #include "formatter.hpp"
-#include "hash.hpp"
 
 // declarations of N and associated functions and types
 namespace jmaths {
@@ -167,14 +166,12 @@ class N {
     [[nodiscard]] bool bit_(bitpos_t pos) const;
     void bit_(bitpos_t pos, bool val);
 
-    template <TMP::decays_to<N> T>
-    class bit_reference_base_;
+    template <TMP::decays_to<N> T> class bit_reference_base_;
 
     static const N one_;
 };
 
-template <TMP::decays_to<N> T>
-class N::bit_reference_base_ {
+template <TMP::decays_to<N> T> class N::bit_reference_base_ {
     friend class bit_reference;
     friend class const_bit_reference;
 
@@ -242,4 +239,5 @@ struct N::detail {
 
 template <> struct std::formatter<jmaths::N> : jmaths::format_output<jmaths::N> {};
 
-#include "tmpl_N.hpp"
+#include "N_detail_impl.hpp"
+#include "N_impl.hpp"

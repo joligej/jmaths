@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#pragma once
+
 #include <compare>
 #include <istream>
 #include <ostream>
@@ -26,18 +28,19 @@
 #include "def.hh"
 #include "sign_type.hpp"
 
+// member functions of Z::detail
 namespace jmaths {
 
 /**********************************************************/
 // implementation functions
 
-std::ostream & Z::detail::opr_ins(std::ostream & os, const Z & z) {
+inline std::ostream & Z::detail::opr_ins(std::ostream & os, const Z & z) {
     JMATHS_FUNCTION_TO_LOG;
 
     return os << z.conv_to_base_();
 }
 
-std::istream & Z::detail::opr_extr(std::istream & is, Z & z) {
+inline std::istream & Z::detail::opr_extr(std::istream & is, Z & z) {
     JMATHS_FUNCTION_TO_LOG;
 
     std::string num_str;
@@ -46,7 +49,7 @@ std::istream & Z::detail::opr_extr(std::istream & is, Z & z) {
     return is;
 }
 
-Z Z::detail::opr_add(const Z & lhs, const Z & rhs) {
+inline Z Z::detail::opr_add(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
@@ -74,7 +77,7 @@ Z Z::detail::opr_add(const Z & lhs, const Z & rhs) {
     }
 }
 
-Z Z::detail::opr_subtr(const Z & lhs, const Z & rhs) {
+inline Z Z::detail::opr_subtr(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
@@ -102,7 +105,7 @@ Z Z::detail::opr_subtr(const Z & lhs, const Z & rhs) {
     }
 }
 
-Z Z::detail::opr_mult(const Z & lhs, const Z & rhs) {
+inline Z Z::detail::opr_mult(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N product = N::detail::opr_mult(lhs.abs(), rhs.abs());
@@ -112,7 +115,7 @@ Z Z::detail::opr_mult(const Z & lhs, const Z & rhs) {
     return {std::move(product), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
-std::pair<Z, Z> Z::detail::opr_div(const Z & lhs, const Z & rhs) {
+inline std::pair<Z, Z> Z::detail::opr_div(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (auto [quotient, remainder] = N::detail::opr_div(lhs.abs(), rhs.abs()); quotient.is_zero()) {
@@ -132,7 +135,7 @@ std::pair<Z, Z> Z::detail::opr_div(const Z & lhs, const Z & rhs) {
     }
 }
 
-Z Z::detail::opr_and(const Z & lhs, const Z & rhs) {
+inline Z Z::detail::opr_and(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N and_result = N::detail::opr_and(lhs.abs(), rhs.abs());
@@ -142,7 +145,7 @@ Z Z::detail::opr_and(const Z & lhs, const Z & rhs) {
     return {std::move(and_result), static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_)};
 }
 
-Z Z::detail::opr_or(const Z & lhs, const Z & rhs) {
+inline Z Z::detail::opr_or(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N or_result = N::detail::opr_or(lhs.abs(), rhs.abs());
@@ -152,7 +155,7 @@ Z Z::detail::opr_or(const Z & lhs, const Z & rhs) {
     return {std::move(or_result), static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_)};
 }
 
-Z Z::detail::opr_xor(const Z & lhs, const Z & rhs) {
+inline Z Z::detail::opr_xor(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N xor_result = N::detail::opr_xor(lhs.abs(), rhs.abs());
@@ -162,13 +165,13 @@ Z Z::detail::opr_xor(const Z & lhs, const Z & rhs) {
     return {std::move(xor_result), static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
-bool Z::detail::opr_eq(const Z & lhs, const Z & rhs) {
+inline bool Z::detail::opr_eq(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return lhs.sign_ == rhs.sign_ && lhs.abs() == rhs.abs();
 }
 
-std::strong_ordering Z::detail::opr_comp(const Z & lhs, const Z & rhs) {
+inline std::strong_ordering Z::detail::opr_comp(const Z & lhs, const Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_positive()) {

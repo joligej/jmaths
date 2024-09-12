@@ -36,10 +36,10 @@ struct format_parser {
 
         if (*it == '}') { return it; }
 
-        base = 0;
+        base = 0U;
 
         do {
-            base *= 10;
+            base *= 10U;
 
             if (!(*it >= '0' && *it <= '9')) {
                 throw std::format_error("Invalid format arguments.");
@@ -61,9 +61,9 @@ template <TMP::any_of<N, Z, Q> T> struct format_output : format_parser {
         JMATHS_FUNCTION_TO_LOG;
 
         switch (base) {
-            case 2:
+            case 2U:
                 return std::ranges::copy(obj.to_bin(), ctx.out()).out;
-            case 16:
+            case 16U:
                 return std::ranges::copy(obj.to_hex(), ctx.out()).out;
             default:
                 return std::ranges::copy(obj.conv_to_base_(base), ctx.out()).out;

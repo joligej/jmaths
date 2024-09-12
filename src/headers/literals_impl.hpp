@@ -14,42 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include <string_view>
+#pragma once
 
-#include "error.hpp"
-
+#include "N.hpp"
+#include "Z.hpp"
 #include "def.hh"
+#include "literals.hpp"
 
-namespace jmaths {
+namespace jmaths::inline literals {
 
-error::error() : error(default_message) {
+inline N operator""_N(const char * num_str) {
     JMATHS_FUNCTION_TO_LOG;
+
+    return N{num_str};
 }
 
-error::error(std::string_view message) : message_(message) {
-    JMATHS_FUNCTION_TO_LOG;
-};
-
-const char * error::what() const noexcept {
+inline Z operator""_Z(const char * num_str) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return message_.c_str();
+    return Z{num_str};
 }
 
-error::division_by_zero::division_by_zero() : error(default_message) {
-    JMATHS_FUNCTION_TO_LOG;
-}
-
-error::division_by_zero::division_by_zero(std::string_view message) : error(message) {
-    JMATHS_FUNCTION_TO_LOG;
-};
-
-error::invalid_base::invalid_base() : error(default_message) {
-    JMATHS_FUNCTION_TO_LOG;
-}
-
-error::invalid_base::invalid_base(std::string_view message) : error(message) {
-    JMATHS_FUNCTION_TO_LOG;
-};
-
-}  // namespace jmaths
+}  // namespace jmaths::inline literals

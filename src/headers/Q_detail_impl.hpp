@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#pragma once
+
 #include <compare>
 #include <istream>
 #include <ostream>
@@ -27,18 +29,19 @@
 #include "error.hpp"
 #include "sign_type.hpp"
 
+// member functions of Q::detail
 namespace jmaths {
 
 /**********************************************************/
 // implementation functions
 
-std::ostream & Q::detail::opr_ins(std::ostream & os, const Q & q) {
+inline std::ostream & Q::detail::opr_ins(std::ostream & os, const Q & q) {
     JMATHS_FUNCTION_TO_LOG;
 
     return os << q.conv_to_base_();
 }
 
-std::istream & Q::detail::opr_extr(std::istream & is, Q & q) {
+inline std::istream & Q::detail::opr_extr(std::istream & is, Q & q) {
     JMATHS_FUNCTION_TO_LOG;
 
     std::string num_str;
@@ -47,7 +50,7 @@ std::istream & Q::detail::opr_extr(std::istream & is, Q & q) {
     return is;
 }
 
-Q Q::detail::opr_add(const Q & lhs, const Q & rhs) {
+inline Q Q::detail::opr_add(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
@@ -97,7 +100,7 @@ Q Q::detail::opr_add(const Q & lhs, const Q & rhs) {
     }
 }
 
-Q Q::detail::opr_subtr(const Q & lhs, const Q & rhs) {
+inline Q Q::detail::opr_subtr(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     using sign_type::positive, sign_type::negative;
@@ -147,7 +150,7 @@ Q Q::detail::opr_subtr(const Q & lhs, const Q & rhs) {
     }
 }
 
-Q Q::detail::opr_mult(const Q & lhs, const Q & rhs) {
+inline Q Q::detail::opr_mult(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N numerator = lhs.num_ * rhs.num_;
@@ -159,7 +162,7 @@ Q Q::detail::opr_mult(const Q & lhs, const Q & rhs) {
             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
-Q Q::detail::opr_div(const Q & lhs, const Q & rhs) {
+inline Q Q::detail::opr_div(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N numerator = lhs.num_ * rhs.denom_;
@@ -171,7 +174,7 @@ Q Q::detail::opr_div(const Q & lhs, const Q & rhs) {
             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
-Q Q::detail::opr_and(const Q & lhs, const Q & rhs) {
+inline Q Q::detail::opr_and(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N denominator = lhs.denom_ & rhs.denom_;
@@ -187,7 +190,7 @@ Q Q::detail::opr_and(const Q & lhs, const Q & rhs) {
             static_cast<sign_type::sign_bool>(lhs.sign_ & rhs.sign_)};
 }
 
-Q Q::detail::opr_or(const Q & lhs, const Q & rhs) {
+inline Q Q::detail::opr_or(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N numerator = lhs.num_ | rhs.num_;
@@ -199,7 +202,7 @@ Q Q::detail::opr_or(const Q & lhs, const Q & rhs) {
             static_cast<sign_type::sign_bool>(lhs.sign_ | rhs.sign_)};
 }
 
-Q Q::detail::opr_xor(const Q & lhs, const Q & rhs) {
+inline Q Q::detail::opr_xor(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     N denominator = lhs.denom_ ^ rhs.denom_;
@@ -215,18 +218,18 @@ Q Q::detail::opr_xor(const Q & lhs, const Q & rhs) {
             static_cast<sign_type::sign_bool>(lhs.sign_ ^ rhs.sign_)};
 }
 
-bool Q::detail::opr_eq(const Q & lhs, const Q & rhs) {
+inline bool Q::detail::opr_eq(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return lhs.sign_ == rhs.sign_ && lhs.num_ == rhs.num_ && lhs.denom_ == rhs.denom_;
 }
 
-std::strong_ordering Q::detail::opr_comp(const Q & lhs, const Q & rhs) {
+inline std::strong_ordering Q::detail::opr_comp(const Q & lhs, const Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
-            return opr_comp(lhs.num_ * rhs.denom_, rhs.num_ * lhs.denom_);
+            return N::detail::opr_comp(lhs.num_ * rhs.denom_, rhs.num_ * lhs.denom_);
         } else {
             return std::strong_ordering::greater;
         }
@@ -234,7 +237,7 @@ std::strong_ordering Q::detail::opr_comp(const Q & lhs, const Q & rhs) {
         if (rhs.is_positive()) {
             return std::strong_ordering::less;
         } else {
-            return opr_comp(rhs.num_ * lhs.denom_, lhs.num_ * rhs.denom_);
+            return N::detail::opr_comp(rhs.num_ * lhs.denom_, lhs.num_ * rhs.denom_);
         }
     }
 }

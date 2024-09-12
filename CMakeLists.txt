@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.28.1)
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 
 project(jmaths
-        VERSION 1.0
+        VERSION 2.0
         DESCRIPTION "The jmaths library for C++"
         LANGUAGES CXX
         HOMEPAGE_URL "https://github.com/joligej/jmaths.git")
@@ -43,7 +43,7 @@ endif ()
 
 install(TARGETS compilation_flags EXPORT jmathsTargets)
 
-install(FILES LICENSE.txt DESTINATION lib/jmaths/)
+install(FILES "LICENSE" DESTINATION lib/jmaths/)
 
 add_subdirectory(src)
 add_subdirectory(samples)

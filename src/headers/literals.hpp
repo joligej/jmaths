@@ -26,3 +26,5 @@ N operator""_N(const char * num_str);
 Z operator""_Z(const char * num_str);
 
 }  // namespace jmaths::inline literals
+
+#include "literals_impl.hpp"

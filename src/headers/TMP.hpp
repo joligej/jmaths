@@ -186,6 +186,12 @@ struct same_template_helper<U, T<Ts...>> {
 template <typename T, template <typename...> class U>
 concept same_template = same_template_helper<U, T>::value;
 
+template <typename T>
+using ref_or_copy_t = std::conditional_t<std::is_rvalue_reference_v<T> and
+                                             !std::is_const_v<std::remove_reference_t<T>>,
+                                         std::add_lvalue_reference_t<std::decay_t<T>>,
+                                         std::decay_t<T>>;
+
 template <auto size> struct type_size {
     char _[size];
 };

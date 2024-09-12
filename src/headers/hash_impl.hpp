@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "hash.hpp"
+#pragma once
 
 #include <cstddef>
 #include <string_view>
@@ -24,8 +24,9 @@
 #include "Z.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
+#include "hash.hpp"
 
-std::size_t std::hash<jmaths::N>::operator()(const jmaths::N & n) const {
+inline std::size_t std::hash<jmaths::N>::operator()(const jmaths::N & n) const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (n.digits_.empty()) {
@@ -33,21 +34,23 @@ std::size_t std::hash<jmaths::N>::operator()(const jmaths::N & n) const {
         return empty_hash;
     }
 
-    return std::hash<std::string_view>{}(std::string_view(reinterpret_cast<const char *>(n.digits_.data()),
-                                           n.digits_.size() * jmaths::base_int_size));
+    return std::hash<std::string_view>{}(
+        std::string_view(reinterpret_cast<const char *>(n.digits_.data()),
+                         n.digits_.size() * jmaths::base_int_size));
 }
 
-std::size_t std::hash<jmaths::Z>::operator()(const jmaths::Z & z) const {
+inline std::size_t std::hash<jmaths::Z>::operator()(const jmaths::Z & z) const {
     JMATHS_FUNCTION_TO_LOG;
 
     return std::hash<jmaths::N>{}(z) ^
-           (static_cast<std::size_t>(z.sign_) << (z.front_() % (sizeof(std::size_t) * jmaths::bits_in_byte)));
+           (static_cast<std::size_t>(z.sign_)
+            << (z.front_() % (sizeof(std::size_t) * jmaths::bits_in_byte)));
 }
 
-std::size_t std::hash<jmaths::Q>::operator()(const jmaths::Q & q) const {
+inline std::size_t std::hash<jmaths::Q>::operator()(const jmaths::Q & q) const {
     JMATHS_FUNCTION_TO_LOG;
 
     return (std::hash<jmaths::N>{}(q.num_) ^ std::hash<jmaths::N>{}(q.denom_)) ^
-           (static_cast<std::size_t>(q.sign_)
-            << ((q.num_.front_() ^ q.denom_.front_()) % (sizeof(std::size_t) * jmaths::bits_in_byte)));
+           (static_cast<std::size_t>(q.sign_) << ((q.num_.front_() ^ q.denom_.front_()) %
+                                                  (sizeof(std::size_t) * jmaths::bits_in_byte)));
 }

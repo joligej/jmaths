@@ -21,14 +21,15 @@
 #include <type_traits>
 
 #include "TMP.hpp"
+#include "declarations.hpp"
 
 namespace jmaths::internal {
 
 template <typename T> class rand_gen {
-    using allowed_types = TMP::pack_container<short,
+    using allowed_types = TMP::pack_container</*short,
                                               int,
                                               long,
-                                              long long,
+                                              long long,*/
                                               unsigned short,
                                               unsigned int,
                                               unsigned long,
@@ -66,3 +67,5 @@ template <TMP::any_of<N, Z> T> struct rand {
 };
 
 }  // namespace jmaths
+
+#include "rand_impl.hpp"
