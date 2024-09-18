@@ -22,8 +22,8 @@
 #include <random>
 #include <utility>
 
-#include "N.hpp"
-#include "Z.hpp"
+#include "basic_N.hpp"
+#include "basic_Z.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
 #include "rand.hpp"
@@ -81,24 +81,27 @@ template <typename T> void rand_gen<T>::reseed_(generator_type::result_type seed
 // member functions of rand
 namespace jmaths {
 
-template <> inline N rand<N>::generate(bitcount_t upper_bound_exponent) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+auto rand<basic_N<BaseInt, BaseIntBig, Allocator>>::generate(bitcount_t upper_bound_exponent)
+    -> basic_N_type {
     JMATHS_FUNCTION_TO_LOG;
 
-    static internal::rand_gen<base_int> random_base_int;
+    static internal::rand_gen<typename basic_N_type::base_int_type> random_base_int;
 
-    const std::size_t pos_whole = upper_bound_exponent / base_int_bits;
+    const std::size_t pos_whole = upper_bound_exponent / basic_N_type::base_int_type_bits;
 
-    N random_number;
+    basic_N_type random_number;
     random_number.digits_.reserve(pos_whole + 1U);
 
-    const bitpos_t pos_mod = upper_bound_exponent % base_int_bits;
+    const bitpos_t pos_mod = upper_bound_exponent % basic_N_type::base_int_type_bits;
 
     for (std::size_t i = 0U; i < pos_whole; ++i) {
         random_number.digits_.emplace_back(random_base_int());
     }
 
     if (pos_mod > 0U) {
-        random_number.digits_.emplace_back(random_base_int() >> (base_int_bits - pos_mod));
+        random_number.digits_.emplace_back(random_base_int() >>
+                                           (basic_N_type::base_int_type_bits - pos_mod));
     }
 
     random_number.remove_leading_zeroes_();
@@ -106,14 +109,16 @@ template <> inline N rand<N>::generate(bitcount_t upper_bound_exponent) {
     return random_number;
 }
 
-template <> inline Z rand<Z>::generate(bitcount_t upper_bound_exponent) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+auto rand<basic_Z<BaseInt, BaseIntBig, Allocator>>::generate(bitcount_t upper_bound_exponent)
+    -> basic_Z_type {
     JMATHS_FUNCTION_TO_LOG;
 
     static internal::rand_gen<bool> random_bool;
 
-    N random_number = rand<N>::generate(upper_bound_exponent);
+    auto random_number = rand<typename basic_Z_type::basic_N_type>::generate(upper_bound_exponent);
 
-    if (random_number.is_zero()) { return Z{}; }
+    if (random_number.is_zero()) { return basic_Z_type{}; }
 
     return {std::move(random_number), static_cast<sign_type::sign_bool>(random_bool())};
 }

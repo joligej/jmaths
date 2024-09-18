@@ -14,26 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include <iostream>
-#include <string>
+#pragma once
 
-#include "basic_Z.hpp"
-#include "calc.hpp"
-#include "literals.hpp"
+#include <cstdint>
 
-using namespace jmaths::literals;
+#include "constants_and_types.hpp"
+#include "declarations.hpp"
 
-int main(int, char *[]) {
-    std::string input_str;
-    std::cout << "Enter your number:\n";
-    std::cin >> input_str;
+namespace jmaths {
 
-    using jmaths::Z, jmaths::calc;
+using Q = basic_Q<std::uint32_t, std::uint64_t, allocator<std::uint32_t>>;
 
-    Z z(input_str);
-    std::cout << "z == " << z << '\n';
-    ++z;
-    std::cout << "z + 1 == " << z << '\n';
-    z = calc::pow(z, 2_N);  // or z *= z;
-    std::cout << "(z + 1)^2 == " << z << '\n';
-}
+}  // namespace jmaths

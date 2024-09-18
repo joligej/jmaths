@@ -18,7 +18,7 @@
 #include <iostream>
 #include <random>
 
-#include "Z.hpp"
+#include "basic_Z.hpp"
 #include "rand.hpp"
 
 int main(int, char *[]) {

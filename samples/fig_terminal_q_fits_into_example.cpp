@@ -16,7 +16,7 @@
 
 #include <iostream>
 
-#include "Q.hpp"
+#include "basic_Q.hpp"
 
 int main(int, char *[]) {
     using jmaths::Q;

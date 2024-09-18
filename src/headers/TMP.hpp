@@ -196,4 +196,21 @@ template <auto size> struct type_size {
     char _[size];
 };
 
+template <typename, template <typename...> class> struct is_instance_of : std::false_type {};
+
+template <template <typename...> class T, typename... U>
+struct is_instance_of<T<U...>, T> : std::true_type {};
+
+template <typename T, template <typename...> class U>
+inline constexpr bool is_instance_of_v = is_instance_of<T, U>::value;
+
+template <typename T, template <typename...> class... U>
+concept instance_of = (is_instance_of_v<std::decay_t<T>, U> || ...);
+
+template <typename T> using id_t = std::type_identity_t<T>;
+template <typename T> using id_decay_t = id_t<std::decay_t<T>>;
+
+template <typename T, template <typename...> class... U>
+/*[[deprecated]]*/ concept decays_to_instance = instance_of<std::decay_t<T>, U...>;
+
 }  // namespace jmaths::TMP

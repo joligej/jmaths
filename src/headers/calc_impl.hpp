@@ -18,11 +18,13 @@
 
 #include <algorithm>
 #include <cassert>
+#include <ratio>
+#include <type_traits>
 #include <utility>
 
-#include "N.hpp"
+#include "basic_N.hpp"
 #include "TMP.hpp"
-#include "Z.hpp"
+#include "basic_Z.hpp"
 #include "calc.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
@@ -31,8 +33,11 @@
 // member functions of calc
 namespace jmaths {
 
-N calc::gcd(TMP::decays_to<N> auto && a, TMP::decays_to<N> auto && b) {
+template <TMP::instance_of<basic_N> basic_N_type_1, TMP::decays_to<basic_N_type_1> basic_N_type_2>
+auto calc::gcd(basic_N_type_1 && a, basic_N_type_2 && b) -> std::decay_t<basic_N_type_1> {
     JMATHS_FUNCTION_TO_LOG;
+
+    using basic_N_t = std::decay_t<basic_N_type_1>;
 
     if (a.is_zero()) { return std::forward<decltype(b)>(b); }
     if (b.is_zero()) { return std::forward<decltype(a)>(a); }
@@ -52,7 +57,7 @@ N calc::gcd(TMP::decays_to<N> auto && a, TMP::decays_to<N> auto && b) {
         assert(num1.is_odd());
         assert(num2.is_odd());
 
-        if (N::detail::opr_comp(num1, num2) > 0) { num1.digits_.swap(num2.digits_); }
+        if (basic_N_t::detail::opr_comp(num1, num2) > 0) { num1.digits_.swap(num2.digits_); }
 
         num2.opr_subtr_assign_(num1);
 
@@ -62,22 +67,26 @@ N calc::gcd(TMP::decays_to<N> auto && a, TMP::decays_to<N> auto && b) {
     }
 }
 
-std::pair<N, N> calc::sqrt(TMP::decays_to<N> auto && num) {
+template <TMP::instance_of<basic_N> basic_N_type>
+auto calc::sqrt(basic_N_type && num)
+    -> std::pair<std::decay_t<basic_N_type>, std::decay_t<basic_N_type>> {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (num.is_zero() || num.is_one()) { return {std::forward<decltype(num)>(num), N{}}; }
+    using basic_N_t = std::decay_t<basic_N_type>;
 
-    N start = N::one_, end = num.opr_bitshift_r_(1U), ans;
+    if (num.is_zero() || num.is_one()) { return {std::forward<decltype(num)>(num), basic_N_t{}}; }
 
-    while (N::detail::opr_comp(start, end) <= 0) {
-        N mid = N::detail::opr_add(start, end);
+    basic_N_t start = basic_N_t::one_, end = num.opr_bitshift_r_(1U), ans;
+
+    while (basic_N_t::detail::opr_comp(start, end) <= 0) {
+        basic_N_t mid = basic_N_t::detail::opr_add(start, end);
         mid.opr_bitshift_r_assign_(1U);
 
-        const N sqr = N::detail::opr_mult(mid, mid);
+        const basic_N_t sqr = basic_N_t::detail::opr_mult(mid, mid);
 
-        const auto compared = N::detail::opr_comp(sqr, num);
+        const auto compared = basic_N_t::detail::opr_comp(sqr, num);
 
-        if (compared == 0) { return {std::move(mid), N{}}; }
+        if (compared == 0) { return {std::move(mid), basic_N_t{}}; }
 
         if (compared < 0) {
             ans = mid;
@@ -89,24 +98,27 @@ std::pair<N, N> calc::sqrt(TMP::decays_to<N> auto && num) {
         }
     }
 
-    N remainder = N::detail::opr_subtr(num, N::detail::opr_mult(ans, ans));
+    basic_N_t remainder = basic_N_t::detail::opr_subtr(num, basic_N_t::detail::opr_mult(ans, ans));
 
     return {std::move(ans), std::move(remainder)};
 }
 
-N calc::sqrt_whole(TMP::decays_to<N> auto && num) {
+template <TMP::instance_of<basic_N> basic_N_type>
+auto calc::sqrt_whole(basic_N_type && num) -> std::decay_t<basic_N_type> {
     JMATHS_FUNCTION_TO_LOG;
+
+    using basic_N_t = std::decay_t<basic_N_type>;
 
     if (num.is_zero() || num.is_one()) { return std::forward<decltype(num)>(num); }
 
-    N start = N::one_, end = num.opr_bitshift_r_(1U), ans;
+    basic_N_t start = basic_N_t::one_, end = num.opr_bitshift_r_(1U), ans;
 
-    while (N::detail::opr_comp(start, end) <= 0) {
-        N mid = N::detail::opr_add(start, end).opr_bitshift_r_(1U);
+    while (basic_N_t::detail::opr_comp(start, end) <= 0) {
+        basic_N_t mid = basic_N_t::detail::opr_add(start, end).opr_bitshift_r_(1U);
 
-        const N sqr = N::detail::opr_mult(mid, mid);
+        const basic_N_t sqr = basic_N_t::detail::opr_mult(mid, mid);
 
-        const auto compared = N::detail::opr_comp(sqr, num);
+        const auto compared = basic_N_t::detail::opr_comp(sqr, num);
 
         if (compared == 0) { return mid; }
 
@@ -123,15 +135,18 @@ N calc::sqrt_whole(TMP::decays_to<N> auto && num) {
     return ans;
 }
 
-N calc::pow(TMP::decays_to<N> auto && base, TMP::decays_to<N> auto && exponent) {
+template <TMP::instance_of<basic_N> basic_N_type_1, TMP::decays_to<basic_N_type_1> basic_N_type_2>
+auto calc::pow(basic_N_type_1 && base, basic_N_type_2 && exponent) -> std::decay_t<basic_N_type_1> {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (exponent.is_zero()) { return N::one_; }
+    using basic_N_t = std::decay_t<basic_N_type_1>;
+
+    if (exponent.is_zero()) { return basic_N_t::one_; }
 
     TMP::ref_or_copy_t<decltype(base)> base_num = base;
     TMP::ref_or_copy_t<decltype(exponent)> exponent_num = exponent;
 
-    N result(N::one_);
+    basic_N_t result(basic_N_t::one_);
 
     for (;;) {
         if (exponent_num.is_odd()) { result.opr_mult_assign_(base_num); }
@@ -143,22 +158,27 @@ N calc::pow(TMP::decays_to<N> auto && base, TMP::decays_to<N> auto && exponent) 
     return result;
 }
 
-N calc::pow_mod(TMP::decays_to<N> auto && base, TMP::decays_to<N> auto && exponent, const N & mod) {
+template <TMP::instance_of<basic_N> basic_N_type_1, TMP::decays_to<basic_N_type_1> basic_N_type_2>
+auto calc::pow_mod(basic_N_type_1 && base,
+                   basic_N_type_2 && exponent,
+                   const std::decay_t<basic_N_type_1> & mod) -> std::decay_t<basic_N_type_1> {
     JMATHS_FUNCTION_TO_LOG;
+
+    using basic_N_t = std::decay_t<basic_N_type_1>;
 
     error::division_by_zero::check(mod);
 
-    if (exponent.is_zero()) { return N::one_; }
+    if (exponent.is_zero()) { return basic_N_t::one_; }
 
     TMP::ref_or_copy_t<decltype(base)> base_num = base;
     TMP::ref_or_copy_t<decltype(exponent)> exponent_num = exponent;
 
-    N result(N::one_);
+    basic_N_t result(basic_N_t::one_);
 
     for (;;) {
         if (exponent_num.is_odd()) {
             result.opr_mult_assign_(base_num);
-            result = N::detail::opr_div(result, mod)
+            result = basic_N_t::detail::opr_div(result, mod)
                          .second;  // maybe use separate function just for mod ???
         }
 
@@ -170,7 +190,8 @@ N calc::pow_mod(TMP::decays_to<N> auto && base, TMP::decays_to<N> auto && expone
     return result;
 }
 
-Z calc::pow(TMP::decays_to<Z> auto && base, TMP::decays_to<N> auto && exponent) {
+template <TMP::instance_of<basic_Z> basic_Z_type, TMP::instance_of<basic_N> basic_N_type>
+auto calc::pow(basic_Z_type && base, basic_N_type && exponent) -> std::decay_t<basic_Z_type> {
     JMATHS_FUNCTION_TO_LOG;
 
     const auto sign =

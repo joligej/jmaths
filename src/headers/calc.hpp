@@ -24,19 +24,30 @@
 namespace jmaths {
 
 struct calc {
-    static N gcd(TMP::decays_to<N> auto && a, TMP::decays_to<N> auto && b);
+    template <TMP::instance_of<basic_N> basic_N_type_1,
+              TMP::decays_to<basic_N_type_1> basic_N_type_2>
+    static auto gcd(basic_N_type_1 && a, basic_N_type_2 && b) -> std::decay_t<basic_N_type_1>;
 
-    static std::pair<N, N> sqrt(TMP::decays_to<N> auto && num);
+    template <TMP::instance_of<basic_N> basic_N_type>
+    static auto sqrt(basic_N_type && num)
+        -> std::pair<std::decay_t<basic_N_type>, std::decay_t<basic_N_type>>;
 
-    static N sqrt_whole(TMP::decays_to<N> auto && num);
+    template <TMP::instance_of<basic_N> basic_N_type>
+    static auto sqrt_whole(basic_N_type && num) -> std::decay_t<basic_N_type>;
 
-    static N pow(TMP::decays_to<N> auto && base, TMP::decays_to<N> auto && exponent);
+    template <TMP::instance_of<basic_N> basic_N_type_1,
+              TMP::decays_to<basic_N_type_1> basic_N_type_2>
+    static auto pow(basic_N_type_1 && base, basic_N_type_2 && exponent)
+        -> std::decay_t<basic_N_type_1>;
 
-    static N pow_mod(TMP::decays_to<N> auto && base,
-                     TMP::decays_to<N> auto && exponent,
-                     const N & mod);
+    template <TMP::instance_of<basic_N> basic_N_type_1,
+              TMP::decays_to<basic_N_type_1> basic_N_type_2>
+    static auto pow_mod(basic_N_type_1 && base,
+                        basic_N_type_2 && exponent,
+                        const std::decay_t<basic_N_type_1> & mod) -> std::decay_t<basic_N_type_1>;
 
-    static Z pow(TMP::decays_to<Z> auto && base, TMP::decays_to<N> auto && exponent);
+    template <TMP::instance_of<basic_Z> basic_Z_type, TMP::instance_of<basic_N> basic_N_type>
+    static auto pow(basic_Z_type && base, basic_N_type && exponent) -> std::decay_t<basic_Z_type>;
 };  // namespace struct calc
 
 }  // namespace jmaths

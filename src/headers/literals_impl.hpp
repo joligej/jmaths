@@ -16,9 +16,9 @@
 
 #pragma once
 
-#include "N.hpp"
-#include "Z.hpp"
 #include "def.hh"
+#include "default_N.hpp"
+#include "default_Z.hpp"
 #include "literals.hpp"
 
 namespace jmaths::inline literals {

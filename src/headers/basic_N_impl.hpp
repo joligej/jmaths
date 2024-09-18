@@ -108,8 +108,8 @@ void basic_N<BaseInt, BaseIntBig, Allocator>::handle_int_(std::integral auto num
     JMATHS_FUNCTION_TO_LOG;
 
     if constexpr (base_int_type_size < sizeof(num)) {
-        static constexpr std::size_t digits_needed = static_cast<std::size_t>(
-            std::ceil(static_cast<long double>(sizeof(num)) / base_int_type_size));
+        static constexpr std::size_t digits_needed = static_cast<std::size_t>(std::ceil(
+            static_cast<long double>(sizeof(num)) / static_cast<long double>(base_int_type_size)));
 
         digits_.reserve(digits_needed);
 #if 0
@@ -415,7 +415,7 @@ inline std::string basic_N<BaseInt, BaseIntBig, Allocator>::conv_to_base_(unsign
         "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+~";
 
     if (is_zero()) {
-        static const/*expr*/ std::string zero = "0";
+        static const /*expr*/ std::string zero = "0";
         return zero;
     }
 
@@ -1017,7 +1017,7 @@ inline std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_hex() const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) {
-        static const/*expr*/ std::string zero = "0";
+        static const /*expr*/ std::string zero = "0";
         return zero;
     }
 
@@ -1047,7 +1047,7 @@ inline std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_bin() const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) {
-        static const/*expr*/ std::string zero = "0";
+        static const /*expr*/ std::string zero = "0";
         return zero;
     }
 

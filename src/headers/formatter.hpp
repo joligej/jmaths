@@ -56,7 +56,7 @@ struct format_parser {
     }
 };
 
-template <TMP::any_of<N, Z, Q> T> struct format_output : format_parser {
+template <TMP::instance_of<basic_N, basic_Z, basic_Q> T> struct format_output : format_parser {
     auto format(const T & obj, auto & ctx) const {
         JMATHS_FUNCTION_TO_LOG;
 

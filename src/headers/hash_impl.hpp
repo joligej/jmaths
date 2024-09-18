@@ -19,14 +19,15 @@
 #include <cstddef>
 #include <string_view>
 
-#include "N.hpp"
-#include "Q.hpp"
-#include "Z.hpp"
+#include "basic_N.hpp"
+#include "basic_Q.hpp"
+#include "basic_Z.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
 #include "hash.hpp"
 
-inline std::size_t std::hash<jmaths::N>::operator()(const jmaths::N & n) const {
+template <jmaths::TMP::instance_of<jmaths::basic_N> N>
+inline std::size_t std::hash<N>::operator()(const N & n) const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (n.digits_.empty()) {
@@ -36,21 +37,26 @@ inline std::size_t std::hash<jmaths::N>::operator()(const jmaths::N & n) const {
 
     return std::hash<std::string_view>{}(
         std::string_view(reinterpret_cast<const char *>(n.digits_.data()),
-                         n.digits_.size() * jmaths::base_int_size));
+                         n.digits_.size() * N::base_int_type_size));
 }
 
-inline std::size_t std::hash<jmaths::Z>::operator()(const jmaths::Z & z) const {
+template <jmaths::TMP::instance_of<jmaths::basic_Z> Z>
+inline std::size_t std::hash<Z>::operator()(const Z & z) const {
     JMATHS_FUNCTION_TO_LOG;
 
-    return std::hash<jmaths::N>{}(z) ^
-           (static_cast<std::size_t>(z.sign_)
-            << (z.front_() % (sizeof(std::size_t) * jmaths::bits_in_byte)));
+    using hash_N = std::hash<typename Z::N>;
+
+    return hash_N{}(z) ^ (static_cast<std::size_t>(z.sign_)
+                          << (z.front_() % (sizeof(std::size_t) * jmaths::bits_in_byte)));
 }
 
-inline std::size_t std::hash<jmaths::Q>::operator()(const jmaths::Q & q) const {
+template <jmaths::TMP::instance_of<jmaths::basic_Q> Q>
+inline std::size_t std::hash<Q>::operator()(const Q & q) const {
     JMATHS_FUNCTION_TO_LOG;
 
-    return (std::hash<jmaths::N>{}(q.num_) ^ std::hash<jmaths::N>{}(q.denom_)) ^
+    using hash_N = std::hash<typename Q::N>;
+
+    return (hash_N{}(q.num_) ^ hash_N{}(q.denom_)) ^
            (static_cast<std::size_t>(q.sign_) << ((q.num_.front_() ^ q.denom_.front_()) %
                                                   (sizeof(std::size_t) * jmaths::bits_in_byte)));
 }

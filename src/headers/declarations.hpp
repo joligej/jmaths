@@ -24,14 +24,20 @@ namespace jmaths {
 
 struct calc;
 
-class N;
+template <typename BaseInt, typename BaseIntBig, typename Allocator> class basic_N;
+
 class sign_type;
-class Z;
-class Q;
+
+template <typename BaseInt, typename BaseIntBig, typename Allocator> class basic_Z;
+
+template <typename BaseInt, typename BaseIntBig, typename Allocator> class basic_Q;
+
 class error;
 
-template <TMP::any_of<N, Z> T> struct rand;
+template <TMP::instance_of<basic_N, basic_Z> T> struct rand;
 
-template <bitcount_t V> requires TMP::is_power_of_2<V> class uint;
+template <bitcount_t V>
+    requires TMP::is_power_of_2<V>
+class uint;
 
 }  // namespace jmaths

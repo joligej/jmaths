@@ -28,8 +28,7 @@ namespace jmaths {
 class sign_type {
     friend struct calc;
 
-    friend struct rand<N>;
-    friend struct rand<Z>;
+    template <TMP::instance_of<basic_N, basic_Z> T> friend struct rand;
 
    public:
     [[nodiscard]] bool is_positive() const;

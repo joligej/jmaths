@@ -33,9 +33,9 @@
 #include <type_traits>
 #include <utility>
 
-#include "N.hpp"
-#include "Q.hpp"
-#include "Z.hpp"
+#include "basic_N.hpp"
+#include "basic_Q.hpp"
+#include "basic_Z.hpp"
 #include "calc.hpp"
 #include "constants_and_types.hpp"
 #include "def.hh"
@@ -45,40 +45,49 @@
 // comparison functions for Q with floating point types
 namespace jmaths {
 
-bool Q::detail::opr_eq(const Q & lhs, std::floating_point auto rhs) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+bool basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_eq(const basic_Q & lhs,
+                                                             std::floating_point auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return lhs == Q{rhs};
+    return lhs == basic_Q{rhs};
 }
 
-std::strong_ordering Q::detail::opr_comp(const Q & lhs, std::floating_point auto rhs) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+std::strong_ordering basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_comp(
+    const basic_Q & lhs,
+    std::floating_point auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return lhs <=> Q{rhs};
+    return lhs <=> basic_Q{rhs};
 }
 
-bool operator==(const Q & lhs, std::floating_point auto rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+bool operator==(const basic_Q_type & lhs, std::floating_point auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_eq(lhs, rhs);
+    return basic_Q_type::detail::opr_eq(lhs, rhs);
 }
 
-bool operator==(std::floating_point auto lhs, const Q & rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+bool operator==(std::floating_point auto lhs, const basic_Q_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_eq(rhs, lhs);
+    return basic_Q_type::detail::opr_eq(rhs, lhs);
 }
 
-std::strong_ordering operator<=>(const Q & lhs, std::floating_point auto rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+std::strong_ordering operator<=>(const basic_Q_type & lhs, std::floating_point auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_comp(lhs, rhs);
+    return basic_Q_type::detail::opr_comp(lhs, rhs);
 }
 
-std::strong_ordering operator<=>(std::floating_point auto lhs, const Q & rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+std::strong_ordering operator<=>(std::floating_point auto lhs, const basic_Q_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return 0 <=> Q::detail::opr_comp(rhs, lhs);
+    return 0 <=> basic_Q_type::detail::opr_comp(rhs, lhs);
 }
 
 }  // namespace jmaths
@@ -86,7 +95,9 @@ std::strong_ordering operator<=>(std::floating_point auto lhs, const Q & rhs) {
 // member function templates of Q
 namespace jmaths {
 
-std::tuple<N, N, sign_type::sign_bool> Q::handle_float_(std::floating_point auto num) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+auto basic_Q<BaseInt, BaseIntBig, Allocator>::handle_float_(std::floating_point auto num)
+    -> std::tuple<basic_N_type, basic_N_type, sign_bool> {
     JMATHS_FUNCTION_TO_LOG;
 
     using floating_point_type = decltype(num);
@@ -111,14 +122,17 @@ std::tuple<N, N, sign_type::sign_bool> Q::handle_float_(std::floating_point auto
             sign};
 }
 
-Q::Q(std::floating_point auto num) : Q(handle_float_(num)) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(std::floating_point auto num) :
+    basic_Q(handle_float_(num)) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
 // FIXME:
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
 template <std::floating_point T>
     requires std::numeric_limits<T>::is_iec559
-std::optional<T> Q::fits_into() const {
+std::optional<T> basic_Q<BaseInt, BaseIntBig, Allocator>::fits_into() const {
     JMATHS_FUNCTION_TO_LOG;
 
     using nlf = std::numeric_limits<T>;
@@ -239,12 +253,12 @@ std::optional<T> Q::fits_into() const {
         std::size_t i = 0U;
 
         for (auto crit = num_.digits_.crbegin();
-             crit != num_.digits_.crend() && i < sizeof(T) / base_int_size;
+             crit != num_.digits_.crend() && i < sizeof(T) / base_int_type_size;
              ++crit, ++i) {
             numerator = numerator * radix + *crit;
         }
 
-        for (; i < sizeof(T) / base_int_size; ++i) {
+        for (; i < sizeof(T) / base_int_type_size; ++i) {
             numerator *= radix;
         }
     }
@@ -255,12 +269,12 @@ std::optional<T> Q::fits_into() const {
         std::size_t j = 0;
 
         for (auto crit = denom_.digits_.crbegin();
-             crit != denom_.digits_.crend() && j < sizeof(T) / base_int_size;
+             crit != denom_.digits_.crend() && j < sizeof(T) / base_int_type_size;
              ++crit, ++j) {
             denominator = denominator * radix + *crit;
         }
 
-        for (; j < sizeof(T) / base_int_size; ++j) {
+        for (; j < sizeof(T) / base_int_type_size; ++j) {
             denominator *= radix;
         }
     }
@@ -271,7 +285,7 @@ std::optional<T> Q::fits_into() const {
         static constexpr std::uint16_t min_exponent = 1U;
 
         if (result.fields.exponent <
-            min_exponent + (denom_.digits_.size() - num_.digits_.size()) * base_int_bits) {
+            min_exponent + (denom_.digits_.size() - num_.digits_.size()) * base_int_type_bits) {
 #if 0
   if (*this >= Q{nlf::min()}) {
   return nlf::min();
@@ -284,14 +298,14 @@ std::optional<T> Q::fits_into() const {
         }
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
-        result.fields.exponent -= (denom_.digits_.size() - num_.digits_.size()) * base_int_bits;
+        result.fields.exponent -= (denom_.digits_.size() - num_.digits_.size()) * base_int_type_bits;
 #pragma GCC diagnostic pop
 
     } else {
         static constexpr std::uint32_t max_exponent =
             ~(~static_cast<std::uint32_t>(0) << sizes_type::exponent) - 1;
 
-        if ((num_.digits_.size() - denom_.digits_.size()) * base_int_bits >
+        if ((num_.digits_.size() - denom_.digits_.size()) * base_int_type_bits >
             max_exponent - result.fields.exponent) {
             if constexpr (nlf::has_infinity) {
                 return nlf::infinity();
@@ -302,7 +316,7 @@ std::optional<T> Q::fits_into() const {
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
-        result.fields.exponent += (num_.digits_.size() - denom_.digits_.size()) * base_int_bits;
+        result.fields.exponent += (num_.digits_.size() - denom_.digits_.size()) * base_int_type_bits;
 #pragma GCC diagnostic pop
     }
 
@@ -311,7 +325,8 @@ std::optional<T> Q::fits_into() const {
     return result.val;
 }
 
-Q & Q::operator=(std::floating_point auto rhs) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator=(std::floating_point auto rhs) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     auto fraction_info = handle_float_(rhs);
@@ -331,71 +346,82 @@ namespace jmaths {
 /**********************************************************/
 // forwarding functions
 
-inline std::ostream & operator<<(std::ostream & os, const Q & q) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+inline std::ostream & operator<<(std::ostream & os, const basic_Q_type & q) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_ins(os, q);
+    return basic_Q_type::detail::opr_ins(os, q);
 }
 
-inline std::istream & operator>>(std::istream & is, Q & q) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+inline std::istream & operator>>(std::istream & is, basic_Q_type & q) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_extr(is, q);
+    return basic_Q_type::detail::opr_extr(is, q);
 }
 
-inline Q operator+(const Q & lhs, const Q & rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+inline basic_Q_type operator+(const basic_Q_type & lhs, const basic_Q_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_add(lhs, rhs);
+    return basic_Q_type::detail::opr_add(lhs, rhs);
 }
 
-inline Q operator-(const Q & lhs, const Q & rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+inline basic_Q_type operator-(const basic_Q_type & lhs, const basic_Q_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_subtr(lhs, rhs);
+    return basic_Q_type::detail::opr_subtr(lhs, rhs);
 }
 
-inline Q operator*(const Q & lhs, const Q & rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+inline basic_Q_type operator*(const basic_Q_type & lhs, const basic_Q_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_mult(lhs, rhs);
+    return basic_Q_type::detail::opr_mult(lhs, rhs);
 }
 
-inline Q operator/(const Q & lhs, const Q & rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+inline basic_Q_type operator/(const basic_Q_type & lhs, const basic_Q_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     error::division_by_zero::check(rhs);
-    return Q::detail::opr_div(lhs, rhs);
+    return basic_Q_type::detail::opr_div(lhs, rhs);
 }
 
-inline Q operator&(const Q & lhs, const Q & rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+inline basic_Q_type operator&(const basic_Q_type & lhs, const basic_Q_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_and(lhs, rhs);
+    return basic_Q_type::detail::opr_and(lhs, rhs);
 }
 
-inline Q operator|(const Q & lhs, const Q & rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+inline basic_Q_type operator|(const basic_Q_type & lhs, const basic_Q_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_or(lhs, rhs);
+    return basic_Q_type::detail::opr_or(lhs, rhs);
 }
 
-inline Q operator^(const Q & lhs, const Q & rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+inline basic_Q_type operator^(const basic_Q_type & lhs, const basic_Q_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_xor(lhs, rhs);
+    return basic_Q_type::detail::opr_xor(lhs, rhs);
 }
 
-inline bool operator==(const Q & lhs, const Q & rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+inline bool operator==(const basic_Q_type & lhs, const basic_Q_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_eq(lhs, rhs);
+    return basic_Q_type::detail::opr_eq(lhs, rhs);
 }
 
-inline std::strong_ordering operator<=>(const Q & lhs, const Q & rhs) {
+template <TMP::instance_of<basic_Q> basic_Q_type>
+inline std::strong_ordering operator<=>(const basic_Q_type & lhs, const basic_Q_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
-    return Q::detail::opr_comp(lhs, rhs);
+    return basic_Q_type::detail::opr_comp(lhs, rhs);
 }
 
 }  // namespace jmaths
@@ -403,27 +429,38 @@ inline std::strong_ordering operator<=>(const Q & lhs, const Q & rhs) {
 // member functions of Q
 namespace jmaths {
 
-inline Q::Q(N && num, N && denom, sign_bool sign) :
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(basic_N_type && num,
+                                                        basic_N_type && denom,
+                                                        sign_bool sign) :
     sign_type(sign), num_(std::move(num)), denom_(std::move(denom)) {
     JMATHS_FUNCTION_TO_LOG;
 
     canonicalise_();
 }
 
-inline Q::Q(const N & num, const N & denom, sign_bool sign) : sign_type(sign), num_(num), denom_(denom) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(const basic_N_type & num,
+                                                        const basic_N_type & denom,
+                                                        sign_bool sign) :
+    sign_type(sign), num_(num), denom_(denom) {
     JMATHS_FUNCTION_TO_LOG;
 
     canonicalise_();
 }
 
-inline Q::Q(std::tuple<N, N, sign_bool> && fraction_info) :
-    Q(std::move(std::get<0>(fraction_info)),
-      std::move(std::get<1>(fraction_info)),
-      std::get<2>(fraction_info)) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(
+    std::tuple<basic_N_type, basic_N_type, sign_bool> && fraction_info) :
+    basic_Q(std::move(std::get<0>(fraction_info)),
+            std::move(std::get<1>(fraction_info)),
+            std::get<2>(fraction_info)) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-inline std::string_view Q::handle_fraction_string_(std::string_view * num_str) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline std::string_view basic_Q<BaseInt, BaseIntBig, Allocator>::handle_fraction_string_(
+    std::string_view * num_str) {
     JMATHS_FUNCTION_TO_LOG;
 
     const auto fraction_bar = num_str->find(vinculum);
@@ -432,15 +469,17 @@ inline std::string_view Q::handle_fraction_string_(std::string_view * num_str) {
     return numerator;
 }
 
-inline void Q::canonicalise_() {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline void basic_Q<BaseInt, BaseIntBig, Allocator>::canonicalise_() {
     JMATHS_FUNCTION_TO_LOG;
 
-    const N gcd = calc::gcd(num_, denom_);
-    num_ = N::detail::opr_div(num_, gcd).first;
-    denom_ = N::detail::opr_div(denom_, gcd).first;
+    const basic_N_type gcd = calc::gcd(num_, denom_);
+    num_ = basic_N_type::detail::opr_div(num_, gcd).first;
+    denom_ = basic_N_type::detail::opr_div(denom_, gcd).first;
 }
 
-inline std::string Q::conv_to_base_(unsigned base) const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline std::string basic_Q<BaseInt, BaseIntBig, Allocator>::conv_to_base_(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_positive()) { return num_.conv_to_base_(base) + vinculum + denom_.conv_to_base_(base); }
@@ -448,59 +487,57 @@ inline std::string Q::conv_to_base_(unsigned base) const {
     return negative_sign + num_.conv_to_base_(base) + vinculum + denom_.conv_to_base_(base);
 }
 
-inline std::size_t Q::dynamic_size_() const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline std::size_t basic_Q<BaseInt, BaseIntBig, Allocator>::dynamic_size_() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return num_.dynamic_size_() + denom_.dynamic_size_();
 }
 
-inline Q::Q() : denom_(N::one_) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q() : denom_(basic_N_type::one_) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-inline Q::Q(std::string_view num_str, unsigned base) :
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(std::string_view num_str, unsigned base) :
     sign_type(&num_str), num_(handle_fraction_string_(&num_str), base), denom_(num_str, base) {
     JMATHS_FUNCTION_TO_LOG;
 
     error::division_by_zero::check(denom_, "Denominator cannot be zero!");
 
     canonicalise_();
-    if (Q::is_zero()) { set_sign_(positive); }
+    if (basic_Q::is_zero()) { set_sign_(positive); }
 }
 
-inline Q::Q(const N & n) : num_(n), denom_(N::one_) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(const basic_N_type & n) :
+    num_(n), denom_(basic_N_type::one_) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-inline Q::Q(N && n) : num_(std::move(n)), denom_(N::one_) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(basic_N_type && n) :
+    num_(std::move(n)), denom_(basic_N_type::one_) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-inline Q::Q(const Z & z) : sign_type(z.sign_), num_(z.abs()), denom_(N::one_) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(const basic_Z_type & z) :
+    sign_type(z.sign_), num_(z.abs()), denom_(basic_N_type::one_) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-inline Q::Q(Z && z) : sign_type(z.sign_), num_(std::move(std::move(z).abs())), denom_(N::one_) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(basic_Z_type && z) :
+    sign_type(z.sign_), num_(std::move(std::move(z).abs())), denom_(basic_N_type::one_) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-inline Q::Q(const N & num, const N & denom) : num_(num), denom_(denom) {
-    JMATHS_FUNCTION_TO_LOG;
-
-    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
-
-    canonicalise_();
-}
-
-inline Q::Q(const N & num, N && denom) : num_(num), denom_(std::move(denom)) {
-    JMATHS_FUNCTION_TO_LOG;
-
-    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
-
-    canonicalise_();
-}
-
-inline Q::Q(N && num, const N & denom) : num_(std::move(num)), denom_(denom) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(const basic_N_type & num,
+                                                        const basic_N_type & denom) :
+    num_(num), denom_(denom) {
     JMATHS_FUNCTION_TO_LOG;
 
     error::division_by_zero::check(denom_, "Denominator cannot be zero!");
@@ -508,7 +545,10 @@ inline Q::Q(N && num, const N & denom) : num_(std::move(num)), denom_(denom) {
     canonicalise_();
 }
 
-inline Q::Q(N && num, N && denom) : num_(std::move(num)), denom_(std::move(denom)) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(const basic_N_type & num,
+                                                        basic_N_type && denom) :
+    num_(num), denom_(std::move(denom)) {
     JMATHS_FUNCTION_TO_LOG;
 
     error::division_by_zero::check(denom_, "Denominator cannot be zero!");
@@ -516,7 +556,30 @@ inline Q::Q(N && num, N && denom) : num_(std::move(num)), denom_(std::move(denom
     canonicalise_();
 }
 
-inline Q::Q(const Z & num, const Z & denom) :
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(basic_N_type && num,
+                                                        const basic_N_type & denom) :
+    num_(std::move(num)), denom_(denom) {
+    JMATHS_FUNCTION_TO_LOG;
+
+    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
+
+    canonicalise_();
+}
+
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(basic_N_type && num, basic_N_type && denom) :
+    num_(std::move(num)), denom_(std::move(denom)) {
+    JMATHS_FUNCTION_TO_LOG;
+
+    error::division_by_zero::check(denom_, "Denominator cannot be zero!");
+
+    canonicalise_();
+}
+
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(const basic_Z_type & num,
+                                                        const basic_Z_type & denom) :
     sign_type(num.is_zero() ? positive : static_cast<sign_bool>(num.sign_ ^ denom.sign_)),
     num_(num.abs()),
     denom_(denom.abs()) {
@@ -527,7 +590,9 @@ inline Q::Q(const Z & num, const Z & denom) :
     canonicalise_();
 }
 
-inline Q::Q(const Z & num, Z && denom) :
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(const basic_Z_type & num,
+                                                        basic_Z_type && denom) :
     sign_type(num.is_zero() ? positive : static_cast<sign_bool>(num.sign_ ^ denom.sign_)),
     num_(num.abs()),
     denom_(std::move(std::move(denom).abs())) {
@@ -538,7 +603,9 @@ inline Q::Q(const Z & num, Z && denom) :
     canonicalise_();
 }
 
-inline Q::Q(Z && num, const Z & denom) :
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(basic_Z_type && num,
+                                                        const basic_Z_type & denom) :
     sign_type(num.is_zero() ? positive : static_cast<sign_bool>(num.sign_ ^ denom.sign_)),
     num_(std::move(std::move(num).abs())),
     denom_(denom.abs()) {
@@ -549,7 +616,8 @@ inline Q::Q(Z && num, const Z & denom) :
     canonicalise_();
 }
 
-inline Q::Q(Z && num, Z && denom) :
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::basic_Q(basic_Z_type && num, basic_Z_type && denom) :
     sign_type(num.is_zero() ? positive : static_cast<sign_bool>(num.sign_ ^ denom.sign_)),
     num_(std::move(std::move(num).abs())),
     denom_(std::move(std::move(denom).abs())) {
@@ -560,38 +628,44 @@ inline Q::Q(Z && num, Z && denom) :
     canonicalise_();
 }
 
-inline bool Q::is_zero() const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline bool basic_Q<BaseInt, BaseIntBig, Allocator>::is_zero() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return num_.is_zero();
 }
 
-inline bool Q::is_one() const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline bool basic_Q<BaseInt, BaseIntBig, Allocator>::is_one() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return is_positive() && num_.is_one() && denom_.is_one();
 }
 
-inline bool Q::is_neg_one() const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline bool basic_Q<BaseInt, BaseIntBig, Allocator>::is_neg_one() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return is_negative() && num_.is_one() && denom_.is_one();
 }
 
-inline Q Q::abs() const & {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::abs() const & -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
     return {num_, denom_, positive};
 }
 
-inline Q && Q::abs() && {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::abs() && -> basic_Q && {
     JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(positive);
     return std::move(*this);
 }
 
-inline Q Q::inverse() const & {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::inverse() const & -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
     error::division_by_zero::check(num_, "Cannot take the inverse of zero!");
@@ -599,7 +673,8 @@ inline Q Q::inverse() const & {
     return {denom_, num_, sign_};
 }
 
-inline Q && Q::inverse() && {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::inverse() && -> basic_Q && {
     JMATHS_FUNCTION_TO_LOG;
 
     error::division_by_zero::check(num_, "Cannot take the inverse of zero!");
@@ -608,13 +683,15 @@ inline Q && Q::inverse() && {
     return std::move(*this);
 }
 
-inline std::size_t Q::size() const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline std::size_t basic_Q<BaseInt, BaseIntBig, Allocator>::size() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return sizeof(*this) + dynamic_size_();
 }
 
-inline std::string Q::to_str(unsigned base) const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline std::string basic_Q<BaseInt, BaseIntBig, Allocator>::to_str(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
     error::invalid_base::check(base);
@@ -622,7 +699,8 @@ inline std::string Q::to_str(unsigned base) const {
     return conv_to_base_(base);
 }
 
-inline std::string Q::to_hex() const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline std::string basic_Q<BaseInt, BaseIntBig, Allocator>::to_hex() const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_positive()) { return num_.to_hex() + vinculum + denom_.to_hex(); }
@@ -630,7 +708,8 @@ inline std::string Q::to_hex() const {
     return negative_sign + num_.to_hex() + vinculum + denom_.to_hex();
 }
 
-inline std::string Q::to_bin() const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline std::string basic_Q<BaseInt, BaseIntBig, Allocator>::to_bin() const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_positive()) { return num_.to_bin() + vinculum + denom_.to_bin(); }
@@ -638,25 +717,27 @@ inline std::string Q::to_bin() const {
     return negative_sign + num_.to_bin() + vinculum + denom_.to_bin();
 }
 
-inline Q::operator bool() const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline basic_Q<BaseInt, BaseIntBig, Allocator>::operator bool() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return !is_zero();
 }
 
-inline Q & Q::operator++() {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator++() -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_positive()) {
         num_.opr_add_assign_(denom_);
     } else {
-        if (const auto difference = N::detail::opr_comp(num_, denom_); difference == 0) {
+        if (const auto difference = basic_N_type::detail::opr_comp(num_, denom_); difference == 0) {
             num_.set_zero();
             set_sign_(positive);
         } else if (difference > 0) {
             num_.opr_subtr_assign_(denom_);
         } else {
-            num_ = N::detail::opr_subtr(denom_, num_);
+            num_ = basic_N_type::detail::opr_subtr(denom_, num_);
             set_sign_(positive);
         }
     }
@@ -664,16 +745,17 @@ inline Q & Q::operator++() {
     return *this;
 }
 
-inline Q & Q::operator--() {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator--() -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_positive()) {
-        if (const auto difference = N::detail::opr_comp(num_, denom_); difference == 0) {
+        if (const auto difference = basic_N_type::detail::opr_comp(num_, denom_); difference == 0) {
             num_.set_zero();
         } else if (difference > 0) {
             num_.opr_subtr_assign_(denom_);
         } else {
-            num_ = N::detail::opr_subtr(denom_, num_);
+            num_ = basic_N_type::detail::opr_subtr(denom_, num_);
             set_sign_(negative);
         }
 
@@ -684,22 +766,24 @@ inline Q & Q::operator--() {
     return *this;
 }
 
-inline Q & Q::operator+=(const Q & rhs) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator+=(const basic_Q & rhs) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     if (this->is_positive()) {
         if (rhs.is_positive()) {
-            N first_product = N::detail::opr_mult(num_, rhs.denom_);
-            first_product.opr_add_assign_(N::detail::opr_mult(denom_, rhs.num_));
+            basic_N_type first_product = basic_N_type::detail::opr_mult(num_, rhs.denom_);
+            first_product.opr_add_assign_(basic_N_type::detail::opr_mult(denom_, rhs.num_));
             num_ = std::move(first_product);
         } else {
-            N first_product = N::detail::opr_mult(num_, rhs.denom_);
-            N second_product = N::detail::opr_mult(denom_, rhs.num_);
+            basic_N_type first_product = basic_N_type::detail::opr_mult(num_, rhs.denom_);
+            basic_N_type second_product = basic_N_type::detail::opr_mult(denom_, rhs.num_);
 
-            if (const auto difference = N::detail::opr_comp(first_product, second_product);
+            if (const auto difference =
+                    basic_N_type::detail::opr_comp(first_product, second_product);
                 difference == 0) {
                 num_.set_zero();
-                denom_ = N::one_;
+                denom_ = basic_N_type::one_;
                 return *this;
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
@@ -712,13 +796,14 @@ inline Q & Q::operator+=(const Q & rhs) {
         }
     } else {
         if (rhs.is_positive()) {
-            N first_product = N::detail::opr_mult(num_, rhs.denom_);
-            N second_product = N::detail::opr_mult(denom_, rhs.num_);
+            basic_N_type first_product = basic_N_type::detail::opr_mult(num_, rhs.denom_);
+            basic_N_type second_product = basic_N_type::detail::opr_mult(denom_, rhs.num_);
 
-            if (const auto difference = N::detail::opr_comp(first_product, second_product);
+            if (const auto difference =
+                    basic_N_type::detail::opr_comp(first_product, second_product);
                 difference == 0) {
                 num_.set_zero();
-                denom_ = N::one_;
+                denom_ = basic_N_type::one_;
                 set_sign_(positive);
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
@@ -729,8 +814,8 @@ inline Q & Q::operator+=(const Q & rhs) {
                 set_sign_(positive);
             }
         } else {
-            N first_product = N::detail::opr_mult(num_, rhs.denom_);
-            first_product.opr_add_assign_(N::detail::opr_mult(denom_, rhs.num_));
+            basic_N_type first_product = basic_N_type::detail::opr_mult(num_, rhs.denom_);
+            first_product.opr_add_assign_(basic_N_type::detail::opr_mult(denom_, rhs.num_));
             num_ = std::move(first_product);
         }
     }
@@ -742,18 +827,20 @@ inline Q & Q::operator+=(const Q & rhs) {
     return *this;
 }
 
-inline Q & Q::operator-=(const Q & rhs) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator-=(const basic_Q & rhs) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     if (this->is_positive()) {
         if (rhs.is_positive()) {
-            N first_product = N::detail::opr_mult(num_, rhs.denom_);
-            N second_product = N::detail::opr_mult(denom_, rhs.num_);
+            basic_N_type first_product = basic_N_type::detail::opr_mult(num_, rhs.denom_);
+            basic_N_type second_product = basic_N_type::detail::opr_mult(denom_, rhs.num_);
 
-            if (const auto difference = N::detail::opr_comp(first_product, second_product);
+            if (const auto difference =
+                    basic_N_type::detail::opr_comp(first_product, second_product);
                 difference == 0) {
                 num_.set_zero();
-                denom_ = N::one_;
+                denom_ = basic_N_type::one_;
                 return *this;
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
@@ -764,23 +851,24 @@ inline Q & Q::operator-=(const Q & rhs) {
                 set_sign_(negative);
             }
         } else {
-            N first_product = N::detail::opr_mult(num_, rhs.denom_);
-            first_product.opr_add_assign_(N::detail::opr_mult(denom_, rhs.num_));
+            basic_N_type first_product = basic_N_type::detail::opr_mult(num_, rhs.denom_);
+            first_product.opr_add_assign_(basic_N_type::detail::opr_mult(denom_, rhs.num_));
             num_ = std::move(first_product);
         }
     } else {
         if (rhs.is_positive()) {
-            N first_product = N::detail::opr_mult(num_, rhs.denom_);
-            first_product.opr_add_assign_(N::detail::opr_mult(denom_, rhs.num_));
+            basic_N_type first_product = basic_N_type::detail::opr_mult(num_, rhs.denom_);
+            first_product.opr_add_assign_(basic_N_type::detail::opr_mult(denom_, rhs.num_));
             num_ = std::move(first_product);
         } else {
-            N first_product = N::detail::opr_mult(num_, rhs.denom_);
-            N second_product = N::detail::opr_mult(denom_, rhs.num_);
+            basic_N_type first_product = basic_N_type::detail::opr_mult(num_, rhs.denom_);
+            basic_N_type second_product = basic_N_type::detail::opr_mult(denom_, rhs.num_);
 
-            if (const auto difference = N::detail::opr_comp(first_product, second_product);
+            if (const auto difference =
+                    basic_N_type::detail::opr_comp(first_product, second_product);
                 difference == 0) {
                 num_.set_zero();
-                denom_ = N::one_;
+                denom_ = basic_N_type::one_;
                 set_sign_(positive);
             } else if (difference > 0) {
                 first_product.opr_subtr_assign_(second_product);
@@ -800,7 +888,8 @@ inline Q & Q::operator-=(const Q & rhs) {
     return *this;
 }
 
-inline Q & Q::operator*=(const Q & rhs) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator*=(const basic_Q & rhs) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     num_.opr_mult_assign_(rhs.num_);
@@ -813,7 +902,8 @@ inline Q & Q::operator*=(const Q & rhs) {
     return *this;
 }
 
-inline Q & Q::operator/=(const Q & rhs) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator/=(const basic_Q & rhs) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     error::division_by_zero::check(rhs);
@@ -828,7 +918,8 @@ inline Q & Q::operator/=(const Q & rhs) {
     return *this;
 }
 
-inline Q & Q::operator&=(const Q & rhs) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator&=(const basic_Q & rhs) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     denom_.opr_and_assign_(rhs.denom_);
@@ -844,7 +935,8 @@ inline Q & Q::operator&=(const Q & rhs) {
     return *this;
 }
 
-inline Q & Q::operator|=(const Q & rhs) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator|=(const basic_Q & rhs) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     num_.opr_or_assign_(rhs.num_);
@@ -857,7 +949,8 @@ inline Q & Q::operator|=(const Q & rhs) {
     return *this;
 }
 
-inline Q & Q::operator^=(const Q & rhs) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator^=(const basic_Q & rhs) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     denom_.opr_xor_assign_(rhs.denom_);
@@ -873,28 +966,31 @@ inline Q & Q::operator^=(const Q & rhs) {
     return *this;
 }
 
-inline Q Q::operator-() const & {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator-() const & -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return *this; }
     return {num_, denom_, static_cast<sign_bool>(!sign_)};
 }
 
-inline Q && Q::operator-() && {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator-() && -> basic_Q && {
     JMATHS_FUNCTION_TO_LOG;
 
     flip_sign();
     return std::move(*this);
 }
 
-inline Q Q::operator~() const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator~() const -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
-    N num_complemented = num_.opr_compl_();
+    basic_N_type num_complemented = num_.opr_compl_();
 
-    if (num_complemented.is_zero()) { return Q{}; }
+    if (num_complemented.is_zero()) { return basic_Q{}; }
 
-    N denom_complemented = denom_.opr_compl_();
+    basic_N_type denom_complemented = denom_.opr_compl_();
 
     error::division_by_zero::check(denom_complemented,
                                    "Denominator of complemented fraction cannot be zero!");
@@ -904,20 +1000,23 @@ inline Q Q::operator~() const {
             static_cast<sign_bool>(!sign_)};
 }
 
-inline Q Q::operator<<(bitcount_t pos) const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator<<(bitcount_t pos) const -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
     return {num_.opr_bitshift_l_(pos), denom_, sign_};
 }
 
-inline Q Q::operator>>(bitcount_t pos) const {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator>>(bitcount_t pos) const -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (is_zero()) { return Q{}; }
+    if (is_zero()) { return basic_Q{}; }
     return {num_, denom_.opr_bitshift_l_(pos), sign_};
 }
 
-inline Q & Q::operator<<=(bitcount_t pos) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator<<=(bitcount_t pos) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     num_.opr_bitshift_l_assign_(pos);
@@ -925,7 +1024,8 @@ inline Q & Q::operator<<=(bitcount_t pos) {
     return *this;
 }
 
-inline Q & Q::operator>>=(bitcount_t pos) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator>>=(bitcount_t pos) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return *this; }
@@ -934,7 +1034,9 @@ inline Q & Q::operator>>=(bitcount_t pos) {
     return *this;
 }
 
-inline Q & Q::operator=(std::string_view num_str) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator=(std::string_view num_str)
+    -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(sign_type::handle_string_(&num_str));
@@ -949,39 +1051,43 @@ inline Q & Q::operator=(std::string_view num_str) {
     return *this;
 }
 
-inline Q & Q::operator=(const N & n) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator=(const basic_N_type & n) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(positive);
     num_ = n;
-    denom_ = N::one_;
+    denom_ = basic_N_type::one_;
     return *this;
 }
 
-inline Q & Q::operator=(N && n) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator=(basic_N_type && n) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(positive);
     num_ = std::move(n);
-    denom_ = N::one_;
+    denom_ = basic_N_type::one_;
     return *this;
 }
 
-inline Q & Q::operator=(const Z & z) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator=(const basic_Z_type & z) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(z.sign_);
     num_ = z.abs();
-    denom_ = N::one_;
+    denom_ = basic_N_type::one_;
     return *this;
 }
 
-inline Q & Q::operator=(Z && z) {
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::operator=(basic_Z_type && z) -> basic_Q & {
     JMATHS_FUNCTION_TO_LOG;
 
     set_sign_(z.sign_);
     num_ = std::move(std::move(z).abs());
-    denom_ = N::one_;
+    denom_ = basic_N_type::one_;
     return *this;
 }
 

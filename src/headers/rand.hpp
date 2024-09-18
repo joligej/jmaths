@@ -62,8 +62,22 @@ template <typename T> class rand_gen {
 
 namespace jmaths {
 
-template <TMP::any_of<N, Z> T> struct rand {
+template <TMP::instance_of<basic_N, basic_Z> T> struct rand {
     [[nodiscard]] static T generate(bitcount_t upper_bound_exponent);
+};
+
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+struct rand<basic_N<BaseInt, BaseIntBig, Allocator>> {
+    using basic_N_type = basic_N<BaseInt, BaseIntBig, Allocator>;
+
+    [[nodiscard]] static basic_N_type generate(bitcount_t upper_bound_exponent);
+};
+
+template <typename BaseInt, typename BaseIntBig, typename Allocator>
+struct rand<basic_Z<BaseInt, BaseIntBig, Allocator>> {
+    using basic_Z_type = basic_Z<BaseInt, BaseIntBig, Allocator>;
+
+    [[nodiscard]] static basic_Z_type generate(bitcount_t upper_bound_exponent);
 };
 
 }  // namespace jmaths

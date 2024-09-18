@@ -19,20 +19,21 @@
 #include <cstddef>
 #include <functional>
 
+#include "TMP.hpp"
 #include "declarations.hpp"
 
 // declarations of std::hash specialisations
 
-template <> struct std::hash<jmaths::N> {
-    std::size_t operator()(const jmaths::N & n) const;
+template <jmaths::TMP::instance_of<jmaths::basic_N> N> struct std::hash<N> {
+    std::size_t operator()(const N & n) const;
 };
 
-template <> struct std::hash<jmaths::Z> {
-    std::size_t operator()(const jmaths::Z & z) const;
+template <jmaths::TMP::instance_of<jmaths::basic_Z> Z> struct std::hash<Z> {
+    std::size_t operator()(const Z & z) const;
 };
 
-template <> struct std::hash<jmaths::Q> {
-    std::size_t operator()(const jmaths::Q & q) const;
+template <jmaths::TMP::instance_of<jmaths::basic_Q> Q> struct std::hash<Q> {
+    std::size_t operator()(const Q & q) const;
 };
 
 #include "hash_impl.hpp"

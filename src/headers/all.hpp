@@ -16,10 +16,10 @@
 
 #pragma once
 
-#include "N.hpp"
-#include "Q.hpp"
+#include "basic_N.hpp"
+#include "basic_Q.hpp"
 #include "TMP.hpp"
-#include "Z.hpp"
+#include "basic_Z.hpp"
 #include "calc.hpp"
 #include "constants_and_types.hpp"
 #include "declarations.hpp"

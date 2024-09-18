@@ -21,6 +21,7 @@
 #include <cstddef>
 #include <format>
 #include <istream>
+#include <limits>
 #include <optional>
 #include <ostream>
 #include <string>

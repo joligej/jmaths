@@ -1,16 +1,24 @@
 #include <bitset>
+#include <chrono>
 #include <cstring>
 #include <iostream>
 #include <print>
+#include <thread>
 #include <type_traits>
 #include <utility>
 
-#include "N.hpp"
-#include "Q.hpp"
-#include "Z.hpp"
+#include "basic_N.hpp"
+#include "basic_Q.hpp"
+#include "basic_Z.hpp"
 #include "calc.hpp"
-#include "rand.hpp"
+#include "error.hpp"
 #include "literals.hpp"
+#include "rand.hpp"
+#include "scoped_timer.hpp"
+#include "TMP.hpp"
+#include "default_N.hpp"
+#include "default_Z.hpp"
+#include "default_Q.hpp"
 
 using namespace jmaths;
 
@@ -170,6 +178,16 @@ void free_func() {
     std::cout << "Free func! " << ++i << '\n';
 }
 
+constexpr bool timed_func() {
+    JMATHS_FUNCTION_TO_LOG;
+
+    using namespace std::chrono_literals;
+
+    std::this_thread::sleep_for(2s);
+
+    return true;
+}
+
 int main(int, char *[]) {
     const N n1("255");
 
@@ -254,7 +272,11 @@ int main(int, char *[]) {
     std::println("Pow: {}", calc::pow(15_N, 3_N));
     std::println("Sqrt whole: {}", calc::sqrt_whole(15_N));
 
-    auto pow1 = static_cast<N(*)(N&&, N&&)>(calc::pow);
+    auto pow1 = static_cast<N (*)(N &&, N &&)>(calc::pow);
     N n123(13);
     std::println("Pow: {}", pow1(std::move(n123), 2));
+
+    //static_assert(timed_func());
+    timed_func();
+    timed_func();
 }
