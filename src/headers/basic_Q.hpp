@@ -19,6 +19,7 @@
 #include <compare>
 #include <concepts>
 #include <cstddef>
+#include <cstdint>
 #include <format>
 #include <istream>
 #include <limits>
@@ -28,8 +29,8 @@
 #include <string_view>
 #include <tuple>
 
-#include "basic_N.hpp"
 #include "TMP.hpp"
+#include "basic_N.hpp"
 #include "constants_and_types.hpp"
 #include "declarations.hpp"
 #include "formatter.hpp"
@@ -218,6 +219,24 @@ struct basic_Q<BaseInt, BaseIntBig, Allocator>::detail {
     static std::strong_ordering opr_comp(const basic_Q & lhs, const basic_Q & rhs);
     static std::strong_ordering opr_comp(const basic_Q & lhs, std::floating_point auto rhs);
 };
+
+}  // namespace jmaths
+
+namespace jmaths {
+
+#if defined(UINT64_MAX) && defined(UINT32_MAX)
+
+using Q = basic_Q<std::uint32_t, std::uint64_t>;
+
+#elif defined(UINT32_MAX) && defined(UINT16_MAX)
+
+using Q = basic_Q<std::uint16_t, std::uint32_t>;
+
+#elif defined(UINT16_MAX) && defined(UINT8_MAX)
+
+using Q = basic_Q<std::uint8_t, std::uint16_t>;
+
+#endif
 
 }  // namespace jmaths
 

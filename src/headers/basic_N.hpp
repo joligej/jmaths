@@ -19,6 +19,7 @@
 #include <compare>
 #include <concepts>
 #include <cstddef>
+#include <cstdint>
 #include <format>
 #include <istream>
 #include <limits>
@@ -277,6 +278,24 @@ struct basic_N<BaseInt, BaseIntBig, Allocator>::detail {
     static std::strong_ordering opr_comp(const basic_N & lhs, const basic_N & rhs);
     static std::strong_ordering opr_comp(const basic_N & lhs, std::integral auto rhs);
 };
+
+}  // namespace jmaths
+
+namespace jmaths {
+
+#if defined(UINT64_MAX) && defined(UINT32_MAX)
+
+using N = basic_N<std::uint32_t, std::uint64_t>;
+
+#elif defined(UINT32_MAX) && defined(UINT16_MAX)
+
+using N = basic_N<std::uint16_t, std::uint32_t>;
+
+#elif defined(UINT16_MAX) && defined(UINT8_MAX)
+
+using N = basic_N<std::uint8_t, std::uint16_t>;
+
+#endif
 
 }  // namespace jmaths
 

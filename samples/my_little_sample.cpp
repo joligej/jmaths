@@ -16,9 +16,6 @@
 #include "rand.hpp"
 #include "scoped_timer.hpp"
 #include "TMP.hpp"
-#include "default_N.hpp"
-#include "default_Z.hpp"
-#include "default_Q.hpp"
 
 using namespace jmaths;
 
@@ -279,4 +276,8 @@ int main(int, char *[]) {
     //static_assert(timed_func());
     timed_func();
     timed_func();
+
+    using my_N_type = basic_N<std::uint8_t, std::uint16_t>;
+
+    std::println("{}", *my_N_type{((unsigned char)112)}.fits_into<unsigned char>());
 }
