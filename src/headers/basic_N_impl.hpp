@@ -295,7 +295,7 @@ inline const basic_N<BaseInt, BaseIntBig, Allocator> basic_N<BaseInt, BaseIntBig
 namespace jmaths::impl {
 
 template <std::unsigned_integral BaseInt>
-BaseInt base_converter(char c) noexcept;  // convert char to number for base >= 2 and <= 64
+[[nodiscard]] BaseInt base_converter(char c) noexcept;  // convert char to number for base >= 2 and <= 64
 
 template <std::unsigned_integral BaseInt> BaseInt base_converter(char c) noexcept {
     JMATHS_FUNCTION_TO_LOG;
