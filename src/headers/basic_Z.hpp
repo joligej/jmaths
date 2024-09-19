@@ -92,6 +92,7 @@ class basic_Z final : public sign_type, private basic_N<BaseInt, BaseIntBig, All
 
     using base_int_type = BaseInt;
     using base_int_big_type = BaseIntBig;
+    using allocator_type = Allocator;
     static constexpr base_int_type max_digit = std::numeric_limits<base_int_type>::max();
     static constexpr base_int_big_type radix = static_cast<base_int_big_type>(max_digit) + 1;
     static constexpr std::size_t base_int_type_size = sizeof(base_int_type);
