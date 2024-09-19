@@ -132,7 +132,8 @@ class basic_N {
     [[nodiscard]] constexpr std::size_t size() const;  // size of this object in bytes
 
     [[nodiscard]] constexpr std::string to_str(
-        unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
+        this auto && self,
+        unsigned base = default_base);  // convert to string in any base >= 2 and <= 64
     [[nodiscard]] constexpr std::string to_hex() const;  // convert to string in base 16 (assumes
                                                          // base is an integer power of 2)
     [[nodiscard]] constexpr std::string to_bin() const;  // convert to string in base 2
@@ -191,7 +192,8 @@ class basic_N {
     constexpr void opr_assign_(std::string_view num_str);
     constexpr void opr_assign_(std::integral auto rhs);
 
-    [[nodiscard]] constexpr std::string conv_to_base_(unsigned base = default_base) const;
+    [[nodiscard]] constexpr std::string conv_to_base_(this auto && self,
+                                                      unsigned base = default_base);
 
    private:
     std::vector<base_int_type, allocator_type> digits_;

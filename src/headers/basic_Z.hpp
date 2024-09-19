@@ -133,7 +133,8 @@ class basic_Z final : public sign_type, private basic_N<BaseInt, BaseIntBig, All
     [[nodiscard]] constexpr std::size_t size() const;  // size of this object in bytes
 
     [[nodiscard]] constexpr std::string to_str(
-        unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
+        this auto && self,
+        unsigned base = default_base);  // convert to string in any base >= 2 and <= 64
     [[nodiscard]] constexpr std::string to_hex() const;  // convert to string in base 16 (assumes
                                                          // base is an integer power of 2)
     [[nodiscard]] constexpr std::string to_bin() const;  // convert to string in base 2
@@ -173,7 +174,8 @@ class basic_Z final : public sign_type, private basic_N<BaseInt, BaseIntBig, All
     constexpr basic_Z(basic_N_type && n, sign_bool sign);
     constexpr basic_Z(const basic_N_type & n, sign_bool sign);
 
-    [[nodiscard]] constexpr std::string conv_to_base_(unsigned base = default_base) const;
+    [[nodiscard]] constexpr std::string conv_to_base_(this auto && self,
+                                                      unsigned base = default_base);
 
     [[nodiscard]] constexpr std::size_t dynamic_size_() const;
 };
