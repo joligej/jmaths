@@ -21,9 +21,9 @@
 int main(int, char *[]) {
     using jmaths::Q;
     using flt_type = double;
-    constexpr flt_type not_present = -1;
+    static constexpr flt_type not_present = -1;
 
-    const auto print = [not_present](const Q & q) {
+    const auto print = [](const Q & q) {
         std::cout << q << '\n';
         const auto into_float =
             q.template fits_into<flt_type>().value_or(not_present);
