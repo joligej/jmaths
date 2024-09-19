@@ -304,4 +304,6 @@ int main(int, char *[]) {
     } catch (const std::exception & e) { std::println("{}", e.what()); }
     std::ignore = Q(12.0) | Q(11.9);
     std::ignore = Q(12.0) ^ Q(11.9);
+
+    std::println("{}, {}, {}", 12_Q, 141_Q, 10123234_Q);
 }

@@ -23,7 +23,7 @@
 
 namespace jmaths::inline literals {
 
-#ifdef JMATHS_TYPEDEF_N
+#if defined(JMATHS_TYPEDEF_N)
 constexpr N operator""_N(const char * num_str) {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -31,11 +31,19 @@ constexpr N operator""_N(const char * num_str) {
 }
 #endif
 
-#ifdef JMATHS_TYPEDEF_Z
+#if defined(JMATHS_TYPEDEF_Z)
 constexpr Z operator""_Z(const char * num_str) {
     JMATHS_FUNCTION_TO_LOG;
 
     return Z{num_str};
+}
+#endif
+
+#if defined(JMATHS_TYPEDEF_Q) && defined(JMATHS_TYPEDEF_N)
+constexpr Q operator""_Q(const char * num_str) {
+    JMATHS_FUNCTION_TO_LOG;
+
+    return Q{N{num_str}};
 }
 #endif
 

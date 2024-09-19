@@ -17,17 +17,22 @@
 #pragma once
 
 #include "basic_N.hpp"
+#include "basic_Q.hpp"
 #include "basic_Z.hpp"
 
 // declarations of literals
 namespace jmaths::inline literals {
 
-#ifdef JMATHS_TYPEDEF_N
+#if defined(JMATHS_TYPEDEF_N)
 constexpr N operator""_N(const char * num_str);
 #endif
 
-#ifdef JMATHS_TYPEDEF_Z
+#if defined(JMATHS_TYPEDEF_Z)
 constexpr Z operator""_Z(const char * num_str);
+#endif
+
+#if defined(JMATHS_TYPEDEF_Q)
+constexpr Q operator""_Q(const char * num_str);
 #endif
 
 }  // namespace jmaths::inline literals
