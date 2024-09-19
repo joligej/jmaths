@@ -22,8 +22,8 @@
 #include <type_traits>
 #include <utility>
 
-#include "basic_N.hpp"
 #include "TMP.hpp"
+#include "basic_N.hpp"
 #include "basic_Z.hpp"
 #include "calc.hpp"
 #include "constants_and_types.hpp"
@@ -34,7 +34,7 @@
 namespace jmaths {
 
 template <TMP::instance_of<basic_N> basic_N_type_1, TMP::decays_to<basic_N_type_1> basic_N_type_2>
-auto calc::gcd(basic_N_type_1 && a, basic_N_type_2 && b) -> std::decay_t<basic_N_type_1> {
+constexpr auto calc::gcd(basic_N_type_1 && a, basic_N_type_2 && b) -> std::decay_t<basic_N_type_1> {
     JMATHS_FUNCTION_TO_LOG;
 
     using basic_N_t = std::decay_t<basic_N_type_1>;
@@ -68,7 +68,7 @@ auto calc::gcd(basic_N_type_1 && a, basic_N_type_2 && b) -> std::decay_t<basic_N
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-auto calc::sqrt(basic_N_type && num)
+constexpr auto calc::sqrt(basic_N_type && num)
     -> std::pair<std::decay_t<basic_N_type>, std::decay_t<basic_N_type>> {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -104,7 +104,7 @@ auto calc::sqrt(basic_N_type && num)
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-auto calc::sqrt_whole(basic_N_type && num) -> std::decay_t<basic_N_type> {
+constexpr auto calc::sqrt_whole(basic_N_type && num) -> std::decay_t<basic_N_type> {
     JMATHS_FUNCTION_TO_LOG;
 
     using basic_N_t = std::decay_t<basic_N_type>;
@@ -136,7 +136,8 @@ auto calc::sqrt_whole(basic_N_type && num) -> std::decay_t<basic_N_type> {
 }
 
 template <TMP::instance_of<basic_N> basic_N_type_1, TMP::decays_to<basic_N_type_1> basic_N_type_2>
-auto calc::pow(basic_N_type_1 && base, basic_N_type_2 && exponent) -> std::decay_t<basic_N_type_1> {
+constexpr auto calc::pow(basic_N_type_1 && base, basic_N_type_2 && exponent)
+    -> std::decay_t<basic_N_type_1> {
     JMATHS_FUNCTION_TO_LOG;
 
     using basic_N_t = std::decay_t<basic_N_type_1>;
@@ -159,9 +160,10 @@ auto calc::pow(basic_N_type_1 && base, basic_N_type_2 && exponent) -> std::decay
 }
 
 template <TMP::instance_of<basic_N> basic_N_type_1, TMP::decays_to<basic_N_type_1> basic_N_type_2>
-auto calc::pow_mod(basic_N_type_1 && base,
-                   basic_N_type_2 && exponent,
-                   const std::decay_t<basic_N_type_1> & mod) -> std::decay_t<basic_N_type_1> {
+constexpr auto calc::pow_mod(basic_N_type_1 && base,
+                             basic_N_type_2 && exponent,
+                             const std::decay_t<basic_N_type_1> & mod)
+    -> std::decay_t<basic_N_type_1> {
     JMATHS_FUNCTION_TO_LOG;
 
     using basic_N_t = std::decay_t<basic_N_type_1>;
@@ -191,7 +193,8 @@ auto calc::pow_mod(basic_N_type_1 && base,
 }
 
 template <TMP::instance_of<basic_Z> basic_Z_type, TMP::instance_of<basic_N> basic_N_type>
-auto calc::pow(basic_Z_type && base, basic_N_type && exponent) -> std::decay_t<basic_Z_type> {
+constexpr auto calc::pow(basic_Z_type && base, basic_N_type && exponent)
+    -> std::decay_t<basic_Z_type> {
     JMATHS_FUNCTION_TO_LOG;
 
     const auto sign =

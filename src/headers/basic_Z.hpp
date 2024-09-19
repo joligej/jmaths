@@ -40,49 +40,50 @@
 namespace jmaths {
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-std::ostream & operator<<(std::ostream & os, const basic_Z_type & z);
+constexpr std::ostream & operator<<(std::ostream & os, const basic_Z_type & z);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-std::istream & operator>>(std::istream & is, basic_Z_type & z);
+constexpr std::istream & operator>>(std::istream & is, basic_Z_type & z);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-basic_Z_type operator+(const basic_Z_type & lhs, const basic_Z_type & rhs);
+constexpr basic_Z_type operator+(const basic_Z_type & lhs, const basic_Z_type & rhs);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-basic_Z_type operator-(const basic_Z_type & lhs, const basic_Z_type & rhs);
+constexpr basic_Z_type operator-(const basic_Z_type & lhs, const basic_Z_type & rhs);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-basic_Z_type operator*(const basic_Z_type & lhs, const basic_Z_type & rhs);
+constexpr basic_Z_type operator*(const basic_Z_type & lhs, const basic_Z_type & rhs);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-std::pair<basic_Z_type, basic_Z_type> operator/(const basic_Z_type & lhs, const basic_Z_type & rhs);
+constexpr std::pair<basic_Z_type, basic_Z_type> operator/(const basic_Z_type & lhs,
+                                                          const basic_Z_type & rhs);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-basic_Z_type operator&(const basic_Z_type & lhs, const basic_Z_type & rhs);
+constexpr basic_Z_type operator&(const basic_Z_type & lhs, const basic_Z_type & rhs);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-basic_Z_type operator|(const basic_Z_type & lhs, const basic_Z_type & rhs);
+constexpr basic_Z_type operator|(const basic_Z_type & lhs, const basic_Z_type & rhs);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-basic_Z_type operator^(const basic_Z_type & lhs, const basic_Z_type & rhs);
+constexpr basic_Z_type operator^(const basic_Z_type & lhs, const basic_Z_type & rhs);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-bool operator==(const basic_Z_type & lhs, const basic_Z_type & rhs);
+constexpr bool operator==(const basic_Z_type & lhs, const basic_Z_type & rhs);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-bool operator==(const basic_Z_type & lhs, std::integral auto rhs);
+constexpr bool operator==(const basic_Z_type & lhs, std::integral auto rhs);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-bool operator==(std::integral auto lhs, const basic_Z_type & rhs);
+constexpr bool operator==(std::integral auto lhs, const basic_Z_type & rhs);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-std::strong_ordering operator<=>(const basic_Z_type & lhs, const basic_Z_type & rhs);
+constexpr std::strong_ordering operator<=>(const basic_Z_type & lhs, const basic_Z_type & rhs);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-std::strong_ordering operator<=>(const basic_Z_type & lhs, std::integral auto rhs);
+constexpr std::strong_ordering operator<=>(const basic_Z_type & lhs, std::integral auto rhs);
 
 template <TMP::instance_of<basic_Z> basic_Z_type>
-std::strong_ordering operator<=>(std::integral auto lhs, const basic_Z_type & rhs);
+constexpr std::strong_ordering operator<=>(std::integral auto lhs, const basic_Z_type & rhs);
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator = allocator<BaseInt>>
 class basic_Z final : public sign_type, private basic_N<BaseInt, BaseIntBig, Allocator> {
@@ -114,66 +115,66 @@ class basic_Z final : public sign_type, private basic_N<BaseInt, BaseIntBig, All
 
     struct detail;
 
-    basic_Z();
-    explicit basic_Z(std::string_view num_str, unsigned base = default_base);
-    basic_Z(std::integral auto num);
+    constexpr basic_Z();
+    explicit constexpr basic_Z(std::string_view num_str, unsigned base = default_base);
+    constexpr basic_Z(std::integral auto num);
 
-    basic_Z(const basic_N_type & n);
-    basic_Z(basic_N_type && n);
+    explicit constexpr basic_Z(const basic_N_type & n);
+    explicit constexpr basic_Z(basic_N_type && n);
 
-    [[nodiscard]] const basic_N_type & abs() const &;
-    [[nodiscard]] basic_N_type && abs() &&;
+    [[nodiscard]] constexpr const basic_N_type & abs() const &;
+    [[nodiscard]] constexpr basic_N_type && abs() &&;
 
-    [[nodiscard]] bool is_zero() const override;
-    [[nodiscard]] bool is_one() const;
-    [[nodiscard]] bool is_neg_one() const;
+    [[nodiscard]] constexpr bool is_zero() const override;
+    [[nodiscard]] constexpr bool is_one() const;
+    [[nodiscard]] constexpr bool is_neg_one() const;
 
-    [[nodiscard]] std::size_t size() const;  // size of this object in bytes
+    [[nodiscard]] constexpr std::size_t size() const;  // size of this object in bytes
 
-    [[nodiscard]] std::string to_str(
-        unsigned base = default_base) const;   // convert to string in any base >= 2 and <= 64
-    [[nodiscard]] std::string to_hex() const;  // convert to string in base 16 (assumes base
-                                               // is an integer power of 2)
-    [[nodiscard]] std::string to_bin() const;  // convert to string in base 2
+    [[nodiscard]] constexpr std::string to_str(
+        unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
+    [[nodiscard]] constexpr std::string to_hex() const;  // convert to string in base 16 (assumes
+                                                         // base is an integer power of 2)
+    [[nodiscard]] constexpr std::string to_bin() const;  // convert to string in base 2
 
-    template <std::unsigned_integral T> [[nodiscard]] std::optional<T> fits_into() const;
-    template <std::signed_integral T> [[nodiscard]] std::optional<T> fits_into() const;
+    template <std::unsigned_integral T> [[nodiscard]] constexpr std::optional<T> fits_into() const;
+    template <std::signed_integral T> [[nodiscard]] constexpr std::optional<T> fits_into() const;
 
-    void set_zero();
+    constexpr void set_zero();
 
-    basic_Z & operator++();
-    basic_Z & operator--();
+    constexpr basic_Z & operator++();
+    constexpr basic_Z & operator--();
 
-    basic_Z & operator+=(const basic_Z & rhs);
-    basic_Z & operator-=(const basic_Z & rhs);
-    basic_Z & operator*=(const basic_Z & rhs);
+    constexpr basic_Z & operator+=(const basic_Z & rhs);
+    constexpr basic_Z & operator-=(const basic_Z & rhs);
+    constexpr basic_Z & operator*=(const basic_Z & rhs);
 
-    basic_Z & operator&=(const basic_Z & rhs);
-    basic_Z & operator|=(const basic_Z & rhs);
-    basic_Z & operator^=(const basic_Z & rhs);
+    constexpr basic_Z & operator&=(const basic_Z & rhs);
+    constexpr basic_Z & operator|=(const basic_Z & rhs);
+    constexpr basic_Z & operator^=(const basic_Z & rhs);
 
-    [[nodiscard]] basic_Z operator-() const &;
-    [[nodiscard]] basic_Z && operator-() &&;
-    [[nodiscard]] basic_Z operator~() const;
-    [[nodiscard]] basic_Z operator<<(bitcount_t pos) const;
-    [[nodiscard]] basic_Z operator>>(bitcount_t pos) const;
+    [[nodiscard]] constexpr basic_Z operator-() const &;
+    [[nodiscard]] constexpr basic_Z && operator-() &&;
+    [[nodiscard]] constexpr basic_Z operator~() const;
+    [[nodiscard]] constexpr basic_Z operator<<(bitcount_t pos) const;
+    [[nodiscard]] constexpr basic_Z operator>>(bitcount_t pos) const;
 
-    basic_Z & operator<<=(bitcount_t pos);
-    basic_Z & operator>>=(bitcount_t pos);
+    constexpr basic_Z & operator<<=(bitcount_t pos);
+    constexpr basic_Z & operator>>=(bitcount_t pos);
 
-    basic_Z & operator=(std::string_view num_str);
-    basic_Z & operator=(std::integral auto rhs);
+    constexpr basic_Z & operator=(std::string_view num_str);
+    constexpr basic_Z & operator=(std::integral auto rhs);
 
-    basic_Z & operator=(const basic_N_type & n);
-    basic_Z & operator=(basic_N_type && n);
+    constexpr basic_Z & operator=(const basic_N_type & n);
+    constexpr basic_Z & operator=(basic_N_type && n);
 
    private:
-    basic_Z(basic_N_type && n, sign_bool sign);
-    basic_Z(const basic_N_type & n, sign_bool sign);
+    constexpr basic_Z(basic_N_type && n, sign_bool sign);
+    constexpr basic_Z(const basic_N_type & n, sign_bool sign);
 
-    [[nodiscard]] std::string conv_to_base_(unsigned base = default_base) const;
+    [[nodiscard]] constexpr std::string conv_to_base_(unsigned base = default_base) const;
 
-    [[nodiscard]] std::size_t dynamic_size_() const;
+    [[nodiscard]] constexpr std::size_t dynamic_size_() const;
 };
 
 }  // namespace jmaths
@@ -182,23 +183,23 @@ namespace jmaths {
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
 struct basic_Z<BaseInt, BaseIntBig, Allocator>::detail {
-    static std::ostream & opr_ins(std::ostream & os, const basic_Z & z);
-    static std::istream & opr_extr(std::istream & is, basic_Z & z);
+    static constexpr std::ostream & opr_ins(std::ostream & os, const basic_Z & z);
+    static constexpr std::istream & opr_extr(std::istream & is, basic_Z & z);
 
-    static basic_Z opr_add(const basic_Z & lhs, const basic_Z & rhs);
-    static basic_Z opr_subtr(const basic_Z & lhs, const basic_Z & rhs);
-    static basic_Z opr_mult(const basic_Z & lhs, const basic_Z & rhs);
-    static std::pair<basic_Z, basic_Z> opr_div(const basic_Z & lhs, const basic_Z & rhs);
+    static constexpr basic_Z opr_add(const basic_Z & lhs, const basic_Z & rhs);
+    static constexpr basic_Z opr_subtr(const basic_Z & lhs, const basic_Z & rhs);
+    static constexpr basic_Z opr_mult(const basic_Z & lhs, const basic_Z & rhs);
+    static constexpr std::pair<basic_Z, basic_Z> opr_div(const basic_Z & lhs, const basic_Z & rhs);
 
-    static basic_Z opr_and(const basic_Z & lhs, const basic_Z & rhs);
-    static basic_Z opr_or(const basic_Z & lhs, const basic_Z & rhs);
-    static basic_Z opr_xor(const basic_Z & lhs, const basic_Z & rhs);
+    static constexpr basic_Z opr_and(const basic_Z & lhs, const basic_Z & rhs);
+    static constexpr basic_Z opr_or(const basic_Z & lhs, const basic_Z & rhs);
+    static constexpr basic_Z opr_xor(const basic_Z & lhs, const basic_Z & rhs);
 
-    static bool opr_eq(const basic_Z & lhs, const basic_Z & rhs);
-    static bool opr_eq(const basic_Z & lhs, std::integral auto rhs);
+    static constexpr bool opr_eq(const basic_Z & lhs, const basic_Z & rhs);
+    static constexpr bool opr_eq(const basic_Z & lhs, std::integral auto rhs);
 
-    static std::strong_ordering opr_comp(const basic_Z & lhs, const basic_Z & rhs);
-    static std::strong_ordering opr_comp(const basic_Z & lhs, std::integral auto rhs);
+    static constexpr std::strong_ordering opr_comp(const basic_Z & lhs, const basic_Z & rhs);
+    static constexpr std::strong_ordering opr_comp(const basic_Z & lhs, std::integral auto rhs);
 };
 
 }  // namespace jmaths
@@ -207,14 +208,17 @@ namespace jmaths {
 
 #if defined(UINT64_MAX) && defined(UINT32_MAX)
 
+    #define JMATHS_TYPEDEF_Z 32
 using Z = basic_Z<std::uint32_t, std::uint64_t>;
 
 #elif defined(UINT32_MAX) && defined(UINT16_MAX)
 
+    #define JMATHS_TYPEDEF_Z 16
 using Z = basic_Z<std::uint16_t, std::uint32_t>;
 
 #elif defined(UINT16_MAX) && defined(UINT8_MAX)
 
+    #define JMATHS_TYPEDEF_Z 8
 using Z = basic_Z<std::uint8_t, std::uint16_t>;
 
 #endif

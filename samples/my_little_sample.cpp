@@ -7,15 +7,16 @@
 #include <type_traits>
 #include <utility>
 
+#include "TMP.hpp"
 #include "basic_N.hpp"
 #include "basic_Q.hpp"
 #include "basic_Z.hpp"
 #include "calc.hpp"
 #include "error.hpp"
+#include "hash.hpp"
 #include "literals.hpp"
 #include "rand.hpp"
 #include "scoped_timer.hpp"
-#include "TMP.hpp"
 
 using namespace jmaths;
 
@@ -273,11 +274,34 @@ int main(int, char *[]) {
     N n123(13);
     std::println("Pow: {}", pow1(std::move(n123), 2));
 
-    //static_assert(timed_func());
+    // static_assert(timed_func());
     timed_func();
     timed_func();
 
     using my_N_type = basic_N<std::uint8_t, std::uint16_t>;
 
-    std::println("{}", *my_N_type{((unsigned char)112)}.fits_into<unsigned char>());
+    for (unsigned char i = 110; i < 130; ++i)
+        std::println("{}", +my_N_type{((unsigned char)i)}.fits_into<signed char>().value_or(17));
+
+    using hash_N = std::hash<my_N_type>;
+    hash_N my_hash;
+    (void)my_hash;
+
+    static_assert((my_N_type{12} == 12));
+    static_assert((my_N_type{12}[0] == 0));
+    static_assert((my_N_type{12}[0] = 0) == 0);
+
+    std::println("{} and {}", Q(12.0), Q(11.9));
+
+    std::ignore = Q(12.0) > Q(11.9);
+    std::ignore = Q(12.0) != Q(11.9);
+    std::ignore = Q(12.0) + Q(11.9);
+    std::ignore = Q(12.0) - Q(11.9);
+    std::ignore = Q(12.0) * Q(11.9);
+    std::ignore = Q(12.0) / Q(11.9);
+    try {
+        std::ignore = Q(12.0) & Q(11.9);
+    } catch (const std::exception & e) { std::println("{}", e.what()); }
+    std::ignore = Q(12.0) | Q(11.9);
+    std::ignore = Q(12.0) ^ Q(11.9);
 }

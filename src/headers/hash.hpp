@@ -24,16 +24,16 @@
 
 // declarations of std::hash specialisations
 
-template <jmaths::TMP::instance_of<jmaths::basic_N> N> struct std::hash<N> {
-    std::size_t operator()(const N & n) const;
+template <jmaths::TMP::instance_of<jmaths::basic_N> basic_N_type> struct std::hash<basic_N_type> {
+    static std::size_t operator()(const basic_N_type & n);
 };
 
-template <jmaths::TMP::instance_of<jmaths::basic_Z> Z> struct std::hash<Z> {
-    std::size_t operator()(const Z & z) const;
+template <jmaths::TMP::instance_of<jmaths::basic_Z> basic_Z_type> struct std::hash<basic_Z_type> {
+    static std::size_t operator()(const basic_Z_type & z);
 };
 
-template <jmaths::TMP::instance_of<jmaths::basic_Q> Q> struct std::hash<Q> {
-    std::size_t operator()(const Q & q) const;
+template <jmaths::TMP::instance_of<jmaths::basic_Q> basic_Q_type> struct std::hash<basic_Q_type> {
+    static std::size_t operator()(const basic_Q_type & q);
 };
 
 #include "hash_impl.hpp"

@@ -23,16 +23,20 @@
 
 namespace jmaths::inline literals {
 
-inline N operator""_N(const char * num_str) {
+#ifdef JMATHS_TYPEDEF_N
+constexpr N operator""_N(const char * num_str) {
     JMATHS_FUNCTION_TO_LOG;
 
     return N{num_str};
 }
+#endif
 
-inline Z operator""_Z(const char * num_str) {
+#ifdef JMATHS_TYPEDEF_Z
+constexpr Z operator""_Z(const char * num_str) {
     JMATHS_FUNCTION_TO_LOG;
 
     return Z{num_str};
 }
+#endif
 
 }  // namespace jmaths::inline literals

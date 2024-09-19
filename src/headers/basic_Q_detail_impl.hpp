@@ -36,16 +36,17 @@ namespace jmaths {
 // implementation functions
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::ostream & basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_ins(std::ostream & os,
-                                                                               const basic_Q & q) {
+constexpr std::ostream & basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_ins(
+    std::ostream & os,
+    const basic_Q & q) {
     JMATHS_FUNCTION_TO_LOG;
 
     return os << q.conv_to_base_();
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::istream & basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_extr(std::istream & is,
-                                                                                basic_Q & q) {
+constexpr std::istream & basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_extr(std::istream & is,
+                                                                                   basic_Q & q) {
     JMATHS_FUNCTION_TO_LOG;
 
     std::string num_str;
@@ -55,8 +56,8 @@ inline std::istream & basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_extr(
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const basic_Q & lhs,
-                                                                     const basic_Q & rhs)
+constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const basic_Q & lhs,
+                                                                        const basic_Q & rhs)
     -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -74,7 +75,8 @@ inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const basic
         basic_N_type first_product = basic_N_type::detail::opr_mult(lhs.num_, rhs.denom_);
         basic_N_type second_product = basic_N_type::detail::opr_mult(lhs.denom_, rhs.num_);
 
-        if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
+        if (const auto difference = basic_N_type::detail::opr_comp(first_product, second_product);
+            difference == 0) {
             return basic_Q{};
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
@@ -99,7 +101,8 @@ inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const basic
         basic_N_type first_product = basic_N_type::detail::opr_mult(lhs.num_, rhs.denom_);
         basic_N_type second_product = basic_N_type::detail::opr_mult(lhs.denom_, rhs.num_);
 
-        if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
+        if (const auto difference = basic_N_type::detail::opr_comp(first_product, second_product);
+            difference == 0) {
             return basic_Q{};
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
@@ -116,8 +119,8 @@ inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const basic
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_subtr(const basic_Q & lhs,
-                                                                       const basic_Q & rhs)
+constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_subtr(const basic_Q & lhs,
+                                                                          const basic_Q & rhs)
     -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -135,7 +138,8 @@ inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_subtr(const bas
         basic_N_type first_product = basic_N_type::detail::opr_mult(lhs.num_, rhs.denom_);
         basic_N_type second_product = basic_N_type::detail::opr_mult(lhs.denom_, rhs.num_);
 
-        if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
+        if (const auto difference = basic_N_type::detail::opr_comp(first_product, second_product);
+            difference == 0) {
             return basic_Q{};
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
@@ -160,7 +164,8 @@ inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_subtr(const bas
         basic_N_type first_product = basic_N_type::detail::opr_mult(lhs.num_, rhs.denom_);
         basic_N_type second_product = basic_N_type::detail::opr_mult(lhs.denom_, rhs.num_);
 
-        if (const auto difference = opr_comp(first_product, second_product); difference == 0) {
+        if (const auto difference = basic_N_type::detail::opr_comp(first_product, second_product);
+            difference == 0) {
             return basic_Q{};
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
@@ -177,8 +182,8 @@ inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_subtr(const bas
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_mult(const basic_Q & lhs,
-                                                                      const basic_Q & rhs)
+constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_mult(const basic_Q & lhs,
+                                                                         const basic_Q & rhs)
     -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -192,8 +197,8 @@ inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_mult(const basi
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_div(const basic_Q & lhs,
-                                                                     const basic_Q & rhs)
+constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_div(const basic_Q & lhs,
+                                                                        const basic_Q & rhs)
     -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -207,8 +212,8 @@ inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_div(const basic
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_and(const basic_Q & lhs,
-                                                                     const basic_Q & rhs)
+constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_and(const basic_Q & lhs,
+                                                                        const basic_Q & rhs)
     -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -226,8 +231,9 @@ inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_and(const basic
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_or(const basic_Q & lhs,
-                                                                    const basic_Q & rhs) -> basic_Q {
+constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_or(const basic_Q & lhs,
+                                                                       const basic_Q & rhs)
+    -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
     basic_N_type numerator = lhs.num_ | rhs.num_;
@@ -240,8 +246,8 @@ inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_or(const basic_
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_xor(const basic_Q & lhs,
-                                                                     const basic_Q & rhs)
+constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_xor(const basic_Q & lhs,
+                                                                        const basic_Q & rhs)
     -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -259,15 +265,15 @@ inline auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_xor(const basic
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline bool basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_eq(const basic_Q & lhs,
-                                                                    const basic_Q & rhs) {
+constexpr bool basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_eq(const basic_Q & lhs,
+                                                                       const basic_Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return lhs.sign_ == rhs.sign_ && lhs.num_ == rhs.num_ && lhs.denom_ == rhs.denom_;
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::strong_ordering basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_comp(
+constexpr std::strong_ordering basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_comp(
     const basic_Q & lhs,
     const basic_Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;

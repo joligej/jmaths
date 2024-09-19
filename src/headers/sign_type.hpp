@@ -31,24 +31,24 @@ class sign_type {
     template <TMP::instance_of<basic_N, basic_Z> T> friend struct rand;
 
    public:
-    [[nodiscard]] bool is_positive() const;
-    [[nodiscard]] bool is_negative() const;
+    [[nodiscard]] constexpr bool is_positive() const;
+    [[nodiscard]] constexpr bool is_negative() const;
 
-    [[nodiscard]] virtual bool is_zero() const = 0;
-    void flip_sign();
+    [[nodiscard]] virtual constexpr bool is_zero() const = 0;
+    constexpr void flip_sign();
 
    protected:
     enum sign_bool : bool { positive = 0, negative = 1 } sign_;
 
-    sign_type();
-    sign_type(sign_bool sign);
-    sign_type(std::string_view * num_str);
-    sign_type(std::integral auto * num);
+    constexpr sign_type();
+    constexpr sign_type(sign_bool sign);
+    constexpr sign_type(std::string_view * num_str);
+    constexpr sign_type(std::integral auto * num);
 
-    [[nodiscard]] static sign_bool handle_string_(std::string_view * num_str);
-    [[nodiscard]] static sign_bool handle_int_(std::integral auto * num);
+    [[nodiscard]] static constexpr sign_bool handle_string_(std::string_view * num_str);
+    [[nodiscard]] static constexpr sign_bool handle_int_(std::integral auto * num);
 
-    void set_sign_(std::convertible_to<std::underlying_type_t<sign_bool>> auto val);
+    constexpr void set_sign_(std::convertible_to<std::underlying_type_t<sign_bool>> auto val);
 };
 
 }  // namespace jmaths

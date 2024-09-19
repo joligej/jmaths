@@ -27,7 +27,7 @@
 #include "hash.hpp"
 
 template <jmaths::TMP::instance_of<jmaths::basic_N> N>
-inline std::size_t std::hash<N>::operator()(const N & n) const {
+inline std::size_t std::hash<N>::operator()(const N & n) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (n.digits_.empty()) {
@@ -41,7 +41,7 @@ inline std::size_t std::hash<N>::operator()(const N & n) const {
 }
 
 template <jmaths::TMP::instance_of<jmaths::basic_Z> Z>
-inline std::size_t std::hash<Z>::operator()(const Z & z) const {
+inline std::size_t std::hash<Z>::operator()(const Z & z) {
     JMATHS_FUNCTION_TO_LOG;
 
     using hash_N = std::hash<typename Z::N>;
@@ -51,7 +51,7 @@ inline std::size_t std::hash<Z>::operator()(const Z & z) const {
 }
 
 template <jmaths::TMP::instance_of<jmaths::basic_Q> Q>
-inline std::size_t std::hash<Q>::operator()(const Q & q) const {
+inline std::size_t std::hash<Q>::operator()(const Q & q) {
     JMATHS_FUNCTION_TO_LOG;
 
     using hash_N = std::hash<typename Q::N>;

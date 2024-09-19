@@ -26,28 +26,31 @@ namespace jmaths {
 struct calc {
     template <TMP::instance_of<basic_N> basic_N_type_1,
               TMP::decays_to<basic_N_type_1> basic_N_type_2>
-    static auto gcd(basic_N_type_1 && a, basic_N_type_2 && b) -> std::decay_t<basic_N_type_1>;
+    static constexpr auto gcd(basic_N_type_1 && a, basic_N_type_2 && b)
+        -> std::decay_t<basic_N_type_1>;
 
     template <TMP::instance_of<basic_N> basic_N_type>
-    static auto sqrt(basic_N_type && num)
+    static constexpr auto sqrt(basic_N_type && num)
         -> std::pair<std::decay_t<basic_N_type>, std::decay_t<basic_N_type>>;
 
     template <TMP::instance_of<basic_N> basic_N_type>
-    static auto sqrt_whole(basic_N_type && num) -> std::decay_t<basic_N_type>;
+    static constexpr auto sqrt_whole(basic_N_type && num) -> std::decay_t<basic_N_type>;
 
     template <TMP::instance_of<basic_N> basic_N_type_1,
               TMP::decays_to<basic_N_type_1> basic_N_type_2>
-    static auto pow(basic_N_type_1 && base, basic_N_type_2 && exponent)
+    static constexpr auto pow(basic_N_type_1 && base, basic_N_type_2 && exponent)
         -> std::decay_t<basic_N_type_1>;
 
     template <TMP::instance_of<basic_N> basic_N_type_1,
               TMP::decays_to<basic_N_type_1> basic_N_type_2>
-    static auto pow_mod(basic_N_type_1 && base,
-                        basic_N_type_2 && exponent,
-                        const std::decay_t<basic_N_type_1> & mod) -> std::decay_t<basic_N_type_1>;
+    static constexpr auto pow_mod(basic_N_type_1 && base,
+                                  basic_N_type_2 && exponent,
+                                  const std::decay_t<basic_N_type_1> & mod)
+        -> std::decay_t<basic_N_type_1>;
 
     template <TMP::instance_of<basic_Z> basic_Z_type, TMP::instance_of<basic_N> basic_N_type>
-    static auto pow(basic_Z_type && base, basic_N_type && exponent) -> std::decay_t<basic_Z_type>;
+    static constexpr auto pow(basic_Z_type && base, basic_N_type && exponent)
+        -> std::decay_t<basic_Z_type>;
 };  // namespace struct calc
 
 }  // namespace jmaths

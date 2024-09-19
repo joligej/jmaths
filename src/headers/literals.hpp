@@ -22,9 +22,13 @@
 // declarations of literals
 namespace jmaths::inline literals {
 
-N operator""_N(const char * num_str);
+#ifdef JMATHS_TYPEDEF_N
+constexpr N operator""_N(const char * num_str);
+#endif
 
-Z operator""_Z(const char * num_str);
+#ifdef JMATHS_TYPEDEF_Z
+constexpr Z operator""_Z(const char * num_str);
+#endif
 
 }  // namespace jmaths::inline literals
 

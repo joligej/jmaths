@@ -35,16 +35,17 @@ namespace jmaths {
 // implementation functions
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::ostream & basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_ins(std::ostream & os,
-                                                                               const basic_Z & z) {
+constexpr std::ostream & basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_ins(
+    std::ostream & os,
+    const basic_Z & z) {
     JMATHS_FUNCTION_TO_LOG;
 
     return os << z.conv_to_base_();
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::istream & basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_extr(std::istream & is,
-                                                                                basic_Z & z) {
+constexpr std::istream & basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_extr(std::istream & is,
+                                                                                   basic_Z & z) {
     JMATHS_FUNCTION_TO_LOG;
 
     std::string num_str;
@@ -54,7 +55,7 @@ inline std::istream & basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_extr(
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline basic_Z<BaseInt, BaseIntBig, Allocator>
+constexpr basic_Z<BaseInt, BaseIntBig, Allocator>
 basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const basic_Z & lhs, const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -90,7 +91,7 @@ basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const basic_Z & lhs, co
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline basic_Z<BaseInt, BaseIntBig, Allocator>
+constexpr basic_Z<BaseInt, BaseIntBig, Allocator>
 basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_subtr(const basic_Z & lhs,
                                                            const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
@@ -127,7 +128,7 @@ basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_subtr(const basic_Z & lhs,
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline basic_Z<BaseInt, BaseIntBig, Allocator>
+constexpr basic_Z<BaseInt, BaseIntBig, Allocator>
 basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_mult(const basic_Z & lhs, const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -139,7 +140,7 @@ basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_mult(const basic_Z & lhs, c
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::pair<basic_Z<BaseInt, BaseIntBig, Allocator>, basic_Z<BaseInt, BaseIntBig, Allocator>>
+constexpr std::pair<basic_Z<BaseInt, BaseIntBig, Allocator>, basic_Z<BaseInt, BaseIntBig, Allocator>>
 basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_div(const basic_Z & lhs, const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -164,7 +165,7 @@ basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_div(const basic_Z & lhs, co
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline basic_Z<BaseInt, BaseIntBig, Allocator>
+constexpr basic_Z<BaseInt, BaseIntBig, Allocator>
 basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_and(const basic_Z & lhs, const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -176,7 +177,7 @@ basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_and(const basic_Z & lhs, co
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline basic_Z<BaseInt, BaseIntBig, Allocator>
+constexpr basic_Z<BaseInt, BaseIntBig, Allocator>
 basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_or(const basic_Z & lhs, const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -188,7 +189,7 @@ basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_or(const basic_Z & lhs, con
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline basic_Z<BaseInt, BaseIntBig, Allocator>
+constexpr basic_Z<BaseInt, BaseIntBig, Allocator>
 basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_xor(const basic_Z & lhs, const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -200,15 +201,15 @@ basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_xor(const basic_Z & lhs, co
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline bool basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_eq(const basic_Z & lhs,
-                                                                    const basic_Z & rhs) {
+constexpr bool basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_eq(const basic_Z & lhs,
+                                                                       const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return lhs.sign_ == rhs.sign_ && lhs.abs() == rhs.abs();
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::strong_ordering basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_comp(
+constexpr std::strong_ordering basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_comp(
     const basic_Z & lhs,
     const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;

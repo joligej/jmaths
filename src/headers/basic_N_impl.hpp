@@ -46,8 +46,8 @@
 namespace jmaths {
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-bool basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_eq(const basic_N & lhs,
-                                                             std::integral auto rhs) {
+constexpr bool basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_eq(const basic_N & lhs,
+                                                                       std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (const auto try_and_fit = lhs.template fits_into<decltype(rhs)>(); try_and_fit.has_value()) {
@@ -58,7 +58,7 @@ bool basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_eq(const basic_N & lhs
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-std::strong_ordering basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_comp(
+constexpr std::strong_ordering basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_comp(
     const basic_N & lhs,
     std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
@@ -71,28 +71,28 @@ std::strong_ordering basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_comp(
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-bool operator==(const basic_N_type & lhs, std::integral auto rhs) {
+constexpr bool operator==(const basic_N_type & lhs, std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return basic_N_type::detail::opr_eq(lhs, rhs);
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-bool operator==(std::integral auto lhs, const basic_N_type & rhs) {
+constexpr bool operator==(std::integral auto lhs, const basic_N_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return basic_N_type::detail::opr_eq(rhs, lhs);
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-std::strong_ordering operator<=>(const basic_N_type & lhs, std::integral auto rhs) {
+constexpr std::strong_ordering operator<=>(const basic_N_type & lhs, std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return basic_N_type::detail::opr_comp(lhs, rhs);
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-std::strong_ordering operator<=>(std::integral auto lhs, const basic_N_type & rhs) {
+constexpr std::strong_ordering operator<=>(std::integral auto lhs, const basic_N_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return 0 <=> basic_N_type::detail::opr_comp(rhs, lhs);
@@ -104,7 +104,7 @@ std::strong_ordering operator<=>(std::integral auto lhs, const basic_N_type & rh
 namespace jmaths {
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-void basic_N<BaseInt, BaseIntBig, Allocator>::handle_int_(std::integral auto num) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::handle_int_(std::integral auto num) {
     JMATHS_FUNCTION_TO_LOG;
 
     if constexpr (base_int_type_size < sizeof(num)) {
@@ -157,7 +157,7 @@ void basic_N<BaseInt, BaseIntBig, Allocator>::handle_int_(std::integral auto num
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
 template <std::unsigned_integral T>
-T basic_N<BaseInt, BaseIntBig, Allocator>::fit_into_(std::size_t max_byte) const {
+constexpr T basic_N<BaseInt, BaseIntBig, Allocator>::fit_into_(std::size_t max_byte) const {
     JMATHS_FUNCTION_TO_LOG;
 
     T converted = 0;
@@ -177,7 +177,7 @@ T basic_N<BaseInt, BaseIntBig, Allocator>::fit_into_(std::size_t max_byte) const
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-void basic_N<BaseInt, BaseIntBig, Allocator>::opr_assign_(std::integral auto rhs) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::opr_assign_(std::integral auto rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     set_zero();
@@ -185,7 +185,7 @@ void basic_N<BaseInt, BaseIntBig, Allocator>::opr_assign_(std::integral auto rhs
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-basic_N<BaseInt, BaseIntBig, Allocator>::basic_N(std::integral auto num) {
+constexpr basic_N<BaseInt, BaseIntBig, Allocator>::basic_N(std::integral auto num) {
     JMATHS_FUNCTION_TO_LOG;
 
     handle_int_(num);
@@ -193,7 +193,7 @@ basic_N<BaseInt, BaseIntBig, Allocator>::basic_N(std::integral auto num) {
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
 template <std::unsigned_integral T>
-std::optional<T> basic_N<BaseInt, BaseIntBig, Allocator>::fits_into() const {
+constexpr std::optional<T> basic_N<BaseInt, BaseIntBig, Allocator>::fits_into() const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return 0; }
@@ -230,7 +230,7 @@ std::optional<T> basic_N<BaseInt, BaseIntBig, Allocator>::fits_into() const {
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
 template <std::signed_integral T>
-std::optional<T> basic_N<BaseInt, BaseIntBig, Allocator>::fits_into() const {
+constexpr std::optional<T> basic_N<BaseInt, BaseIntBig, Allocator>::fits_into() const {
     JMATHS_FUNCTION_TO_LOG;
 
     auto fits_into_unsigned = fits_into<std::make_unsigned_t<T>>();
@@ -243,7 +243,8 @@ std::optional<T> basic_N<BaseInt, BaseIntBig, Allocator>::fits_into() const {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-auto basic_N<BaseInt, BaseIntBig, Allocator>::operator=(std::integral auto rhs) -> basic_N & {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator=(std::integral auto rhs)
+    -> basic_N & {
     JMATHS_FUNCTION_TO_LOG;
 
     opr_assign_(rhs);
@@ -257,15 +258,16 @@ namespace jmaths {
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
 template <TMP::decays_to<basic_N<BaseInt, BaseIntBig, Allocator>> T>
-basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference_base_<T>::bit_reference_base_(T & num,
-                                                                                     bitpos_t pos) :
+constexpr basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference_base_<T>::bit_reference_base_(
+    T & num,
+    bitpos_t pos) :
     num_(num), pos_{pos} {
     JMATHS_FUNCTION_TO_LOG;
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
 template <TMP::decays_to<basic_N<BaseInt, BaseIntBig, Allocator>> T>
-basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference_base_<T>::operator bool() const {
+constexpr basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference_base_<T>::operator bool() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return num_.bit_(pos_);
@@ -273,7 +275,7 @@ basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference_base_<T>::operator bool()
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
 template <TMP::decays_to<basic_N<BaseInt, BaseIntBig, Allocator>> T>
-basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference_base_<T>::operator int() const {
+constexpr basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference_base_<T>::operator int() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return operator bool();
@@ -295,9 +297,10 @@ inline const basic_N<BaseInt, BaseIntBig, Allocator> basic_N<BaseInt, BaseIntBig
 namespace jmaths::impl {
 
 template <std::unsigned_integral BaseInt>
-[[nodiscard]] BaseInt base_converter(char c) noexcept;  // convert char to number for base >= 2 and <= 64
+[[nodiscard]] constexpr BaseInt base_converter(
+    char c) noexcept;  // convert char to number for base >= 2 and <= 64
 
-template <std::unsigned_integral BaseInt> BaseInt base_converter(char c) noexcept {
+template <std::unsigned_integral BaseInt> constexpr BaseInt base_converter(char c) noexcept {
     JMATHS_FUNCTION_TO_LOG;
 
     if (c >= '0' && c <= '9') { return static_cast<unsigned char>(c - '0'); }
@@ -320,28 +323,28 @@ namespace jmaths {
 // forwarding functions
 
 template <TMP::instance_of<basic_N> basic_N_type>
-inline std::ostream & operator<<(std::ostream & os, const basic_N_type & n) {
+constexpr std::ostream & operator<<(std::ostream & os, const basic_N_type & n) {
     JMATHS_FUNCTION_TO_LOG;
 
     return basic_N_type::detail::opr_ins(os, n);
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-inline std::istream & operator>>(std::istream & is, basic_N_type & n) {
+constexpr std::istream & operator>>(std::istream & is, basic_N_type & n) {
     JMATHS_FUNCTION_TO_LOG;
 
     return basic_N_type::detail::opr_extr(is, n);
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-inline basic_N_type operator+(const basic_N_type & lhs, const basic_N_type & rhs) {
+constexpr basic_N_type operator+(const basic_N_type & lhs, const basic_N_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return basic_N_type::detail::opr_add(lhs, rhs);
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-inline basic_N_type operator-(const basic_N_type & lhs, const basic_N_type & rhs) {
+constexpr basic_N_type operator-(const basic_N_type & lhs, const basic_N_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     const auto difference = basic_N_type::detail::opr_comp(lhs, rhs);
@@ -352,15 +355,15 @@ inline basic_N_type operator-(const basic_N_type & lhs, const basic_N_type & rhs
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-inline basic_N_type operator*(const basic_N_type & lhs, const basic_N_type & rhs) {
+constexpr basic_N_type operator*(const basic_N_type & lhs, const basic_N_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return basic_N_type::detail::opr_mult(lhs, rhs);
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-inline std::pair<basic_N_type, basic_N_type> operator/(const basic_N_type & lhs,
-                                                       const basic_N_type & rhs) {
+constexpr std::pair<basic_N_type, basic_N_type> operator/(const basic_N_type & lhs,
+                                                          const basic_N_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     error::division_by_zero::check(rhs);
@@ -368,35 +371,35 @@ inline std::pair<basic_N_type, basic_N_type> operator/(const basic_N_type & lhs,
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-inline basic_N_type operator&(const basic_N_type & lhs, const basic_N_type & rhs) {
+constexpr basic_N_type operator&(const basic_N_type & lhs, const basic_N_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return basic_N_type::detail::opr_and(lhs, rhs);
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-inline basic_N_type operator|(const basic_N_type & lhs, const basic_N_type & rhs) {
+constexpr basic_N_type operator|(const basic_N_type & lhs, const basic_N_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return basic_N_type::detail::opr_or(lhs, rhs);
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-inline basic_N_type operator^(const basic_N_type & lhs, const basic_N_type & rhs) {
+constexpr basic_N_type operator^(const basic_N_type & lhs, const basic_N_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return basic_N_type::detail::opr_xor(lhs, rhs);
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-inline bool operator==(const basic_N_type & lhs, const basic_N_type & rhs) {
+constexpr bool operator==(const basic_N_type & lhs, const basic_N_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return basic_N_type::detail::opr_eq(lhs, rhs);
 }
 
 template <TMP::instance_of<basic_N> basic_N_type>
-inline std::strong_ordering operator<=>(const basic_N_type & lhs, const basic_N_type & rhs) {
+constexpr std::strong_ordering operator<=>(const basic_N_type & lhs, const basic_N_type & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return basic_N_type::detail::opr_comp(lhs, rhs);
@@ -408,7 +411,7 @@ inline std::strong_ordering operator<=>(const basic_N_type & lhs, const basic_N_
 namespace jmaths {
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::string basic_N<BaseInt, BaseIntBig, Allocator>::conv_to_base_(unsigned base) const {
+constexpr std::string basic_N<BaseInt, BaseIntBig, Allocator>::conv_to_base_(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
     static constexpr char base_converter[] =
@@ -441,7 +444,7 @@ inline std::string basic_N<BaseInt, BaseIntBig, Allocator>::conv_to_base_(unsign
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::remove_leading_zeroes_() {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::remove_leading_zeroes_() {
     JMATHS_FUNCTION_TO_LOG;
 
     while (!digits_.empty()) {
@@ -453,7 +456,7 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::remove_leading_zeroes_() {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::front_() const -> base_int_type {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::front_() const -> base_int_type {
     JMATHS_FUNCTION_TO_LOG;
 
     if (digits_.empty()) { return 0U; }
@@ -462,8 +465,8 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::front_() const -> base_int_
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::handle_str_(std::string_view num_str,
-                                                                 unsigned base) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::handle_str_(std::string_view num_str,
+                                                                    unsigned base) {
     JMATHS_FUNCTION_TO_LOG;
 
     // the naive yet faster check:
@@ -484,7 +487,7 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::handle_str_(std::string_vie
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline bool basic_N<BaseInt, BaseIntBig, Allocator>::bit_(bitpos_t pos) const {
+constexpr bool basic_N<BaseInt, BaseIntBig, Allocator>::bit_(bitpos_t pos) const {
     JMATHS_FUNCTION_TO_LOG;
 
     const std::size_t pos_whole = pos / base_int_type_bits;
@@ -498,7 +501,7 @@ inline bool basic_N<BaseInt, BaseIntBig, Allocator>::bit_(bitpos_t pos) const {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::bit_(bitpos_t pos, bool val) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::bit_(bitpos_t pos, bool val) {
     JMATHS_FUNCTION_TO_LOG;
 
     const std::size_t pos_whole = pos / base_int_type_bits;
@@ -529,14 +532,14 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::bit_(bitpos_t pos, bool val
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::size_t basic_N<BaseInt, BaseIntBig, Allocator>::dynamic_size_() const {
+constexpr std::size_t basic_N<BaseInt, BaseIntBig, Allocator>::dynamic_size_() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return digits_.size() * base_int_type_size;
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_incr_() {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::opr_incr_() {
     JMATHS_FUNCTION_TO_LOG;
 
     for (auto & digit : digits_) {
@@ -547,7 +550,7 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_incr_() {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_decr_() {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::opr_decr_() {
     JMATHS_FUNCTION_TO_LOG;
 
     for (auto & digit : digits_) {
@@ -561,7 +564,7 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_decr_() {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_add_assign_(const basic_N & rhs) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::opr_add_assign_(const basic_N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     // check for additive identity
@@ -602,7 +605,7 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_add_assign_(const basic
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_subtr_assign_(const basic_N & rhs) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::opr_subtr_assign_(const basic_N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     // this functions assumes that *this >= rhs and for effiency reasons should
@@ -625,7 +628,7 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_subtr_assign_(const bas
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_mult_assign_(const basic_N & rhs) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::opr_mult_assign_(const basic_N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     // !!! remove temporary (at least temp1) !!!
@@ -675,7 +678,7 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_mult_assign_(const basi
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_and_assign_(const basic_N & rhs) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::opr_and_assign_(const basic_N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (this->is_zero()) { return; }
@@ -695,7 +698,7 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_and_assign_(const basic
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_or_assign_(const basic_N & rhs) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::opr_or_assign_(const basic_N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (this->is_zero()) {
@@ -732,7 +735,7 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_or_assign_(const basic_
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_xor_assign_(const basic_N & rhs) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::opr_xor_assign_(const basic_N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (this->is_zero()) {
@@ -768,7 +771,7 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_xor_assign_(const basic
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::opr_compl_() const -> basic_N {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::opr_compl_() const -> basic_N {
     JMATHS_FUNCTION_TO_LOG;
 
     // this function returns 0 if *this == 0
@@ -787,7 +790,7 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::opr_compl_() const -> basic
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::opr_bitshift_l_(bitcount_t pos) const
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::opr_bitshift_l_(bitcount_t pos) const
     -> basic_N {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -822,7 +825,7 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::opr_bitshift_l_(bitcount_t 
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::opr_bitshift_r_(bitcount_t pos) const
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::opr_bitshift_r_(bitcount_t pos) const
     -> basic_N {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -859,7 +862,7 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::opr_bitshift_r_(bitcount_t 
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_bitshift_l_assign_(bitcount_t pos) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::opr_bitshift_l_assign_(bitcount_t pos) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return; }
@@ -890,7 +893,7 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_bitshift_l_assign_(bitc
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_bitshift_r_assign_(bitcount_t pos) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::opr_bitshift_r_assign_(bitcount_t pos) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return; }
@@ -920,7 +923,7 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_bitshift_r_assign_(bitc
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_assign_(std::string_view num_str) {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::opr_assign_(std::string_view num_str) {
     JMATHS_FUNCTION_TO_LOG;
 
     set_zero();
@@ -929,10 +932,10 @@ inline void basic_N<BaseInt, BaseIntBig, Allocator>::opr_assign_(std::string_vie
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline basic_N<BaseInt, BaseIntBig, Allocator>::basic_N() = default;
+constexpr basic_N<BaseInt, BaseIntBig, Allocator>::basic_N() = default;
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline basic_N<BaseInt, BaseIntBig, Allocator>::basic_N(std::string_view num_str, unsigned base) {
+constexpr basic_N<BaseInt, BaseIntBig, Allocator>::basic_N(std::string_view num_str, unsigned base) {
     JMATHS_FUNCTION_TO_LOG;
 
     error::invalid_base::check(base);
@@ -941,28 +944,28 @@ inline basic_N<BaseInt, BaseIntBig, Allocator>::basic_N(std::string_view num_str
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline bool basic_N<BaseInt, BaseIntBig, Allocator>::is_zero() const {
+constexpr bool basic_N<BaseInt, BaseIntBig, Allocator>::is_zero() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return digits_.empty();
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline bool basic_N<BaseInt, BaseIntBig, Allocator>::is_one() const {
+constexpr bool basic_N<BaseInt, BaseIntBig, Allocator>::is_one() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return digits_.size() == 1U && digits_.front() == 1U;
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline bool basic_N<BaseInt, BaseIntBig, Allocator>::is_even() const {
+constexpr bool basic_N<BaseInt, BaseIntBig, Allocator>::is_even() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return !is_odd();
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline bool basic_N<BaseInt, BaseIntBig, Allocator>::is_odd() const {
+constexpr bool basic_N<BaseInt, BaseIntBig, Allocator>::is_odd() const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return false; }
@@ -971,7 +974,7 @@ inline bool basic_N<BaseInt, BaseIntBig, Allocator>::is_odd() const {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline bitcount_t basic_N<BaseInt, BaseIntBig, Allocator>::ctz() const {
+constexpr bitcount_t basic_N<BaseInt, BaseIntBig, Allocator>::ctz() const {
     JMATHS_FUNCTION_TO_LOG;
 
     bitcount_t tz = 0U;
@@ -988,7 +991,7 @@ inline bitcount_t basic_N<BaseInt, BaseIntBig, Allocator>::ctz() const {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline bitcount_t basic_N<BaseInt, BaseIntBig, Allocator>::bits() const {
+constexpr bitcount_t basic_N<BaseInt, BaseIntBig, Allocator>::bits() const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return 1U; }
@@ -997,14 +1000,14 @@ inline bitcount_t basic_N<BaseInt, BaseIntBig, Allocator>::bits() const {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::size_t basic_N<BaseInt, BaseIntBig, Allocator>::size() const {
+constexpr std::size_t basic_N<BaseInt, BaseIntBig, Allocator>::size() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return sizeof(*this) + dynamic_size_();
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_str(unsigned base) const {
+constexpr std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_str(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
     error::invalid_base::check(base);
@@ -1013,7 +1016,7 @@ inline std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_str(unsigned base
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_hex() const {
+constexpr std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_hex() const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) {
@@ -1043,7 +1046,7 @@ inline std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_hex() const {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_bin() const {
+constexpr std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_bin() const {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) {
@@ -1071,21 +1074,21 @@ inline std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_bin() const {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline basic_N<BaseInt, BaseIntBig, Allocator>::operator bool() const {
+constexpr basic_N<BaseInt, BaseIntBig, Allocator>::operator bool() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return !is_zero();
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator[](bitpos_t pos) -> bit_reference {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator[](bitpos_t pos) -> bit_reference {
     JMATHS_FUNCTION_TO_LOG;
 
     return {*this, pos};
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator[](bitpos_t pos) const
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator[](bitpos_t pos) const
     -> const_bit_reference {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -1093,14 +1096,14 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator[](bitpos_t pos) co
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline void basic_N<BaseInt, BaseIntBig, Allocator>::set_zero() {
+constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::set_zero() {
     JMATHS_FUNCTION_TO_LOG;
 
     digits_.clear();
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator++() -> basic_N & {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator++() -> basic_N & {
     JMATHS_FUNCTION_TO_LOG;
 
     opr_incr_();
@@ -1108,7 +1111,7 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator++() -> basic_N & {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator--() -> basic_N & {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator--() -> basic_N & {
     JMATHS_FUNCTION_TO_LOG;
 
     opr_decr_();
@@ -1116,7 +1119,8 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator--() -> basic_N & {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator+=(const basic_N & rhs) -> basic_N & {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator+=(const basic_N & rhs)
+    -> basic_N & {
     JMATHS_FUNCTION_TO_LOG;
 
     opr_add_assign_(rhs);
@@ -1124,7 +1128,8 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator+=(const basic_N & 
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator-=(const basic_N & rhs) -> basic_N & {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator-=(const basic_N & rhs)
+    -> basic_N & {
     JMATHS_FUNCTION_TO_LOG;
 
     if (const auto difference = detail::opr_comp(*this, rhs); difference == 0) {
@@ -1139,7 +1144,8 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator-=(const basic_N & 
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator*=(const basic_N & rhs) -> basic_N & {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator*=(const basic_N & rhs)
+    -> basic_N & {
     JMATHS_FUNCTION_TO_LOG;
 
     opr_mult_assign_(rhs);
@@ -1147,7 +1153,8 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator*=(const basic_N & 
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator&=(const basic_N & rhs) -> basic_N & {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator&=(const basic_N & rhs)
+    -> basic_N & {
     JMATHS_FUNCTION_TO_LOG;
 
     opr_and_assign_(rhs);
@@ -1155,7 +1162,8 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator&=(const basic_N & 
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator|=(const basic_N & rhs) -> basic_N & {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator|=(const basic_N & rhs)
+    -> basic_N & {
     JMATHS_FUNCTION_TO_LOG;
 
     opr_or_assign_(rhs);
@@ -1163,7 +1171,8 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator|=(const basic_N & 
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator^=(const basic_N & rhs) -> basic_N & {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator^=(const basic_N & rhs)
+    -> basic_N & {
     JMATHS_FUNCTION_TO_LOG;
 
     opr_xor_assign_(rhs);
@@ -1171,28 +1180,28 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator^=(const basic_N & 
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator~() const -> basic_N {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator~() const -> basic_N {
     JMATHS_FUNCTION_TO_LOG;
 
     return opr_compl_();
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator<<(bitcount_t pos) const -> basic_N {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator<<(bitcount_t pos) const -> basic_N {
     JMATHS_FUNCTION_TO_LOG;
 
     return opr_bitshift_l_(pos);
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator>>(bitcount_t pos) const -> basic_N {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator>>(bitcount_t pos) const -> basic_N {
     JMATHS_FUNCTION_TO_LOG;
 
     return opr_bitshift_r_(pos);
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator<<=(bitcount_t pos) -> basic_N & {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator<<=(bitcount_t pos) -> basic_N & {
     JMATHS_FUNCTION_TO_LOG;
 
     opr_bitshift_l_assign_(pos);
@@ -1200,7 +1209,7 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator<<=(bitcount_t pos)
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator>>=(bitcount_t pos) -> basic_N & {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator>>=(bitcount_t pos) -> basic_N & {
     JMATHS_FUNCTION_TO_LOG;
 
     opr_bitshift_r_assign_(pos);
@@ -1208,7 +1217,7 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator>>=(bitcount_t pos)
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator=(std::string_view num_str)
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator=(std::string_view num_str)
     -> basic_N & {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -1222,22 +1231,22 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::operator=(std::string_view 
 namespace jmaths {
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference::bit_reference(
+constexpr basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference::bit_reference(
     const bit_reference & ref) = default;
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline basic_N<BaseInt, BaseIntBig, Allocator>::const_bit_reference::const_bit_reference(
+constexpr basic_N<BaseInt, BaseIntBig, Allocator>::const_bit_reference::const_bit_reference(
     const const_bit_reference & ref) = default;
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline basic_N<BaseInt, BaseIntBig, Allocator>::const_bit_reference::const_bit_reference(
+constexpr basic_N<BaseInt, BaseIntBig, Allocator>::const_bit_reference::const_bit_reference(
     const bit_reference & ref) :
     bit_reference_base_<const basic_N>(ref.num_, ref.pos_) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference::operator=(bool val)
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference::operator=(bool val)
     -> bit_reference & {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -1246,7 +1255,7 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference::operator=(bo
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference::operator=(
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference::operator=(
     const bit_reference & ref) -> bit_reference & {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -1255,7 +1264,7 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference::operator=(
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference::operator=(
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference::operator=(
     const const_bit_reference & ref) -> bit_reference & {
     JMATHS_FUNCTION_TO_LOG;
 

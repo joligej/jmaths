@@ -40,16 +40,17 @@ namespace jmaths {
 // implementation functions
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::ostream & basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_ins(std::ostream & os,
-                                                                               const basic_N & n) {
+constexpr std::ostream & basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_ins(
+    std::ostream & os,
+    const basic_N & n) {
     JMATHS_FUNCTION_TO_LOG;
 
     return os << n.conv_to_base_();
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::istream & basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_extr(std::istream & is,
-                                                                                basic_N & n) {
+constexpr std::istream & basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_extr(std::istream & is,
+                                                                                   basic_N & n) {
     JMATHS_FUNCTION_TO_LOG;
 
     std::string num_str;
@@ -62,8 +63,8 @@ inline std::istream & basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_extr(
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const basic_N & lhs,
-                                                                     const basic_N & rhs)
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const basic_N & lhs,
+                                                                        const basic_N & rhs)
     -> basic_N {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -129,8 +130,8 @@ end_of_function:
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_subtr(basic_N lhs,
-                                                                       const basic_N & rhs)
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_subtr(basic_N lhs,
+                                                                          const basic_N & rhs)
     -> basic_N {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -167,8 +168,8 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_subtr(basic_N l
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_mult(const basic_N & lhs,
-                                                                      const basic_N & rhs)
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_mult(const basic_N & lhs,
+                                                                         const basic_N & rhs)
     -> basic_N {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -252,8 +253,8 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_mult(const basi
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_div(const basic_N & lhs,
-                                                                     const basic_N & rhs)
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_div(const basic_N & lhs,
+                                                                        const basic_N & rhs)
     -> std::pair<basic_N, basic_N> {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -308,8 +309,8 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_div(const basic
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_and(const basic_N & lhs,
-                                                                     const basic_N & rhs)
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_and(const basic_N & lhs,
+                                                                        const basic_N & rhs)
     -> basic_N {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -330,8 +331,9 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_and(const basic
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_or(const basic_N & lhs,
-                                                                    const basic_N & rhs) -> basic_N {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_or(const basic_N & lhs,
+                                                                       const basic_N & rhs)
+    -> basic_N {
     JMATHS_FUNCTION_TO_LOG;
 
     if (lhs.is_zero()) { return rhs; }
@@ -365,8 +367,8 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_or(const basic_
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_xor(const basic_N & lhs,
-                                                                     const basic_N & rhs)
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_xor(const basic_N & lhs,
+                                                                        const basic_N & rhs)
     -> basic_N {
     JMATHS_FUNCTION_TO_LOG;
 
@@ -403,15 +405,15 @@ inline auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_xor(const basic
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline bool basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_eq(const basic_N & lhs,
-                                                                    const basic_N & rhs) {
+constexpr bool basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_eq(const basic_N & lhs,
+                                                                       const basic_N & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
     return lhs.digits_ == rhs.digits_;
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-inline std::strong_ordering basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_comp(
+constexpr std::strong_ordering basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_comp(
     const basic_N & lhs,
     const basic_N & rhs) {
     JMATHS_FUNCTION_TO_LOG;

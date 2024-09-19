@@ -27,11 +27,11 @@
 // member function templates of sign_type
 namespace jmaths {
 
-sign_type::sign_type(std::integral auto * num) : sign_{handle_int_(num)} {
+constexpr sign_type::sign_type(std::integral auto * num) : sign_{handle_int_(num)} {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-sign_type::sign_bool sign_type::handle_int_(std::integral auto * num) {
+constexpr sign_type::sign_bool sign_type::handle_int_(std::integral auto * num) {
     JMATHS_FUNCTION_TO_LOG;
 
     if constexpr (std::unsigned_integral<decltype(*num)>) {
@@ -49,7 +49,8 @@ sign_type::sign_bool sign_type::handle_int_(std::integral auto * num) {
     }
 }
 
-void sign_type::set_sign_(std::convertible_to<std::underlying_type_t<sign_bool>> auto val) {
+constexpr void sign_type::set_sign_(
+    std::convertible_to<std::underlying_type_t<sign_bool>> auto val) {
     JMATHS_FUNCTION_TO_LOG;
 
     sign_ = static_cast<sign_bool>(val);
@@ -60,19 +61,19 @@ void sign_type::set_sign_(std::convertible_to<std::underlying_type_t<sign_bool>>
 // member functions of sign_type
 namespace jmaths {
 
-inline sign_type::sign_type() : sign_{positive} {
+constexpr sign_type::sign_type() : sign_{positive} {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-inline sign_type::sign_type(sign_bool sign) : sign_{sign} {
+constexpr sign_type::sign_type(sign_bool sign) : sign_{sign} {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-inline sign_type::sign_type(std::string_view * num_str) : sign_{handle_string_(num_str)} {
+constexpr sign_type::sign_type(std::string_view * num_str) : sign_{handle_string_(num_str)} {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-inline sign_type::sign_bool sign_type::handle_string_(std::string_view * num_str) {
+constexpr sign_type::sign_bool sign_type::handle_string_(std::string_view * num_str) {
     JMATHS_FUNCTION_TO_LOG;
 
     if (!num_str->empty() && num_str->front() == negative_sign) {
@@ -83,19 +84,19 @@ inline sign_type::sign_bool sign_type::handle_string_(std::string_view * num_str
     }
 }
 
-inline bool sign_type::is_positive() const {
+constexpr bool sign_type::is_positive() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return sign_ == positive;
 }
 
-inline bool sign_type::is_negative() const {
+constexpr bool sign_type::is_negative() const {
     JMATHS_FUNCTION_TO_LOG;
 
     return sign_ == negative;
 }
 
-inline void sign_type::flip_sign() {
+constexpr void sign_type::flip_sign() {
     JMATHS_FUNCTION_TO_LOG;
 
     if (is_zero()) { return; }

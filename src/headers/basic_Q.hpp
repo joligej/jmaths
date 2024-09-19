@@ -40,49 +40,49 @@
 namespace jmaths {
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-std::ostream & operator<<(std::ostream & os, const basic_Q_type & q);
+constexpr std::ostream & operator<<(std::ostream & os, const basic_Q_type & q);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-std::istream & operator>>(std::istream & is, basic_Q_type & q);
+constexpr std::istream & operator>>(std::istream & is, basic_Q_type & q);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-basic_Q_type operator+(const basic_Q_type & lhs, const basic_Q_type & rhs);
+constexpr basic_Q_type operator+(const basic_Q_type & lhs, const basic_Q_type & rhs);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-basic_Q_type operator-(const basic_Q_type & lhs, const basic_Q_type & rhs);
+constexpr basic_Q_type operator-(const basic_Q_type & lhs, const basic_Q_type & rhs);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-basic_Q_type operator*(const basic_Q_type & lhs, const basic_Q_type & rhs);
+constexpr basic_Q_type operator*(const basic_Q_type & lhs, const basic_Q_type & rhs);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-basic_Q_type operator/(const basic_Q_type & lhs, const basic_Q_type & rhs);
+constexpr basic_Q_type operator/(const basic_Q_type & lhs, const basic_Q_type & rhs);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-basic_Q_type operator&(const basic_Q_type & lhs, const basic_Q_type & rhs);
+constexpr basic_Q_type operator&(const basic_Q_type & lhs, const basic_Q_type & rhs);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-basic_Q_type operator|(const basic_Q_type & lhs, const basic_Q_type & rhs);
+constexpr basic_Q_type operator|(const basic_Q_type & lhs, const basic_Q_type & rhs);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-basic_Q_type operator^(const basic_Q_type & lhs, const basic_Q_type & rhs);
+constexpr basic_Q_type operator^(const basic_Q_type & lhs, const basic_Q_type & rhs);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-bool operator==(const basic_Q_type & lhs, const basic_Q_type & rhs);
+constexpr bool operator==(const basic_Q_type & lhs, const basic_Q_type & rhs);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-bool operator==(const basic_Q_type & lhs, std::floating_point auto rhs);
+constexpr bool operator==(const basic_Q_type & lhs, std::floating_point auto rhs);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-bool operator==(std::floating_point auto lhs, const basic_Q_type & rhs);
+constexpr bool operator==(std::floating_point auto lhs, const basic_Q_type & rhs);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-std::strong_ordering operator<=>(const basic_Q_type & lhs, const basic_Q_type & rhs);
+constexpr std::strong_ordering operator<=>(const basic_Q_type & lhs, const basic_Q_type & rhs);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-std::strong_ordering operator<=>(const basic_Q_type & lhs, std::floating_point auto rhs);
+constexpr std::strong_ordering operator<=>(const basic_Q_type & lhs, std::floating_point auto rhs);
 
 template <TMP::instance_of<basic_Q> basic_Q_type>
-std::strong_ordering operator<=>(std::floating_point auto lhs, const basic_Q_type & rhs);
+constexpr std::strong_ordering operator<=>(std::floating_point auto lhs, const basic_Q_type & rhs);
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator = allocator<BaseInt>>
 class basic_Q final : public sign_type {
@@ -104,95 +104,96 @@ class basic_Q final : public sign_type {
    public:
     struct detail;
 
-    basic_Q();
-    explicit basic_Q(std::string_view num_str, unsigned base = default_base);
-    basic_Q(std::floating_point auto num);
+    constexpr basic_Q();
+    explicit constexpr basic_Q(std::string_view num_str, unsigned base = default_base);
+    constexpr basic_Q(std::floating_point auto num);
 
-    basic_Q(const basic_N_type & n);
-    basic_Q(basic_N_type && n);
+    explicit constexpr basic_Q(const basic_N_type & n);
+    explicit constexpr basic_Q(basic_N_type && n);
 
-    basic_Q(const basic_Z_type & z);
-    basic_Q(basic_Z_type && z);
+    explicit constexpr basic_Q(const basic_Z_type & z);
+    explicit constexpr basic_Q(basic_Z_type && z);
 
-    basic_Q(const basic_N_type & num, const basic_N_type & denom);
-    basic_Q(const basic_N_type & num, basic_N_type && denom);
-    basic_Q(basic_N_type && num, const basic_N_type & denom);
-    basic_Q(basic_N_type && num, basic_N_type && denom);
+    constexpr basic_Q(const basic_N_type & num, const basic_N_type & denom);
+    constexpr basic_Q(const basic_N_type & num, basic_N_type && denom);
+    constexpr basic_Q(basic_N_type && num, const basic_N_type & denom);
+    constexpr basic_Q(basic_N_type && num, basic_N_type && denom);
 
-    basic_Q(const basic_Z_type & num, const basic_Z_type & denom);
-    basic_Q(const basic_Z_type & num, basic_Z_type && denom);
-    basic_Q(basic_Z_type && num, const basic_Z_type & denom);
-    basic_Q(basic_Z_type && num, basic_Z_type && denom);
+    constexpr basic_Q(const basic_Z_type & num, const basic_Z_type & denom);
+    constexpr basic_Q(const basic_Z_type & num, basic_Z_type && denom);
+    constexpr basic_Q(basic_Z_type && num, const basic_Z_type & denom);
+    constexpr basic_Q(basic_Z_type && num, basic_Z_type && denom);
 
-    [[nodiscard]] bool is_zero() const override;
-    [[nodiscard]] bool is_one() const;
-    [[nodiscard]] bool is_neg_one() const;
+    [[nodiscard]] constexpr bool is_zero() const override;
+    [[nodiscard]] constexpr bool is_one() const;
+    [[nodiscard]] constexpr bool is_neg_one() const;
 
-    [[nodiscard]] basic_Q abs() const &;
-    [[nodiscard]] basic_Q && abs() &&;
+    [[nodiscard]] constexpr basic_Q abs() const &;
+    [[nodiscard]] constexpr basic_Q && abs() &&;
 
-    [[nodiscard]] basic_Q inverse() const &;
-    [[nodiscard]] basic_Q && inverse() &&;
+    [[nodiscard]] constexpr basic_Q inverse() const &;
+    [[nodiscard]] constexpr basic_Q && inverse() &&;
 
-    [[nodiscard]] std::size_t size() const;  // size of this object in bytes
+    [[nodiscard]] constexpr std::size_t size() const;  // size of this object in bytes
 
-    [[nodiscard]] std::string to_str(
-        unsigned base = default_base) const;   // convert to string in any base >= 2 and <= 64
-    [[nodiscard]] std::string to_hex() const;  // convert to string in base 16 (assumes base
-                                               // is an integer power of 2)
-    [[nodiscard]] std::string to_bin() const;  // convert to string in base 2
+    [[nodiscard]] constexpr std::string to_str(
+        unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
+    [[nodiscard]] constexpr std::string to_hex() const;  // convert to string in base 16 (assumes
+                                                         // base is an integer power of 2)
+    [[nodiscard]] constexpr std::string to_bin() const;  // convert to string in base 2
 
-    explicit operator bool() const;
+    explicit constexpr operator bool() const;
     template <std::floating_point T>
         requires std::numeric_limits<T>::is_iec559
-    [[nodiscard]] std::optional<T> fits_into() const;
+    [[nodiscard]] constexpr std::optional<T> fits_into() const;
 
-    basic_Q & operator++();
-    basic_Q & operator--();
+    constexpr basic_Q & operator++();
+    constexpr basic_Q & operator--();
 
-    basic_Q & operator+=(const basic_Q & rhs);
-    basic_Q & operator-=(const basic_Q & rhs);
-    basic_Q & operator*=(const basic_Q & rhs);
-    basic_Q & operator/=(const basic_Q & rhs);
+    constexpr basic_Q & operator+=(const basic_Q & rhs);
+    constexpr basic_Q & operator-=(const basic_Q & rhs);
+    constexpr basic_Q & operator*=(const basic_Q & rhs);
+    constexpr basic_Q & operator/=(const basic_Q & rhs);
 
-    basic_Q & operator&=(const basic_Q & rhs);
-    basic_Q & operator|=(const basic_Q & rhs);
-    basic_Q & operator^=(const basic_Q & rhs);
+    constexpr basic_Q & operator&=(const basic_Q & rhs);
+    constexpr basic_Q & operator|=(const basic_Q & rhs);
+    constexpr basic_Q & operator^=(const basic_Q & rhs);
 
-    [[nodiscard]] basic_Q operator-() const &;
-    [[nodiscard]] basic_Q && operator-() &&;
-    [[nodiscard]] basic_Q operator~() const;
-    [[nodiscard]] basic_Q operator<<(bitcount_t pos) const;
-    [[nodiscard]] basic_Q operator>>(bitcount_t pos) const;
+    [[nodiscard]] constexpr basic_Q operator-() const &;
+    [[nodiscard]] constexpr basic_Q && operator-() &&;
+    [[nodiscard]] constexpr basic_Q operator~() const;
+    [[nodiscard]] constexpr basic_Q operator<<(bitcount_t pos) const;
+    [[nodiscard]] constexpr basic_Q operator>>(bitcount_t pos) const;
 
-    basic_Q & operator<<=(bitcount_t pos);
-    basic_Q & operator>>=(bitcount_t pos);
+    constexpr basic_Q & operator<<=(bitcount_t pos);
+    constexpr basic_Q & operator>>=(bitcount_t pos);
 
-    basic_Q & operator=(std::string_view num_str);
-    basic_Q & operator=(std::floating_point auto rhs);
+    constexpr basic_Q & operator=(std::string_view num_str);
+    constexpr basic_Q & operator=(std::floating_point auto rhs);
 
-    basic_Q & operator=(const basic_N_type & n);
-    basic_Q & operator=(basic_N_type && n);
+    constexpr basic_Q & operator=(const basic_N_type & n);
+    constexpr basic_Q & operator=(basic_N_type && n);
 
-    basic_Q & operator=(const basic_Z_type & z);
-    basic_Q & operator=(basic_Z_type && z);
+    constexpr basic_Q & operator=(const basic_Z_type & z);
+    constexpr basic_Q & operator=(basic_Z_type && z);
 
    private:
     basic_N_type num_, denom_;
 
-    basic_Q(basic_N_type && num, basic_N_type && denom, sign_bool sign);
-    basic_Q(const basic_N_type & num, const basic_N_type & denom, sign_bool sign);
-    basic_Q(std::tuple<basic_N_type, basic_N_type, sign_bool> && fraction_info);
+    constexpr basic_Q(basic_N_type && num, basic_N_type && denom, sign_bool sign);
+    constexpr basic_Q(const basic_N_type & num, const basic_N_type & denom, sign_bool sign);
+    constexpr basic_Q(std::tuple<basic_N_type, basic_N_type, sign_bool> && fraction_info);
 
-    [[nodiscard]] static std::string_view handle_fraction_string_(std::string_view * num_str);
+    [[nodiscard]] static constexpr std::string_view handle_fraction_string_(
+        std::string_view * num_str);
 
-    void canonicalise_();
-    [[nodiscard]] std::string conv_to_base_(unsigned base = default_base) const;
+    constexpr void canonicalise_();
+    [[nodiscard]] constexpr std::string conv_to_base_(unsigned base = default_base) const;
 
-    [[nodiscard]] static std::tuple<basic_N_type, basic_N_type, sign_bool> handle_float_(
+    [[nodiscard]] static constexpr std::tuple<basic_N_type, basic_N_type, sign_bool> handle_float_(
         std::floating_point auto num);
 
-    [[nodiscard]] std::size_t dynamic_size_() const;
+    [[nodiscard]] constexpr std::size_t dynamic_size_() const;
 };
 
 }  // namespace jmaths
@@ -201,23 +202,24 @@ namespace jmaths {
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
 struct basic_Q<BaseInt, BaseIntBig, Allocator>::detail {
-    static std::ostream & opr_ins(std::ostream & os, const basic_Q & q);
-    static std::istream & opr_extr(std::istream & is, basic_Q & q);
+    static constexpr std::ostream & opr_ins(std::ostream & os, const basic_Q & q);
+    static constexpr std::istream & opr_extr(std::istream & is, basic_Q & q);
 
-    static basic_Q opr_add(const basic_Q & lhs, const basic_Q & rhs);
-    static basic_Q opr_subtr(const basic_Q & lhs, const basic_Q & rhs);
-    static basic_Q opr_mult(const basic_Q & lhs, const basic_Q & rhs);
-    static basic_Q opr_div(const basic_Q & lhs, const basic_Q & rhs);
+    static constexpr basic_Q opr_add(const basic_Q & lhs, const basic_Q & rhs);
+    static constexpr basic_Q opr_subtr(const basic_Q & lhs, const basic_Q & rhs);
+    static constexpr basic_Q opr_mult(const basic_Q & lhs, const basic_Q & rhs);
+    static constexpr basic_Q opr_div(const basic_Q & lhs, const basic_Q & rhs);
 
-    static basic_Q opr_and(const basic_Q & lhs, const basic_Q & rhs);
-    static basic_Q opr_or(const basic_Q & lhs, const basic_Q & rhs);
-    static basic_Q opr_xor(const basic_Q & lhs, const basic_Q & rhs);
+    static constexpr basic_Q opr_and(const basic_Q & lhs, const basic_Q & rhs);
+    static constexpr basic_Q opr_or(const basic_Q & lhs, const basic_Q & rhs);
+    static constexpr basic_Q opr_xor(const basic_Q & lhs, const basic_Q & rhs);
 
-    static bool opr_eq(const basic_Q & lhs, const basic_Q & rhs);
-    static bool opr_eq(const basic_Q & lhs, std::floating_point auto rhs);
+    static constexpr bool opr_eq(const basic_Q & lhs, const basic_Q & rhs);
+    static constexpr bool opr_eq(const basic_Q & lhs, std::floating_point auto rhs);
 
-    static std::strong_ordering opr_comp(const basic_Q & lhs, const basic_Q & rhs);
-    static std::strong_ordering opr_comp(const basic_Q & lhs, std::floating_point auto rhs);
+    static constexpr std::strong_ordering opr_comp(const basic_Q & lhs, const basic_Q & rhs);
+    static constexpr std::strong_ordering opr_comp(const basic_Q & lhs,
+                                                   std::floating_point auto rhs);
 };
 
 }  // namespace jmaths
@@ -226,14 +228,17 @@ namespace jmaths {
 
 #if defined(UINT64_MAX) && defined(UINT32_MAX)
 
+    #define JMATHS_TYPEDEF_Q 32
 using Q = basic_Q<std::uint32_t, std::uint64_t>;
 
 #elif defined(UINT32_MAX) && defined(UINT16_MAX)
 
+    #define JMATHS_TYPEDEF_Q 16
 using Q = basic_Q<std::uint16_t, std::uint32_t>;
 
 #elif defined(UINT16_MAX) && defined(UINT8_MAX)
 
+    #define JMATHS_TYPEDEF_Q 8
 using Q = basic_Q<std::uint8_t, std::uint16_t>;
 
 #endif
