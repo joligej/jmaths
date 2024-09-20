@@ -138,8 +138,7 @@ class basic_Q final : public sign_type {
     [[nodiscard]] constexpr std::size_t size() const;  // size of this object in bytes
 
     [[nodiscard]] constexpr std::string to_str(
-        this auto && self,
-        unsigned base = default_base);  // convert to string in any base >= 2 and <= 64
+        unsigned base = default_base) const;  // convert to string in any base >= 2 and <= 64
     [[nodiscard]] constexpr std::string to_hex() const;  // convert to string in base 16 (assumes
                                                          // base is an integer power of 2)
     [[nodiscard]] constexpr std::string to_bin() const;  // convert to string in base 2
@@ -190,8 +189,7 @@ class basic_Q final : public sign_type {
         std::string_view * num_str);
 
     constexpr void canonicalise_();
-    [[nodiscard]] constexpr std::string conv_to_base_(this auto && self,
-                                                      unsigned base = default_base);
+    [[nodiscard]] constexpr std::string conv_to_base_(unsigned base = default_base) const;
 
     [[nodiscard]] static constexpr std::tuple<basic_N_type, basic_N_type, sign_bool> handle_float_(
         std::floating_point auto num);

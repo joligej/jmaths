@@ -481,17 +481,12 @@ constexpr void basic_Q<BaseInt, BaseIntBig, Allocator>::canonicalise_() {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-constexpr std::string basic_Q<BaseInt, BaseIntBig, Allocator>::conv_to_base_(this auto && self,
-                                                                             unsigned base) {
+constexpr std::string basic_Q<BaseInt, BaseIntBig, Allocator>::conv_to_base_(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (self.is_positive()) {
-        return std::forward<decltype(self)>(self).num_.conv_to_base_(base) + vinculum +
-               std::forward<decltype(self)>(self).denom_.conv_to_base_(base);
-    }
+    if (is_positive()) { return num_.conv_to_base_(base) + vinculum + denom_.conv_to_base_(base); }
 
-    return negative_sign + std::forward<decltype(self)>(self).num_.conv_to_base_(base) + vinculum +
-           std::forward<decltype(self)>(self).denom_.conv_to_base_(base);
+    return negative_sign + num_.conv_to_base_(base) + vinculum + denom_.conv_to_base_(base);
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
@@ -700,13 +695,12 @@ constexpr std::size_t basic_Q<BaseInt, BaseIntBig, Allocator>::size() const {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-constexpr std::string basic_Q<BaseInt, BaseIntBig, Allocator>::to_str(this auto && self,
-                                                                      unsigned base) {
+constexpr std::string basic_Q<BaseInt, BaseIntBig, Allocator>::to_str(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
     error::invalid_base::check(base);
 
-    return std::forward<decltype(self)>(self).conv_to_base_(base);
+    return conv_to_base_(base);
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>

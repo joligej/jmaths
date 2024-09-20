@@ -411,25 +411,24 @@ constexpr std::strong_ordering operator<=>(const basic_N_type & lhs, const basic
 namespace jmaths {
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-constexpr std::string basic_N<BaseInt, BaseIntBig, Allocator>::conv_to_base_(this auto && self,
-                                                                             unsigned base) {
+constexpr std::string basic_N<BaseInt, BaseIntBig, Allocator>::conv_to_base_(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
     static constexpr char base_converter[] =
         "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+~";
 
-    if (self.is_zero()) {
+    if (is_zero()) {
         static const /*expr*/ std::string zero = "0";
         return zero;
     }
 
     std::string num_str;
 
-    const std::size_t digits_needed = (self.digits_.size() * base_int_type_bits) / base + 1U;
+    const std::size_t digits_needed = (digits_.size() * base_int_type_bits) / base + 1U;
 
     num_str.reserve(digits_needed);
 
-    TMP::ref_or_copy_t<decltype(self)> helper(self);
+    basic_N helper(*this);
 
     while (!helper.is_zero()) {
         auto [quotient, remainder] = detail::opr_div(helper, base);
@@ -1008,13 +1007,12 @@ constexpr std::size_t basic_N<BaseInt, BaseIntBig, Allocator>::size() const {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-constexpr std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_str(this auto && self,
-                                                                      unsigned base) {
+constexpr std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_str(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
     error::invalid_base::check(base);
 
-    return std::forward<decltype(self)>(self).conv_to_base_(base);
+    return conv_to_base_(base);
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>

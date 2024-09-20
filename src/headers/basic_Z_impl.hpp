@@ -248,14 +248,13 @@ constexpr basic_Z<BaseInt, BaseIntBig, Allocator>::basic_Z(const basic_N_type & 
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-constexpr std::string basic_Z<BaseInt, BaseIntBig, Allocator>::conv_to_base_(this auto && self,
-                                                                             unsigned base) {
+constexpr std::string basic_Z<BaseInt, BaseIntBig, Allocator>::conv_to_base_(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
-    if (self.is_negative()) {
-        return negative_sign + std::forward<decltype(self)>(self).basic_N_type::conv_to_base_(base);
+    if (is_negative()) {
+        return negative_sign + basic_N_type::conv_to_base_(base);
     } else {
-        return std::forward<decltype(self)>(self).basic_N_type::conv_to_base_(base);
+        return basic_N_type::conv_to_base_(base);
     }
 }
 
@@ -332,13 +331,12 @@ constexpr std::size_t basic_Z<BaseInt, BaseIntBig, Allocator>::size() const {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-constexpr std::string basic_Z<BaseInt, BaseIntBig, Allocator>::to_str(this auto && self,
-                                                                      unsigned base) {
+constexpr std::string basic_Z<BaseInt, BaseIntBig, Allocator>::to_str(unsigned base) const {
     JMATHS_FUNCTION_TO_LOG;
 
     error::invalid_base::check(base);
 
-    return std::forward<decltype(self)>(self).conv_to_base_(base);
+    return conv_to_base_(base);
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
