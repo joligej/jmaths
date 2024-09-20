@@ -47,6 +47,8 @@ constexpr error::division_by_zero::division_by_zero(std::string_view message) : 
 };
 
 constexpr void error::division_by_zero::check(const auto & num, std::string_view message) {
+    JMATHS_FUNCTION_TO_LOG;
+
     if constexpr (requires { !num.is_zero(); }) {
         if (!num.is_zero()) { return; }
     } else {

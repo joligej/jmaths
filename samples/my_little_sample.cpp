@@ -187,6 +187,7 @@ constexpr bool timed_func() {
 }
 
 int main(int, char *[]) {
+#if 0
     const N n1("255");
 
     std::cout << n1 << '\n';
@@ -211,11 +212,11 @@ int main(int, char *[]) {
     std::println("z1 == {0}!", z1);
     std::println("z1 == {0:64}!", z1);
 
-#if 0
+    #if 0
     int base;
     std::cin >> base;
     std::cout << z1.to_str(base) << '\n';
-#endif
+    #endif
 
     auto inttest = 17'335'634'962'698'473'524ULL;
 
@@ -306,4 +307,11 @@ int main(int, char *[]) {
     std::ignore = Q(12.0) ^ Q(11.9);
 
     std::println("{}, {}, {}", 12_Q, 141_Q, 10123234_Q);
+#endif
+
+    std::println("{:10}", N(17));
+    std::println("{:10}", Z(-18));
+    std::println("{:10}", Q(-22.7));
+
+    std::println("{:10}", (N("24") / N("6")).first);
 }
