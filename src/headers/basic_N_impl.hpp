@@ -1035,7 +1035,8 @@ constexpr std::string basic_N<BaseInt, BaseIntBig, Allocator>::to_hex() const {
 
     oss.setf(std::ios_base::right, std::ios_base::adjustfield);
     static constexpr auto field_width = base_int_type_bits / 4U;
-    oss.width(field_width);
+    // ReSharper disable once CppRedundantCastExpression
+    oss.width(static_cast<std::streamsize>(field_width));
     oss.fill('0');
 
     while (++crit != digits_.crend()) {
