@@ -31,9 +31,9 @@ class error : public std::exception {
     class division_by_zero;
     class invalid_base;
 
-    constexpr error();
-    explicit constexpr error(std::string_view message);
-    [[nodiscard]] constexpr const char * what() const noexcept override;
+    error();
+    explicit error(std::string_view message);
+    [[nodiscard]] const char * what() const noexcept override;
 
    private:
     const std::string message_;
@@ -43,8 +43,8 @@ class error::division_by_zero : public error {
    public:
     static constexpr char default_message[] = "You tried to divide by zero!";
 
-    constexpr division_by_zero();
-    explicit constexpr division_by_zero(std::string_view message);
+    division_by_zero();
+    explicit division_by_zero(std::string_view message);
 
     static constexpr void check(const auto & num, std::string_view message = default_message);
 };
@@ -53,8 +53,8 @@ class error::invalid_base : public error {
    public:
     static constexpr char default_message[] = "You need to enter a base between 2 and 64!";
 
-    constexpr invalid_base();
-    explicit constexpr invalid_base(std::string_view message);
+    invalid_base();
+    explicit invalid_base(std::string_view message);
 
     static constexpr void check(unsigned base);
 

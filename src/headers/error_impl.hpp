@@ -24,25 +24,25 @@
 // member functions of error and derived types
 namespace jmaths {
 
-constexpr error::error() : error(default_message) {
+inline error::error() : error(default_message) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-constexpr error::error(std::string_view message) : message_(message) {
+inline error::error(std::string_view message) : message_(message) {
     JMATHS_FUNCTION_TO_LOG;
 };
 
-constexpr const char * error::what() const noexcept {
+inline const char * error::what() const noexcept {
     JMATHS_FUNCTION_TO_LOG;
 
     return message_.c_str();
 }
 
-constexpr error::division_by_zero::division_by_zero() : error(default_message) {
+inline error::division_by_zero::division_by_zero() : error(default_message) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-constexpr error::division_by_zero::division_by_zero(std::string_view message) : error(message) {
+inline error::division_by_zero::division_by_zero(std::string_view message) : error(message) {
     JMATHS_FUNCTION_TO_LOG;
 };
 
@@ -58,11 +58,11 @@ constexpr void error::division_by_zero::check(const auto & num, std::string_view
     throw division_by_zero(message);
 }
 
-constexpr error::invalid_base::invalid_base() : error(default_message) {
+inline error::invalid_base::invalid_base() : error(default_message) {
     JMATHS_FUNCTION_TO_LOG;
 }
 
-constexpr error::invalid_base::invalid_base(std::string_view message) : error(message) {
+inline error::invalid_base::invalid_base(std::string_view message) : error(message) {
     JMATHS_FUNCTION_TO_LOG;
 };
 
