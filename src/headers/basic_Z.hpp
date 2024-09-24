@@ -109,12 +109,17 @@ class basic_Z final : public sign_type, private basic_N<BaseInt, BaseIntBig, All
     friend struct format_output<basic_Z>;
 
    public:
-    using basic_N_type::bit_reference, basic_N_type::const_bit_reference;
     using basic_N_type::ctz, basic_N_type::bits, basic_N_type::operator bool,
         basic_N_type::operator[];
     using basic_N_type::is_even, basic_N_type::is_odd;
+    using typename basic_N_type::bit_reference, typename basic_N_type::const_bit_reference;
 
     struct detail;
+
+    constexpr basic_Z(const basic_Z &) = default;
+    constexpr basic_Z(basic_Z &&) = default;
+    constexpr basic_Z & operator=(const basic_Z &) = default;
+    constexpr basic_Z & operator=(basic_Z &&) = default;
 
     constexpr basic_Z();
     explicit constexpr basic_Z(std::string_view num_str, unsigned base = default_base);

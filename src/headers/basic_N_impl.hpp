@@ -1082,15 +1082,15 @@ constexpr basic_N<BaseInt, BaseIntBig, Allocator>::operator bool() const {
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator[](bitpos_t pos) -> bit_reference {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator[](bitpos_t pos) & -> bit_reference {
     JMATHS_FUNCTION_TO_LOG;
 
     return {*this, pos};
 }
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
-constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator[](bitpos_t pos) const
-    -> const_bit_reference {
+constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::operator[](
+    bitpos_t pos) const & -> const_bit_reference {
     JMATHS_FUNCTION_TO_LOG;
 
     return {*this, pos};

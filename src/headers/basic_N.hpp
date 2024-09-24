@@ -116,6 +116,11 @@ class basic_N {
 
     struct detail;
 
+    constexpr basic_N(const basic_N &) = default;
+    constexpr basic_N(basic_N &&) = default;
+    constexpr basic_N & operator=(const basic_N &) = default;
+    constexpr basic_N & operator=(basic_N &&) = default;
+
     constexpr basic_N();
     explicit constexpr basic_N(std::string_view num_str, unsigned base = default_base);
     constexpr basic_N(std::integral auto num);
@@ -141,8 +146,8 @@ class basic_N {
     template <std::unsigned_integral T> [[nodiscard]] constexpr std::optional<T> fits_into() const;
     template <std::signed_integral T> [[nodiscard]] constexpr std::optional<T> fits_into() const;
 
-    [[nodiscard]] constexpr bit_reference operator[](bitpos_t pos);
-    [[nodiscard]] constexpr const_bit_reference operator[](bitpos_t pos) const;
+    [[nodiscard]] constexpr bit_reference operator[](bitpos_t pos) &;
+    [[nodiscard]] constexpr const_bit_reference operator[](bitpos_t pos) const &;
 
     constexpr void set_zero();
 
@@ -207,14 +212,18 @@ class basic_N {
     [[nodiscard]] constexpr bool bit_(bitpos_t pos) const;
     constexpr void bit_(bitpos_t pos, bool val);
 
-    template <TMP::decays_to<basic_N> T> class bit_reference_base_;
+    template <typename T> class bit_reference_base_;
+    // because of error: type constraint differs in template redeclaration
+    // otherwise: template <<TMP::decays_to<basic_N> T> class bit_reference_base_;
 
     static const basic_N one_;
 };
 
 template <typename BaseInt, typename BaseIntBig, typename Allocator>
 template <TMP::decays_to<basic_N<BaseInt, BaseIntBig, Allocator>> T>
-class basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference_base_ {
+class basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference_base_<T> {
+    // because of error: type constraint differs in template redeclaration
+    // otherwise: class basic_N<BaseInt, BaseIntBig, Allocator>::bit_reference_base_ {
    public:
     bit_reference_base_() = delete;
     bit_reference_base_(T &&, bitpos_t) = delete;

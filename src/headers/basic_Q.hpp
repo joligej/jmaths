@@ -105,6 +105,11 @@ class basic_Q final : public sign_type {
    public:
     struct detail;
 
+    constexpr basic_Q(const basic_Q &) = default;
+    constexpr basic_Q(basic_Q &&) = default;
+    constexpr basic_Q & operator=(const basic_Q &) = default;
+    constexpr basic_Q & operator=(basic_Q &&) = default;
+
     constexpr basic_Q();
     explicit constexpr basic_Q(std::string_view num_str, unsigned base = default_base);
     constexpr basic_Q(std::floating_point auto num);
