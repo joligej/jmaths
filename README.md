@@ -26,7 +26,7 @@ Or use the simpler shortcuts for POSIX shells and Windows CMD respectively:
 ./build_install_windows.cmd
 ```
 
-To build in debug mode type `-DCMAKE_BUILD_TYPE=Debug` instead of `=Release`. The library is located at `/usr/local/lib/libjmaths[d].a` (the `d` is appended in debug builds) and the headers at `/usr/local/include/jmaths/*.hpp`. An elaborate documentation, licensing information and sample executables are located in `/usr/local/lib/jmaths/`.
+To build in debug mode, type `-DCMAKE_BUILD_TYPE=Debug` instead of `=Release`. The library is located at `/usr/local/lib/libjmaths[d].a` (the `d` is appended in debug builds) and the headers at `/usr/local/include/jmaths/*.hpp`. An elaborate documentation, licensing information and sample executables are located in `/usr/local/lib/jmaths/`.
 
 The default installation directory is `/usr/local/`. If you would like to change that, you can pass a parameter `-DCMAKE_INSTALL_PREFIX=/some/install/dir/`, like so:
 
