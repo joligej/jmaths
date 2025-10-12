@@ -1,0 +1,55 @@
+// The jmaths library for C++
+// Copyright (C) 2024  Jasper de Smaele
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#pragma once
+
+#include <cstdint>
+#include <cstddef>
+#include <climits>
+#include <memory>
+
+namespace jmaths {
+
+inline constexpr char negative_sign = '-'; // the sign that precedes negative numbers
+inline constexpr char vinculum = '/'; // the fraction bar that separates the numerator and denominator of a fraction
+using bitpos_t = unsigned long long;  // the type that should store a bit position
+using bitcount_t = unsigned long long; // the type that should store a count of bits
+using bitdiff_t = long long; // the type that should store a difference in bit position
+inline constexpr unsigned default_base = 10; // the default base that strings are assumed to be in
+template <typename T> using allocator = std::allocator<T>; // the allocator used to store the numbers in a container on the heap
+
+// you shouldn't edit the below code unless you know what you're doing
+
+inline constexpr double max_ratio = 0.000125; // the ratio between sizeof(smallest type) and sizeof(base_int), preferably a lot smaller
+inline constexpr bitcount_t bits_in_byte = CHAR_BIT;
+
+}  // namespace jmaths
+
+namespace jmaths::internal {
+
+struct metadata {
+    static constexpr char product_name[] = "@product_name@";
+
+    struct version {
+        enum : unsigned {
+            major = @jmaths_VERSION_MAJOR@,
+            minor = @jmaths_VERSION_MINOR@,
+            patch = @jmaths_VERSION_PATCH@ + 0
+        };
+    };  // namespace struct version
+};  // namespace struct metadata
+
+}  // namespace jmaths::internal
