@@ -1,5 +1,5 @@
 // The jmaths library for C++
-// Copyright (C) 2024  Jasper de Smaele
+// Copyright (C) 2025  Jasper de Smaele
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -107,12 +107,31 @@ template <typename BaseInt, typename BaseIntBig, typename Allocator>
 constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::handle_int_(std::integral auto num) {
     JMATHS_FUNCTION_TO_LOG;
 
+    // ALGORITHM: Convert native integer to arbitrary-precision format
+    // This function converts a standard C++ integer type (like int, long, uint64_t, etc.)
+    // into the internal digit representation used by basic_N.
+    //
+    // Two strategies depending on integer size vs base_int_type size:
+    //
+    // Strategy 1: If the input integer is larger than base_int_type
+    // - Split the integer into multiple base_int_type digits
+    // - Extract each digit by masking and shifting
+    // - Store in little-endian order (least significant digit first)
+    //
+    // Strategy 2: If the input integer fits in one base_int_type
+    // - Simply store it as a single digit
+    //
+    // This handles all integer types uniformly, including types larger than 64 bits
+    // if the compiler supports them (e.g., __int128).
+
     if constexpr (base_int_type_size < sizeof(num)) {
+        // Multi-digit case: input is larger than our base digit type
         static constexpr std::size_t digits_needed = static_cast<std::size_t>(std::ceil(
             static_cast<long double>(sizeof(num)) / static_cast<long double>(base_int_type_size)));
 
         digits_.reserve(digits_needed);
 #if 0
+        // Alternative byte-by-byte approach (commented out)
         for (std::size_t curr_byte = 0; curr_byte < sizeof(num); ++curr_byte) {
             const std::size_t curr_index = curr_byte / base_int_type_size;
             const std::size_t curr_offset = curr_byte % base_int_type_size;
@@ -125,6 +144,7 @@ constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::handle_int_(std::integra
             num >>= bits_in_byte;
         }
 #else
+        // Extract full base_int_type sized chunks
         for (std::size_t curr_base_int_part = 0U;
              curr_base_int_part < sizeof(num) / base_int_type_size;
              ++curr_base_int_part) {
@@ -132,6 +152,7 @@ constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::handle_int_(std::integra
             num >>= base_int_type_bits;
         }
 
+        // Handle remaining bytes if input size is not a multiple of base_int_type_size
         if constexpr (sizeof(num) % base_int_type_size > 0U) {
     #if 0
             digits_.emplace_back();
@@ -149,6 +170,7 @@ constexpr void basic_N<BaseInt, BaseIntBig, Allocator>::handle_int_(std::integra
 
         assert(num == 0);
     } else {
+        // Single-digit case: input fits in one base_int_type
         digits_.emplace_back(static_cast<base_int_type>(num));
     }
 
@@ -160,6 +182,21 @@ template <std::unsigned_integral T>
 constexpr T basic_N<BaseInt, BaseIntBig, Allocator>::fit_into_(std::size_t max_byte) const {
     JMATHS_FUNCTION_TO_LOG;
 
+    // ALGORITHM: Convert arbitrary-precision to native unsigned integer
+    // This is the inverse of handle_int_, extracting bytes from the internal
+    // representation and assembling them into a standard C++ integer type.
+    //
+    // Process:
+    // 1. Iterate through bytes up to max_byte (size of target type)
+    // 2. For each byte:
+    //    - Calculate which digit it belongs to (curr_index)
+    //    - Calculate offset within that digit (curr_offset)
+    //    - Extract the byte using bit masking and shifting
+    //    - Place it in the correct position in the result
+    // 3. Return the assembled integer
+    //
+    // This reconstructs the original integer from the digit representation.
+
     T converted = 0;
 
     for (std::size_t curr_byte = 0U; curr_byte < max_byte; ++curr_byte) {
@@ -168,8 +205,10 @@ constexpr T basic_N<BaseInt, BaseIntBig, Allocator>::fit_into_(std::size_t max_b
 
         static constexpr auto bitmask = static_cast<unsigned>(~std::byte{0U});
 
+        // Extract the relevant byte from the appropriate digit
         const auto relevant_byte = (digits_[curr_index] >> (curr_offset * bits_in_byte)) & bitmask;
 
+        // Place it in the correct position in the result
         converted |= (static_cast<T>(relevant_byte) << (curr_byte * bits_in_byte));
     }
 

@@ -1,5 +1,5 @@
 // The jmaths library for C++
-// Copyright (C) 2024  Jasper de Smaele
+// Copyright (C) 2025  Jasper de Smaele
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -61,10 +61,24 @@ constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const ba
     -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
+    // ALGORITHM: Rational number addition
+    // To add two fractions a/b + c/d, we use the formula:
+    // a/b + c/d = (a*d + b*c) / (b*d)
+    //
+    // However, we need to handle signs separately:
+    // - If both have same sign: add numerators (scaled appropriately)
+    // - If different signs: subtract numerators, result takes sign of larger magnitude
+    //
+    // The result should be automatically simplified later by the constructor or
+    // other normalization functions to maintain the fraction in lowest terms.
+    //
+    // Example: 1/2 + 1/3 = (1*3 + 2*1) / (2*3) = 5/6
+
     using sign_type::positive, sign_type::negative;
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
+            // Both positive: (a/b) + (c/d) = (a*d + b*c) / (b*d)
             basic_N_type first_product = basic_N_type::detail::opr_mult(lhs.num_, rhs.denom_);
             first_product.opr_add_assign_(basic_N_type::detail::opr_mult(lhs.denom_, rhs.num_));
             return {std::move(first_product),
@@ -72,12 +86,13 @@ constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const ba
                     positive};
         }
 
+        // Different signs: need to subtract and determine result sign
         basic_N_type first_product = basic_N_type::detail::opr_mult(lhs.num_, rhs.denom_);
         basic_N_type second_product = basic_N_type::detail::opr_mult(lhs.denom_, rhs.num_);
 
         if (const auto difference = basic_N_type::detail::opr_comp(first_product, second_product);
             difference == 0) {
-            return basic_Q{};
+            return basic_Q{};  // Results cancel to zero
         } else if (difference > 0) {
             first_product.opr_subtr_assign_(second_product);
             return {std::move(first_product),
@@ -91,6 +106,7 @@ constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const ba
         }
     } else {
         if (rhs.is_negative()) {
+            // Both negative: -(|a|/b) + -(|c|/d) = -((|a|*d + b*|c|) / (b*d))
             basic_N_type first_product = basic_N_type::detail::opr_mult(lhs.num_, rhs.denom_);
             first_product.opr_add_assign_(basic_N_type::detail::opr_mult(lhs.denom_, rhs.num_));
             return {std::move(first_product),
@@ -98,6 +114,7 @@ constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const ba
                     negative};
         }
 
+        // Different signs: need to subtract and determine result sign
         basic_N_type first_product = basic_N_type::detail::opr_mult(lhs.num_, rhs.denom_);
         basic_N_type second_product = basic_N_type::detail::opr_mult(lhs.denom_, rhs.num_);
 
@@ -187,6 +204,19 @@ constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_mult(const b
     -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
 
+    // ALGORITHM: Rational number multiplication
+    // Multiplying fractions is straightforward:
+    // (a/b) * (c/d) = (a*c) / (b*d)
+    //
+    // Sign rule: same as integer multiplication (XOR of signs)
+    // - positive * positive = positive
+    // - negative * negative = positive
+    // - positive * negative = negative
+    // - negative * positive = negative
+    //
+    // The result should be reduced to lowest terms by dividing both numerator
+    // and denominator by their GCD (done elsewhere in the constructor).
+
     basic_N_type numerator = lhs.num_ * rhs.num_;
 
     if (numerator.is_zero()) { return basic_Q{}; }
@@ -201,6 +231,17 @@ constexpr auto basic_Q<BaseInt, BaseIntBig, Allocator>::detail::opr_div(const ba
                                                                         const basic_Q & rhs)
     -> basic_Q {
     JMATHS_FUNCTION_TO_LOG;
+
+    // ALGORITHM: Rational number division
+    // Division of fractions uses the "invert and multiply" rule:
+    // (a/b) / (c/d) = (a/b) * (d/c) = (a*d) / (b*c)
+    //
+    // In other words, we multiply the first fraction by the reciprocal of the second.
+    // Sign handling is the same as multiplication.
+    //
+    // Example: (2/3) / (4/5) = (2/3) * (5/4) = 10/12 = 5/6 (after reduction)
+    //
+    // Note: Division by zero is checked before this function is called.
 
     basic_N_type numerator = lhs.num_ * rhs.denom_;
 
@@ -278,6 +319,18 @@ constexpr std::strong_ordering basic_Q<BaseInt, BaseIntBig, Allocator>::detail::
     const basic_Q & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
+    // ALGORITHM: Rational number comparison
+    // To compare a/b with c/d, we can't simply compare numerators and denominators.
+    // Instead, we use cross-multiplication to avoid division:
+    // a/b < c/d  ⟺  a*d < b*c  (assuming positive denominators)
+    //
+    // Steps:
+    // 1. If signs differ, the positive one is greater
+    // 2. If both positive: compare a*d with b*c
+    // 3. If both negative: compare in reverse (larger magnitude means smaller value)
+    //
+    // This avoids the need for actual division and works with integer arithmetic only.
+
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
             return basic_N_type::detail::opr_comp(lhs.num_ * rhs.denom_, rhs.num_ * lhs.denom_);
@@ -288,6 +341,7 @@ constexpr std::strong_ordering basic_Q<BaseInt, BaseIntBig, Allocator>::detail::
         if (rhs.is_positive()) {
             return std::strong_ordering::less;
         } else {
+            // Both negative: reverse the comparison (more negative = smaller)
             return basic_N_type::detail::opr_comp(rhs.num_ * lhs.denom_, lhs.num_ * rhs.denom_);
         }
     }

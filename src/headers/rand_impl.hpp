@@ -1,5 +1,5 @@
 // The jmaths library for C++
-// Copyright (C) 2024  Jasper de Smaele
+// Copyright (C) 2025  Jasper de Smaele
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -86,6 +86,22 @@ auto rand<basic_N<BaseInt, BaseIntBig, Allocator>>::generate(bitcount_t upper_bo
     -> basic_N_type {
     JMATHS_FUNCTION_TO_LOG;
 
+    // ALGORITHM: Random arbitrary-precision unsigned integer generation
+    // Generates a random number with at most 'upper_bound_exponent' bits.
+    //
+    // Strategy:
+    // 1. Calculate how many full digits are needed (upper_bound_exponent / bits_per_digit)
+    // 2. Generate random values for each full digit using the base random generator
+    // 3. If there are remaining bits (upper_bound_exponent % bits_per_digit), generate
+    //    a partial digit with only those bits set randomly
+    // 4. Remove any leading zeros that may have resulted
+    //
+    // This ensures uniform distribution across the range [0, 2^upper_bound_exponent - 1]
+    //
+    // Example: For upper_bound_exponent = 100 with 32-bit digits:
+    // - Need 3 full digits (96 bits) + 4 additional bits
+    // - Generate 3 random 32-bit values + 1 random 4-bit value
+
     static internal::rand_gen<typename basic_N_type::base_int_type> random_base_int;
 
     const std::size_t pos_whole = upper_bound_exponent / basic_N_type::base_int_type_bits;
@@ -95,10 +111,12 @@ auto rand<basic_N<BaseInt, BaseIntBig, Allocator>>::generate(bitcount_t upper_bo
 
     const bitpos_t pos_mod = upper_bound_exponent % basic_N_type::base_int_type_bits;
 
+    // Generate full random digits
     for (std::size_t i = 0U; i < pos_whole; ++i) {
         random_number.digits_.emplace_back(random_base_int());
     }
 
+    // Generate partial digit for remaining bits if needed
     if (pos_mod > 0U) {
         random_number.digits_.emplace_back(random_base_int() >>
                                            (basic_N_type::base_int_type_bits - pos_mod));
@@ -113,6 +131,16 @@ template <typename BaseInt, typename BaseIntBig, typename Allocator>
 auto rand<basic_Z<BaseInt, BaseIntBig, Allocator>>::generate(bitcount_t upper_bound_exponent)
     -> basic_Z_type {
     JMATHS_FUNCTION_TO_LOG;
+
+    // ALGORITHM: Random arbitrary-precision signed integer generation
+    // Generates a random signed integer with at most 'upper_bound_exponent' bits.
+    //
+    // Strategy:
+    // 1. Generate the magnitude using the unsigned random generator
+    // 2. Randomly choose the sign (positive or negative) with equal probability
+    // 3. Handle zero specially (always positive)
+    //
+    // This provides uniform distribution over both positive and negative values.
 
     static internal::rand_gen<bool> random_bool;
 

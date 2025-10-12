@@ -1,5 +1,5 @@
 // The jmaths library for C++
-// Copyright (C) 2024  Jasper de Smaele
+// Copyright (C) 2025  Jasper de Smaele
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,6 +35,31 @@
 #include "declarations.hpp"
 #include "formatter.hpp"
 #include "sign_type.hpp"
+
+/**
+ * @file basic_Q.hpp
+ * @brief Arbitrary-precision rational number type (basic_Q class template)
+ *
+ * This file defines the basic_Q class template, which implements arbitrary-precision
+ * rational numbers (fractions). Each rational is represented as numerator/denominator
+ * with a separate sign.
+ *
+ * KEY FEATURES:
+ * - Arbitrary-precision: Both numerator and denominator can be any size
+ * - Automatic reduction: Fractions reduced to lowest terms using GCD
+ * - Sign-magnitude: Sign stored separately, denominator always positive
+ * - Floating-point interop: Can construct from and convert to float/double
+ *
+ * DESIGN INVARIANTS:
+ * - Denominator is always positive (sign stored separately)
+ * - Fractions are always in reduced form: gcd(numerator, denominator) = 1
+ * - Zero is represented as 0/1 with positive sign
+ *
+ * TEMPLATE PARAMETERS:
+ * - BaseInt: Base digit type (e.g., uint32_t)
+ * - BaseIntBig: Wider type for intermediate calculations (e.g., uint64_t)
+ * - Allocator: Memory allocator for digit storage
+ */
 
 // declarations of Q and associated functions and types
 namespace jmaths {
@@ -84,6 +109,30 @@ constexpr std::strong_ordering operator<=>(const basic_Q_type & lhs, std::floati
 template <TMP::instance_of<basic_Q> basic_Q_type>
 constexpr std::strong_ordering operator<=>(std::floating_point auto lhs, const basic_Q_type & rhs);
 
+/**
+ * @class basic_Q
+ * @brief Arbitrary-precision rational number (fraction)
+ *
+ * Implements rational numbers as fractions with arbitrary-precision numerator and
+ * denominator. All fractions are automatically reduced to lowest terms.
+ *
+ * REPRESENTATION:
+ * - numerator (num_): Absolute value of numerator
+ * - denominator (denom_): Always positive, never zero
+ * - sign (sign_): Positive or negative
+ *
+ * EXAMPLE: The number -3/4 is represented as:
+ * - num_ = 3
+ * - denom_ = 4
+ * - sign_ = negative
+ *
+ * ARITHMETIC:
+ * - Addition: (a/b) + (c/d) = (a×d + b×c) / (b×d), then reduce
+ * - Multiplication: (a/b) × (c/d) = (a×c) / (b×d), then reduce
+ * - Division: (a/b) / (c/d) = (a×d) / (b×c), then reduce
+ *
+ * COMPLEXITY: Operations involve multiple N multiplications plus GCD for reduction
+ */
 template <typename BaseInt, typename BaseIntBig, typename Allocator = allocator<BaseInt>>
 class basic_Q final : public sign_type {
     using basic_N_type = basic_N<BaseInt, BaseIntBig, Allocator>;

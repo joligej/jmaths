@@ -1,5 +1,5 @@
 // The jmaths library for C++
-// Copyright (C) 2024  Jasper de Smaele
+// Copyright (C) 2025  Jasper de Smaele
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,6 +35,31 @@
 #include "declarations.hpp"
 #include "formatter.hpp"
 #include "sign_type.hpp"
+
+/**
+ * @file basic_Z.hpp
+ * @brief Arbitrary-precision signed integer type (basic_Z class template)
+ *
+ * This file defines the basic_Z class template, which implements arbitrary-precision
+ * signed integers. It inherits from basic_N (unsigned) and sign_type to represent
+ * signed values.
+ *
+ * KEY FEATURES:
+ * - Sign-magnitude representation: Sign stored separately from magnitude
+ * - Reuses basic_N for all magnitude operations
+ * - C++ standard compliant division (truncated toward zero)
+ * - Constexpr support for compile-time arithmetic
+ *
+ * DESIGN:
+ * - Inherits privately from basic_N to reuse unsigned operations
+ * - Inherits publicly from sign_type for sign management
+ * - All operations decompose into unsigned operations + sign handling
+ *
+ * TEMPLATE PARAMETERS:
+ * - BaseInt: Base digit type (e.g., uint32_t)
+ * - BaseIntBig: Wider type for intermediate calculations (e.g., uint64_t)
+ * - Allocator: Memory allocator for digit storage
+ */
 
 // declarations of Z and associated functions and types
 namespace jmaths {
@@ -85,6 +110,30 @@ constexpr std::strong_ordering operator<=>(const basic_Z_type & lhs, std::integr
 template <TMP::instance_of<basic_Z> basic_Z_type>
 constexpr std::strong_ordering operator<=>(std::integral auto lhs, const basic_Z_type & rhs);
 
+/**
+ * @class basic_Z
+ * @brief Arbitrary-precision signed integer
+ *
+ * Implements signed integers of arbitrary size using sign-magnitude representation.
+ * The magnitude is stored using basic_N (unsigned), and the sign is managed by sign_type.
+ *
+ * REPRESENTATION:
+ * - Sign: positive or negative (stored in sign_type base)
+ * - Magnitude: absolute value (stored in basic_N base)
+ * - Zero: Always positive by convention
+ *
+ * EXAMPLE: The number -42 is represented as:
+ * - sign_ = negative
+ * - magnitude (from basic_N) = 42
+ *
+ * ARITHMETIC RULES:
+ * - Addition: Four cases based on operand signs
+ * - Subtraction: Converted to addition with negated operand
+ * - Multiplication: Sign = XOR of operand signs
+ * - Division: C++ standard behavior (truncated toward zero)
+ *
+ * COMPLEXITY: Same as basic_N operations + O(1) sign handling
+ */
 template <typename BaseInt, typename BaseIntBig, typename Allocator = allocator<BaseInt>>
 class basic_Z final : public sign_type, private basic_N<BaseInt, BaseIntBig, Allocator> {
     using basic_N_type = basic_N<BaseInt, BaseIntBig, Allocator>;

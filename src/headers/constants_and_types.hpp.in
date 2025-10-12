@@ -21,35 +21,149 @@
 #include <climits>
 #include <memory>
 
+/**
+ * @file constants_and_types.hpp.in
+ * @brief Core type definitions and constants for the jmaths library
+ *
+ * This file defines fundamental types and constants used throughout the library.
+ * The .in extension indicates this is a template file processed by CMake to
+ * generate the actual constants_and_types.hpp header.
+ *
+ * KEY DEFINITIONS:
+ * - Bit position and count types
+ * - Default numeric base for string conversions
+ * - Memory allocator template
+ * - Configuration constants
+ *
+ * CONFIGURATION:
+ * CMake substitutes @variables@ with actual values during build configuration.
+ */
+
 namespace jmaths {
 
-inline constexpr char negative_sign = '-'; // the sign that precedes negative numbers
-inline constexpr char vinculum = '/'; // the fraction bar that separates the numerator and denominator of a fraction
-using bitpos_t = unsigned long long;  // the type that should store a bit position
-using bitcount_t = unsigned long long; // the type that should store a count of bits
-using bitdiff_t = long long; // the type that should store a difference in bit position
-inline constexpr unsigned default_base = 10; // the default base that strings are assumed to be in
-template <typename T> using allocator = std::allocator<T>; // the allocator used to store the numbers in a container on the heap
+/**
+ * @var negative_sign
+ * @brief Character used to indicate negative numbers in string representation
+ * Default: '-'
+ */
+inline constexpr char negative_sign = '-';
 
-// you shouldn't edit the below code unless you know what you're doing
+/**
+ * @var vinculum
+ * @brief Character used to separate numerator and denominator in fractions
+ * Default: '/' (as in "3/4")
+ */
+inline constexpr char vinculum = '/';
 
-inline constexpr double max_ratio = 0.000125; // the ratio between sizeof(smallest type) and sizeof(base_int), preferably a lot smaller
+/**
+ * @typedef bitpos_t
+ * @brief Type for storing bit positions
+ * Must be large enough to address any bit in the largest supported number
+ */
+using bitpos_t = unsigned long long;
+
+/**
+ * @typedef bitcount_t
+ * @brief Type for counting bits
+ * Used for bit counts, shifts, and similar operations
+ */
+using bitcount_t = unsigned long long;
+
+/**
+ * @typedef bitdiff_t
+ * @brief Type for signed bit position differences
+ * Used when computing differences between bit positions
+ */
+using bitdiff_t = long long;
+
+/**
+ * @var default_base
+ * @brief Default numeric base for string conversions
+ * Default: 10 (decimal)
+ *
+ * When converting numbers to/from strings without specifying a base,
+ * this base is used.
+ */
+inline constexpr unsigned default_base = 10;
+
+/**
+ * @typedef allocator
+ * @brief Memory allocator template for digit storage
+ * Default: std::allocator
+ *
+ * This can be customized to use alternative allocators
+ * (e.g., pool allocators, tracking allocators)
+ */
+template <typename T> using allocator = std::allocator<T>;
+
+// Internal configuration constants
+// WARNING: Modifying these may break the library
+
+/**
+ * @var max_ratio
+ * @brief Maximum ratio between smallest type size and base_int size
+ * Default: 0.000125
+ *
+ * This constant helps determine appropriate digit sizes for the
+ * arbitrary-precision representation.
+ */
+inline constexpr double max_ratio = 0.000125;
+
+/**
+ * @var bits_in_byte
+ * @brief Number of bits per byte on this platform
+ * Typically 8, but defined by CHAR_BIT for portability
+ *
+ * USAGE: Used for bit/byte conversions throughout the library
+ */
 inline constexpr bitcount_t bits_in_byte = CHAR_BIT;
 
 }  // namespace jmaths
 
+/**
+ * @namespace jmaths::internal
+ * @brief Internal implementation details
+ * Contains metadata about the library version and build
+ */
 namespace jmaths::internal {
 
+/**
+ * @struct metadata
+ * @brief Library metadata and version information
+ *
+ * Contains compile-time constants about the library version.
+ * Values are substituted by CMake during configuration.
+ */
 struct metadata {
+    /**
+     * @var product_name
+     * @brief Name of the library
+     * Substituted by CMake from @product_name@
+     */
     static constexpr char product_name[] = "@product_name@";
 
+    /**
+     * @struct version
+     * @brief Version number components
+     * Follows semantic versioning: MAJOR.MINOR.PATCH
+     */
     struct version {
+        /**
+         * @enum Version components
+         * @brief Major, minor, and patch version numbers
+         *
+         * - major: Incremented for incompatible API changes
+         * - minor: Incremented for backward-compatible functionality additions
+         * - patch: Incremented for backward-compatible bug fixes
+         *
+         * Values substituted by CMake from project version
+         */
         enum : unsigned {
             major = @jmaths_VERSION_MAJOR@,
             minor = @jmaths_VERSION_MINOR@,
             patch = @jmaths_VERSION_PATCH@ + 0
         };
-    };  // namespace struct version
-};  // namespace struct metadata
+    };
+};
 
 }  // namespace jmaths::internal

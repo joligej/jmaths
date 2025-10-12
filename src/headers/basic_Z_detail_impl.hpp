@@ -1,5 +1,5 @@
 // The jmaths library for C++
-// Copyright (C) 2024  Jasper de Smaele
+// Copyright (C) 2025  Jasper de Smaele
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -59,16 +59,28 @@ constexpr basic_Z<BaseInt, BaseIntBig, Allocator>
 basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const basic_Z & lhs, const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
+    // ALGORITHM: Signed integer addition
+    // Addition of signed integers requires handling four cases based on signs:
+    // 1. (+a) + (+b) = +(|a| + |b|)     - both positive: add magnitudes
+    // 2. (+a) + (-b) = sign(|a| - |b|)  - different signs: subtract, keep sign of larger
+    // 3. (-a) + (+b) = sign(|b| - |a|)  - different signs: subtract, keep sign of larger
+    // 4. (-a) + (-b) = -(|a| + |b|)     - both negative: add magnitudes, result negative
+    //
+    // The implementation uses the underlying unsigned integer operations and
+    // manages the sign separately based on the comparison of magnitudes.
+
     using sign_type::positive, sign_type::negative;
 
     if (lhs.is_positive()) {
         if (rhs.is_positive()) {
+            // Case 1: positive + positive
             return {basic_N_type::detail::opr_add(lhs.abs(), rhs.abs()), positive};
         }
 
+        // Case 2: positive + negative (subtraction in disguise)
         if (const auto difference = basic_N_type::detail::opr_comp(lhs.abs(), rhs.abs());
             difference == 0) {
-            return basic_Z{};
+            return basic_Z{};  // Equal magnitudes cancel out to zero
         } else if (difference > 0) {
             return {basic_N_type::detail::opr_subtr(lhs.abs(), rhs.abs()), positive};
         } else {
@@ -76,12 +88,14 @@ basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_add(const basic_Z & lhs, co
         }
     } else {
         if (rhs.is_negative()) {
+            // Case 4: negative + negative
             return {basic_N_type::detail::opr_add(lhs.abs(), rhs.abs()), negative};
         }
 
+        // Case 3: negative + positive (subtraction in disguise)
         if (const auto difference = basic_N_type::detail::opr_comp(lhs.abs(), rhs.abs());
             difference == 0) {
-            return basic_Z{};
+            return basic_Z{};  // Equal magnitudes cancel out to zero
         } else if (difference > 0) {
             return {basic_N_type::detail::opr_subtr(lhs.abs(), rhs.abs()), negative};
         } else {
@@ -96,13 +110,23 @@ basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_subtr(const basic_Z & lhs,
                                                            const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
+    // ALGORITHM: Signed integer subtraction
+    // Subtraction can be viewed as addition with negated second operand: a - b = a + (-b)
+    // This gives us four cases based on signs:
+    // 1. (+a) - (+b) = sign(|a| - |b|)  - subtract magnitudes, sign depends on which is larger
+    // 2. (+a) - (-b) = +(|a| + |b|)     - becomes addition of magnitudes
+    // 3. (-a) - (+b) = -(|a| + |b|)     - becomes addition of magnitudes, negative result
+    // 4. (-a) - (-b) = sign(|b| - |a|)  - subtract magnitudes, inverted comparison
+
     using sign_type::positive, sign_type::negative;
 
     if (lhs.is_positive()) {
         if (rhs.is_negative()) {
+            // Case 2: positive - negative = positive + positive
             return {basic_N_type::detail::opr_add(lhs.abs(), rhs.abs()), positive};
         }
 
+        // Case 1: positive - positive
         if (const auto difference = basic_N_type::detail::opr_comp(lhs.abs(), rhs.abs());
             difference == 0) {
             return basic_Z{};
@@ -113,9 +137,11 @@ basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_subtr(const basic_Z & lhs,
         }
     } else {
         if (rhs.is_positive()) {
+            // Case 3: negative - positive = negative + negative
             return {basic_N_type::detail::opr_add(lhs.abs(), rhs.abs()), negative};
         }
 
+        // Case 4: negative - negative
         if (const auto difference = basic_N_type::detail::opr_comp(lhs.abs(), rhs.abs());
             difference == 0) {
             return basic_Z{};
@@ -132,6 +158,17 @@ constexpr basic_Z<BaseInt, BaseIntBig, Allocator>
 basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_mult(const basic_Z & lhs, const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
+    // ALGORITHM: Signed integer multiplication
+    // Sign rules for multiplication are straightforward:
+    // - positive * positive = positive
+    // - positive * negative = negative
+    // - negative * positive = negative
+    // - negative * negative = positive
+    //
+    // In other words: result is negative if signs differ, positive if signs match.
+    // This is implemented using XOR of sign bits: 0 XOR 0 = 0 (pos), 1 XOR 1 = 0 (pos),
+    // 0 XOR 1 = 1 (neg), 1 XOR 0 = 1 (neg)
+
     basic_N_type product = basic_N_type::detail::opr_mult(lhs.abs(), rhs.abs());
 
     if (product.is_zero()) { return basic_Z{}; }
@@ -144,11 +181,26 @@ constexpr std::pair<basic_Z<BaseInt, BaseIntBig, Allocator>, basic_Z<BaseInt, Ba
 basic_Z<BaseInt, BaseIntBig, Allocator>::detail::opr_div(const basic_Z & lhs, const basic_Z & rhs) {
     JMATHS_FUNCTION_TO_LOG;
 
+    // ALGORITHM: Signed integer division
+    // Division of signed integers follows similar sign rules as multiplication:
+    // - The quotient is negative if signs differ, positive if signs match
+    // - The remainder always has the same sign as the dividend (lhs)
+    //
+    // This implements truncated division (rounding toward zero), which is the
+    // standard behavior in C++ for signed integer division.
+    //
+    // Examples:
+    //   7 / 3 = 2 remainder 1
+    //  -7 / 3 = -2 remainder -1  (not -3 remainder 2)
+    //   7 / -3 = -2 remainder 1
+    //  -7 / -3 = 2 remainder -1
+
     if (auto [quotient, remainder] = basic_N_type::detail::opr_div(lhs.abs(), rhs.abs());
         quotient.is_zero()) {
         if (remainder.is_zero()) {
             return {basic_Z{}, basic_Z{}};
         } else {
+            // Remainder takes sign of dividend
             return {basic_Z{}, basic_Z{std::move(remainder), lhs.sign_}};
         }
     } else {
