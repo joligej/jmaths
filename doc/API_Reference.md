@@ -203,6 +203,7 @@ N right = a >> 1;        // Divide by 2
 | `size()` | `std::size_t` | Size in bytes |
 | `fits_into<T>()` | `std::optional<T>` | Safe conversion to built-in type |
 | `operator[](bitpos_t)` | bit reference | Access individual bit |
+| `set_zero()` | `void` | Set value to zero |
 
 **Example:**
 ```cpp
@@ -221,7 +222,121 @@ bool odd = num.is_odd();                  // true
 // Bit access
 bool bit_0 = num[0];                      // Access bit 0 (LSB)
 num[5] = true;                            // Set bit 5
+
+// Set to zero
+num.set_zero();                           // num becomes 0
 ```
+
+#### Bit Access with Proxy Classes
+
+The `operator[]` returns proxy objects that allow safe bit manipulation:
+
+**bit_reference** - Mutable bit access for non-const objects:
+```cpp
+N num = 0b1010_N;
+num[0] = true;           // Set bit 0: num becomes 0b1011
+num[2] = false;          // Clear bit 2: num becomes 0b1011
+bool val = num[3];       // Read bit 3: true
+```
+
+**const_bit_reference** - Read-only bit access for const objects:
+```cpp
+const N num = 0b1010_N;
+bool val = num[1];       // Read bit 1: true
+// num[1] = false;       // ERROR: cannot modify const object
+```
+
+**Design Note:** These proxy classes enable `num[i] = value` syntax while maintaining
+internal number representation. They convert to `bool` for reading and accept `bool`
+assignment for writing.
+
+#### Post-increment and Post-decrement
+
+In addition to pre-increment/decrement, post-increment/decrement operators are supported:
+
+```cpp
+N num = 5_N;
+
+N a = num++;    // a = 5, num = 6 (post-increment)
+N b = ++num;    // b = 7, num = 7 (pre-increment)
+
+N c = num--;    // c = 7, num = 6 (post-decrement)  
+N d = --num;    // d = 5, num = 5 (pre-decrement)
+```
+
+**Performance Note:** Pre-increment/decrement is more efficient as it doesn't
+require creating a temporary copy of the original value.
+
+#### Stream I/O Operators
+
+All jmaths types support stream input/output for easy console and file I/O:
+
+```cpp
+#include <iostream>
+#include <sstream>
+
+N num = 12345_N;
+
+// Output to stream (uses default base 10)
+std::cout << num << std::endl;         // Prints: 12345
+
+// Input from stream
+N input_num;
+std::cin >> input_num;                 // Reads number from input
+
+// String stream operations
+std::stringstream ss;
+ss << num;                             // Write to string stream
+std::string str = ss.str();            // "12345"
+
+ss >> input_num;                       // Read from string stream
+```
+
+**Operators:**
+- `operator<<(std::ostream&, const N&)` - Output N to stream
+- `operator>>(std::istream&, N&)` - Input N from stream
+- Similarly for Z and Q types
+
+#### Internal Implementation: detail Struct
+
+**Advanced Usage:** For library developers or those needing low-level access, each type has a 
+nested `detail` struct containing static implementation functions:
+
+**basic_N::detail** - Internal operations for unsigned integers:
+```cpp
+struct basic_N::detail {
+    // I/O operations
+    static constexpr std::ostream& opr_ins(std::ostream& os, const basic_N& n);
+    static constexpr std::istream& opr_extr(std::istream& is, basic_N& n);
+    
+    // Arithmetic operations (return new values)
+    static constexpr basic_N opr_add(const basic_N& lhs, const basic_N& rhs);
+    static constexpr basic_N opr_subtr(basic_N lhs, const basic_N& rhs);
+    static constexpr basic_N opr_mult(const basic_N& lhs, const basic_N& rhs);
+    static constexpr std::pair<basic_N, basic_N> opr_div(const basic_N& lhs, const basic_N& rhs);
+    
+    // Bitwise operations
+    static constexpr basic_N opr_and(const basic_N& lhs, const basic_N& rhs);
+    static constexpr basic_N opr_or(const basic_N& lhs, const basic_N& rhs);
+    static constexpr basic_N opr_xor(const basic_N& lhs, const basic_N& rhs);
+    
+    // Comparison operations
+    static constexpr bool opr_eq(const basic_N& lhs, const basic_N& rhs);
+    static constexpr bool opr_eq(const basic_N& lhs, std::integral auto rhs);
+    static constexpr std::strong_ordering opr_comp(const basic_N& lhs, const basic_N& rhs);
+    static constexpr std::strong_ordering opr_comp(const basic_N& lhs, std::integral auto rhs);
+};
+```
+
+**Design Note:** These static functions are used internally by the operator overloads
+and compound assignment operators. They're exposed in the `detail` struct for:
+- Testing and verification purposes
+- Advanced optimizations where direct function calls avoid temporary object creation
+- Understanding the implementation for contributors
+
+**Similar structures exist for:**
+- `basic_Z::detail` - Signed integer operations with sign handling
+- `basic_Q::detail` - Rational number operations with automatic reduction
 
 ---
 
