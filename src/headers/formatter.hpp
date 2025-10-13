@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#pragma once
+
+#include "def.hh"
+#include "error.hpp"
+
 /**
  * @file formatter.hpp
  * @brief std::format support for jmaths arbitrary-precision types

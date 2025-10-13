@@ -1,0 +1,82 @@
+name: Code Coverage
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  coverage:
+    name: Generate Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo apt-get update
+        sudo apt-get install -y g++-15 libboost-all-dev gcovr lcov
+
+    - name: Configure CMake with coverage
+      env:
+        CXX: g++-15
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_COMPILER=g++-15 \
+          -DCMAKE_CXX_FLAGS="--coverage -fprofile-arcs -ftest-coverage -O0"
+
+    - name: Build
+      run: cmake --build build -j$(nproc)
+
+    - name: Run tests
+      working-directory: build
+      run: ctest --output-on-failure
+
+    - name: Generate coverage report (gcovr)
+      run: |
+        gcovr --root . \
+          --exclude build \
+          --exclude test \
+          --print-summary \
+          --xml coverage.xml \
+          --html-details coverage.html
+
+    - name: Generate coverage report (lcov)
+      run: |
+        lcov --directory build --capture --output-file coverage.info
+        lcov --remove coverage.info '/usr/*' '*/test/*' '*/build/*' --output-file coverage.info
+        lcov --list coverage.info
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.xml
+        fail_ci_if_error: false
+        verbose: true
+        flags: unittests
+        
+    - name: Upload coverage HTML report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: coverage.html
+        
+    - name: Comment coverage on PR
+      if: github.event_name == 'pull_request'
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml
+        
+    - name: Check coverage threshold
+      run: |
+        coverage_percent=$(gcovr --root . --exclude build --exclude test --print-summary | grep TOTAL | awk '{print $4}' | sed 's/%//')
+        echo "Coverage: ${coverage_percent}%"
+        if (( $(echo "$coverage_percent < 70" | bc -l) )); then
+          echo "Warning: Coverage is below 70%"
+        fi

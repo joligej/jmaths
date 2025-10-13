@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/joligej/jmaths/tree/main/doc
+    about: Check the documentation for API reference and algorithm explanations
+  - name: Discussions
+    url: https://github.com/joligej/jmaths/discussions
+    about: Ask questions and discuss ideas with the community

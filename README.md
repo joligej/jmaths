@@ -1,39 +1,182 @@
 # jmaths
 
-`jmaths` is a maths library for C++ that has support for arbitrary precision integers and fractions, and for other concepts in common fields in mathematics, like linear algebra.
+[![CI](https://img.shields.io/github/actions/workflow/status/joligej/jmaths/ci.yml?branch=main&label=CI&logo=github)](https://github.com/joligej/jmaths/actions/workflows/ci.yml)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://isocpp.org/)
+[![CMake](https://img.shields.io/badge/CMake-3.28+-064F8C?logo=cmake)](https://cmake.org/)
 
-There are 2 ways to install this program. You can either use the default settings, or you can choose these settings yourself by editing `src/headers/constants_and_types.hpp.in`.
+A professional, high-performance C++ library for arbitrary-precision arithmetic with support for integers, rationals, and advanced mathematical operations.
 
-You can add your own dependencies for the library as well, which might be necessary if you've entered your own custom types in the previous step. Do this by adding the relevant includes to the aforementioned file.
+## Features
 
-Regardless of whether you added your own dependencies, type the following to build and install the library:
+- **Arbitrary-Precision Integers** (`N`, `Z`): Unlimited size integers with full arithmetic support
+- **Rational Numbers** (`Q`): Arbitrary-precision fractions automatically reduced to lowest terms
+- **Modern C++23**: Leverages latest language features for clean, efficient code
+- **Comprehensive Testing**: 215+ unit tests with Boost.Test framework
+- **Constexpr Support**: Most operations work at compile-time
+- **User-Defined Literals**: Natural syntax with `_N`, `_Z`, `_Q` literals
+- **Rich API**: GCD, square root, power, bitwise operations, and more
 
-```
-mkdir build
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j8
-sudo cmake --install .
-```
+## Quick Start
 
-Or use the simpler shortcuts for POSIX shells and Windows CMD respectively:
+### Installation
 
-```
+#### Using the build script (recommended)
+
+```bash
 ./build_install_posix.sh
 ```
 
-```
-./build_install_windows.cmd
-```
+#### Manual installation
 
-To build in debug mode, type `-DCMAKE_BUILD_TYPE=Debug` instead of `=Release`. The library is located at `/usr/local/lib/libjmaths[d].a` (the `d` is appended in debug builds) and the headers at `/usr/local/include/jmaths/*.hpp`. An elaborate documentation, licensing information and sample executables are located in `/usr/local/lib/jmaths/`.
-
-The default installation directory is `/usr/local/`. If you would like to change that, you can pass a parameter `-DCMAKE_INSTALL_PREFIX=/some/install/dir/`, like so:
-
-```
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/some/preferred/installation/directory/
+```bash
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-15
+cmake --build . -j$(nproc)
+sudo cmake --install .
 ```
 
-When linking with `libjmaths.a`, it is important to also link with any libraries that it depends on, for example when providing a custom allocator in `src/headers/constants_and_types.hpp`, and to do so _after_ linking with `libjmaths.a`. Or you could of course alter the `CMakeLists.txt` file a little so all that will be done automatically.
+### Basic Usage
 
+```cpp
+#include <jmaths/all.hpp>
+using namespace jmaths;
+using namespace jmaths::literals;
+
+int main() {
+    // Arbitrary-precision unsigned integers
+    N large = "123456789012345678901234567890"_N;
+    N result = large * large;
+    
+    // Signed integers
+    Z negative = -42_Z;
+    Z positive = 100_Z;
+    Z sum = negative + positive;  // 58
+    
+    // Rational numbers (fractions)
+    Q half("1/2");
+    Q third("1/3");
+    Q sum_frac = half + third;  // 5/6
+    
+    // Mathematical functions
+    N base(2);
+    N exponent(100);
+    N power = calc::pow(base, exponent);  // 2^100
+    
+    N a(48), b(18);
+    N gcd = calc::gcd(a, b);  // 6
+    
+    return 0;
+}
+```
+
+### Compilation
+
+```bash
+g++-15 -std=c++23 -O3 your_program.cpp -ljmaths -o your_program
+```
+
+## Requirements
+
+- **Compiler**: g++-15 or later with C++23 support
+- **CMake**: 3.28.1 or later
+- **Boost**: 1.70 or later (for testing only)
+- **binutils**: 2.43 or later (required for GCC 15)
+- **Operating System**: Linux, macOS, or Windows (with appropriate toolchain)
+
+> **Note**: When using g++-15, ensure binutils 2.43 or later is installed. Older versions will cause assembler errors in debug builds. The CMake configuration automatically detects your binutils version and provides guidance. See [GCC15_BINUTILS_ISSUE.md](GCC15_BINUTILS_ISSUE.md) for details.
+
+## Documentation
+
+- **[API Reference](doc/API_Reference.md)**: Complete API documentation
+- **[Algorithm Documentation](doc/algorithm_documentation.md)**: Detailed algorithm explanations
+- **[Contributing Guidelines](CONTRIBUTING.md)**: How to contribute to the project
+- **[Code of Conduct](CODE_OF_CONDUCT.md)**: Community guidelines
+- **[Security Policy](SECURITY.md)**: Security considerations and reporting
+
+## Testing
+
+The library includes a comprehensive test suite with 215+ test cases:
+
+```bash
+cd build
+ctest --output-on-failure --verbose
+```
+
+Test coverage includes:
+- **Basic Operations**: Arithmetic, comparison, assignment for N, Z, Q types
+- **Edge Cases**: Boundary conditions, zero handling, overflow prevention
+- **Parametric Tests**: Data-driven testing with multiple input sets
+- **Performance Tests**: Benchmarking of all major operations
+- **Type Conversions**: String parsing, numeric conversions, type safety
+- **Bitwise Operations**: AND, OR, XOR, shifts for arbitrary-precision integers
+- **Mathematical Functions**: GCD, square root, power, modular arithmetic
+- **Random Number Generation**: Cryptographically secure random numbers
+- **Error Handling**: Division by zero, invalid inputs, exception safety
+
+## Project Structure
+
+```
+jmaths/
+├── .github/              # GitHub integration (workflows, templates)
+├── doc/                  # Documentation
+├── src/
+│   └── headers/          # Public header files
+├── test/                 # Boost.Test unit tests
+├── CMakeLists.txt        # Root CMake configuration
+├── CONTRIBUTING.md       # Contribution guidelines
+├── CODE_OF_CONDUCT.md    # Community guidelines
+├── SECURITY.md           # Security policy
+└── README.md             # This file
+```
+
+## Configuration Options
+
+You can customize the library by editing `src/headers/constants_and_types.hpp.in` before building:
+
+- **Base integer types**: Customize underlying digit types
+- **Allocators**: Provide custom memory allocators
+- **Karatsuba multiplication**: Toggle advanced multiplication algorithm (experimental)
+
+## Performance
+
+jmaths is designed for performance with:
+- **Zero-cost abstractions**: Template-based design with no runtime overhead
+- **Efficient algorithms**: Binary GCD, exponentiation by squaring, Karatsuba multiplication
+- **Compile-time optimization**: Extensive use of `constexpr` and `[[nodiscard]]`
+- **Memory efficiency**: Custom allocator support and minimal overhead
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/joligej/jmaths/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/joligej/jmaths/discussions)
+- **Email**: See maintainer information in commit history
+
+## Acknowledgments
+
+- Built with modern C++23 and CMake
+- Uses Boost.Test for unit testing
+- Inspired by various arbitrary-precision arithmetic libraries
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
+
+---
+
+**Note**: This library requires a modern C++23 compiler. Ensure your toolchain is up to date before building.
 

@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo apt-get update
+        sudo apt-get install -y g++-15 libboost-all-dev
+
+    - name: Build Release
+      env:
+        CXX: g++-15
+      run: |
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-15
+        cmake --build build -j$(nproc)
+
+    - name: Run tests
+      working-directory: build
+      run: ctest --output-on-failure
+
+    - name: Create package
+      working-directory: build
+      run: cpack
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: build/jmaths-*.tar.gz
+        generate_release_notes: true
+        draft: false
+        prerelease: false

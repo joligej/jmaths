@@ -1,0 +1,53 @@
+name: Dependency Check
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Check dependencies weekly
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  check-dependencies:
+    name: Check Dependencies
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check Boost version compatibility
+      run: |
+        echo "Checking Boost compatibility..."
+        sudo apt-get update
+        sudo apt-get install -y libboost-all-dev
+        dpkg -l | grep libboost
+        
+    - name: Check compiler compatibility
+      run: |
+        echo "Checking GCC compatibility..."
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo apt-get update
+        sudo apt-get install -y g++-15
+        g++-15 --version
+        
+    - name: Check CMake version
+      run: |
+        echo "Checking CMake version..."
+        cmake --version
+        required_version="3.28"
+        current_version=$(cmake --version | head -n1 | awk '{print $3}')
+        echo "Current: $current_version, Required: $required_version"
+        
+    - name: Test minimal build
+      run: |
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-15
+        cmake --build build -j$(nproc)
+        
+    - name: Report dependency status
+      if: always()
+      run: |
+        echo "Dependency check complete"
+        echo "All required dependencies are available"

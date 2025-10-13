@@ -1,0 +1,109 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  check-docs:
+    name: Check Documentation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-pip
+        pip3 install markdown-link-validator || true
+
+    - name: Check for broken links in markdown
+      run: |
+        echo "Checking markdown files for validity..."
+        find . -name "*.md" -not -path "./build/*" -not -path "./.git/*" | while read file; do
+          echo "Checking $file"
+          if ! grep -q "^# " "$file"; then
+            echo "Warning: $file may be missing a top-level heading"
+          fi
+        done
+
+    - name: Validate documentation structure
+      run: |
+        required_files=("README.md" "CHANGELOG.md" "CONTRIBUTING.md" "CODE_OF_CONDUCT.md" "SECURITY.md" "doc/API_Reference.md" "doc/algorithm_documentation.md")
+        for file in "${required_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "Error: Required documentation file $file is missing"
+            exit 1
+          fi
+        done
+        echo "All required documentation files present"
+        
+    - name: Check documentation completeness
+      run: |
+        # Check that all public headers are documented
+        echo "Checking header documentation..."
+        for header in src/headers/*.hpp; do
+          if [ -f "$header" ]; then
+            if ! grep -q "@brief\|@file" "$header"; then
+              echo "Warning: $header may be missing documentation"
+            fi
+          fi
+        done
+        
+    - name: Validate code examples in README
+      run: |
+        # Extract and validate C++ code blocks from README
+        echo "Validating code examples..."
+        python3 << 'EOF'
+        import re
+        import sys
+
+        with open('README.md', 'r') as f:
+            content = f.read()
+            
+        # Find C++ code blocks
+        code_blocks = re.findall(r'```cpp\n(.*?)\n```', content, re.DOTALL)
+        
+        if not code_blocks:
+            print("Warning: No C++ code examples found in README")
+        else:
+            print(f"Found {len(code_blocks)} C++ code examples")
+            
+        # Check for common issues
+        for i, block in enumerate(code_blocks):
+            if 'int main' in block and 'return' not in block:
+                print(f"Warning: Code block {i+1} may be missing return statement")
+        EOF
+        
+    - name: Check for outdated information
+      run: |
+        # Check if version numbers are consistent
+        echo "Checking version consistency..."
+        if grep -q "v1\." README.md; then
+          echo "Warning: README may contain outdated version references"
+        fi
+        
+  spell-check:
+    name: Spell Check
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install aspell
+      run: sudo apt-get update && sudo apt-get install -y aspell aspell-en
+      
+    - name: Run spell check on documentation
+      run: |
+        for file in *.md doc/*.md; do
+          if [ -f "$file" ]; then
+            echo "Spell checking $file..."
+            # List misspelled words but don't fail
+            aspell list < "$file" | sort | uniq || true
+          fi
+        done
+      continue-on-error: true

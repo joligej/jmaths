@@ -1,0 +1,182 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+  schedule:
+    # Run weekly on Sunday at 00:00 UTC
+    - cron: '0 0 * * 0'
+
+jobs:
+  build-and-test:
+    name: Build and Test (${{ matrix.os }}, ${{ matrix.build_type }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        build_type: [Release, Debug]
+        include:
+          - os: ubuntu-latest
+            compiler: g++-15
+            install_cmd: |
+              sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+              sudo apt-get update
+              sudo apt-get install -y g++-15 libboost-all-dev
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: ${{ matrix.install_cmd }}
+
+    - name: Cache CMake build
+      uses: actions/cache@v3
+      with:
+        path: |
+          build
+          ~/.cache
+        key: ${{ runner.os }}-cmake-${{ matrix.build_type }}-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-cmake-${{ matrix.build_type }}-
+          ${{ runner.os }}-cmake-
+
+    - name: Configure CMake
+      env:
+        CXX: ${{ matrix.compiler }}
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
+          -DCMAKE_VERBOSE_MAKEFILE=ON
+
+    - name: Build
+      run: cmake --build build -j$(nproc)
+
+    - name: Run tests
+      working-directory: build
+      run: |
+        ctest --output-on-failure --verbose
+        
+    - name: Generate test report
+      if: always()
+      working-directory: build
+      run: |
+        ctest --output-junit test-results.xml || true
+        
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results-${{ matrix.os }}-${{ matrix.build_type }}
+        path: build/test-results.xml
+
+    - name: Install
+      if: matrix.build_type == 'Release'
+      run: sudo cmake --install build
+      
+    - name: Create package
+      if: matrix.build_type == 'Release'
+      working-directory: build
+      run: cpack -G TGZ
+      
+    - name: Upload package
+      if: matrix.build_type == 'Release'
+      uses: actions/upload-artifact@v3
+      with:
+        name: jmaths-package-${{ matrix.os }}
+        path: build/jmaths-*.tar.gz
+      run: sudo cmake --install build
+
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install clang-format
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-format
+
+    - name: Check code formatting
+      run: |
+        find src test samples \( -name '*.cpp' -o -name '*.hpp' -o -name '*.hh' \) -print0 | \
+        xargs -0 clang-format --dry-run --Werror
+        
+    - name: Check for trailing whitespace
+      run: |
+        ! find src test -name '*.cpp' -o -name '*.hpp' | xargs grep -n '[[:space:]]$'
+        
+    - name: Check for tabs
+      run: |
+        ! find src test -name '*.cpp' -o -name '*.hpp' | xargs grep -P '\t'
+
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies
+      run: |
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo apt-get update
+        sudo apt-get install -y g++-15 libboost-all-dev cppcheck
+        
+    - name: Run cppcheck
+      run: |
+        cppcheck --enable=all --suppress=missingIncludeSystem \
+          --suppress=unusedFunction --suppress=unmatchedSuppression \
+          --error-exitcode=1 --inline-suppr \
+          -I src/headers src/ 2>&1 | tee cppcheck-report.txt
+      continue-on-error: true
+      
+    - name: Upload cppcheck report
+      uses: actions/upload-artifact@v3
+      with:
+        name: cppcheck-report
+        path: cppcheck-report.txt
+
+  sanitizers:
+    name: Sanitizers (${{ matrix.sanitizer }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer: [address, undefined, leak]
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo apt-get update
+        sudo apt-get install -y g++-15 libboost-all-dev
+
+    - name: Configure CMake with sanitizers
+      env:
+        CXX: g++-15
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_COMPILER=g++-15 \
+          -DCMAKE_CXX_FLAGS="-fsanitize=${{ matrix.sanitizer }} -fno-omit-frame-pointer -g"
+
+    - name: Build
+      run: cmake --build build -j$(nproc)
+
+    - name: Run tests with sanitizers
+      working-directory: build
+      env:
+        ASAN_OPTIONS: detect_leaks=1:check_initialization_order=1
+        UBSAN_OPTIONS: print_stacktrace=1
+        LSAN_OPTIONS: suppressions=../lsan.supp:print_suppressions=0
+      run: ctest --output-on-failure --verbose

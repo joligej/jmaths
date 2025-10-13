@@ -1,0 +1,22 @@
+# Code Owners for jmaths
+# These owners will be automatically requested for review when someone opens a pull request
+
+# Default owner for everything
+* @joligej
+
+# Documentation
+*.md @joligej
+/doc/ @joligej
+
+# Core library code
+/src/ @joligej
+
+# Tests
+/test/ @joligej
+
+# Build system
+CMakeLists.txt @joligej
+*.cmake @joligej
+
+# CI/CD
+/.github/ @joligej

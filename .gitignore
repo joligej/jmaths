@@ -1,26 +1,50 @@
-# Project-specific #
-###################
-*
-!*.*
-!*/
-*.cfg
-!LICENSE
-/build
-/Build
+# Build directories
+/build/
+/Build/
+/build_*/
+/cmake-build-*/
 
-# Compiled source #
-###################
-*.com
-*.class
-*.dll
-*.exe
+# Compiled artifacts
 *.o
 *.so
+*.a
+*.dll
+*.exe
+*.out
+*.app
 
-# Packages #
-############
-# it's better to unpack these files and commit the raw source
-# git has its own built in compression methods
+# CMake
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+Testing/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+DerivedData/
+*.xcodeproj/
+*.xcworkspace/
+
+# Package managers
+*.cfg
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# Archives
 *.7z
 *.dmg
 *.gz
@@ -30,16 +54,18 @@
 *.tar
 *.zip
 
-# Logs and databases #
-######################
-*.log
-*.sql
-*.sqlite
-*.csv
+# Coverage reports
+*.gcov
+*.gcda
+*.gcno
+coverage.xml
+*.coverage
 
-# OS generated files #
-######################
-.DS_Store
+# Documentation build
+doc/html/
+doc/latex/
+
+# System files
 .DS_Store?
 ._*
 .Spotlight-V100
@@ -47,9 +73,7 @@
 ehthumbs.db
 Thumbs.db
 
-# IDE generated files and directories #
-######################
-/.vscode
-/DerivedData
-/.idea
-/cmake-build-*
+# Temporary files
+*.tmp
+*.bak
+*.cache

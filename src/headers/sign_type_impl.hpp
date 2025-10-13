@@ -154,6 +154,7 @@ constexpr bool sign_type::is_negative() const {
 
 /**
  * @brief Flip the sign (positive <-> negative)
+ */
 constexpr void sign_type::flip_sign() {
     JMATHS_FUNCTION_TO_LOG;
 

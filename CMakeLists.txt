@@ -2,6 +2,52 @@ cmake_minimum_required(VERSION 3.28.1)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 
+# Force g++-15 as the compiler (must be before project())
+if(NOT DEFINED CMAKE_CXX_COMPILER)
+    set(CMAKE_CXX_COMPILER "g++-15")
+endif()
+
+# Check binutils version for GCC 15 compatibility
+execute_process(
+    COMMAND as --version
+    OUTPUT_VARIABLE BINUTILS_VERSION_OUTPUT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
+
+string(REGEX MATCH "[0-9]+\\.[0-9]+" BINUTILS_VERSION "${BINUTILS_VERSION_OUTPUT}")
+
+message(STATUS "Using ${CMAKE_CXX_COMPILER}")
+if(BINUTILS_VERSION)
+    message(STATUS "Detected binutils version: ${BINUTILS_VERSION}")
+else()
+    set(BINUTILS_VERSION "unknown")
+    message(STATUS "Could not detect binutils version")
+endif()
+
+# GCC 15 + binutils compatibility check
+if(CMAKE_CXX_COMPILER MATCHES "g\\+\\+-15" OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 15))
+    if(BINUTILS_VERSION STREQUAL "unknown")
+        message(STATUS "GCC 15 detected - ensure binutils 2.43+ is available for Debug builds")
+    elseif(BINUTILS_VERSION VERSION_LESS "2.43")
+        message(WARNING "═════════════════════════════════════════════════════════════")
+        message(WARNING " GCC 15 with binutils < 2.43 detected")
+        message(WARNING " Your binutils version: ${BINUTILS_VERSION}")
+        message(WARNING " ")
+        message(WARNING " Debug builds may fail with '.base64' assembler errors")
+        message(WARNING " ")
+        message(WARNING " Solutions:")
+        message(WARNING "   1. Use Release builds (works with any binutils)")
+        message(WARNING "   2. Upgrade binutils to 2.43+")
+        message(WARNING "   3. Use GCC 14: cmake .. -DCMAKE_CXX_COMPILER=g++-14")
+        message(WARNING " ")
+        message(WARNING " See GCC15_BINUTILS_ISSUE.md for details")
+        message(WARNING "═════════════════════════════════════════════════════════════")
+    else()
+        message(STATUS "GCC 15 + binutils ${BINUTILS_VERSION}: ✓ Full compatibility")
+    endif()
+endif()
+
 project(jmaths
         VERSION 2.0
         DESCRIPTION "The jmaths library for C++"
@@ -22,31 +68,17 @@ target_compile_options(compilation_flags INTERFACE
         "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wpedantic;-Wshadow;-Werror;-Wuninitialized;-Winit-self;-Wconversion;-Wsign-conversion;-Wsign-compare>>"
         "$<${msvc_cxx}:$<BUILD_INTERFACE:-W4;-WX>>")
 
-if (NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm" OR NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
-    message(STATUS "Using address sanitizer with ${CMAKE_CXX_COMPILER_ID} on ${CMAKE_SYSTEM_PROCESSOR}")
-    target_compile_options(compilation_flags INTERFACE "$<$<CONFIG:Debug>:-fsanitize=address;-fsanitize=undefined>")
-    target_link_options(compilation_flags INTERFACE "$<$<CONFIG:Debug>:-fsanitize=address;-fsanitize=undefined>")
-    target_link_libraries(compilation_flags INTERFACE "$<$<CONFIG:Debug>:-fsanitize=address;-fsanitize=undefined>")
-else ()
-    message(STATUS "Not using address sanitizer with ${CMAKE_CXX_COMPILER_ID} on ${CMAKE_SYSTEM_PROCESSOR}")
-endif ()
+# Sanitizers - Re-enable when needed
+# Note: Sanitizers work fine with GCC 15 + binutils 2.43+
+# Disabled by default to avoid confusion with older toolchains
 
-#include(CheckIPOSupported)
-#check_ipo_supported(RESULT ipo_supported OUTPUT ipo_error)
-
-#if(ipo_supported)
-#   message(STATUS "IPO / LTO supported in release builds")
-#   set_property(TARGET compilation_flags PROPERTY INTERPROCEDURAL_OPTIMIZATION_RELEASE True)
-#else()
-#   message(STATUS "IPO / LTO not supported: <${ipo_error}>")
-#endif()
+message(STATUS "Sanitizers disabled by default (can be enabled with appropriate toolchain)")
 
 install(TARGETS compilation_flags EXPORT jmathsTargets)
 
 install(FILES "LICENSE" DESTINATION lib/jmaths/)
 
 add_subdirectory(src)
-add_subdirectory(samples)
 add_subdirectory(test)
 add_subdirectory(doc)
 

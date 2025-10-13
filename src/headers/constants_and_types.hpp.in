@@ -1,5 +1,5 @@
 // The jmaths library for C++
-// Copyright (C) 2024  Jasper de Smaele
+// Copyright (C) 2025  Jasper de Smaele
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by

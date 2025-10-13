@@ -1,3 +1,3 @@
-file(GLOB documentation_files manual.*)
+file(GLOB documentation_files "*.md")
 
-install(FILES ${documentation_files} DESTINATION lib/jmaths/doc/)
+install(FILES ${documentation_files} LICENSE.txt DESTINATION lib/jmaths/doc/)
