@@ -2,6 +2,25 @@
 
 This guide provides step-by-step instructions for configuring your jmaths repository on GitHub for maximum professionalism and functionality.
 
+## ⚠️ IMPORTANT: Setup Order
+
+**Follow steps in this exact order to avoid issues:**
+
+1. Steps 1-3: Enable basic repository features
+2. Step 6: Enable security features (Dependabot will create PRs)
+3. Step 7: Configure secrets if needed
+4. Step 8: Enable Actions
+5. **Step 9: Run workflows and verify they pass** ⭐ CRITICAL
+6. **THEN go back to Steps 4-5:** Set up branch protection with required checks
+
+**Why this order matters:**
+- Branch protection rules (Steps 4-5) require status checks to exist first
+- Status checks only appear after workflows run successfully (Step 9)
+- If you set up branch protection too early, all PRs (including Dependabot) will fail
+- Dependabot PRs created in Step 6 will fail until workflows are working
+
+**Already did Steps 4-5 too early?** See the Troubleshooting section at the end.
+
 ## Table of Contents
 1. [Initial Repository Setup](#initial-repository-setup)
 2. [Enable GitHub Features](#enable-github-features)
@@ -53,63 +72,103 @@ This guide provides step-by-step instructions for configuring your jmaths reposi
 
 ## Configure Branch Protection
 
-### Step 4: Protect Main Branch
+**IMPORTANT:** Complete Steps 4 and 5 AFTER Step 8 (running workflows at least once). Status checks must exist before they can be made required.
+
+### Step 4: Protect Main Branch (WAIT until after Step 8!)
 1. Go to **Settings** → **Branches** (left sidebar)
 2. Click **Add branch protection rule** or **Add rule**
-3. Configure as follows:
+3. In the **Branch name pattern** field, type: `main`
+4. Configure the following options:
 
-**Branch name pattern:** `main`
-
-**Protect matching branches:**
-- ☑ **Require a pull request before merging**
-  - ☑ Required approvals: **1**
-  - ☑ **Dismiss stale pull request approvals when new commits are pushed**
-  - ☑ **Require review from Code Owners**
+**Require a pull request before merging:**
+- ☑ Check this box
+- In the sub-options that appear:
+  - Set **Require approvals** dropdown to: `1`
+  - ☑ Check **Dismiss stale pull request approvals when new commits are pushed**
+  - ☑ Check **Require review from Code Owners** (only if you have a CODEOWNERS file)
   
-- ☑ **Require status checks to pass before merging**
-  - ☑ **Require branches to be up to date before merging**
-  - Add required checks (these will appear after first workflow run):
+**Require status checks to pass before merging:**
+- ☑ Check this box
+- ☑ Check **Require branches to be up to date before merging**
+- In the **Search for status checks** field, type and select the following checks (they will appear after Step 8):
+  - Type `build-and-test` and select:
     - `build-and-test (ubuntu-latest, Release)`
     - `build-and-test (ubuntu-latest, Debug)`
-    - `code-quality`
-    - `static-analysis`
+  - Type `code-quality` and select it
+  - Type `static-analysis` and select it
+  - Type `CodeQL` and select it (from security.yml workflow)
   
-- ☑ **Require conversation resolution before merging**
-- ☑ **Require linear history**
-- ☑ **Do not allow bypassing the above settings**
+**Additional protections:**
+- ☑ Check **Require conversation resolution before merging**
+- ☑ Check **Require linear history** (prevents merge commits)
+- ☑ Check **Do not allow bypassing the above settings** (even admins must follow rules)
 
-4. Click **Create** or **Save changes**
+5. Scroll to bottom and click **Create** or **Save changes**
 
-### Step 5: Protect Develop Branch (if used)
-1. Repeat Step 4 with pattern: `develop`
-2. Use similar settings but allow maintainers to push directly
+**Note:** If you don't see the status checks in the search field, it means the workflows haven't run yet. Complete Step 8 first, wait for workflows to finish, then return to configure these protection rules.
+
+### Step 5: Protect Develop Branch (Optional - WAIT until after Step 8!)
+Only follow this step if you use a `develop` branch for ongoing development.
+
+1. In **Settings** → **Branches**, click **Add branch protection rule** again
+2. In the **Branch name pattern** field, type: `develop`
+3. Configure with these lighter restrictions:
+   - ☑ **Require a pull request before merging** (but 0 approvals required for faster iteration)
+   - ☑ **Require status checks to pass before merging**
+     - Select the same status checks as main branch
+   - ☑ **Automatically delete head branches**
+4. Click **Create**
+
+**Why lighter restrictions?** The develop branch is for active development, while main is your stable/release branch.
 
 ---
 
 ## Set Up Security Features
 
 ### Step 6: Enable Security Features
-1. Go to **Settings** → **Code security and analysis** (left sidebar)
-2. Enable all security features:
+1. In **Settings**, find and click **Code security and analysis** in the left sidebar
+2. You'll see several security features listed. Enable them as follows:
 
 **Dependency graph:**
-- Click **Enable** (should be enabled by default)
+- This should already be enabled (shows as "Enabled" with a green checkmark)
+- If not enabled, click the **Enable** button
+- This allows GitHub to track your project dependencies
 
-**Dependabot:**
-- ☑ **Dependabot alerts** - Click **Enable**
-- ☑ **Dependabot security updates** - Click **Enable**
+**Dependabot alerts:**
+- Click **Enable** button
+- This notifies you of security vulnerabilities in dependencies
+- After enabling, you'll receive alerts when vulnerable dependencies are detected
+
+**Dependabot security updates:**
+- Click **Enable** button
+- This automatically creates PRs to update vulnerable dependencies
+- Dependabot will create pull requests to patch security issues
 
 **Code scanning:**
-- Click **Set up** for CodeQL analysis
-- Choose **Default** setup
-- Click **Enable CodeQL**
+- Find the **CodeQL analysis** section
+- Click **Set up** button
+- A modal will appear with two options:
+  - Choose **Default** setup (easier)
+  - Select languages: `C++` (should be auto-detected)
+  - Click **Enable CodeQL**
+- This scans your code for security vulnerabilities and coding errors
+- Note: You already have a security.yml workflow, so this may show as already configured
 
 **Secret scanning:**
-- ☑ **Secret scanning** - Click **Enable**
-- ☑ **Push protection** - Click **Enable**
+- Click **Enable** button under "Secret scanning"
+- This detects committed secrets like API keys and tokens
+- After enabling, click **Enable** for **Push protection** too
+- Push protection prevents you from accidentally pushing secrets
 
-3. Scroll to **Private vulnerability reporting**
-- Click **Enable** to allow security researchers to privately report vulnerabilities
+**Private vulnerability reporting:**
+- Scroll down to find this section
+- Click **Enable** button
+- This allows security researchers to privately report vulnerabilities to you
+- They can submit reports through the Security tab
+
+3. After enabling all features, scroll to top and verify all show green "Enabled" status
+
+**Important:** After enabling Dependabot, it may immediately create several PRs for dependency updates. This is normal - review and merge them as appropriate.
 
 ---
 
@@ -134,24 +193,69 @@ This guide provides step-by-step instructions for configuring your jmaths reposi
 ## Enable Actions and Workflows
 
 ### Step 8: Enable GitHub Actions
-1. Go to **Settings** → **Actions** → **General** (left sidebar)
-2. Under **Actions permissions**, select:
-   - ● **Allow all actions and reusable workflows**
-3. Under **Workflow permissions**, select:
-   - ● **Read and write permissions**
-   - ☑ **Allow GitHub Actions to create and approve pull requests**
-4. Click **Save**
+1. In **Settings**, find and click **Actions** in the left sidebar
+2. Then click **General** (sub-menu under Actions)
+3. Configure the following:
 
-### Step 9: Verify Workflows
-1. Go to **Actions** tab (main repository page)
-2. You should see your workflows listed:
+**Actions permissions:**
+- You'll see three radio button options:
+  - Select ● **Allow all actions and reusable workflows** (most permissive)
+  - This allows your repository to use any GitHub Actions
+  
+**Workflow permissions:**
+- Scroll down to find this section
+- You'll see two radio button options:
+  - Select ● **Read and write permissions**
+  - This allows workflows to modify your repository
+- Below that, find and check:
+  - ☑ **Allow GitHub Actions to create and approve pull requests**
+  - This is needed for Dependabot and automated PRs
+
+4. Scroll to bottom and click **Save** button
+
+### Step 9: Verify and Run Workflows
+1. Navigate to the **Actions** tab at the top of the repository page (next to Pull requests)
+2. You should see a list of your workflows in the left sidebar:
    - CI
-   - Code Coverage
+   - Code Coverage  
    - Dependency Check
    - Documentation
    - Release
    - Security Scan
-3. Click **Run workflow** on CI workflow to trigger first run
+
+3. **Run the CI workflow manually:**
+   - Click on **CI** in the left sidebar
+   - Click the **Run workflow** dropdown button (right side)
+   - Select branch: `main`
+   - Click the green **Run workflow** button
+   - Wait for the workflow to complete (may take 5-10 minutes)
+
+4. **Check workflow status:**
+   - A new workflow run will appear in the list
+   - It will show a yellow circle (⚪) while running
+   - Wait for it to complete:
+     - Green checkmark (✓) means success
+     - Red X (✗) means failure
+   - Click on the workflow run to see details
+   - Verify all jobs complete successfully:
+     - build-and-test (ubuntu-latest, Release)
+     - build-and-test (ubuntu-latest, Debug)
+     - code-quality
+     - static-analysis
+     - sanitizers (address, undefined, leak)
+
+5. **Run the Security Scan workflow:**
+   - Click **Security Scan** in left sidebar
+   - Click **Run workflow** → select `main` → click **Run workflow**
+   - Wait for completion (creates the CodeQL status check)
+
+6. **After successful runs:** Now you can return to Steps 4 and 5 to configure branch protection with required status checks!
+
+**Troubleshooting workflow failures:**
+- If CI fails, click on the failed job to see error logs
+- Common issues: missing dependencies, syntax errors in code
+- Fix any issues, commit, and workflows will re-run automatically
+- The fixed CI workflow should now work (duplicate line was removed)
 
 ---
 
@@ -382,18 +486,61 @@ Go through this checklist to ensure everything is set up:
 ## Troubleshooting
 
 ### Workflows Not Running
-- Check Actions are enabled in Settings → Actions
-- Verify workflow files are in `.github/workflows/`
-- Check for YAML syntax errors
+- Check Actions are enabled in Settings → Actions → General
+- Verify workflow files are in `.github/workflows/` directory
+- Check for YAML syntax errors: use a YAML validator or look for red X's
+- Ensure Actions permissions include "Read and write permissions"
 
 ### Status Checks Not Required
-- Status checks only appear after first run
-- Re-configure branch protection after first CI run
+- Status checks only appear in branch protection after their first successful run
+- Run workflows manually first (Step 9)
+- After workflows complete, configure branch protection (Steps 4-5)
+- Return to Settings → Branches to add the status checks
+
+### Dependabot PRs Failing with Red X's
+**Symptoms:** Dependabot creates PRs with names like "chore(deps): bump actions/..." and they all fail with red X's.
+
+**Root cause:** This happens when:
+1. Branch protection requires status checks that haven't run yet (Steps 4-5 done before Step 8)
+2. CI workflow has syntax errors (like duplicate lines)
+3. Workflows don't have permission to run on Dependabot PRs
+
+**Solutions:**
+1. **First, verify CI workflow works:**
+   - Go to Actions tab
+   - Manually run CI workflow on main branch
+   - Fix any errors shown in the logs
+   - The duplicate line at line 101 has been removed
+
+2. **If branch protection was set up too early:**
+   - Go to Settings → Branches
+   - Edit or delete the main branch protection rule
+   - Wait for CI to pass on some PRs
+   - Then re-enable branch protection with required checks
+
+3. **Close and recreate failed Dependabot PRs:**
+   - Go to Pull Requests tab
+   - Find the failed Dependabot PRs
+   - Close them (click "Close pull request")
+   - Go to Settings → Code security and analysis → Dependabot
+   - Click "Check for updates" to create fresh PRs
+   - New PRs should trigger workflows correctly
+
+4. **Verify Dependabot has permissions:**
+   - Settings → Actions → General
+   - Ensure "Allow GitHub Actions to create and approve pull requests" is checked
+   - This allows Dependabot PRs to trigger workflows
+
+5. **If you want to ignore the failed PRs:**
+   - Simply close all failing Dependabot PRs
+   - Disable and re-enable Dependabot security updates
+   - Fresh PRs will be created that should work correctly
 
 ### Code Coverage Not Uploading
-- Verify CODECOV_TOKEN is set correctly
+- Verify CODECOV_TOKEN is set correctly in Settings → Secrets
 - Check Codecov website for repository status
-- Review coverage workflow logs
+- Review coverage workflow logs for upload errors
+- Ensure coverage.yml workflow has correct token reference
 
 ---
 

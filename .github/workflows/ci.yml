@@ -98,7 +98,6 @@ jobs:
       with:
         name: jmaths-package-${{ matrix.os }}
         path: build/jmaths-*.tar.gz
-      run: sudo cmake --install build
 
   code-quality:
     name: Code Quality Checks
