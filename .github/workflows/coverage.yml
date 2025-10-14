@@ -7,6 +7,10 @@ on:
     branches: [ main, develop ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pull-requests: write  # For posting coverage comments on PRs
+
 jobs:
   coverage:
     name: Generate Code Coverage

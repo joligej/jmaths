@@ -10,6 +10,10 @@ on:
     # Run weekly on Sunday at 00:00 UTC
     - cron: '0 0 * * 0'
 
+permissions:
+  contents: read
+  pull-requests: write  # For commenting on PRs if needed
+
 jobs:
   build-and-test:
     name: Build and Test (${{ matrix.os }}, ${{ matrix.build_type }})
@@ -34,13 +38,10 @@ jobs:
     - name: Install dependencies
       run: ${{ matrix.install_cmd }}
 
-
-    - name: switch to gcc-15
+    - name: Configure GCC alternatives
       run: |
-        sudo apt install gcc-15 g++-15
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-15 100 --slave /usr/bin/g++ g++ /usr/bin/g++-15 --slave /usr/bin/gcov gcov /usr/bin/gcov-15
         sudo update-alternatives --set gcc /usr/bin/gcc-15
-
 
     - name: Cache CMake build
       uses: actions/cache@v3
