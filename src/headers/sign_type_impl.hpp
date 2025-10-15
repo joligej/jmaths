@@ -58,10 +58,11 @@ constexpr sign_type::sign_bool sign_type::handle_int_(std::integral auto * num) 
         return positive;
     } else {
         if (*num < 0) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wsign-conversion"
-            *num *= -1;  // Make the value positive
-#pragma GCC diagnostic pop
+            // Handle negation safely to avoid undefined behavior with INT_MIN
+            // Cast to unsigned, negate, then cast back to signed
+            using value_type = std::remove_reference_t<decltype(*num)>;
+            using unsigned_type = std::make_unsigned_t<value_type>;
+            *num = static_cast<value_type>(-static_cast<unsigned_type>(*num));
             return negative;
         } else {
             return positive;
