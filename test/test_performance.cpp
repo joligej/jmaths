@@ -83,14 +83,23 @@ BOOST_AUTO_TEST_CASE(string_conversion_performance) {
     auto avg_time = measure_time([&]() { volatile std::string s = n.to_str(); });
 
     BOOST_TEST_MESSAGE("Average string conversion time: " << avg_time << " ms");
-    BOOST_TEST(avg_time < 1.0);
+    // More lenient threshold when sanitizers are enabled (they add significant overhead)
+    #if defined(__SANITIZE_ADDRESS__) || defined(__SANITIZE_THREAD__) || defined(__SANITIZE_UNDEFINED__)
+        BOOST_TEST(avg_time < 30.0);  // Sanitizers are slow
+    #else
+        BOOST_TEST(avg_time < 1.0);
+    #endif
 }
 
 BOOST_AUTO_TEST_CASE(construction_performance) {
     auto avg_time = measure_time([]() { volatile N n("123456789012345678901234567890"); });
 
     BOOST_TEST_MESSAGE("Average construction time: " << avg_time << " ms");
-    BOOST_TEST(avg_time < 1.0);
+    #if defined(__SANITIZE_ADDRESS__) || defined(__SANITIZE_THREAD__) || defined(__SANITIZE_UNDEFINED__)
+        BOOST_TEST(avg_time < 30.0);  // Sanitizers are slow
+    #else
+        BOOST_TEST(avg_time < 1.0);
+    #endif
 }
 
 BOOST_AUTO_TEST_CASE(copy_performance) {
