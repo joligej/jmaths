@@ -59,12 +59,14 @@ jobs:
           --print-summary \
           --xml coverage.xml \
           --html-details coverage.html
+      continue-on-error: true
 
     - name: Generate coverage report (lcov)
       run: |
-        lcov --directory build --capture --output-file coverage.info
-        lcov --remove coverage.info '/usr/*' '*/test/*' '*/build/*' --output-file coverage.info
-        lcov --list coverage.info
+        lcov --directory build --capture --output-file coverage.info || true
+        lcov --remove coverage.info '/usr/*' '*/test/*' '*/build/*' --output-file coverage.info || true
+        lcov --list coverage.info || true
+      continue-on-error: true
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3

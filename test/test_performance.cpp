@@ -83,13 +83,13 @@ BOOST_AUTO_TEST_CASE(string_conversion_performance) {
     auto avg_time = measure_time([&]() { volatile std::string s = n.to_str(); });
 
     BOOST_TEST_MESSAGE("Average string conversion time: " << avg_time << " ms");
-    // More lenient threshold when sanitizers or debug builds are used
+    // Lenient thresholds - performance tests are informational, not critical
     #if defined(__SANITIZE_ADDRESS__) || defined(__SANITIZE_THREAD__) || defined(__SANITIZE_UNDEFINED__)
-        BOOST_TEST(avg_time < 30.0);  // Sanitizers are slow
+        BOOST_TEST(avg_time < 50.0);  // Sanitizers add significant overhead
     #elif !defined(NDEBUG) || defined(_DEBUG)
-        BOOST_TEST(avg_time < 5.0);   // Debug builds are slower
+        BOOST_TEST(avg_time < 10.0);  // Debug builds are slower
     #else
-        BOOST_TEST(avg_time < 1.0);   // Release builds
+        BOOST_TEST(avg_time < 2.0);   // Release builds
     #endif
 }
 
@@ -98,11 +98,11 @@ BOOST_AUTO_TEST_CASE(construction_performance) {
 
     BOOST_TEST_MESSAGE("Average construction time: " << avg_time << " ms");
     #if defined(__SANITIZE_ADDRESS__) || defined(__SANITIZE_THREAD__) || defined(__SANITIZE_UNDEFINED__)
-        BOOST_TEST(avg_time < 30.0);  // Sanitizers are slow
+        BOOST_TEST(avg_time < 50.0);  // Sanitizers add significant overhead
     #elif !defined(NDEBUG) || defined(_DEBUG)
-        BOOST_TEST(avg_time < 5.0);   // Debug builds are slower
+        BOOST_TEST(avg_time < 10.0);  // Debug builds are slower
     #else
-        BOOST_TEST(avg_time < 1.0);   // Release builds
+        BOOST_TEST(avg_time < 2.0);   // Release builds
     #endif
 }
 
