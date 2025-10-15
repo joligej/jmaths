@@ -28,20 +28,20 @@ jobs:
       run: |
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo apt-get update
-        sudo apt-get install -y g++-15 libboost-all-dev gcovr lcov binutils
+        sudo apt-get install -y g++-14 libboost-all-dev gcovr lcov binutils
         
     - name: Verify toolchain versions
       run: |
-        g++-15 --version
+        g++-14 --version
         as --version | head -1
 
     - name: Configure CMake with coverage
       env:
-        CXX: g++-15
+        CXX: g++-14
       run: |
         cmake -B build \
           -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_CXX_COMPILER=g++-15 \
+          -DCMAKE_CXX_COMPILER=g++-14 \
           -DCMAKE_CXX_FLAGS="--coverage -fprofile-arcs -ftest-coverage -O0"
 
     - name: Build

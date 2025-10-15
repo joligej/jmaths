@@ -38,8 +38,8 @@ jobs:
         echo "Checking GCC compatibility..."
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo apt-get update
-        sudo apt-get install -y g++-15 binutils
-        g++-15 --version
+        sudo apt-get install -y g++-14 binutils
+        g++-14 --version
         as --version | head -1
         
     - name: Check CMake version
@@ -52,7 +52,7 @@ jobs:
         
     - name: Test minimal build
       run: |
-        cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-15
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++-14
         cmake --build build -j$(nproc)
         
     - name: Report dependency status

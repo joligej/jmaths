@@ -25,11 +25,11 @@ jobs:
         build_type: [Release, Debug]
         include:
           - os: ubuntu-latest
-            compiler: g++-15
+            compiler: g++-14
             install_cmd: |
               sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
               sudo apt-get update
-              sudo apt-get install -y g++-15 libboost-all-dev
+              sudo apt-get install -y g++-14 libboost-all-dev binutils
 
     steps:
     - name: Checkout repository
@@ -48,14 +48,21 @@ jobs:
         # Install newer binutils for GCC 15 compatibility
         sudo apt-get install -y binutils
 
+    - name: Verify GCC-15 installation
+      run: |
+        echo "Checking for g++-14..."
+        which g++-14
+        g++-14 --version
+        
     - name: Configure GCC alternatives
       run: |
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-15 100 --slave /usr/bin/g++ g++ /usr/bin/g++-15 --slave /usr/bin/gcov gcov /usr/bin/gcov-15
-        sudo update-alternatives --set gcc /usr/bin/gcc-15
+        # Set up alternatives for g++-14
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100 --slave /usr/bin/g++ g++ /usr/bin/g++-14 --slave /usr/bin/gcov gcov /usr/bin/gcov-14
+        sudo update-alternatives --set gcc /usr/bin/gcc-14
         
     - name: Verify toolchain versions
       run: |
-        g++-15 --version
+        g++-14 --version
         as --version | head -1
         cmake --version
 
@@ -157,7 +164,7 @@ jobs:
       run: |
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo apt-get update
-        sudo apt-get install -y g++-15 libboost-all-dev cppcheck binutils
+        sudo apt-get install -y g++-14 libboost-all-dev cppcheck binutils
         
     - name: Run cppcheck
       run: |
@@ -193,20 +200,20 @@ jobs:
       run: |
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo apt-get update
-        sudo apt-get install -y g++-15 libboost-all-dev binutils
+        sudo apt-get install -y g++-14 libboost-all-dev binutils
         
     - name: Verify toolchain versions
       run: |
-        g++-15 --version
+        g++-14 --version
         as --version | head -1
 
     - name: Configure CMake with sanitizers
       env:
-        CXX: g++-15
+        CXX: g++-14
       run: |
         cmake -B build \
           -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_CXX_COMPILER=g++-15 \
+          -DCMAKE_CXX_COMPILER=g++-14 \
           -DCMAKE_CXX_FLAGS="-fsanitize=${{ matrix.sanitizer }} -fno-omit-frame-pointer -g"
 
     - name: Build
