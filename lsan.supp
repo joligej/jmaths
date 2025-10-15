@@ -1,5 +1,0 @@
-# Leak Sanitizer suppressions for jmaths
-# This file lists known non-critical leaks (e.g., from third-party libraries)
-
-# Boost.Test framework may have some static allocations
-leak:boost::unit_test
