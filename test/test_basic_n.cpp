@@ -17,6 +17,7 @@
 #include <boost/test/unit_test.hpp>
 #include <sstream>
 #include <string>
+
 #include "all.hpp"
 
 using namespace jmaths;
@@ -31,10 +32,10 @@ BOOST_AUTO_TEST_CASE(default_constructor) {
 BOOST_AUTO_TEST_CASE(integral_constructor) {
     N num1(42);
     BOOST_TEST(num1 == 42);
-    
+
     N num2(0);
     BOOST_TEST(num2 == 0);
-    
+
     N num3(1000000);
     BOOST_TEST(num3 == 1000000);
 }
@@ -42,10 +43,10 @@ BOOST_AUTO_TEST_CASE(integral_constructor) {
 BOOST_AUTO_TEST_CASE(string_constructor) {
     N num1("123");
     BOOST_TEST(num1 == 123);
-    
+
     N num2("0");
     BOOST_TEST(num2 == 0);
-    
+
     N num3("999999999999999999999");
     std::string str = num3.to_str();
     BOOST_TEST(str == "999999999999999999999");
@@ -219,7 +220,7 @@ BOOST_AUTO_TEST_CASE(increment_operator) {
     N num(41);
     ++num;
     BOOST_TEST(num == 42);
-    
+
     // Post-increment not tested as it may not be implemented
 }
 
@@ -227,7 +228,7 @@ BOOST_AUTO_TEST_CASE(decrement_operator) {
     N num(43);
     --num;
     BOOST_TEST(num == 42);
-    
+
     // Post-decrement not tested as it may not be implemented
 }
 
@@ -293,19 +294,17 @@ BOOST_AUTO_TEST_CASE(stream_input_multiple_numbers) {
 
 BOOST_AUTO_TEST_CASE(stream_roundtrip) {
     // Test that output -> input preserves value
-    std::vector<N> test_values = {
-        N(0), N(1), N(42), N(100), N(9999),
-        N(65535), N(1000000), N("123456789012345")
-    };
-    
-    for (const auto& original : test_values) {
+    std::vector<N> test_values =
+        {N(0), N(1), N(42), N(100), N(9999), N(65535), N(1000000), N("123456789012345")};
+
+    for (const auto & original : test_values) {
         std::ostringstream oss;
         oss << original;
-        
+
         std::istringstream iss(oss.str());
         N restored;
         iss >> restored;
-        
+
         BOOST_TEST(original == restored);
     }
 }
@@ -325,7 +324,7 @@ BOOST_AUTO_TEST_CASE(fits_into_too_large) {
 
 BOOST_AUTO_TEST_CASE(fits_into_all_unsigned_types) {
     N small(100);
-    
+
     // Only test safe types (32-bit and 64-bit)
     BOOST_TEST(small.fits_into<std::uint32_t>().has_value());
     BOOST_TEST(small.fits_into<std::uint64_t>().has_value());
@@ -338,10 +337,10 @@ BOOST_AUTO_TEST_CASE(constructor_from_various_types) {
     // Test construction from safe integer types
     N from_uint32(std::uint32_t(4294967295U));
     BOOST_TEST(from_uint32 == 4294967295U);
-    
+
     N from_ulong(42UL);
     BOOST_TEST(from_ulong == 42);
-    
+
     N from_ulonglong(123456789ULL);
     BOOST_TEST(from_ulonglong == 123456789ULL);
 }

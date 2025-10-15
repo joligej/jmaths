@@ -264,8 +264,7 @@ constexpr auto calc::pow_mod(basic_N_type_1 && base,
         if (exponent_num.is_odd()) {
             result.opr_mult_assign_(base_num);
             // Apply modulo to keep result small
-            result = basic_N_t::detail::opr_div(result, mod)
-                         .second;  // .second is the remainder
+            result = basic_N_t::detail::opr_div(result, mod).second;  // .second is the remainder
         }
 
         exponent_num.opr_bitshift_r_assign_(1U);

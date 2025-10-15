@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <boost/test/unit_test.hpp>
+
 #include "all.hpp"
 
 using namespace jmaths;
@@ -41,14 +42,14 @@ BOOST_AUTO_TEST_CASE(compound_assignment_multiply) {
 
 BOOST_AUTO_TEST_CASE(pre_increment) {
     N num(10);
-    N& result = ++num;
+    N & result = ++num;
     BOOST_TEST(num == 11);
     BOOST_TEST(result == 11);
 }
 
 BOOST_AUTO_TEST_CASE(pre_decrement) {
     N num(10);
-    N& result = --num;
+    N & result = --num;
     BOOST_TEST(num == 9);
     BOOST_TEST(result == 9);
 }
@@ -64,7 +65,7 @@ BOOST_AUTO_TEST_CASE(comparison_chain) {
     N a(10);
     N b(20);
     N c(30);
-    
+
     BOOST_TEST(a < b);
     BOOST_TEST(b < c);
     BOOST_TEST(a < c);
@@ -98,14 +99,14 @@ BOOST_AUTO_TEST_CASE(comparison_consistency) {
     N a(10);
     N b(20);
     N c(10);
-    
+
     // Reflexive: a == a
     BOOST_TEST(a == a);
-    
+
     // Symmetric: a == c implies c == a
     BOOST_TEST(a == c);
     BOOST_TEST(c == a);
-    
+
     // Transitive properties
     BOOST_TEST(a < b);
     BOOST_TEST(b > a);
@@ -119,15 +120,15 @@ BOOST_AUTO_TEST_CASE(arithmetic_properties) {
     N a(5);
     N b(3);
     N c(2);
-    
+
     // Commutativity: a + b = b + a
     BOOST_TEST(a + b == b + a);
     BOOST_TEST(a * b == b * a);
-    
+
     // Associativity: (a + b) + c = a + (b + c)
     BOOST_TEST((a + b) + c == a + (b + c));
     BOOST_TEST((a * b) * c == a * (b * c));
-    
+
     // Distributivity: a * (b + c) = a * b + a * c
     BOOST_TEST(a * (b + c) == a * b + a * c);
 }
@@ -136,11 +137,11 @@ BOOST_AUTO_TEST_CASE(identity_elements) {
     N num(42);
     N zero(0);
     N one(1);
-    
+
     // Additive identity
     BOOST_TEST(num + zero == num);
     BOOST_TEST(zero + num == num);
-    
+
     // Multiplicative identity
     BOOST_TEST(num * one == num);
     BOOST_TEST(one * num == num);
@@ -160,7 +161,7 @@ BOOST_AUTO_TEST_CASE(operator_precedence_test) {
     N a(2);
     N b(3);
     N c(4);
-    
+
     // Test that operators follow expected precedence
     N result = a + b * c;  // Should be 2 + (3 * 4) = 14
     BOOST_TEST(result == 14);

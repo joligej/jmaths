@@ -90,7 +90,7 @@ class scoped_timer {
    private:
     using clock_type = std::chrono::high_resolution_clock;
 
-    const char * const timed_obj_name_;  ///< Name of function being timed
+    const char * const timed_obj_name_;        ///< Name of function being timed
     const clock_type::time_point start_time_;  ///< Time when timer was created
 
     inline static std::ostream * ostream_ = std::addressof(std::clog);  ///< Output stream (shared)

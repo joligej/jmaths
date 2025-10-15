@@ -19,11 +19,21 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Install CMake
+      uses: jwlawson/actions-setup-cmake@v2
+      with:
+        cmake-version: '3.28.1'
+
     - name: Install dependencies
       run: |
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo apt-get update
-        sudo apt-get install -y g++-15 libboost-all-dev gcovr lcov
+        sudo apt-get install -y g++-15 libboost-all-dev gcovr lcov binutils
+        
+    - name: Verify toolchain versions
+      run: |
+        g++-15 --version
+        as --version | head -1
 
     - name: Configure CMake with coverage
       env:
@@ -65,7 +75,7 @@ jobs:
         flags: unittests
         
     - name: Upload coverage HTML report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: coverage.html

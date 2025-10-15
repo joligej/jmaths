@@ -16,6 +16,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <sstream>
+
 #include "all.hpp"
 
 using namespace jmaths;
@@ -68,7 +69,7 @@ BOOST_AUTO_TEST_CASE(addition_mixed_signs) {
     Z b(-20);
     Z c = a + b;
     BOOST_TEST(c == 30);
-    
+
     Z d = b + a;
     BOOST_TEST(d == 30);
 }
@@ -106,7 +107,7 @@ BOOST_AUTO_TEST_CASE(multiplication_negative) {
     Z b(7);
     Z c = a * b;
     BOOST_TEST(c == -42);
-    
+
     Z d = b * a;
     BOOST_TEST(d == -42);
 }
@@ -154,7 +155,7 @@ BOOST_AUTO_TEST_CASE(negation_operator) {
     Z a(42);
     Z b = -a;
     BOOST_TEST(b == -42);
-    
+
     Z c = -b;
     BOOST_TEST(c == 42);
 }
@@ -170,7 +171,7 @@ BOOST_AUTO_TEST_CASE(sign_detection) {
     Z positive(42);
     Z negative(-42);
     Z zero(0);
-    
+
     BOOST_TEST(positive > 0);
     BOOST_TEST(negative < 0);
     BOOST_TEST(zero == 0);
@@ -180,7 +181,7 @@ BOOST_AUTO_TEST_CASE(comparison_operators) {
     Z a(10);
     Z b(20);
     Z c(-10);
-    
+
     BOOST_TEST(a < b);
     BOOST_TEST(c < a);
     BOOST_TEST(b > a);
@@ -192,7 +193,7 @@ BOOST_AUTO_TEST_CASE(stream_operations) {
     std::ostringstream oss;
     oss << num;
     BOOST_TEST(oss.str() == "-42");
-    
+
     std::istringstream iss("-123");
     Z input;
     iss >> input;

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <boost/test/unit_test.hpp>
+
 #include "all.hpp"
 
 using namespace jmaths;
@@ -106,9 +107,9 @@ BOOST_AUTO_TEST_CASE(compound_xor) {
 
 BOOST_AUTO_TEST_CASE(bit_manipulation_sequence) {
     N num(0);
-    num |= N(1) << 0;  // Set bit 0
-    num |= N(1) << 2;  // Set bit 2
-    num |= N(1) << 4;  // Set bit 4
+    num |= N(1) << 0;            // Set bit 0
+    num |= N(1) << 2;            // Set bit 2
+    num |= N(1) << 4;            // Set bit 4
     BOOST_TEST(num == 0b10101);  // 21
 }
 

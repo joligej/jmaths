@@ -217,8 +217,8 @@ constexpr auto basic_N<BaseInt, BaseIntBig, Allocator>::detail::opr_mult(const b
     // where B is the base (radix) and m is half the number of digits
     //
     // Then computes: lhs * rhs = lhs_l*rhs_l * B^(2m) +
-    //                            ((lhs_l + lhs_r)*(rhs_l + rhs_r) - lhs_l*rhs_l - lhs_r*rhs_r) * B^m +
-    //                            lhs_r*rhs_r
+    //                            ((lhs_l + lhs_r)*(rhs_l + rhs_r) - lhs_l*rhs_l - lhs_r*rhs_r) * B^m
+    //                            + lhs_r*rhs_r
     // This reduces 4 multiplications to 3, saving operations for large numbers.
 
     // check for multiplicative identity

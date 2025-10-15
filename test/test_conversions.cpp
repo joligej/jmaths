@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <boost/test/unit_test.hpp>
+
 #include "all.hpp"
 
 using namespace jmaths;
@@ -29,11 +30,9 @@ BOOST_AUTO_TEST_CASE(n_to_string) {
 
 BOOST_AUTO_TEST_CASE(n_to_string_matches_standard) {
     // Compare jmaths string conversion to std::to_string
-    std::vector<unsigned long long> test_values = {
-        0, 1, 42, 100, 255, 256, 1000, 9999, 
-        65535, 65536, 1000000, 4294967295ULL
-    };
-    
+    std::vector<unsigned long long> test_values =
+        {0, 1, 42, 100, 255, 256, 1000, 9999, 65535, 65536, 1000000, 4294967295ULL};
+
     for (auto val : test_values) {
         N num(val);
         std::string jmaths_str = num.to_str();
@@ -50,11 +49,11 @@ BOOST_AUTO_TEST_CASE(n_to_string_large_numbers) {
 
 BOOST_AUTO_TEST_CASE(n_to_string_different_bases) {
     N num(255);
-    
-    BOOST_TEST(num.to_str(2) == "11111111");   // Binary
-    BOOST_TEST(num.to_str(8) == "377");         // Octal
-    BOOST_TEST(num.to_str(10) == "255");        // Decimal
-    BOOST_TEST(num.to_str(16) == "FF");         // Hexadecimal (uppercase)
+
+    BOOST_TEST(num.to_str(2) == "11111111");  // Binary
+    BOOST_TEST(num.to_str(8) == "377");       // Octal
+    BOOST_TEST(num.to_str(10) == "255");      // Decimal
+    BOOST_TEST(num.to_str(16) == "FF");       // Hexadecimal (uppercase)
 }
 
 BOOST_AUTO_TEST_CASE(n_from_string) {
@@ -64,15 +63,13 @@ BOOST_AUTO_TEST_CASE(n_from_string) {
 
 BOOST_AUTO_TEST_CASE(n_from_string_matches_standard) {
     // Compare jmaths string parsing to standard library
-    std::vector<std::string> test_strings = {
-        "0", "1", "10", "42", "100", "999", "1234", "9999",
-        "10000", "65535", "100000", "1000000"
-    };
-    
-    for (const auto& str : test_strings) {
+    std::vector<std::string> test_strings =
+        {"0", "1", "10", "42", "100", "999", "1234", "9999", "10000", "65535", "100000", "1000000"};
+
+    for (const auto & str : test_strings) {
         N num(str);
         unsigned long long std_val = std::stoull(str);
-        
+
         auto opt = num.fits_into<unsigned long long>();
         BOOST_TEST(opt.has_value());
         BOOST_TEST(opt.value() == std_val);
@@ -95,13 +92,13 @@ BOOST_AUTO_TEST_CASE(n_fits_into_uint64) {
 
 BOOST_AUTO_TEST_CASE(n_fits_into_boundary_values) {
     // Test boundary values for safe integer types (32-bit and 64-bit only)
-    
+
     // uint32_t max = 4294967295
     N n32(4294967295U);
     auto opt32 = n32.fits_into<std::uint32_t>();
     BOOST_TEST(opt32.has_value());
     BOOST_TEST(opt32.value() == 4294967295U);
-    
+
     // uint64_t works fine
     N n64("12345678901234567890");
     auto opt64 = n64.fits_into<std::uint64_t>();
@@ -135,10 +132,8 @@ BOOST_AUTO_TEST_CASE(z_to_string_negative) {
 
 BOOST_AUTO_TEST_CASE(z_to_string_matches_standard_positive) {
     // Compare jmaths to std::to_string for positive values
-    std::vector<long long> test_values = {
-        0, 1, 42, 100, 999, 1234, 9999, 65535, 1000000
-    };
-    
+    std::vector<long long> test_values = {0, 1, 42, 100, 999, 1234, 9999, 65535, 1000000};
+
     for (auto val : test_values) {
         Z num(val);
         std::string jmaths_str = num.to_str();
@@ -149,10 +144,8 @@ BOOST_AUTO_TEST_CASE(z_to_string_matches_standard_positive) {
 
 BOOST_AUTO_TEST_CASE(z_to_string_matches_standard_negative) {
     // Compare jmaths to std::to_string for negative values
-    std::vector<long long> test_values = {
-        -1, -42, -100, -999, -1234, -9999, -65535, -1000000
-    };
-    
+    std::vector<long long> test_values = {-1, -42, -100, -999, -1234, -9999, -65535, -1000000};
+
     for (auto val : test_values) {
         Z num(val);
         std::string jmaths_str = num.to_str();
@@ -172,15 +165,13 @@ BOOST_AUTO_TEST_CASE(z_from_string_negative) {
 }
 
 BOOST_AUTO_TEST_CASE(z_from_string_matches_standard) {
-    std::vector<std::string> test_strings = {
-        "0", "1", "42", "-42", "100", "-100", 
-        "999", "-999", "123456", "-123456"
-    };
-    
-    for (const auto& str : test_strings) {
+    std::vector<std::string> test_strings =
+        {"0", "1", "42", "-42", "100", "-100", "999", "-999", "123456", "-123456"};
+
+    for (const auto & str : test_strings) {
         Z num(str);
         long long std_val = std::stoll(str);
-        
+
         auto opt = num.fits_into<long long>();
         BOOST_TEST(opt.has_value());
         BOOST_TEST(opt.value() == std_val);
@@ -203,7 +194,7 @@ BOOST_AUTO_TEST_CASE(z_fits_into_int32_negative) {
 
 BOOST_AUTO_TEST_CASE(z_fits_into_boundary_values) {
     // Test with safe integer types only (32-bit and 64-bit)
-    
+
     // int32_t boundaries
     Z n32_min(std::int32_t(-2147483648));
     Z n32_max(std::int32_t(2147483647));

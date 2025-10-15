@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <boost/test/unit_test.hpp>
+
 #include "all.hpp"
 
 using namespace jmaths;
@@ -30,7 +31,7 @@ BOOST_AUTO_TEST_CASE(constructor_from_integers) {
     Q half("1/2");
     Q third("1/3");
     Q two_thirds("2/3");
-    
+
     BOOST_TEST(half.to_str() == "1/2");
     BOOST_TEST(third.to_str() == "1/3");
 }
@@ -44,17 +45,17 @@ BOOST_AUTO_TEST_CASE(constructor_normalizes) {
 BOOST_AUTO_TEST_CASE(negative_fractions) {
     Q neg1("-1/2");
     Q neg2("-1/2");
-    
+
     // Both should represent -1/2
     BOOST_TEST(neg1.to_str() == "-1/2");
     BOOST_TEST(neg2.to_str() == "-1/2");
 }
 
 BOOST_AUTO_TEST_CASE(addition_simple) {
-    Q a("1/2");  // 1/2
-    Q b("1/3");  // 1/3
+    Q a("1/2");   // 1/2
+    Q b("1/3");   // 1/3
     Q c = a + b;  // Should be 5/6
-    
+
     BOOST_TEST(c.to_str() == "5/6");
 }
 
@@ -62,31 +63,31 @@ BOOST_AUTO_TEST_CASE(addition_same_denominator) {
     Q a("1/4");
     Q b("1/4");
     Q c = a + b;  // Should be 1/2
-    
+
     BOOST_TEST(c.to_str() == "1/2");
 }
 
 BOOST_AUTO_TEST_CASE(subtraction_simple) {
-    Q a("3/4");  // 3/4
-    Q b("1/4");  // 1/4
+    Q a("3/4");   // 3/4
+    Q b("1/4");   // 1/4
     Q c = a - b;  // Should be 1/2
-    
+
     BOOST_TEST(c.to_str() == "1/2");
 }
 
 BOOST_AUTO_TEST_CASE(multiplication_simple) {
-    Q a("2/3");  // 2/3
-    Q b("3/4");  // 3/4
+    Q a("2/3");   // 2/3
+    Q b("3/4");   // 3/4
     Q c = a * b;  // Should be 1/2
-    
+
     BOOST_TEST(c.to_str() == "1/2");
 }
 
 BOOST_AUTO_TEST_CASE(division_simple) {
-    Q a("1/2");  // 1/2
-    Q b("1/4");  // 1/4
+    Q a("1/2");   // 1/2
+    Q b("1/4");   // 1/4
     Q c = a / b;  // Should be 2/1
-    
+
     BOOST_TEST(c.to_str() == "2/1");
 }
 
@@ -138,7 +139,7 @@ BOOST_AUTO_TEST_CASE(mixed_operations) {
     Q a("1/2");  // 1/2
     Q b("1/3");  // 1/3
     Q c("1/6");  // 1/6
-    
+
     Q result = (a + b) * c;  // (5/6) * (1/6) = 5/36
     BOOST_TEST(result.to_str() == "5/36");
 }

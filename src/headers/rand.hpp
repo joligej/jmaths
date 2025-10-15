@@ -77,7 +77,7 @@ template <typename T> class rand_gen {
    private:
     distribution_type distrib_;
 
-    static generator_type gen_;  // Shared generator state
+    static generator_type gen_;                     // Shared generator state
     static clock_type::time_point last_seed_time_;  // Shared last seed time
 
     /**

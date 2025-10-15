@@ -42,12 +42,11 @@
      *
      * PERFORMANCE: When JMATHS_BENCHMARKING=0, this becomes ((void)0) - no overhead
      */
-    #define JMATHS_FUNCTION_TO_LOG                                                \
-        static constexpr const char * JMATHS_MACRO_IMPL_FUNCTION_NAME =           \
-            ::std::source_location::current().function_name();                    \
-        ::jmaths::internal::scoped_timer JMATHS_MACRO_IMPL_TIME_THIS_FUNCTION (   \
-            JMATHS_MACRO_IMPL_FUNCTION_NAME                                       \
-        )
+    #define JMATHS_FUNCTION_TO_LOG                                             \
+        static constexpr const char * JMATHS_MACRO_IMPL_FUNCTION_NAME =        \
+            ::std::source_location::current().function_name();                 \
+        ::jmaths::internal::scoped_timer JMATHS_MACRO_IMPL_TIME_THIS_FUNCTION( \
+            JMATHS_MACRO_IMPL_FUNCTION_NAME)
 #else
     /**
      * @def JMATHS_FUNCTION_TO_LOG

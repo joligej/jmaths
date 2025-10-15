@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <boost/test/unit_test.hpp>
+
 #include "all.hpp"
 
 using namespace jmaths;
@@ -122,16 +123,16 @@ BOOST_AUTO_TEST_CASE(pow_large) {
 BOOST_AUTO_TEST_CASE(pow_edge_cases_comprehensive) {
     // 0^0 = 1 (by convention)
     BOOST_TEST(calc::pow(N(0), N(0)) == 1);
-    
+
     // 0^n = 0 for n > 0
     BOOST_TEST(calc::pow(N(0), N(5)) == 0);
-    
+
     // 1^n = 1
     BOOST_TEST(calc::pow(N(1), N(1000)) == 1);
-    
+
     // n^1 = n
     BOOST_TEST(calc::pow(N(42), N(1)) == 42);
-    
+
     // 2^n powers
     BOOST_TEST(calc::pow(N(2), N(8)) == 256);
     BOOST_TEST(calc::pow(N(2), N(16)) == 65536);
@@ -142,7 +143,7 @@ BOOST_AUTO_TEST_CASE(pow_mod_basic) {
     N base(2);
     N exponent(10);
     N mod(100);
-    
+
     // 2^10 = 1024, 1024 % 100 = 24
     N result = calc::pow_mod(base, exponent, mod);
     BOOST_TEST(result == 24);
@@ -153,7 +154,7 @@ BOOST_AUTO_TEST_CASE(pow_mod_large_exponent) {
     N base(3);
     N exponent(6);  // φ(7) = 6, so 3^6 ≡ 1 (mod 7)
     N mod(7);
-    
+
     N result = calc::pow_mod(base, exponent, mod);
     BOOST_TEST(result == 1);
 }
@@ -180,19 +181,19 @@ BOOST_AUTO_TEST_CASE(sqrt_more_cases) {
     auto [root1, rem1] = calc::sqrt(N(1));
     BOOST_TEST(root1 == 1);
     BOOST_TEST(rem1 == 0);
-    
+
     auto [root4, rem4] = calc::sqrt(N(4));
     BOOST_TEST(root4 == 2);
     BOOST_TEST(rem4 == 0);
-    
+
     auto [root25, rem25] = calc::sqrt(N(25));
     BOOST_TEST(root25 == 5);
     BOOST_TEST(rem25 == 0);
-    
+
     auto [root100, rem100] = calc::sqrt(N(100));
     BOOST_TEST(root100 == 10);
     BOOST_TEST(rem100 == 0);
-    
+
     auto [root10000, rem10000] = calc::sqrt(N(10000));
     BOOST_TEST(root10000 == 100);
     BOOST_TEST(rem10000 == 0);
@@ -202,15 +203,15 @@ BOOST_AUTO_TEST_CASE(sqrt_non_perfect_squares) {
     auto [root, rem] = calc::sqrt(N(2));
     BOOST_TEST(root == 1);
     BOOST_TEST(rem == 1);  // 2 - 1^2 = 1
-    
+
     auto [root3, rem3] = calc::sqrt(N(3));
     BOOST_TEST(root3 == 1);
     BOOST_TEST(rem3 == 2);  // 3 - 1^2 = 2
-    
+
     auto [root8, rem8] = calc::sqrt(N(8));
     BOOST_TEST(root8 == 2);
     BOOST_TEST(rem8 == 4);  // 8 - 2^2 = 4
-    
+
     auto [root50, rem50] = calc::sqrt(N(50));
     BOOST_TEST(root50 == 7);
     BOOST_TEST(rem50 == 1);  // 50 - 7^2 = 1

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <boost/test/unit_test.hpp>
+
 #include "all.hpp"
 
 using namespace jmaths;
@@ -67,7 +68,7 @@ BOOST_AUTO_TEST_CASE(q_literal_negative) {
 BOOST_AUTO_TEST_CASE(literal_arithmetic) {
     auto result = 10_N + 20_N;
     BOOST_TEST(result == 30);
-    
+
     auto result2 = 50_Z - 20_Z;
     BOOST_TEST(result2 == 30);
 }
