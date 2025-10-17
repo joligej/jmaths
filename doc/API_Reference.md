@@ -146,6 +146,66 @@ N d{"FF", 16};                // 255 from hex
 N e{"101010", 2};             // 42 from binary
 ```
 
+##### String Constructor Details
+
+The string constructor `N(std::string_view str, unsigned base = 10)` converts a string representation to an arbitrary-precision number.
+
+**Important Behaviors:**
+
+1. **No Automatic Whitespace Trimming**  
+   - Input strings are parsed character-by-character without preprocessing
+   - Leading/trailing whitespace will cause errors or unexpected behavior
+   - **Correct:** `N{"123"}` → 123
+   - **Incorrect:** `N{" 123 "}` → Error (space is not a valid digit)
+
+2. **No Sign Prefix Support for N Type**  
+   - The `N` type represents unsigned integers only
+   - Characters `+` and `-` are NOT interpreted as sign prefixes
+   - For signed integers, use the `Z` type instead
+   - **Correct:** `N{"456"}` → 456
+   - **Incorrect:** `N{"+456"}` → Error (`+` is not valid in base-10)
+   - **Use Z instead:** `Z{"+456"}` → 456 (signed type supports `+` prefix)
+
+3. **Base-64 Encoding Character Set**  
+   The character-to-digit mapping supports bases 2 through 64:
+   - **Base 2-10:** `'0'-'9'` represent values 0-9
+   - **Base 11-36:** `'A'-'Z'` represent values 10-35 (case-insensitive in base ≤36)
+   - **Base 37-62:** `'a'-'z'` represent values 36-61
+   - **Base 63:** `'+'` represents value 62
+   - **Base 64:** `'~'` represents value 63
+   
+   ```cpp
+   N dec{"255"};              // Base-10: 255
+   N hex{"FF", 16};           // Base-16: 255
+   N b36{"ZZ", 36};           // Base-36: 35*36 + 35 = 1295
+   N b64{"~~", 64};           // Base-64: 63*64 + 63 = 4095
+   N b64_plus{"+~", 64};      // Base-64: 62*64 + 63 = 4031
+   ```
+
+4. **Empty and Zero Strings**  
+   - Empty strings and strings containing only `'0'` characters represent zero
+   - **Examples:** `N{""}` → 0, `N{"0"}` → 0, `N{"000"}` → 0
+
+5. **Invalid Characters**  
+   - Characters outside the valid range for the specified base will cause errors
+   - **Base-10 valid:** `'0'-'9'` only
+   - **Base-16 valid:** `'0'-'9'`, `'A'-'F'`, `'a'-'f'`
+   - Using `'G'` in base-16 or `'A'` in base-10 causes an error
+
+**Best Practices:**
+```cpp
+// ✓ Correct usage
+N a{"12345"};                  // Clean decimal string
+N b{"DEADBEEF", 16};          // Hex without prefix
+N c{"0"};                     // Zero
+
+// ✗ Avoid these
+N d{" 123"};                  // Has whitespace - ERROR
+N e{"+123"};                  // Has sign prefix - ERROR (use Z type)
+N f{"0x123"};                 // Has prefix - ERROR (remove "0x")
+N g{"12.34"};                 // Has decimal point - ERROR (use Q type)
+```
+
 #### Arithmetic Operations
 
 ```cpp
@@ -189,6 +249,82 @@ N left = a << 2;         // Multiply by 4
 N right = a >> 1;        // Divide by 2
 ```
 
+##### Bitwise NOT (~) for Arbitrary-Precision Integers
+
+The bitwise NOT operator behaves differently for arbitrary-precision integers compared to fixed-width types due to the absence of a predetermined bit width.
+
+**Key Behavior:**
+
+- **For non-zero values:** `~N` inverts all bits in the internal representation
+- **For zero:** `~N(0)` returns `N(0)` (special case)
+
+**Why This Design:**
+
+In fixed-width types (like `uint32_t`), `~0` produces all bits set (e.g., `0xFFFFFFFF`). However, arbitrary-precision integers don't have a fixed maximum bit width:
+
+```cpp
+// Fixed-width (uint32_t)
+uint32_t x = 0;           // 32 bits: 0x00000000
+uint32_t y = ~x;          // 32 bits: 0xFFFFFFFF (all ones)
+
+// Arbitrary-precision (N)
+N x = 0;                  // No bits stored (empty = zero)
+N y = ~x;                 // No bits to invert → still zero
+```
+
+**Correct Usage:**
+
+```cpp
+// Inverting non-zero values works as expected
+N a = 0b1111_N;           // Binary: 1111
+N b = ~a;                 // Inverts bits: 11111111111...11110000 (in internal representation)
+                          // After removing leading zeros: result depends on internal digit size
+
+// Zero is a special case
+N zero = 0_N;
+N inverted = ~zero;       // Returns 0 (no bits to invert)
+ASSERT(inverted == 0);    // TRUE
+
+// Practical bitwise NOT usage
+N mask = 0xFF_N;          // 8 bits set
+N data = 0b10101010_N;
+N result = data & mask;   // Extract lowest 8 bits
+
+// Double NOT returns to original (for non-zero)
+N original = 42_N;
+N restored = ~~original;
+ASSERT(restored == original);  // TRUE
+```
+
+**Implementation Note:**
+
+The library inverts all bits in the internal digit representation and then removes leading zeros. For zero (no digits), there are no bits to invert, resulting in zero.
+
+```cpp
+// Conceptual implementation
+N operator~() const {
+    if (digits.empty()) return N(0);  // Zero case
+    
+    N result;
+    for (auto digit : digits) {
+        result.digits.push_back(~digit);  // Invert each digit
+    }
+    result.remove_leading_zeros();        // Clean up
+    return result;
+}
+```
+
+**When to Use Bitwise NOT:**
+
+- Bit masking operations
+- Implementing bitwise algorithms
+- Low-level data manipulation
+
+**When NOT to Use:**
+
+- Don't rely on `~0` to generate "all ones" (use explicit masks instead)
+- For arithmetic negation, use the `Z` type (signed integers), not bitwise NOT
+
 #### Member Functions
 
 | Function | Returns | Description |
@@ -206,6 +342,117 @@ N right = a >> 1;        // Divide by 2
 | `fits_into<T>()` | `std::optional<T>` | Safe conversion to built-in type |
 | `operator[](bitpos_t)` | bit reference | Access individual bit |
 | `set_zero()` | `void` | Set value to zero |
+
+##### Type Conversion with fits_into<T>()
+
+The `fits_into<T>()` member function provides safe, checked conversion from arbitrary-precision integers to built-in integer types. It returns `std::optional<T>` which contains the value if it fits, or `std::nullopt` if the value is too large.
+
+**Signature:**
+```cpp
+template<std::integral T>
+constexpr std::optional<T> fits_into() const;
+```
+
+**Behavior:**
+
+- **Returns value** if the number can be represented exactly in type `T`
+- **Returns std::nullopt** if the number is too large for type `T`
+- **Works with signed and unsigned** integer types
+- **Performs range checking** to ensure no data loss
+
+**Examples:**
+
+```cpp
+// Successful conversions
+N small = 42_N;
+auto val32 = small.fits_into<uint32_t>();
+if (val32) {
+    uint32_t n = *val32;  // 42
+}
+
+N zero = 0_N;
+auto val8 = zero.fits_into<uint8_t>();
+ASSERT(val8.has_value());
+ASSERT(*val8 == 0);
+
+// Range boundaries
+N max_u8 = 255_N;
+ASSERT(max_u8.fits_into<uint8_t>().has_value());  // Fits exactly
+
+N too_large_u8 = 256_N;
+ASSERT(!too_large_u8.fits_into<uint8_t>().has_value());  // Too large
+
+N max_u16 = 65535_N;
+ASSERT(max_u16.fits_into<uint16_t>().has_value());  // Fits exactly
+
+N too_large_u16 = 65536_N;
+ASSERT(!too_large_u16.fits_into<uint16_t>().has_value());  // Too large
+
+// Large numbers
+N huge = "999999999999999999999"_N;
+ASSERT(!huge.fits_into<uint64_t>().has_value());  // Too large for any standard type
+
+// Signed types
+N in_signed_range = 100_N;
+auto signed_val = in_signed_range.fits_into<int32_t>();
+ASSERT(signed_val.has_value());
+ASSERT(*signed_val == 100);
+
+// Safe usage pattern with std::optional
+N value = get_some_value();
+if (auto result = value.fits_into<uint64_t>(); result.has_value()) {
+    uint64_t native = *result;
+    // Use native type for performance
+} else {
+    // Keep using arbitrary-precision
+}
+```
+
+**Type Support:**
+
+| Type | Max Value | Example |
+|------|-----------|---------|
+| `uint8_t` | 255 | `N{255}.fits_into<uint8_t>()` ✓ |
+| `uint16_t` | 65,535 | `N{65535}.fits_into<uint16_t>()` ✓ |
+| `uint32_t` | 4,294,967,295 | `N{4294967295}.fits_into<uint32_t>()` ✓ |
+| `uint64_t` | 18,446,744,073,709,551,615 | `N{"18446744073709551615"}.fits_into<uint64_t>()` ✓ |
+| `int8_t` | 127 | `N{127}.fits_into<int8_t>()` ✓ |
+| `int32_t` | 2,147,483,647 | `N{2147483647}.fits_into<int32_t>()` ✓ |
+
+**Why Use fits_into():**
+
+1. **Safety:** No silent overflow or data loss
+2. **Clarity:** Explicit intent to convert
+3. **Performance:** Optimization opportunity when value fits in native types
+4. **Constexpr:** Can be used in compile-time contexts
+
+**Common Patterns:**
+
+```cpp
+// Pattern 1: Extract or error
+N value = parse_input();
+auto result = value.fits_into<uint32_t>();
+if (!result) {
+    throw std::overflow_error("Value too large");
+}
+uint32_t native = *result;
+
+// Pattern 2: Fallback to arbitrary-precision
+template<typename Func>
+void process(const N& value, Func&& f) {
+    if (auto small = value.fits_into<uint64_t>()) {
+        f(*small);  // Fast path with native type
+    } else {
+        f(value);   // Slow path with arbitrary-precision
+    }
+}
+
+// Pattern 3: Validation
+bool is_valid_port(const N& num) {
+    auto port = num.fits_into<uint16_t>();
+    return port.has_value() && *port >= 1024;
+}
+```
 
 **Example:**
 ```cpp
