@@ -1,8 +1,11 @@
-# Algorithm Documentation for jmaths Library
+# Algorithm Documentation
 
-This document provides a comprehensive overview of the key algorithms implemented in the jmaths library. All algorithms are documented in detail within the source code comments in `src/headers/`.
+**jmaths Library — Arbitrary-Precision Arithmetic Algorithms**
+
+This document provides comprehensive technical documentation of the algorithms implemented in the jmaths library. All algorithms are thoroughly documented within the source code comments in `src/headers/`, and this document serves as a high-level overview and reference.
 
 ## Table of Contents
+
 1. [Overview](#overview)
 2. [Arbitrary-Precision Unsigned Integers (N)](#unsigned-integers-n)
 3. [Arbitrary-Precision Signed Integers (Z)](#signed-integers-z)
@@ -16,13 +19,15 @@ This document provides a comprehensive overview of the key algorithms implemente
 
 ## Overview
 
-The jmaths library implements arbitrary-precision arithmetic using a digit-based representation where each number is stored as a vector of fixed-size integers (digits). This approach allows numbers to grow dynamically without overflow, limited only by available memory.
+The jmaths library implements arbitrary-precision arithmetic using a digit-based representation system. Each number is stored as a dynamically-sized vector of fixed-size integers (digits), allowing numbers to grow beyond the limits of native integer types, constrained only by available memory.
 
-**Key Design Principles:**
-- **Little-endian storage**: Least significant digit stored first for efficient carry propagation
-- **Zero normalization**: Leading zeros always removed to maintain canonical form
-- **Type safety**: Separate types for unsigned (N), signed (Z), and rational (Q) numbers
-- **Constexpr support**: Most operations work at compile-time when possible
+### Core Design Principles
+
+- **Little-Endian Storage** — Least significant digit stored first, enabling efficient carry propagation in arithmetic operations
+- **Zero Normalization** — Leading zeros are always removed to maintain canonical form and optimize comparisons
+- **Type Safety** — Distinct types for unsigned (N), signed (Z), and rational (Q) numbers prevent type confusion
+- **Constexpr Support** — Most operations are designed to work at compile-time when possible
+- **Performance** — Algorithms selected and optimized for real-world performance characteristics
 
 ---
 

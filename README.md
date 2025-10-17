@@ -5,17 +5,19 @@
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://isocpp.org/)
 [![CMake](https://img.shields.io/badge/CMake-3.28+-064F8C?logo=cmake)](https://cmake.org/)
 
-A professional, high-performance C++ library for arbitrary-precision arithmetic with support for integers, rationals, and advanced mathematical operations.
+A professional, high-performance C++23 library for arbitrary-precision arithmetic operations with comprehensive support for unlimited-size integers, rational numbers, and advanced mathematical computations.
 
 ## Features
 
-- **Arbitrary-Precision Integers** (`N`, `Z`): Unlimited size integers with full arithmetic support
-- **Rational Numbers** (`Q`): Arbitrary-precision fractions automatically reduced to lowest terms
-- **Modern C++23**: Leverages latest language features for clean, efficient code
-- **Comprehensive Testing**: 215+ unit tests with Boost.Test framework
-- **Constexpr Support**: Most operations work at compile-time
-- **User-Defined Literals**: Natural syntax with `_N`, `_Z`, `_Q` literals
-- **Rich API**: GCD, square root, power, bitwise operations, and more
+- **Arbitrary-Precision Integers** (`N`, `Z`) — Unlimited-size integers with complete arithmetic support
+- **Rational Numbers** (`Q`) — Arbitrary-precision fractions with automatic reduction to lowest terms
+- **Modern C++23** — Leverages latest language features for clean, efficient, and type-safe code
+- **Comprehensive Testing** — 215+ unit tests ensuring reliability and correctness
+- **Constexpr Support** — Compile-time evaluation for most operations
+- **User-Defined Literals** — Natural syntax using `_N`, `_Z`, and `_Q` literals
+- **Rich Mathematical API** — GCD, square root, exponentiation, bitwise operations, and more
+- **Header-Only** — Easy integration into your projects
+- **Production-Ready** — Thoroughly tested with continuous integration and quality assurance
 
 ## Quick Start
 
@@ -78,41 +80,46 @@ g++-15 -std=c++23 -O3 your_program.cpp -ljmaths -o your_program
 
 ## Requirements
 
-- **Compiler**: g++-15 or later with C++23 support
-- **CMake**: 3.28.1 or later
-- **Boost**: 1.70 or later (for testing only)
-- **binutils**: 2.43 or later (required for GCC 15)
-- **Operating System**: Linux, macOS, or Windows (with appropriate toolchain)
+- **Compiler** — GCC 15 or later with C++23 support
+- **CMake** — 3.28.1 or later
+- **Boost** — 1.70 or later (testing framework only)
+- **binutils** — 2.43 or later (required for GCC 15)
+- **Operating System** — Linux, macOS, or Windows (with appropriate toolchain)
 
-> **Note**: When using g++-15, ensure binutils 2.43 or later is installed. Older versions will cause assembler errors in debug builds. The CMake configuration automatically detects your binutils version and provides guidance. See [GCC15_BINUTILS_ISSUE.md](GCC15_BINUTILS_ISSUE.md) for details.
+> **Note**: When using GCC 15, ensure binutils 2.43 or later is installed. Older versions may cause assembler errors in debug builds. The CMake configuration automatically detects your binutils version and provides appropriate guidance. See [GCC15_REQUIREMENTS.md](GCC15_REQUIREMENTS.md) for detailed information.
 
 ## Documentation
 
-- **[API Reference](doc/API_Reference.md)**: Complete API documentation
-- **[Algorithm Documentation](doc/algorithm_documentation.md)**: Detailed algorithm explanations
-- **[Contributing Guidelines](CONTRIBUTING.md)**: How to contribute to the project
-- **[Code of Conduct](CODE_OF_CONDUCT.md)**: Community guidelines
-- **[Security Policy](SECURITY.md)**: Security considerations and reporting
+- **[API Reference](doc/API_Reference.md)** — Complete API documentation for all classes and functions
+- **[Algorithm Documentation](doc/algorithm_documentation.md)** — Detailed algorithm explanations and complexity analysis
+- **[CI/CD Workflows](doc/WORKFLOWS.md)** — Comprehensive guide to the automated testing and deployment pipeline
+- **[Contributing Guidelines](CONTRIBUTING.md)** — How to contribute to the project
+- **[Code of Conduct](CODE_OF_CONDUCT.md)** — Community guidelines and expectations
+- **[Security Policy](SECURITY.md)** — Security considerations and vulnerability reporting
+- **[GCC 15 Requirements](GCC15_REQUIREMENTS.md)** — Toolchain compatibility information
 
 ## Testing
 
-The library includes a comprehensive test suite with 215+ test cases:
+The library includes a comprehensive test suite with over 215 test cases covering all major functionality:
 
 ```bash
 cd build
 ctest --output-on-failure --verbose
 ```
 
-Test coverage includes:
-- **Basic Operations**: Arithmetic, comparison, assignment for N, Z, Q types
-- **Edge Cases**: Boundary conditions, zero handling, overflow prevention
-- **Parametric Tests**: Data-driven testing with multiple input sets
-- **Performance Tests**: Benchmarking of all major operations
-- **Type Conversions**: String parsing, numeric conversions, type safety
-- **Bitwise Operations**: AND, OR, XOR, shifts for arbitrary-precision integers
-- **Mathematical Functions**: GCD, square root, power, modular arithmetic
-- **Random Number Generation**: Cryptographically secure random numbers
-- **Error Handling**: Division by zero, invalid inputs, exception safety
+### Test Coverage
+
+The test suite provides extensive validation across multiple dimensions:
+
+- **Basic Operations** — Arithmetic, comparison, and assignment for N, Z, and Q types
+- **Edge Cases** — Boundary conditions, zero handling, and overflow prevention
+- **Parametric Tests** — Data-driven testing with diverse input sets
+- **Performance Tests** — Benchmarking of all major operations
+- **Type Conversions** — String parsing, numeric conversions, and type safety validation
+- **Bitwise Operations** — AND, OR, XOR, and shift operations for arbitrary-precision integers
+- **Mathematical Functions** — GCD, square root, exponentiation, and modular arithmetic
+- **Random Number Generation** — Cryptographically secure random number generation
+- **Error Handling** — Division by zero, invalid inputs, and exception safety
 
 ## Project Structure
 
@@ -134,17 +141,18 @@ jmaths/
 
 You can customize the library by editing `src/headers/constants_and_types.hpp.in` before building:
 
-- **Base integer types**: Customize underlying digit types
-- **Allocators**: Provide custom memory allocators
-- **Karatsuba multiplication**: Toggle advanced multiplication algorithm (experimental)
+- **Base Integer Types** — Customize underlying digit representation
+- **Custom Allocators** — Provide specialized memory allocators
+- **Karatsuba Multiplication** — Enable advanced multiplication algorithm (experimental)
 
 ## Performance
 
-jmaths is designed for performance with:
-- **Zero-cost abstractions**: Template-based design with no runtime overhead
-- **Efficient algorithms**: Binary GCD, exponentiation by squaring, Karatsuba multiplication
-- **Compile-time optimization**: Extensive use of `constexpr` and `[[nodiscard]]`
-- **Memory efficiency**: Custom allocator support and minimal overhead
+jmaths is engineered for high performance through several optimization strategies:
+
+- **Zero-Cost Abstractions** — Template-based design with no runtime overhead
+- **Efficient Algorithms** — Binary GCD, exponentiation by squaring, Karatsuba multiplication
+- **Compile-Time Optimization** — Extensive use of `constexpr` and `[[nodiscard]]` attributes
+- **Memory Efficiency** — Custom allocator support and minimal overhead per operation
 
 ## License
 
@@ -162,15 +170,20 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/joligej/jmaths/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/joligej/jmaths/discussions)
-- **Email**: See maintainer information in commit history
+For assistance, questions, or feedback:
+
+- **Issues** — [GitHub Issues](https://github.com/joligej/jmaths/issues) for bug reports and feature requests
+- **Discussions** — [GitHub Discussions](https://github.com/joligej/jmaths/discussions) for questions and community interaction
+- **Email** — Contact information available in commit history
 
 ## Acknowledgments
 
-- Built with modern C++23 and CMake
-- Uses Boost.Test for unit testing
-- Inspired by various arbitrary-precision arithmetic libraries
+This library is built with modern tools and best practices:
+
+- Implemented in **C++23** with extensive use of modern language features
+- Build system powered by **CMake**
+- Testing framework provided by **Boost.Test**
+- Inspired by established arbitrary-precision arithmetic libraries and academic research
 
 ## Changelog
 
@@ -178,5 +191,4 @@ See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
 
 ---
 
-**Note**: This library requires a modern C++23 compiler. Ensure your toolchain is up to date before building.
-
+**Note**: This library requires a modern C++23-compliant compiler. Ensure your development toolchain is up to date before building.

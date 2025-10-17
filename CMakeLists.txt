@@ -41,7 +41,7 @@ if(CMAKE_CXX_COMPILER MATCHES "g\\+\\+-15" OR (CMAKE_CXX_COMPILER_ID STREQUAL "G
         message(WARNING "   2. Upgrade binutils to 2.43+")
         message(WARNING "   3. Use GCC 14: cmake .. -DCMAKE_CXX_COMPILER=g++-14")
         message(WARNING " ")
-        message(WARNING " See GCC15_BINUTILS_ISSUE.md for details")
+        message(WARNING " See GCC15_REQUIREMENTS.md for details")
         message(WARNING "═════════════════════════════════════════════════════════════")
     else()
         message(STATUS "GCC 15 + binutils ${BINUTILS_VERSION}: ✓ Full compatibility")

@@ -242,4 +242,167 @@ BOOST_AUTO_TEST_CASE(n_q_conversion) {
     BOOST_TEST(q_val.to_str() == "42/1");
 }
 
+// Additional fits_into tests for N (4+ per type)
+BOOST_AUTO_TEST_CASE(n_fits_into_uint8_small) {
+    N num(127);
+    auto opt = num.fits_into<uint8_t>();
+    BOOST_TEST(opt.has_value());
+    BOOST_TEST(opt.value() == 127);
+}
+
+BOOST_AUTO_TEST_CASE(n_fits_into_uint8_max) {
+    N num(255);
+    auto opt = num.fits_into<uint8_t>();
+    BOOST_TEST(opt.has_value());
+    BOOST_TEST(opt.value() == 255);
+}
+
+BOOST_AUTO_TEST_CASE(n_doesnt_fit_uint8_too_large) {
+    N num(256);
+    auto opt = num.fits_into<uint8_t>();
+    BOOST_TEST(!opt.has_value());
+}
+
+BOOST_AUTO_TEST_CASE(n_fits_into_uint8_zero) {
+    N num(0);
+    auto opt = num.fits_into<uint8_t>();
+    BOOST_TEST(opt.has_value());
+    BOOST_TEST(opt.value() == 0);
+}
+
+// uint16_t tests
+BOOST_AUTO_TEST_CASE(n_fits_into_uint16_small) {
+    N num(12345);
+    auto opt = num.fits_into<uint16_t>();
+    BOOST_TEST(opt.has_value());
+    BOOST_TEST(opt.value() == 12345);
+}
+
+BOOST_AUTO_TEST_CASE(n_fits_into_uint16_max) {
+    N num(65535);
+    auto opt = num.fits_into<uint16_t>();
+    BOOST_TEST(opt.has_value());
+    BOOST_TEST(opt.value() == 65535);
+}
+
+BOOST_AUTO_TEST_CASE(n_doesnt_fit_uint16_too_large) {
+    N num(65536);
+    auto opt = num.fits_into<uint16_t>();
+    BOOST_TEST(!opt.has_value());
+}
+
+BOOST_AUTO_TEST_CASE(n_fits_into_uint16_boundary) {
+    N num(32768);
+    auto opt = num.fits_into<uint16_t>();
+    BOOST_TEST(opt.has_value());
+}
+
+// uint32_t tests
+BOOST_AUTO_TEST_CASE(n_fits_into_uint32_medium) {
+    N num(1000000);
+    auto opt = num.fits_into<uint32_t>();
+    BOOST_TEST(opt.has_value());
+    BOOST_TEST(opt.value() == 1000000);
+}
+
+BOOST_AUTO_TEST_CASE(n_fits_into_uint32_max) {
+    N num(4294967295u);
+    auto opt = num.fits_into<uint32_t>();
+    BOOST_TEST(opt.has_value());
+}
+
+BOOST_AUTO_TEST_CASE(n_doesnt_fit_uint32_too_large) {
+    N num("4294967296");
+    auto opt = num.fits_into<uint32_t>();
+    BOOST_TEST(!opt.has_value());
+}
+
+BOOST_AUTO_TEST_CASE(n_fits_into_uint32_power_of_two) {
+    N num(1073741824);  // 2^30
+    auto opt = num.fits_into<uint32_t>();
+    BOOST_TEST(opt.has_value());
+}
+
+// uint64_t tests
+BOOST_AUTO_TEST_CASE(n_fits_into_uint64_large) {
+    N num("123456789012345");
+    auto opt = num.fits_into<uint64_t>();
+    BOOST_TEST(opt.has_value());
+}
+
+BOOST_AUTO_TEST_CASE(n_fits_into_uint64_max) {
+    N num("18446744073709551615");
+    auto opt = num.fits_into<uint64_t>();
+    BOOST_TEST(opt.has_value());
+}
+
+BOOST_AUTO_TEST_CASE(n_doesnt_fit_uint64_too_large) {
+    N num("18446744073709551616");
+    auto opt = num.fits_into<uint64_t>();
+    BOOST_TEST(!opt.has_value());
+}
+
+BOOST_AUTO_TEST_CASE(n_fits_into_uint64_boundary) {
+    N num("9223372036854775808");  // 2^63
+    auto opt = num.fits_into<uint64_t>();
+    BOOST_TEST(opt.has_value());
+}
+
+// Additional Z conversion tests
+BOOST_AUTO_TEST_CASE(z_to_q_positive) {
+    Z z_val(42);
+    Q q_val(z_val);
+    BOOST_TEST(q_val.to_str() == "42/1");
+    BOOST_TEST(q_val == Q("42/1"));
+}
+
+BOOST_AUTO_TEST_CASE(z_to_q_negative) {
+    Z z_val(-42);
+    Q q_val(z_val);
+    BOOST_TEST(q_val.to_str() == "-42/1");
+    BOOST_TEST(q_val == Q("-42/1"));
+}
+
+BOOST_AUTO_TEST_CASE(z_to_q_zero) {
+    Z z_val(0);
+    Q q_val(z_val);
+    BOOST_TEST(q_val.to_str() == "0/1");
+    BOOST_TEST(q_val == Q("0/1"));
+}
+
+BOOST_AUTO_TEST_CASE(z_from_n_large) {
+    N n_val("9999999999999999999");
+    Z z_val(n_val);
+    BOOST_TEST(z_val.to_str() == "9999999999999999999");
+}
+
+// String conversion round-trip tests
+BOOST_AUTO_TEST_CASE(n_string_round_trip_small) {
+    N original(123);
+    std::string str = original.to_str();
+    N reconstructed(str);
+    BOOST_TEST(original == reconstructed);
+}
+
+BOOST_AUTO_TEST_CASE(n_string_round_trip_large) {
+    N original("123456789012345678901234567890");
+    std::string str = original.to_str();
+    N reconstructed(str);
+    BOOST_TEST(original == reconstructed);
+}
+
+BOOST_AUTO_TEST_CASE(z_string_round_trip_positive) {
+    Z original(987654);
+    std::string str = original.to_str();
+    Z reconstructed(str);
+    BOOST_TEST(original == reconstructed);
+}
+
+BOOST_AUTO_TEST_CASE(z_string_round_trip_negative) {
+    Z original(-987654);
+    std::string str = original.to_str();
+    Z reconstructed(str);
+    BOOST_TEST(original == reconstructed);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

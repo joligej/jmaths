@@ -253,7 +253,7 @@ constexpr std::optional<T> basic_N<BaseInt, BaseIntBig, Allocator>::fits_into() 
     } else if constexpr (base_int_type_size > sizeof(T)) {
         if (digits_.size() > 1U) { return std::nullopt; }
 
-        static constexpr auto bitmask = ~static_cast<T>(0);
+        static constexpr auto bitmask = static_cast<base_int_type>(~static_cast<T>(0));
 
         if (const auto masked_digit = digits_.front() & bitmask; masked_digit == digits_.front()) {
             return masked_digit;

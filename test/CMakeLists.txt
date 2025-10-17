@@ -24,6 +24,9 @@ file(GLOB TEST_SOURCES
     test_edge_cases.cpp
     test_parametric.cpp
     test_performance.cpp
+    test_constructors_comprehensive.cpp
+    test_api_complete_coverage.cpp
+    boost_test_gcc_abi_fix.cpp
 )
 
 target_sources(jmaths_unit_test PRIVATE ${TEST_SOURCES})

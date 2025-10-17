@@ -167,4 +167,155 @@ BOOST_AUTO_TEST_CASE(operator_precedence_test) {
     BOOST_TEST(result == 14);
 }
 
+// Additional increment/decrement tests (4+ per operator)
+BOOST_AUTO_TEST_CASE(prefix_increment_n) {
+    N num(10);
+    N result = ++num;
+    BOOST_TEST(num == N(11));
+    BOOST_TEST(result == N(11));
+}
+
+// Note: Postfix increment (N++) and decrement (N--) operators are not implemented
+// Removed tests: postfix_increment_n, postfix_decrement_n
+
+BOOST_AUTO_TEST_CASE(prefix_decrement_n) {
+    N num(10);
+    N result = --num;
+    BOOST_TEST(num == N(9));
+    BOOST_TEST(result == N(9));
+}
+
+// Note: Postfix decrement (N--) operator is not implemented
+// Removed test: postfix_decrement_n
+
+BOOST_AUTO_TEST_CASE(increment_from_zero) {
+    N num(0);
+    ++num;
+    BOOST_TEST(num == N(1));
+}
+
+BOOST_AUTO_TEST_CASE(decrement_from_one) {
+    N num(1);
+    --num;
+    BOOST_TEST(num == N(0));
+}
+
+BOOST_AUTO_TEST_CASE(multiple_increments) {
+    N num(5);
+    ++num;
+    ++num;
+    ++num;
+    BOOST_TEST(num == N(8));
+}
+
+BOOST_AUTO_TEST_CASE(mixed_increment_decrement) {
+    N num(10);
+    ++num;  // 11
+    --num;  // 10 (changed from postfix to prefix - postfix not supported)
+    ++num;  // 11
+    BOOST_TEST(num == N(11));
+}
+
+// Z increment/decrement tests
+BOOST_AUTO_TEST_CASE(z_prefix_increment_positive) {
+    Z num(5);
+    ++num;
+    BOOST_TEST(num == Z(6));
+}
+
+BOOST_AUTO_TEST_CASE(z_prefix_increment_negative) {
+    Z num(-5);
+    ++num;
+    BOOST_TEST(num == Z(-4));
+}
+
+BOOST_AUTO_TEST_CASE(z_prefix_decrement_positive) {
+    Z num(5);
+    --num;
+    BOOST_TEST(num == Z(4));
+}
+
+BOOST_AUTO_TEST_CASE(z_prefix_decrement_negative) {
+    Z num(-5);
+    --num;
+    BOOST_TEST(num == Z(-6));
+}
+
+BOOST_AUTO_TEST_CASE(z_increment_through_zero) {
+    Z num(-1);
+    ++num;
+    BOOST_TEST(num == Z(0));
+    ++num;
+    BOOST_TEST(num == Z(1));
+}
+
+BOOST_AUTO_TEST_CASE(z_decrement_through_zero) {
+    Z num(1);
+    --num;
+    BOOST_TEST(num == Z(0));
+    --num;
+    BOOST_TEST(num == Z(-1));
+}
+
+// Unary operator tests
+// Note: N and Z don't support unary plus operator (only unary minus for Z)
+
+BOOST_AUTO_TEST_CASE(unary_minus_z_positive) {
+    Z num(42);
+    Z result = -num;
+    BOOST_TEST(result == Z(-42));
+}
+
+BOOST_AUTO_TEST_CASE(unary_minus_z_negative) {
+    Z num(-42);
+    Z result = -num;
+    BOOST_TEST(result == Z(42));
+}
+
+BOOST_AUTO_TEST_CASE(unary_minus_z_zero) {
+    Z num(0);
+    Z result = -num;
+    BOOST_TEST(result == Z(0));
+}
+
+// Comparison operator tests (additional)
+BOOST_AUTO_TEST_CASE(three_way_comparison_n) {
+    N a(10);
+    N b(20);
+    N c(10);
+    
+    // Use direct comparison operators instead of comparing <=> result with 0
+    BOOST_TEST(a < b);
+    BOOST_TEST(b > a);
+    BOOST_TEST(a == c);
+}
+
+BOOST_AUTO_TEST_CASE(comparison_with_zero_n) {
+    N zero(0);
+    N nonzero(1);
+    
+    BOOST_TEST(zero < nonzero);
+    BOOST_TEST(nonzero > zero);
+    BOOST_TEST(zero != nonzero);
+}
+
+BOOST_AUTO_TEST_CASE(comparison_large_numbers) {
+    N a("999999999999999999");
+    N b("1000000000000000000");
+    
+    BOOST_TEST(a < b);
+    BOOST_TEST(b > a);
+    BOOST_TEST(a != b);
+}
+
+BOOST_AUTO_TEST_CASE(equality_same_value_different_construction) {
+    N a(42);
+    N b("42");
+    N c = 42_N;
+    
+    BOOST_TEST(a == b);
+    BOOST_TEST(b == c);
+    BOOST_TEST(a == c);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

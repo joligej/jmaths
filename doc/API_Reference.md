@@ -1,10 +1,11 @@
 # jmaths API Reference
 
-**Version:** 1.0.0  
-**License:** GPLv3  
-**Author:** Jasper de Smaele
+**Version:** 2.0.0  
+**License:** GNU General Public License v3.0  
+**Author:** Jasper de Smaele  
+**Repository:** [github.com/joligej/jmaths](https://github.com/joligej/jmaths)
 
-This comprehensive API reference documents all 30+ header files in the jmaths library. Every class, function, type alias, constant, and utility is covered with examples.
+This comprehensive API reference documents all header files in the jmaths library. Every class, function, type alias, constant, and utility is thoroughly documented with practical examples and usage guidelines.
 
 ---
 
@@ -35,15 +36,16 @@ This comprehensive API reference documents all 30+ header files in the jmaths li
 
 ## Introduction
 
-**jmaths** is a C++20 library providing arbitrary-precision arithmetic for integers and rational numbers. It supports compile-time evaluation (constexpr), modern C++ features, and integrates seamlessly with the standard library.
+**jmaths** is a C++23 library providing arbitrary-precision arithmetic for integers and rational numbers. It supports compile-time evaluation (constexpr), modern C++ features, and integrates seamlessly with the C++ standard library.
 
 ### Key Features
 
-- **Arbitrary Precision**: Numbers limited only by available memory
-- **Constexpr Support**: Most operations can be evaluated at compile-time
-- **Modern C++20**: Uses concepts, ranges, and three-way comparison
-- **Standard Library Integration**: Works with `std::format`, `std::unordered_map`, streams
-- **Performance**: Optimized algorithms with optional benchmarking
+- **Arbitrary Precision** — Numbers limited only by available memory
+- **Constexpr Support** — Compile-time evaluation for most operations
+- **Modern C++23** — Leverages concepts, ranges, and three-way comparison
+- **Standard Library Integration** — Works with `std::format`, `std::unordered_map`, streams, and more
+- **Performance Optimized** — Efficient algorithms with optional benchmarking capabilities
+- **Type Safety** — Strong type system preventing accidental misuse
 
 ### Installation
 
@@ -53,7 +55,7 @@ Include the main header in your project:
 #include <jmaths/all.hpp>
 ```
 
-Or include specific headers for faster compilation:
+Alternatively, include specific headers for faster compilation:
 
 ```cpp
 #include <jmaths/basic_N.hpp>  // Unsigned integers only

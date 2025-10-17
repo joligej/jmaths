@@ -136,4 +136,191 @@ BOOST_AUTO_TEST_CASE(bit_clear) {
     BOOST_TEST(num == 0b0101);  // 5
 }
 
+// Additional shift operator tests (4+ per direction)
+BOOST_AUTO_TEST_CASE(left_shift_by_one) {
+    N num(5);  // 101
+    N result = num << 1;
+    BOOST_TEST(result == N(10));  // 1010
+}
+
+BOOST_AUTO_TEST_CASE(left_shift_by_multiple) {
+    N num(1);
+    N result = num << 10;
+    BOOST_TEST(result == N(1024));
+}
+
+BOOST_AUTO_TEST_CASE(left_shift_large_number) {
+    N num(1000);
+    N result = num << 5;
+    BOOST_TEST(result == N(32000));
+}
+
+BOOST_AUTO_TEST_CASE(left_shift_zero) {
+    N num(42);
+    N result = num << 0;
+    BOOST_TEST(result == N(42));
+}
+
+BOOST_AUTO_TEST_CASE(right_shift_by_one) {
+    N num(10);  // 1010
+    N result = num >> 1;
+    BOOST_TEST(result == N(5));  // 101
+}
+
+BOOST_AUTO_TEST_CASE(right_shift_by_multiple) {
+    N num(1024);
+    N result = num >> 10;
+    BOOST_TEST(result == N(1));
+}
+
+BOOST_AUTO_TEST_CASE(right_shift_to_zero_large) {
+    N num(7);
+    N result = num >> 5;
+    BOOST_TEST(result == N(0));
+}
+
+BOOST_AUTO_TEST_CASE(right_shift_large_amount) {
+    N num(1000000);
+    N result = num >> 20;
+    BOOST_TEST(result == N(0));
+}
+
+// Additional AND tests
+BOOST_AUTO_TEST_CASE(and_with_zero) {
+    N num(0b1111);
+    N result = num & N(0);
+    BOOST_TEST(result == N(0));
+}
+
+BOOST_AUTO_TEST_CASE(and_with_self) {
+    N num(0b1010);
+    N result = num & num;
+    BOOST_TEST(result == num);
+}
+
+BOOST_AUTO_TEST_CASE(and_selective_bits) {
+    N num(0b11111111);
+    N mask(0b00001111);
+    N result = num & mask;
+    BOOST_TEST(result == N(0b00001111));
+}
+
+BOOST_AUTO_TEST_CASE(and_large_numbers) {
+    N a(255);
+    N b(127);
+    N result = a & b;
+    BOOST_TEST(result == N(127));
+}
+
+// Additional OR tests
+BOOST_AUTO_TEST_CASE(or_with_zero) {
+    N num(0b1010);
+    N result = num | N(0);
+    BOOST_TEST(result == num);
+}
+
+BOOST_AUTO_TEST_CASE(or_with_self) {
+    N num(0b1010);
+    N result = num | num;
+    BOOST_TEST(result == num);
+}
+
+BOOST_AUTO_TEST_CASE(or_combining_bits) {
+    N a(0b1100);
+    N b(0b0011);
+    N result = a | b;
+    BOOST_TEST(result == N(0b1111));
+}
+
+BOOST_AUTO_TEST_CASE(or_with_all_ones) {
+    N num(0b1010);
+    N mask(0b1111);
+    N result = num | mask;
+    BOOST_TEST(result == N(0b1111));
+}
+
+// Additional XOR tests
+BOOST_AUTO_TEST_CASE(xor_with_zero) {
+    N num(0b1010);
+    N result = num ^ N(0);
+    BOOST_TEST(result == num);
+}
+
+BOOST_AUTO_TEST_CASE(xor_with_self) {
+    N num(0b1010);
+    N result = num ^ num;
+    BOOST_TEST(result == N(0));
+}
+
+BOOST_AUTO_TEST_CASE(xor_toggle_bits) {
+    N num(0b1010);
+    N mask(0b1111);
+    N result = num ^ mask;
+    BOOST_TEST(result == N(0b0101));
+}
+
+BOOST_AUTO_TEST_CASE(xor_double_application) {
+    N original(0b1010);
+    N mask(0b0011);
+    N toggled = original ^ mask;
+    N restored = toggled ^ mask;
+    BOOST_TEST(restored == original);
+}
+
+// NOT operator tests
+BOOST_AUTO_TEST_CASE(not_small_number) {
+    N num(0);
+    N result = ~num;
+    // Result depends on bit width, just check it's not zero
+    BOOST_TEST(result != N(0));
+}
+
+BOOST_AUTO_TEST_CASE(not_all_ones) {
+    N num(0b1111);
+    N result = ~num;
+    // Low bits should be zero
+    BOOST_TEST((result & N(0b1111)) == N(0));
+}
+
+BOOST_AUTO_TEST_CASE(not_double_application) {
+    N num(42);
+    N result = ~~num;
+    BOOST_TEST(result == num);
+}
+
+BOOST_AUTO_TEST_CASE(not_zero) {
+    N num(0);
+    N result = ~num;
+    BOOST_TEST(result != N(0));
+}
+
+// Compound assignment additional tests
+BOOST_AUTO_TEST_CASE(compound_left_shift) {
+    N num(1);
+    num <<= 5;
+    BOOST_TEST(num == N(32));
+}
+
+BOOST_AUTO_TEST_CASE(compound_right_shift) {
+    N num(64);
+    num >>= 4;
+    BOOST_TEST(num == N(4));
+}
+
+BOOST_AUTO_TEST_CASE(bitwise_compound_chain) {
+    N num(0b1010);
+    num |= N(0b0101);   // 1111
+    num &= N(0b1100);   // 1100
+    num ^= N(0b0011);   // 1111
+    BOOST_TEST(num == N(0b1111));
+}
+
+BOOST_AUTO_TEST_CASE(mixed_bitwise_and_arithmetic) {
+    N num(8);
+    num <<= 2;     // 32
+    num += N(16);  // 48
+    num >>= 1;     // 24
+    BOOST_TEST(num == N(24));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

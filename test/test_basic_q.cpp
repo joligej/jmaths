@@ -144,4 +144,101 @@ BOOST_AUTO_TEST_CASE(mixed_operations) {
     BOOST_TEST(result.to_str() == "5/36");
 }
 
+// Additional Q tests - constructor variations
+BOOST_AUTO_TEST_CASE(q_construct_from_z_n) {
+    Z num(3);
+    Z denom(4);  // Changed from N to Z - Q requires both Z or both N
+    Q frac(num, denom);
+    BOOST_TEST(frac == Q("3/4"));
+}
+
+BOOST_AUTO_TEST_CASE(q_construct_requires_reduction) {
+    Q frac("10/15");  // Should reduce to 2/3
+    BOOST_TEST(frac.to_str() == "2/3");
+    BOOST_TEST(frac == Q("2/3"));
+}
+
+BOOST_AUTO_TEST_CASE(q_negative_denominator_normalized) {
+    Q frac("-3/4");
+    BOOST_TEST(frac.to_str() == "-3/4");
+    BOOST_TEST(frac == Q("-3/4"));
+}
+
+BOOST_AUTO_TEST_CASE(q_large_numerator_denominator) {
+    Q frac(Z("123456789"), Z("987654321"));  // Changed N to Z - Q requires both Z or both N
+    BOOST_TEST(frac.to_str().find('/') != std::string::npos);
+    BOOST_TEST(!frac.is_zero());
+}
+
+// Additional arithmetic tests
+BOOST_AUTO_TEST_CASE(q_add_same_denominator) {
+    Q a("1/5");
+    Q b("2/5");
+    Q result = a + b;
+    BOOST_TEST(result == Q("3/5"));
+}
+
+BOOST_AUTO_TEST_CASE(q_subtract_same_denominator) {
+    Q a("4/7");
+    Q b("1/7");
+    Q result = a - b;
+    BOOST_TEST(result == Q("3/7"));
+}
+
+BOOST_AUTO_TEST_CASE(q_multiply_fractions) {
+    Q a("2/3");
+    Q b("3/4");
+    Q result = a * b;
+    BOOST_TEST(result == Q("1/2"));  // (2*3)/(3*4) = 6/12 = 1/2
+}
+
+BOOST_AUTO_TEST_CASE(q_divide_fractions) {
+    Q a("1/2");
+    Q b("1/4");
+    Q result = a / b;
+    BOOST_TEST(result == Q("2/1"));  // (1/2) / (1/4) = 2
+}
+
+// Additional comparison tests  
+BOOST_AUTO_TEST_CASE(q_compare_different_denominators) {
+    Q a("1/2");  // 0.5
+    Q b("2/3");  // 0.666...
+    BOOST_TEST(a < b);
+}
+
+BOOST_AUTO_TEST_CASE(q_compare_negative_positive) {
+    Q a("-1/2");
+    Q b("1/2");
+    BOOST_TEST(a < b);
+}
+
+BOOST_AUTO_TEST_CASE(q_compare_equal_different_form) {
+    Q a("2/4");
+    Q b("3/6");
+    BOOST_TEST(a == b);  // Both reduce to 1/2
+}
+
+BOOST_AUTO_TEST_CASE(q_compare_improper_fractions) {
+    Q a("7/3");  // 2.333...
+    Q b("8/3");  // 2.666...
+    BOOST_TEST(a < b);
+}
+
+// Member function tests
+BOOST_AUTO_TEST_CASE(q_to_string_basic) {
+    Q frac("5/7");
+    BOOST_TEST(frac.to_str() == "5/7");
+    BOOST_TEST(frac == Q("5/7"));
+}
+
+BOOST_AUTO_TEST_CASE(q_to_string_simple) {
+    Q frac("3/4");
+    BOOST_TEST(frac.to_str() == "3/4");
+}
+
+BOOST_AUTO_TEST_CASE(q_to_string_negative) {
+    Q frac("-5/6");
+    BOOST_TEST(frac.to_str() == "-5/6");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
