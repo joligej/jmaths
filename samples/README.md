@@ -115,5 +115,5 @@ If you encounter compilation errors:
 3. Check that jmaths is properly installed (for Method 1)
 4. Verify include paths are correct (for Method 2)
 
-For additional help, see [CONTRIBUTING.md](../CONTRIBUTING.md) or the [GCC 15 Requirements Guide](../GCC15_REQUIREMENTS.md).
+For additional help, see [CONTRIBUTING.md](../CONTRIBUTING.md) or the [GCC 15 Requirements Guide](../doc/GCC15_REQUIREMENTS.md).
 

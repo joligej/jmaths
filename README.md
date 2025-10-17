@@ -12,11 +12,10 @@ A professional, high-performance C++23 library for arbitrary-precision arithmeti
 - **Arbitrary-Precision Integers** (`N`, `Z`) — Unlimited-size integers with complete arithmetic support
 - **Rational Numbers** (`Q`) — Arbitrary-precision fractions with automatic reduction to lowest terms
 - **Modern C++23** — Leverages latest language features for clean, efficient, and type-safe code
-- **Comprehensive Testing** — 215+ unit tests ensuring reliability and correctness
+- **Comprehensive Testing** — 550+ unit tests ensuring reliability and correctness
 - **Constexpr Support** — Compile-time evaluation for most operations
 - **User-Defined Literals** — Natural syntax using `_N`, `_Z`, and `_Q` literals
 - **Rich Mathematical API** — GCD, square root, exponentiation, bitwise operations, and more
-- **Header-Only** — Easy integration into your projects
 - **Production-Ready** — Thoroughly tested with continuous integration and quality assurance
 
 ## Quick Start
@@ -86,40 +85,37 @@ g++-15 -std=c++23 -O3 your_program.cpp -ljmaths -o your_program
 - **binutils** — 2.43 or later (required for GCC 15)
 - **Operating System** — Linux, macOS, or Windows (with appropriate toolchain)
 
-> **Note**: When using GCC 15, ensure binutils 2.43 or later is installed. Older versions may cause assembler errors in debug builds. The CMake configuration automatically detects your binutils version and provides appropriate guidance. See [GCC15_REQUIREMENTS.md](GCC15_REQUIREMENTS.md) for detailed information.
+> **Note**: When using GCC 15, ensure binutils 2.43 or later is installed. Older versions may cause assembler errors in debug builds. The CMake configuration automatically detects your binutils version and provides appropriate guidance. See [GCC15_REQUIREMENTS.md](doc/GCC15_REQUIREMENTS.md) for detailed information.
 
 ## Documentation
 
-- **[API Reference](doc/API_Reference.md)** — Complete API documentation for all classes and functions
-- **[Algorithm Documentation](doc/algorithm_documentation.md)** — Detailed algorithm explanations and complexity analysis
-- **[CI/CD Workflows](doc/WORKFLOWS.md)** — Comprehensive guide to the automated testing and deployment pipeline
-- **[Contributing Guidelines](CONTRIBUTING.md)** — How to contribute to the project
-- **[Code of Conduct](CODE_OF_CONDUCT.md)** — Community guidelines and expectations
-- **[Security Policy](SECURITY.md)** — Security considerations and vulnerability reporting
-- **[GCC 15 Requirements](GCC15_REQUIREMENTS.md)** — Toolchain compatibility information
+- **[API Reference](doc/API_Reference.md)** — Complete API documentation
+- **[Quick Reference](doc/QUICK_REFERENCE.md)** — Common patterns and gotchas
+- **[Algorithm Documentation](doc/algorithm_documentation.md)** — Algorithm explanations and complexity analysis
+- **[Known Issues](doc/KNOWN_ISSUES.md)** — Known bugs and workarounds
+- **[Exception Reference](doc/EXCEPTION_REFERENCE.md)** — Exception handling guide
+- **[GCC 15 Requirements](doc/GCC15_REQUIREMENTS.md)** — Toolchain compatibility
+- **[CI/CD Workflows](doc/WORKFLOWS.md)** — Automated testing pipeline
+- **[Contributing](CONTRIBUTING.md)** — Contribution guidelines
+- **[Security](SECURITY.md)** — Security policy and best practices
 
 ## Testing
 
-The library includes a comprehensive test suite with over 215 test cases covering all major functionality:
+The library includes a comprehensive test suite with over 550 test cases covering all major functionality:
 
 ```bash
 cd build
-ctest --output-on-failure --verbose
+ctest --output-on-failure
 ```
 
 ### Test Coverage
 
-The test suite provides extensive validation across multiple dimensions:
-
-- **Basic Operations** — Arithmetic, comparison, and assignment for N, Z, and Q types
-- **Edge Cases** — Boundary conditions, zero handling, and overflow prevention
-- **Parametric Tests** — Data-driven testing with diverse input sets
-- **Performance Tests** — Benchmarking of all major operations
-- **Type Conversions** — String parsing, numeric conversions, and type safety validation
-- **Bitwise Operations** — AND, OR, XOR, and shift operations for arbitrary-precision integers
+- **Arithmetic Operations** — All operations for N, Z, and Q types
+- **Edge Cases** — Boundary conditions, zero handling, and special values
+- **Type Conversions** — String parsing, numeric conversions, and range checking
+- **Bitwise Operations** — Complete coverage of bitwise operations for integers
 - **Mathematical Functions** — GCD, square root, exponentiation, and modular arithmetic
-- **Random Number Generation** — Cryptographically secure random number generation
-- **Error Handling** — Division by zero, invalid inputs, and exception safety
+- **Error Handling** — Exception throwing and safety guarantees
 
 ## Project Structure
 
@@ -170,25 +166,17 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 ## Support
 
-For assistance, questions, or feedback:
-
 - **Issues** — [GitHub Issues](https://github.com/joligej/jmaths/issues) for bug reports and feature requests
-- **Discussions** — [GitHub Discussions](https://github.com/joligej/jmaths/discussions) for questions and community interaction
-- **Email** — Contact information available in commit history
+- **Discussions** — [GitHub Discussions](https://github.com/joligej/jmaths/discussions) for questions
+- **Documentation** — [Complete documentation index](DOCUMENTATION_INDEX.md)
 
 ## Acknowledgments
 
-This library is built with modern tools and best practices:
-
-- Implemented in **C++23** with extensive use of modern language features
+- Implemented in **C++23** with modern language features
 - Build system powered by **CMake**
 - Testing framework provided by **Boost.Test**
-- Inspired by established arbitrary-precision arithmetic libraries and academic research
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
+- Continuous integration via **GitHub Actions**
 
 ---
 
-**Note**: This library requires a modern C++23-compliant compiler. Ensure your development toolchain is up to date before building.
+**jmaths** — Professional arbitrary-precision arithmetic for C++23

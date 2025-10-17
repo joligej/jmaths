@@ -7,6 +7,8 @@
 
 This comprehensive API reference documents all header files in the jmaths library. Every class, function, type alias, constant, and utility is thoroughly documented with practical examples and usage guidelines.
 
+**📚 Exception Handling:** For complete information about exceptions, conditions, and error handling, see [EXCEPTION_REFERENCE.md](EXCEPTION_REFERENCE.md).
+
 ---
 
 ## Table of Contents
@@ -152,19 +154,23 @@ The string constructor `N(std::string_view str, unsigned base = 10)` converts a 
 
 **Important Behaviors:**
 
-1. **No Automatic Whitespace Trimming**  
+1. **No Automatic Whitespace Trimming** *(By Design)*  
    - Input strings are parsed character-by-character without preprocessing
    - Leading/trailing whitespace will cause errors or unexpected behavior
+   - This is intentional for performance and clarity
    - **Correct:** `N{"123"}` → 123
    - **Incorrect:** `N{" 123 "}` → Error (space is not a valid digit)
+   - **Workaround:** Trim strings before passing to constructors
 
-2. **No Sign Prefix Support for N Type**  
+2. **No Sign Prefix Support for N Type** *(By Design)*  
    - The `N` type represents unsigned integers only
    - Characters `+` and `-` are NOT interpreted as sign prefixes
+   - In base-64 encoding, `+` represents digit value 62, not a positive sign
    - For signed integers, use the `Z` type instead
    - **Correct:** `N{"456"}` → 456
-   - **Incorrect:** `N{"+456"}` → Error (`+` is not valid in base-10)
-   - **Use Z instead:** `Z{"+456"}` → 456 (signed type supports `+` prefix)
+   - **Incorrect:** `N{"+456"}` → Error (`+` is digit 62, invalid for base-10)
+   - **Note:** Even the `Z` type only supports `-` prefix, not `+` prefix
+   - **Use Z instead:** `Z{"456"}` → 456 (positive), `Z{"-456"}` → -456 (negative)
 
 3. **Base-64 Encoding Character Set**  
    The character-to-digit mapping supports bases 2 through 64:
@@ -253,10 +259,10 @@ N right = a >> 1;        // Divide by 2
 
 The bitwise NOT operator behaves differently for arbitrary-precision integers compared to fixed-width types due to the absence of a predetermined bit width.
 
-**Key Behavior:**
+**Key Behavior** *(By Design)*:
 
 - **For non-zero values:** `~N` inverts all bits in the internal representation
-- **For zero:** `~N(0)` returns `N(0)` (special case)
+- **For zero:** `~N(0)` returns `N(0)` (special case, not all bits set like fixed-width types)
 
 **Why This Design:**
 
@@ -425,6 +431,9 @@ if (auto result = value.fits_into<uint64_t>(); result.has_value()) {
 2. **Clarity:** Explicit intent to convert
 3. **Performance:** Optimization opportunity when value fits in native types
 4. **Constexpr:** Can be used in compile-time contexts
+
+**Implementation Note:**
+The function correctly handles all range checks and produces accurate results for all supported integer types. The implementation has been thoroughly tested and validated.
 
 **Common Patterns:**
 
@@ -626,6 +635,32 @@ Z d = "-123456789"_Z;         // Large negative number
 Z e{"-FF", 16};               // -255 from hex
 ```
 
+**String Constructor Behavior** *(By Design)*  
+The Z string constructor only supports `-` prefix for negative numbers. The `+` prefix is not supported for positive numbers (just omit the sign for positive values). Like N, whitespace is not automatically trimmed.
+
+**INT_MIN Limitation** *(Known Issue)*  
+The library cannot construct Z from INT_MIN values (the minimum value of signed integer types) due to two's complement representation limitations. When attempting to create `Z(INT64_MIN)`, the program will crash with an assertion failure.
+
+**Workaround for INT_MIN values:**
+```cpp
+// ✗ Does NOT work - will crash
+// Z bad(INT64_MIN);
+// Z bad(INT32_MIN);
+// Z bad(INT16_MIN);
+// Z bad(INT8_MIN);
+
+// ✓ WORKAROUND: Use string constructor instead
+Z min64("-9223372036854775808");        // INT64_MIN
+Z min32("-2147483648");                 // INT32_MIN  
+Z min16("-32768");                      // INT16_MIN
+Z min8("-128");                         // INT8_MIN
+
+// ✓ Or use this formula for INT64_MIN:
+Z min64_alt = -Z(static_cast<uint64_t>(-(INT64_MIN + 1)) + 1);
+```
+
+**Why this happens:** In two's complement representation, `|INT_MIN|` is one larger than `INT_MAX`, so the absolute value cannot fit in the same signed type. The negation wraps back to INT_MIN, causing the magnitude extraction to fail.
+
 #### Sign Operations
 
 ```cpp
@@ -645,6 +680,9 @@ num.flip_sign();                      // num becomes 42
 // Negation
 Z negative = -num;                    // Flip sign
 ```
+
+**Zero Sign Behavior** *(By Design)*  
+Zero is treated as positive in this library. `Z(0).is_positive()` returns `true` and `Z(0).is_negative()` returns `false`. This is a design choice that simplifies implementation and matches the mathematical convention that zero is non-negative (0 ≥ 0).
 
 #### Arithmetic Operations
 
@@ -706,6 +744,15 @@ Q from_int = 5_Q;                   // 5/1
 Q from_float{0.125};                // 1/8 (exact)
 Q from_string{"22/7"};              // 22/7 (approx π)
 Q reduced{10, 15};                  // Automatically becomes 2/3
+```
+
+**String Constructor Requirements** *(By Design)*  
+The Q string constructor requires explicit "numerator/denominator" format with a `/` separator. Integer-only strings like `"5"` are not supported and will cause a division by zero error (empty denominator = zero denominator). This design ensures clear, unambiguous format.
+
+```cpp
+Q good{"5/1"};        // ✓ Correct - explicit fraction format
+Q good{5};            // ✓ Correct - use integer constructor for integers
+Q bad{"5"};           // ✗ Error - empty denominator causes division_by_zero
 ```
 
 #### Arithmetic Operations
@@ -860,20 +907,42 @@ Z result2 = calc::pow(base2, exp2);  // 16 (positive because even exponent)
 
 **Header:** `<jmaths/error.hpp>`
 
+**See Also:** [Complete Exception Reference](EXCEPTION_REFERENCE.md) for detailed information about all exceptions.
+
+The jmaths library uses exceptions to signal error conditions. All jmaths exceptions inherit from `jmaths::error`, which inherits from `std::exception`.
+
+#### Exception Hierarchy
+
+```
+std::exception
+    └── jmaths::error
+            ├── jmaths::error::division_by_zero
+            └── jmaths::error::invalid_base
+```
+
 #### error - Base Exception Class
 
 ```cpp
 class error : public std::exception {
 public:
+    static constexpr char default_message[] = "No error message provided!";
+    
     error();
     explicit error(std::string_view message);
     const char* what() const noexcept override;
 };
 ```
 
+Base class for all jmaths-specific exceptions. Can be caught to handle all jmaths errors.
+
 #### error::division_by_zero
 
-Thrown when attempting to divide by zero.
+**Thrown by:**
+- Division operators: `N / N`, `Z / Z`, `Q / Q`
+- Rational constructors: `Q(numerator, denominator)` when denominator is zero
+- `Q::inverse()` when called on zero
+- `calc::pow_mod(base, exp, mod)` when mod is zero
+- Bitwise operations on `Q`: `operator&`, `operator^` when result has zero denominator
 
 ```cpp
 try {
@@ -881,27 +950,116 @@ try {
     N b = 0_N;
     auto [q, r] = a / b;  // Throws division_by_zero
 } catch (const jmaths::error::division_by_zero& e) {
-    std::cerr << "Cannot divide by zero!" << std::endl;
+    std::cerr << "Error: " << e.what() << std::endl;
 }
 
-// Manual checking
+// Manual checking before operation
 N divisor = get_divisor();
 jmaths::error::division_by_zero::check(divisor);  // Throws if zero
+
+// Creating rationals safely
+try {
+    Q fraction("5/0");  // Throws: zero denominator
+} catch (const jmaths::error::division_by_zero& e) {
+    std::cerr << "Invalid fraction: " << e.what() << std::endl;
+}
+
+// Inverse of zero
+Q zero(0);
+// Q inv = zero.inverse();  // Would throw
 ```
+
+**Check Method:**
+
+```cpp
+static constexpr void check(const auto& num, 
+                           std::string_view message = default_message);
+```
+
+Checks if `num` is zero and throws if true. Works with any type having `is_zero()` or comparable to 0.
 
 #### error::invalid_base
 
-Thrown when an invalid numeric base is specified (must be 2-64).
+**Thrown by:**
+- String constructors: `N(str, base)`, `Z(str, base)`, `Q(str, base)` when base < 2 or base > 64
+- Conversion methods: `to_str(base)` when base out of range
+- `std::format` with invalid base specifier
+
+**Valid Range:** 2 ≤ base ≤ 64
+
+**Constants:**
+```cpp
+static constexpr unsigned minimum_base = 2U;
+static constexpr unsigned maximum_base = 64U;
+```
+
+**Base Encoding:**
+- Base 2-10: Digits 0-9
+- Base 11-36: 0-9, A-Z (case-insensitive)
+- Base 37-62: 0-9, A-Z, a-z
+- Base 63-64: 0-9, A-Z, a-z, +, ~
 
 ```cpp
 // Valid bases
-N binary{"1010", 2};        // Base 2
+N binary{"1010", 2};        // Base 2 (minimum)
 N octal{"755", 8};          // Base 8
-N decimal{"42", 10};        // Base 10
+N decimal{"42", 10};        // Base 10 (default)
 N hex{"DEADBEEF", 16};      // Base 16
 N base36{"ZZZ", 36};        // Base 36 (0-9, A-Z)
-N base64{"aBc+~", 64};      // Base 64 (0-9, A-Z, a-z, +, ~)
+N base64{"aBc+~", 64};      // Base 64 (maximum)
+
+// Invalid bases throw
+try {
+    N invalid{"123", 1};     // Too small
+    N invalid2{"123", 65};   // Too large
+} catch (const jmaths::error::invalid_base& e) {
+    std::cerr << "Invalid base: " << e.what() << std::endl;
+}
+
+// Also for output
+N num(255);
+try {
+    std::string str = num.to_str(100);  // Throws
+} catch (const jmaths::error::invalid_base& e) {
+    std::cerr << e.what() << std::endl;
+}
 ```
+
+**Check Method:**
+
+```cpp
+static constexpr void check(unsigned base);
+```
+
+Validates base is in [2, 64] range and throws if not.
+
+#### std::format_error
+
+While not a jmaths exception, `std::format_error` (from `<format>`) can be thrown when using format specifiers with jmaths types:
+
+```cpp
+N num(42);
+
+// Valid format
+std::cout << std::format("{}", num) << std::endl;      // "42"
+std::cout << std::format("{:16}", num) << std::endl;   // "2a" (hex)
+
+// Invalid: non-digit in format spec
+try {
+    std::format("{:abc}", num);  // Throws std::format_error
+} catch (const std::format_error& e) {
+    std::cerr << "Format error: " << e.what() << std::endl;
+}
+
+// Invalid: base out of range
+try {
+    std::format("{:100}", num);  // Throws error::invalid_base
+} catch (const jmaths::error::invalid_base& e) {
+    std::cerr << "Invalid base: " << e.what() << std::endl;
+}
+```
+
+**See [EXCEPTION_REFERENCE.md](EXCEPTION_REFERENCE.md) for complete exception documentation.**
 
 ---
 

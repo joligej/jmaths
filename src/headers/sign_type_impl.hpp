@@ -46,7 +46,18 @@ constexpr sign_type::sign_type(std::integral auto * num) : sign_{handle_int_(num
  *
  * ALGORITHM:
  * - Unsigned integers: always return positive
- * - Signed integers: if negative, multiply by -1 (make positive) and return negative
+ * - Signed integers: if negative, negate (make positive) and return negative
+ *
+ * IMPORTANT: The complex casting in the negation is necessary to avoid undefined behavior.
+ * 
+ * Why not use "*num = -*num"?
+ * - For INT_MIN, -INT_MIN causes signed integer overflow (UNDEFINED BEHAVIOR in C++)
+ * - The cast-to-unsigned-negate-cast-back approach uses well-defined unsigned arithmetic
+ * 
+ * However, this STILL doesn't fix INT_MIN:
+ * - For INT_MIN: -unsigned(INT_MIN) wraps to unsigned(INT_MIN) in modular arithmetic
+ * - Casting back to signed gives INT_MIN again (magnitude doesn't fit in signed range)
+ * - See KNOWN_ISSUES.md for details and workarounds
  *
  * NOTE: Suppresses -Wsign-conversion warning because we're intentionally
  * converting from signed to unsigned after ensuring the value is positive
@@ -59,7 +70,8 @@ constexpr sign_type::sign_bool sign_type::handle_int_(std::integral auto * num) 
     } else {
         if (*num < 0) {
             // Handle negation safely to avoid undefined behavior with INT_MIN
-            // Cast to unsigned, negate, then cast back to signed
+            // Cannot use "*num = -*num" because that causes UB for INT_MIN
+            // Instead: cast to unsigned, negate (well-defined), cast back
             using value_type = std::remove_reference_t<decltype(*num)>;
             using unsigned_type = std::make_unsigned_t<value_type>;
             *num = static_cast<value_type>(-static_cast<unsigned_type>(*num));

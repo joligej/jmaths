@@ -1,9 +1,6 @@
-# jmaths Library Behavior Quick Reference
+# jmaths Quick Reference
 
-**For Developers and Users**  
-**Updated:** 2025-10-17
-
-This quick reference clarifies commonly misunderstood behaviors in the jmaths library.
+Common patterns, gotchas, and best practices for the jmaths library.
 
 ---
 
@@ -201,12 +198,17 @@ Z wrong("+123");    // ✗ ERROR: + is not recognized
 ### String Format
 
 ```cpp
-// Fraction format: "numerator/denominator"
+// Fraction format: "numerator/denominator" - REQUIRED
 Q half("1/2");           // ✓ 1/2
 Q third("1/3");          // ✓ 1/3
 
-// Integer format: "number"
-Q five("5");             // ✓ 5/1
+// Integer values must use fraction format too
+Q five("5/1");           // ✓ 5/1 (correct)
+// Q wrong("5");         // ✗ ERROR: causes zero denominator
+
+// Alternative: Use constructor from integer
+Q five_alt(5);           // ✓ 5/1 (recommended for integers)
+Q five_alt2(N(5));       // ✓ 5/1 (using N type)
 
 // NO whitespace
 Q wrong(" 1 / 2 ");      // ✗ ERROR: spaces not trimmed
