@@ -96,7 +96,7 @@ g++-15 -std=c++23 -O3 your_program.cpp -ljmaths -o your_program
 - **[Exception Reference](doc/EXCEPTION_REFERENCE.md)** — Exception handling guide
 - **[GCC 15 Requirements](doc/GCC15_REQUIREMENTS.md)** — Toolchain compatibility
 - **[CI/CD Workflows](doc/WORKFLOWS.md)** — Automated testing pipeline
-- **[Contributing](CONTRIBUTING.md)** — Contribution guidelines
+- **[Contributing](doc/CONTRIBUTING.md)** — Contribution guidelines
 - **[Security](SECURITY.md)** — Security policy and best practices
 
 ## Testing
@@ -127,7 +127,6 @@ jmaths/
 │   └── headers/          # Public header files
 ├── test/                 # Boost.Test unit tests
 ├── CMakeLists.txt        # Root CMake configuration
-├── CONTRIBUTING.md       # Contribution guidelines
 ├── CODE_OF_CONDUCT.md    # Community guidelines
 ├── SECURITY.md           # Security policy
 └── README.md             # This file
@@ -156,7 +155,7 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please see [CONTRIBUTING.md](doc/CONTRIBUTING.md) for guidelines.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -168,7 +167,7 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 - **Issues** — [GitHub Issues](https://github.com/joligej/jmaths/issues) for bug reports and feature requests
 - **Discussions** — [GitHub Discussions](https://github.com/joligej/jmaths/discussions) for questions
-- **Documentation** — [Complete documentation index](DOCUMENTATION_INDEX.md)
+- **Documentation** — [Complete documentation index](doc/DOCUMENTATION_INDEX.md)
 
 ## Acknowledgments
 

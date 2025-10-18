@@ -96,8 +96,8 @@ For newcomers to jmaths, we recommend exploring samples in this order:
 
 ## Additional Resources
 
-- **API Reference** — See [doc/API_Reference.md](../doc/API_Reference.md) for complete API documentation
-- **Algorithm Documentation** — See [doc/algorithm_documentation.md](../doc/algorithm_documentation.md) for implementation details
+- **API Reference** — See [API_Reference.md](API_Reference.md) for complete API documentation
+- **Algorithm Documentation** — See [algorithm_documentation.md](algorithm_documentation.md) for implementation details
 - **Main README** — See [README.md](../README.md) for general library information
 
 ## Compilation Notes
@@ -115,5 +115,5 @@ If you encounter compilation errors:
 3. Check that jmaths is properly installed (for Method 1)
 4. Verify include paths are correct (for Method 2)
 
-For additional help, see [CONTRIBUTING.md](../CONTRIBUTING.md) or the [GCC 15 Requirements Guide](../doc/GCC15_REQUIREMENTS.md).
+For additional help, see [CONTRIBUTING.md](../CONTRIBUTING.md) or the [GCC 15 Requirements Guide](GCC15_REQUIREMENTS.md).
 

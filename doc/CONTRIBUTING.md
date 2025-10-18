@@ -4,7 +4,7 @@ Thank you for your interest in contributing to jmaths! This document provides co
 
 ## Code of Conduct
 
-By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md). We are committed to maintaining a respectful, inclusive, and welcoming environment for all contributors.
+By participating in this project, you agree to abide by our [Code of Conduct](../CODE_OF_CONDUCT.md). We are committed to maintaining a respectful, inclusive, and welcoming environment for all contributors.
 
 ## How Can I Contribute?
 
@@ -31,6 +31,8 @@ Feature requests are welcome and encouraged! When suggesting a feature, please p
 
 ### Pull Requests
 
+When submitting a pull request, follow this process:
+
 1. **Fork the repository** and create your branch from `main` or `develop`
 2. **Make your changes** following the coding standards below
 3. **Add tests** for any new functionality
@@ -38,6 +40,54 @@ Feature requests are welcome and encouraged! When suggesting a feature, please p
 5. **Update documentation** if you've changed APIs or added features
 6. **Write a clear commit message** describing your changes
 7. **Submit a pull request** with a comprehensive description
+
+#### Pull Request Checklist
+
+When opening a pull request, please include:
+
+**Description:**
+- Clear and concise description of the changes
+- Link to related issues using GitHub keywords ("Fixes #123", "Closes #456", "Relates to #789")
+
+**Type of Change:** (Mark all that apply)
+- Bug fix (non-breaking change that resolves an issue)
+- New feature (non-breaking change that adds functionality)
+- Breaking change (modification that causes existing functionality to change)
+- Documentation update
+- Performance improvement
+- Code refactoring (no functional changes)
+- Test coverage improvement
+- Build system or CI/CD update
+
+**Testing Performed:**
+- All existing tests pass locally
+- New tests added to cover new functionality
+- Manual testing completed
+- Code coverage maintained or improved
+- Performance impact assessed (if applicable)
+
+**Code Quality:**
+- My code follows the project's style guidelines
+- I have performed a self-review of my code
+- I have commented my code, particularly in complex areas
+- I have made corresponding documentation changes
+- My changes generate no new compiler warnings
+- I have added tests proving my fix or feature works
+- New and existing unit tests pass locally
+- Any dependent changes have been merged and published
+
+**Documentation:** (Check all that apply)
+- README.md updated (if user-facing changes)
+- API documentation updated (if API changes)
+- Algorithm documentation updated (if algorithm changes)
+- CHANGELOG.md updated with user-facing changes
+- Code comments added for complex logic
+
+**Breaking Changes:**
+If this introduces breaking changes, describe:
+- What breaks
+- Migration path for users
+- Deprecation timeline (if applicable)
 
 ## Development Setup
 
