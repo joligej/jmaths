@@ -123,7 +123,7 @@ jmaths/
 - [Exception Reference](EXCEPTION_REFERENCE.md)
 - [Sample Programs](SAMPLES_GUIDE.md)
 
-### Contributing
+### Contributing to the Project
 
 - [Contribution Guide](../CONTRIBUTING.md)
 - [Development Setup](../CONTRIBUTING.md#development-setup)

@@ -112,34 +112,34 @@ This comprehensive guide provides step-by-step instructions for configuring the 
 3. In the **Branch name pattern** field, type: `main`
 4. Configure the following options:
 
-	**Require a pull request before merging:**
+**Require a pull request before merging:**
 
-	- ☑ Check this box
-	- In the sub-options that appear:
-	  - Set **Require approvals** dropdown to: `1`
-	  - ☑ Check **Dismiss stale pull request approvals when new commits are pushed**
-	  - ☑ Check **Require review from Code Owners** (only if you have a CODEOWNERS file)
+- ☑ Check this box
+- In the sub-options that appear:
+- Set **Require approvals** dropdown to: `1`
+- ☑ Check **Dismiss stale pull request approvals when new commits are pushed**
+- ☑ Check **Require review from Code Owners** (only if you have a CODEOWNERS file)
 
-	**Require status checks to pass before merging:**
+**Require status checks to pass before merging:**
 
-	- ☑ Check this box
-	- ☑ Check **Require branches to be up to date before merging**
-	- In the **Search for status checks** field, type and select the following checks (they will appear after Step 9):
-	  - Type `build-and-test` and select:
-	    - `build-and-test (ubuntu-latest, Release)`
-	    - `build-and-test (ubuntu-latest, Debug)`
-	  - Type `code-quality` and select it
-	  - Type `static-analysis` and select it
-	  - Type `coverage` and select it (if using code coverage)
+- ☑ Check this box
+- ☑ Check **Require branches to be up to date before merging**
+- In the **Search for status checks** field, type and select the following checks (they will appear after Step 9):
+  - Type `build-and-test` and select:
+    - `build-and-test (ubuntu-latest, Release)`
+    - `build-and-test (ubuntu-latest, Debug)`
+  - Type `code-quality` and select it
+  - Type `static-analysis` and select it
+  - Type `coverage` and select it (if using code coverage)
 
-	**Additional protections:**
+**Additional protections:**
 
-	- ☑ **Require conversation resolution before merging**
-	- ☑ **Require signed commits** (highly recommended for security)
-	- ☑ **Require linear history** (recommended for clean git history)
-	- ☑ **Include administrators** (ensures even admins follow the rules)
+- ☑ **Require conversation resolution before merging**
+- ☑ **Require signed commits** (highly recommended for security)
+- ☑ **Require linear history** (recommended for clean git history)
+- ☑ **Include administrators** (ensures even admins follow the rules)
 
-5. Then click **Create** or **Save changes**.
+Then click **Create** or **Save changes**.
 
 ---
 
