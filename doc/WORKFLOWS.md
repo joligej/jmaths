@@ -36,7 +36,7 @@ The project implements a robust CI/CD pipeline consisting of six specialized Git
 
 ### Continuous Integration
 
-> **Workflow:** `.github/workflows/ci.yml`  
+> **Workflow:** `.github/workflows/ci.yml`
 > **Triggers:** Push to `main`/`develop` • Pull requests • Weekly schedule (Sunday 00:00 UTC) • Manual dispatch
 
 The cornerstone of the development pipeline, this workflow performs comprehensive validation across multiple dimensions to ensure code reliability and maintainability.
@@ -90,7 +90,7 @@ Each sanitizer runs in isolated jobs with specialized instrumentation flags and 
 
 ### Release Management
 
-> **Workflow:** `.github/workflows/release.yml`  
+> **Workflow:** `.github/workflows/release.yml`
 > **Triggers:** Version tags (`v*.*.*`) • Manual dispatch
 
 Fully automated release pipeline that transforms version tags into distributable releases with minimal manual intervention.
@@ -112,7 +112,7 @@ Fully automated release pipeline that transforms version tags into distributable
 
 ### Security Scanning
 
-> **Workflow:** `.github/workflows/security.yml`  
+> **Workflow:** `.github/workflows/security.yml`
 > **Triggers:** Push to `main`/`develop` • Pull requests • Weekly schedule (Tuesday 00:00 UTC) • Manual dispatch
 
 Multi-layered security analysis providing continuous vulnerability monitoring and dependency security assessment.
@@ -144,7 +144,7 @@ Automated supply chain security for pull requests:
 
 ### Dependency Management
 
-> **Workflow:** `.github/workflows/dependency-check.yml`  
+> **Workflow:** `.github/workflows/dependency-check.yml`
 > **Triggers:** Push to `main`/`develop` • Pull requests • Weekly schedule (Monday 00:00 UTC) • Manual dispatch
 
 Proactive dependency health monitoring ensuring build environment stability and compatibility.
@@ -168,7 +168,7 @@ Proactive dependency health monitoring ensuring build environment stability and 
 
 ### Documentation Validation
 
-> **Workflow:** `.github/workflows/documentation.yml`  
+> **Workflow:** `.github/workflows/documentation.yml`
 > **Triggers:** Push to `main` • Pull requests to `main` • Manual dispatch
 
 Comprehensive documentation quality assurance maintaining professional standards and completeness.
@@ -212,7 +212,7 @@ Comprehensive documentation quality assurance maintaining professional standards
 
 ### Code Coverage
 
-> **Workflow:** `.github/workflows/coverage.yml`  
+> **Workflow:** `.github/workflows/coverage.yml`
 > **Triggers:** Push to `main`/`develop` • Pull requests • Manual dispatch
 
 Quantitative test effectiveness measurement with automated reporting and threshold enforcement.
@@ -272,7 +272,7 @@ The six workflows operate as an integrated system, with each component serving a
              ├──────────► Coverage Analysis (Test Effectiveness)
              │
              └──────────► Documentation Check (Content Quality)
-                         
+
 ┌─────────────────────────────────────────────────────────────────┐
 │  Scheduled Maintenance (Weekly)                                 │
 └────────────┬────────────────────────────────────────────────────┘
@@ -473,7 +473,7 @@ body
 footer
 ```
 
-**Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`  
+**Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 **Example:** `feat(matrix): add sparse matrix support`
 
 ### Coverage Expectations
@@ -536,7 +536,7 @@ For workflow-related issues:
 
 **[Back to Top](#continuous-integration--deployment)**
 
-*Last Updated: 2025-10-15*  
+*Last Updated: 2025-10-15*
 *Maintained by the jmaths development team*
 
 </div>

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Removed trailing whitespace from all source files for CI compliance
+- Fixed newline at end of file for all source files
+
+### Improved
+- Refactored test suite to remove duplicate test cases
+- Added new meaningful test cases for edge cases (Fibonacci GCD, large primes, improper fractions)
+- Improved test organization and clarity in literals, calc, and Q tests
+
 ### Planned
 - Additional mathematical functions (factorial, combinatorics)
 - Performance optimizations for large number operations

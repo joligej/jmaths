@@ -25,11 +25,11 @@ using namespace jmaths;
 /**
  * @file test_exceptions.cpp
  * @brief Comprehensive tests for all exception-throwing functions in jmaths library
- * 
+ *
  * This test suite verifies that all public library functions that can throw
  * exceptions actually do throw the expected exceptions under the appropriate
  * conditions.
- * 
+ *
  * EXCEPTIONS TESTED:
  * 1. error::division_by_zero - Thrown when dividing by zero
  * 2. error::invalid_base - Thrown when base is out of range [2, 64]
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_SUITE(division_by_zero_tests)
 BOOST_AUTO_TEST_CASE(basic_N_division_operator) {
     N a(100);
     N zero(0);
-    
+
     BOOST_CHECK_THROW(a / zero, error::division_by_zero);
 }
 
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(basic_N_division_operator) {
 BOOST_AUTO_TEST_CASE(basic_N_modulo_operator) {
     N a(100);
     N zero(0);
-    
+
     // Division operator returns std::pair, division by zero throws
     BOOST_CHECK_THROW(a / zero, error::division_by_zero);
 }
@@ -65,14 +65,14 @@ BOOST_AUTO_TEST_CASE(basic_N_modulo_operator) {
 BOOST_AUTO_TEST_CASE(basic_Z_division_operator) {
     Z a(100);
     Z zero(0);
-    
+
     BOOST_CHECK_THROW(a / zero, error::division_by_zero);
 }
 
 BOOST_AUTO_TEST_CASE(basic_Z_division_negative) {
     Z a(-100);
     Z zero(0);
-    
+
     BOOST_CHECK_THROW(a / zero, error::division_by_zero);
 }
 
@@ -80,14 +80,14 @@ BOOST_AUTO_TEST_CASE(basic_Z_division_negative) {
 BOOST_AUTO_TEST_CASE(basic_Q_division_operator) {
     Q a(N(100));
     Q zero(N(0));
-    
+
     BOOST_CHECK_THROW(a / zero, error::division_by_zero);
 }
 
 BOOST_AUTO_TEST_CASE(basic_Q_division_operator_rational) {
     Q a(N(3), N(4));  // 3/4
     Q zero(N(0));
-    
+
     BOOST_CHECK_THROW(a / zero, error::division_by_zero);
 }
 
@@ -95,35 +95,35 @@ BOOST_AUTO_TEST_CASE(basic_Q_division_operator_rational) {
 BOOST_AUTO_TEST_CASE(basic_Q_constructor_NN_zero_denom) {
     N numerator(5);
     N zero_denom(0);
-    
+
     BOOST_CHECK_THROW(Q(numerator, zero_denom), error::division_by_zero);
 }
 
 BOOST_AUTO_TEST_CASE(basic_Q_constructor_NN_zero_denom_move) {
     N numerator(5);
     N zero_denom(0);
-    
+
     BOOST_CHECK_THROW(Q(std::move(numerator), std::move(zero_denom)), error::division_by_zero);
 }
 
 BOOST_AUTO_TEST_CASE(basic_Q_constructor_ZZ_zero_denom) {
     Z numerator(5);
     Z zero_denom(0);
-    
+
     BOOST_CHECK_THROW(Q(numerator, zero_denom), error::division_by_zero);
 }
 
 BOOST_AUTO_TEST_CASE(basic_Q_constructor_ZZ_zero_denom_negative) {
     Z numerator(-5);
     Z zero_denom(0);
-    
+
     BOOST_CHECK_THROW(Q(numerator, zero_denom), error::division_by_zero);
 }
 
 BOOST_AUTO_TEST_CASE(basic_Q_constructor_ZZ_zero_denom_move) {
     Z numerator(5);
     Z zero_denom(0);
-    
+
     BOOST_CHECK_THROW(Q(std::move(numerator), std::move(zero_denom)), error::division_by_zero);
 }
 
@@ -140,14 +140,14 @@ BOOST_AUTO_TEST_CASE(basic_Q_string_constructor_zero_denom_base16) {
 BOOST_AUTO_TEST_CASE(basic_Q_inverse_zero) {
     Q zero(N(0));
     Q result;
-    
+
     BOOST_CHECK_THROW(result = zero.inverse(), error::division_by_zero);
 }
 
 BOOST_AUTO_TEST_CASE(basic_Q_inverse_zero_lvalue) {
     const Q zero(N(0));
     Q result;
-    
+
     BOOST_CHECK_THROW(result = zero.inverse(), error::division_by_zero);
 }
 
@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(basic_Q_inverse_zero_lvalue) {
 BOOST_AUTO_TEST_CASE(basic_Q_bitwise_and_zero_denom) {
     Q a(N(1), N(15));  // denom = 15
     Q b(N(1), N(240)); // denom = 240
-    
+
     // 15 & 240 = 0, which would create zero denominator
     BOOST_CHECK_THROW(a & b, error::division_by_zero);
 }
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(basic_Q_bitwise_and_zero_denom) {
 BOOST_AUTO_TEST_CASE(basic_Q_bitwise_xor_zero_denom) {
     Q a(N(1), N(5));  // denom = 5
     Q b(N(1), N(5));  // denom = 5
-    
+
     // 5 XOR 5 = 0, which would create zero denominator
     BOOST_CHECK_THROW(a ^ b, error::division_by_zero);
 }
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(calc_pow_mod_zero_modulus) {
     N base(5);
     N exponent(3);
     N zero_mod(0);
-    
+
     BOOST_CHECK_THROW(calc::pow_mod(base, exponent, zero_mod), error::division_by_zero);
 }
 
@@ -182,48 +182,48 @@ BOOST_AUTO_TEST_CASE(calc_pow_mod_zero_modulus_large) {
     N base(12345);
     N exponent(67890);
     N zero_mod(0);
-    
+
     BOOST_CHECK_THROW(calc::pow_mod(base, exponent, zero_mod), error::division_by_zero);
 }
 
 // Test error::division_by_zero::check with N
 BOOST_AUTO_TEST_CASE(error_check_N) {
     N zero(0);
-    
+
     BOOST_CHECK_THROW(error::division_by_zero::check(zero), error::division_by_zero);
 }
 
 // Test error::division_by_zero::check with Z
 BOOST_AUTO_TEST_CASE(error_check_Z) {
     Z zero(0);
-    
+
     BOOST_CHECK_THROW(error::division_by_zero::check(zero), error::division_by_zero);
 }
 
 // Test error::division_by_zero::check with Q
 BOOST_AUTO_TEST_CASE(error_check_Q) {
     Q zero(N(0));
-    
+
     BOOST_CHECK_THROW(error::division_by_zero::check(zero), error::division_by_zero);
 }
 
 // Test error::division_by_zero::check with integral types
 BOOST_AUTO_TEST_CASE(error_check_int) {
     int zero = 0;
-    
+
     BOOST_CHECK_THROW(error::division_by_zero::check(zero), error::division_by_zero);
 }
 
 BOOST_AUTO_TEST_CASE(error_check_unsigned) {
     unsigned zero = 0U;
-    
+
     BOOST_CHECK_THROW(error::division_by_zero::check(zero), error::division_by_zero);
 }
 
 // Test error::division_by_zero::check with custom message
 BOOST_AUTO_TEST_CASE(error_check_custom_message) {
     N zero(0);
-    
+
     try {
         error::division_by_zero::check(zero, "Custom error message");
         BOOST_FAIL("Expected exception not thrown");
@@ -236,13 +236,13 @@ BOOST_AUTO_TEST_CASE(error_check_custom_message) {
 // Test that non-zero values do NOT throw
 BOOST_AUTO_TEST_CASE(error_check_non_zero_N) {
     N one(1);
-    
+
     BOOST_CHECK_NO_THROW(error::division_by_zero::check(one));
 }
 
 BOOST_AUTO_TEST_CASE(error_check_non_zero_Z) {
     Z minus_one(-1);
-    
+
     BOOST_CHECK_NO_THROW(error::division_by_zero::check(minus_one));
 }
 
@@ -275,28 +275,28 @@ BOOST_AUTO_TEST_CASE(basic_N_constructor_base_way_too_large) {
 BOOST_AUTO_TEST_CASE(basic_N_to_str_base_too_small) {
     N num(42);
     std::string result;
-    
+
     BOOST_CHECK_THROW(result = num.to_str(1), error::invalid_base);
 }
 
 BOOST_AUTO_TEST_CASE(basic_N_to_str_base_zero) {
     N num(42);
     std::string result;
-    
+
     BOOST_CHECK_THROW(result = num.to_str(0), error::invalid_base);
 }
 
 BOOST_AUTO_TEST_CASE(basic_N_to_str_base_too_large) {
     N num(42);
     std::string result;
-    
+
     BOOST_CHECK_THROW(result = num.to_str(65), error::invalid_base);
 }
 
 BOOST_AUTO_TEST_CASE(basic_N_to_str_base_way_too_large) {
     N num(42);
     std::string result;
-    
+
     BOOST_CHECK_THROW(result = num.to_str(255), error::invalid_base);
 }
 
@@ -312,14 +312,14 @@ BOOST_AUTO_TEST_CASE(basic_Z_constructor_base_too_large) {
 BOOST_AUTO_TEST_CASE(basic_Z_to_str_base_too_small) {
     Z num(-42);
     std::string result;
-    
+
     BOOST_CHECK_THROW(result = num.to_str(1), error::invalid_base);
 }
 
 BOOST_AUTO_TEST_CASE(basic_Z_to_str_base_too_large) {
     Z num(-42);
     std::string result;
-    
+
     BOOST_CHECK_THROW(result = num.to_str(65), error::invalid_base);
 }
 
@@ -335,14 +335,14 @@ BOOST_AUTO_TEST_CASE(basic_Q_constructor_base_too_large) {
 BOOST_AUTO_TEST_CASE(basic_Q_to_str_base_too_small) {
     Q num(N(3), N(4));
     std::string result;
-    
+
     BOOST_CHECK_THROW(result = num.to_str(1), error::invalid_base);
 }
 
 BOOST_AUTO_TEST_CASE(basic_Q_to_str_base_too_large) {
     Q num(N(3), N(4));
     std::string result;
-    
+
     BOOST_CHECK_THROW(result = num.to_str(65), error::invalid_base);
 }
 
@@ -419,19 +419,19 @@ BOOST_AUTO_TEST_SUITE(format_error_tests)
 // Test invalid format string with non-digit characters
 BOOST_AUTO_TEST_CASE(formatter_invalid_non_digit) {
     N num(42);
-    
+
     BOOST_CHECK_THROW(std::format("{:abc}", num), std::format_error);
 }
 
 BOOST_AUTO_TEST_CASE(formatter_invalid_letter) {
     Z num(-42);
-    
+
     BOOST_CHECK_THROW(std::format("{:x}", num), std::format_error);
 }
 
 BOOST_AUTO_TEST_CASE(formatter_invalid_special_char) {
     Q num(3, 4);
-    
+
     BOOST_CHECK_THROW(std::format("{:@}", num), std::format_error);
 }
 */
@@ -442,21 +442,21 @@ BOOST_AUTO_TEST_CASE(formatter_invalid_special_char) {
 /*
 BOOST_AUTO_TEST_CASE(formatter_base_too_small) {
     N num(42);
-    
+
     // Base 1 is invalid, but parser will create it from "1"
     BOOST_CHECK_THROW(std::format("{:1}", num), error::invalid_base);
 }
 
 BOOST_AUTO_TEST_CASE(formatter_base_too_large) {
     N num(42);
-    
+
     // Base 65 is invalid
     BOOST_CHECK_THROW(std::format("{:65}", num), error::invalid_base);
 }
 
 BOOST_AUTO_TEST_CASE(formatter_base_way_too_large) {
     N num(42);
-    
+
     // Base 999 is invalid
     BOOST_CHECK_THROW(std::format("{:999}", num), error::invalid_base);
 }
@@ -466,35 +466,35 @@ BOOST_AUTO_TEST_CASE(formatter_base_way_too_large) {
 BOOST_AUTO_TEST_CASE(formatter_valid_default) {
     N num(42);
     std::string result;
-    
+
     BOOST_CHECK_NO_THROW(result = std::format("{}", num));
 }
 
 BOOST_AUTO_TEST_CASE(formatter_valid_base_10) {
     N num(42);
     std::string result;
-    
+
     BOOST_CHECK_NO_THROW(result = std::format("{:10}", num));
 }
 
 BOOST_AUTO_TEST_CASE(formatter_valid_base_16) {
     N num(255);
     std::string result;
-    
+
     BOOST_CHECK_NO_THROW(result = std::format("{:16}", num));
 }
 
 BOOST_AUTO_TEST_CASE(formatter_valid_base_2) {
     Z num(-8);
     std::string result;
-    
+
     BOOST_CHECK_NO_THROW(result = std::format("{:2}", num));
 }
 
 BOOST_AUTO_TEST_CASE(formatter_valid_base_64) {
     Q num(N(1234), N(5678));
     std::string result;
-    
+
     BOOST_CHECK_NO_THROW(result = std::format("{:64}", num));
 }
 

@@ -105,6 +105,15 @@ BOOST_AUTO_TEST_CASE(compound_xor) {
     BOOST_TEST(num == 0b1001);
 }
 
+BOOST_AUTO_TEST_CASE(shift_operations_large_values) {
+    N num(1);
+    num <<= 50;  // Very large shift
+    BOOST_TEST(num == N("1125899906842624"));  // 2^50
+    
+    num >>= 25;  // Shift back half way
+    BOOST_TEST(num == N("33554432"));  // 2^25
+}
+
 BOOST_AUTO_TEST_CASE(bit_manipulation_sequence) {
     N num(0);
     num |= N(1) << 0;            // Set bit 0
@@ -304,16 +313,14 @@ BOOST_AUTO_TEST_CASE(not_zero_special_case) {
 }
 
 // Compound assignment additional tests
-BOOST_AUTO_TEST_CASE(compound_left_shift) {
-    N num(1);
-    num <<= 5;
-    BOOST_TEST(num == N(32));
-}
+BOOST_AUTO_TEST_CASE(compound_shift_operations) {
+    N num1(1);
+    num1 <<= 5;
+    BOOST_TEST(num1 == N(32));
 
-BOOST_AUTO_TEST_CASE(compound_right_shift) {
-    N num(64);
-    num >>= 4;
-    BOOST_TEST(num == N(4));
+    N num2(64);
+    num2 >>= 4;
+    BOOST_TEST(num2 == N(4));
 }
 
 BOOST_AUTO_TEST_CASE(bitwise_compound_chain) {

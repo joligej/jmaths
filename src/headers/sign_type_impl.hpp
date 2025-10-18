@@ -49,11 +49,11 @@ constexpr sign_type::sign_type(std::integral auto * num) : sign_{handle_int_(num
  * - Signed integers: if negative, negate (make positive) and return negative
  *
  * IMPORTANT: The complex casting in the negation is necessary to avoid undefined behavior.
- * 
+ *
  * Why not use "*num = -*num"?
  * - For INT_MIN, -INT_MIN causes signed integer overflow (UNDEFINED BEHAVIOR in C++)
  * - The cast-to-unsigned-negate-cast-back approach uses well-defined unsigned arithmetic
- * 
+ *
  * However, this STILL doesn't fix INT_MIN:
  * - For INT_MIN: -unsigned(INT_MIN) wraps to unsigned(INT_MIN) in modular arithmetic
  * - Casting back to signed gives INT_MIN again (magnitude doesn't fit in signed range)

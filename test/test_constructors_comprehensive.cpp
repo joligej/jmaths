@@ -22,7 +22,7 @@ using namespace jmaths;
 /**
  * @file test_constructors_comprehensive.cpp
  * @brief Comprehensive tests for all constructor variants
- * 
+ *
  * This file provides extensive coverage of constructor functionality
  * including edge cases, various input formats, and error conditions.
  */
@@ -504,12 +504,12 @@ BOOST_AUTO_TEST_CASE(q_constructor_string_integer_form) {
     // When "5" is parsed, find('/') returns npos, creating empty denominator = 0
     // This correctly triggers division_by_zero exception
     // The test expectation was wrong - update documentation to clarify format
-    
+
     // CORRECT: Use explicit fraction format
     Q value("5/1");
     Q expected(N(5), N(1));
     BOOST_TEST(value == expected);
-    
+
     // OR: Use constructor from N
     Q value2(N(5));
     BOOST_TEST(value2 == expected);

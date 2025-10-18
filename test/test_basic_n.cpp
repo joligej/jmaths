@@ -256,6 +256,16 @@ BOOST_AUTO_TEST_CASE(compound_multiplication) {
     BOOST_TEST(num == 42);
 }
 
+BOOST_AUTO_TEST_CASE(compound_operations_with_large_numbers) {
+    N num("1000000000000");
+    num += N("2000000000000");
+    BOOST_TEST(num == N("3000000000000"));
+    num *= N(2);
+    BOOST_TEST(num == N("6000000000000"));
+    num -= N("1000000000000");
+    BOOST_TEST(num == N("5000000000000"));
+}
+
 BOOST_AUTO_TEST_CASE(to_string_conversion) {
     N num(12345);
     std::string str = num.to_str();

@@ -1,8 +1,8 @@
 # jmaths API Reference
 
-**Version:** 2.0.0  
-**License:** GNU General Public License v3.0  
-**Author:** Jasper de Smaele  
+**Version:** 2.0.0
+**License:** GNU General Public License v3.0
+**Author:** Jasper de Smaele
 **Repository:** [github.com/joligej/jmaths](https://github.com/joligej/jmaths)
 
 This comprehensive API reference documents all header files in the jmaths library. Every class, function, type alias, constant, and utility is thoroughly documented with practical examples and usage guidelines.
@@ -82,29 +82,29 @@ int main() {
     N a = "123456789012345678901234567890"_N;
     N b = 999999_N;
     N c = a + b;
-    
+
     std::cout << "Sum: " << c << std::endl;
-    
+
     // Signed integers
     Z negative = -12345_Z;
     Z positive = 67890_Z;
     Z result = negative * positive;
-    
+
     std::cout << "Product: " << result << std::endl;
-    
+
     // Rational numbers (fractions)
     Q half{1, 2};        // 1/2
     Q third{1, 3};       // 1/3
     Q sum = half + third; // 5/6 (automatically reduced)
-    
+
     std::cout << "Fraction sum: " << sum << std::endl;
-    
+
     // Mathematical functions
     N square = calc::pow(123_N, 2_N);  // 123^2
     auto [sqrt_val, remainder] = calc::sqrt(10000_N);
-    
+
     std::cout << "Square root: " << sqrt_val << std::endl;
-    
+
     return 0;
 }
 ```
@@ -115,7 +115,7 @@ int main() {
 
 ### N - Arbitrary-Precision Unsigned Integers
 
-**Header:** `<jmaths/basic_N.hpp>`  
+**Header:** `<jmaths/basic_N.hpp>`
 **Type:** `jmaths::N` (alias for `basic_N<uint32_t, uint64_t>`)
 
 Arbitrary-precision unsigned integers stored as vectors of digits in little-endian order.
@@ -154,7 +154,7 @@ The string constructor `N(std::string_view str, unsigned base = 10)` converts a 
 
 **Important Behaviors:**
 
-1. **No Automatic Whitespace Trimming** *(By Design)*  
+1. **No Automatic Whitespace Trimming** *(By Design)*
    - Input strings are parsed character-by-character without preprocessing
    - Leading/trailing whitespace will cause errors or unexpected behavior
    - This is intentional for performance and clarity
@@ -162,7 +162,7 @@ The string constructor `N(std::string_view str, unsigned base = 10)` converts a 
    - **Incorrect:** `N{" 123 "}` → Error (space is not a valid digit)
    - **Workaround:** Trim strings before passing to constructors
 
-2. **No Sign Prefix Support for N Type** *(By Design)*  
+2. **No Sign Prefix Support for N Type** *(By Design)*
    - The `N` type represents unsigned integers only
    - Characters `+` and `-` are NOT interpreted as sign prefixes
    - In base-64 encoding, `+` represents digit value 62, not a positive sign
@@ -172,14 +172,14 @@ The string constructor `N(std::string_view str, unsigned base = 10)` converts a 
    - **Note:** Even the `Z` type only supports `-` prefix, not `+` prefix
    - **Use Z instead:** `Z{"456"}` → 456 (positive), `Z{"-456"}` → -456 (negative)
 
-3. **Base-64 Encoding Character Set**  
+3. **Base-64 Encoding Character Set**
    The character-to-digit mapping supports bases 2 through 64:
    - **Base 2-10:** `'0'-'9'` represent values 0-9
    - **Base 11-36:** `'A'-'Z'` represent values 10-35 (case-insensitive in base ≤36)
    - **Base 37-62:** `'a'-'z'` represent values 36-61
    - **Base 63:** `'+'` represents value 62
    - **Base 64:** `'~'` represents value 63
-   
+
    ```cpp
    N dec{"255"};              // Base-10: 255
    N hex{"FF", 16};           // Base-16: 255
@@ -188,11 +188,11 @@ The string constructor `N(std::string_view str, unsigned base = 10)` converts a 
    N b64_plus{"+~", 64};      // Base-64: 62*64 + 63 = 4031
    ```
 
-4. **Empty and Zero Strings**  
+4. **Empty and Zero Strings**
    - Empty strings and strings containing only `'0'` characters represent zero
    - **Examples:** `N{""}` → 0, `N{"0"}` → 0, `N{"000"}` → 0
 
-5. **Invalid Characters**  
+5. **Invalid Characters**
    - Characters outside the valid range for the specified base will cause errors
    - **Base-10 valid:** `'0'-'9'` only
    - **Base-16 valid:** `'0'-'9'`, `'A'-'F'`, `'a'-'f'`
@@ -310,7 +310,7 @@ The library inverts all bits in the internal digit representation and then remov
 // Conceptual implementation
 N operator~() const {
     if (digits.empty()) return N(0);  // Zero case
-    
+
     N result;
     for (auto digit : digits) {
         result.digits.push_back(~digit);  // Invert each digit
@@ -518,7 +518,7 @@ N num = 5_N;
 N a = num++;    // a = 5, num = 6 (post-increment)
 N b = ++num;    // b = 7, num = 7 (pre-increment)
 
-N c = num--;    // c = 7, num = 6 (post-decrement)  
+N c = num--;    // c = 7, num = 6 (post-decrement)
 N d = --num;    // d = 5, num = 5 (pre-decrement)
 ```
 
@@ -557,7 +557,7 @@ ss >> input_num;                       // Read from string stream
 
 #### Internal Implementation: detail Struct
 
-**Advanced Usage:** For library developers or those needing low-level access, each type has a 
+**Advanced Usage:** For library developers or those needing low-level access, each type has a
 nested `detail` struct containing static implementation functions:
 
 **basic_N::detail** - Internal operations for unsigned integers:
@@ -566,18 +566,18 @@ struct basic_N::detail {
     // I/O operations
     static constexpr std::ostream& opr_ins(std::ostream& os, const basic_N& n);
     static constexpr std::istream& opr_extr(std::istream& is, basic_N& n);
-    
+
     // Arithmetic operations (return new values)
     static constexpr basic_N opr_add(const basic_N& lhs, const basic_N& rhs);
     static constexpr basic_N opr_subtr(basic_N lhs, const basic_N& rhs);
     static constexpr basic_N opr_mult(const basic_N& lhs, const basic_N& rhs);
     static constexpr std::pair<basic_N, basic_N> opr_div(const basic_N& lhs, const basic_N& rhs);
-    
+
     // Bitwise operations
     static constexpr basic_N opr_and(const basic_N& lhs, const basic_N& rhs);
     static constexpr basic_N opr_or(const basic_N& lhs, const basic_N& rhs);
     static constexpr basic_N opr_xor(const basic_N& lhs, const basic_N& rhs);
-    
+
     // Comparison operations
     static constexpr bool opr_eq(const basic_N& lhs, const basic_N& rhs);
     static constexpr bool opr_eq(const basic_N& lhs, std::integral auto rhs);
@@ -600,7 +600,7 @@ and compound assignment operators. They're exposed in the `detail` struct for:
 
 ### Z - Arbitrary-Precision Signed Integers
 
-**Header:** `<jmaths/basic_Z.hpp>`  
+**Header:** `<jmaths/basic_Z.hpp>`
 **Type:** `jmaths::Z` (alias for `basic_Z<uint32_t, uint64_t>`)
 
 Sign-magnitude representation: inherits from `basic_N` for magnitude operations and adds sign handling.
@@ -609,7 +609,7 @@ Sign-magnitude representation: inherits from `basic_N` for magnitude operations 
 
 ```cpp
 template <typename BaseInt, typename BaseIntBig, typename Allocator = std::allocator<BaseInt>>
-class basic_Z : private basic_N<BaseInt, BaseIntBig, Allocator>, 
+class basic_Z : private basic_N<BaseInt, BaseIntBig, Allocator>,
                 public sign_type;
 
 // Common typedef
@@ -635,10 +635,10 @@ Z d = "-123456789"_Z;         // Large negative number
 Z e{"-FF", 16};               // -255 from hex
 ```
 
-**String Constructor Behavior** *(By Design)*  
+**String Constructor Behavior** *(By Design)*
 The Z string constructor only supports `-` prefix for negative numbers. The `+` prefix is not supported for positive numbers (just omit the sign for positive values). Like N, whitespace is not automatically trimmed.
 
-**INT_MIN Limitation** *(Known Issue)*  
+**INT_MIN Limitation** *(Known Issue)*
 The library cannot construct Z from INT_MIN values (the minimum value of signed integer types) due to two's complement representation limitations. When attempting to create `Z(INT64_MIN)`, the program will crash with an assertion failure.
 
 **Workaround for INT_MIN values:**
@@ -651,7 +651,7 @@ The library cannot construct Z from INT_MIN values (the minimum value of signed 
 
 // ✓ WORKAROUND: Use string constructor instead
 Z min64("-9223372036854775808");        // INT64_MIN
-Z min32("-2147483648");                 // INT32_MIN  
+Z min32("-2147483648");                 // INT32_MIN
 Z min16("-32768");                      // INT16_MIN
 Z min8("-128");                         // INT8_MIN
 
@@ -681,7 +681,7 @@ num.flip_sign();                      // num becomes 42
 Z negative = -num;                    // Flip sign
 ```
 
-**Zero Sign Behavior** *(By Design)*  
+**Zero Sign Behavior** *(By Design)*
 Zero is treated as positive in this library. `Z(0).is_positive()` returns `true` and `Z(0).is_negative()` returns `false`. This is a design choice that simplifies implementation and matches the mathematical convention that zero is non-negative (0 ≥ 0).
 
 #### Arithmetic Operations
@@ -710,7 +710,7 @@ Z negative = -a;             // Flip sign
 
 ### Q - Arbitrary-Precision Rational Numbers
 
-**Header:** `<jmaths/basic_Q.hpp>`  
+**Header:** `<jmaths/basic_Q.hpp>`
 **Type:** `jmaths::Q` (alias for `basic_Q<uint32_t, uint64_t>`)
 
 Represents fractions as numerator/denominator pairs, always in reduced form.
@@ -746,7 +746,7 @@ Q from_string{"22/7"};              // 22/7 (approx π)
 Q reduced{10, 15};                  // Automatically becomes 2/3
 ```
 
-**String Constructor Requirements** *(By Design)*  
+**String Constructor Requirements** *(By Design)*
 The Q string constructor requires explicit "numerator/denominator" format with a `/` separator. Integer-only strings like `"5"` are not supported and will cause a division by zero error (empty denominator = zero denominator). This design ensures clear, unambiguous format.
 
 ```cpp
@@ -798,7 +798,7 @@ Q reciprocal = a.inverse();          // If a = 3/4, returns 4/3
 
 ### uint<V> - Fixed-Size Unsigned Integers
 
-**Header:** `<jmaths/uint.hpp>`  
+**Header:** `<jmaths/uint.hpp>`
 **Type:** `jmaths::uint<V>` where V is a power of 2
 
 Fixed-width unsigned integers of arbitrary bit size (e.g., uint<256>, uint<512>, uint<1024>).
@@ -830,7 +830,7 @@ uint<256> c{0xDEADBEEF};
 
 ### calc - Calculation Functions
 
-**Header:** `<jmaths/calc.hpp>`  
+**Header:** `<jmaths/calc.hpp>`
 **Namespace:** `jmaths::calc`
 
 Collection of mathematical functions for arbitrary-precision numbers.
@@ -926,7 +926,7 @@ std::exception
 class error : public std::exception {
 public:
     static constexpr char default_message[] = "No error message provided!";
-    
+
     error();
     explicit error(std::string_view message);
     const char* what() const noexcept override;
@@ -972,7 +972,7 @@ Q zero(0);
 **Check Method:**
 
 ```cpp
-static constexpr void check(const auto& num, 
+static constexpr void check(const auto& num,
                            std::string_view message = default_message);
 ```
 
@@ -1093,7 +1093,7 @@ Z random_signed = jmaths::rand<Z>::generate(128);
 
 ### User-Defined Literals
 
-**Header:** `<jmaths/literals.hpp>`  
+**Header:** `<jmaths/literals.hpp>`
 **Namespace:** `jmaths::literals` (inline namespace)
 
 Convenient syntax for creating large numbers.
@@ -1198,7 +1198,7 @@ fraction_names[Q{1, 4}] = "quarter";
 
 ## Template Metaprogramming
 
-**Header:** `<jmaths/TMP.hpp>`  
+**Header:** `<jmaths/TMP.hpp>`
 **Namespace:** `jmaths::TMP`
 
 Template metaprogramming utilities for compile-time type manipulation and constraints.
@@ -1282,7 +1282,7 @@ using bitpos_t = unsigned long long;    // Bit position (index)
 using bitcount_t = unsigned long long;  // Bit count
 using bitdiff_t = long long;            // Signed bit difference
 
-template <typename T> 
+template <typename T>
 using allocator = std::allocator<T>;    // Default allocator
 ```
 
@@ -1292,7 +1292,7 @@ using allocator = std::allocator<T>;    // Default allocator
 namespace jmaths::internal {
     struct metadata {
         static constexpr char product_name[] = "jmaths";
-        
+
         struct version {
             enum : unsigned {
                 major = 1,
@@ -1393,16 +1393,16 @@ using namespace jmaths;
 
 N fibonacci(unsigned n) {
     if (n <= 1) return N{n};
-    
+
     N prev = 0_N;
     N curr = 1_N;
-    
+
     for (unsigned i = 2; i <= n; ++i) {
         N next = prev + curr;
         prev = curr;
         curr = next;
     }
-    
+
     return curr;
 }
 
@@ -1424,18 +1424,18 @@ using namespace jmaths;
 int main() {
     // Calculate sum: 1/1 + 1/2 + 1/3 + ... + 1/100
     Q sum;
-    
+
     for (int i = 1; i <= 100; ++i) {
         sum += Q{1, i};
     }
-    
+
     std::cout << "Sum of 1/1 + 1/2 + ... + 1/100 = " << sum << std::endl;
-    
+
     // Approximate as decimal
     if (auto decimal = sum.fits_into<double>()) {
         std::cout << "Approximately: " << *decimal << std::endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1451,19 +1451,19 @@ using namespace jmaths;
 
 int main() {
     N num{"DEADBEEF", 16};  // Create from hex
-    
+
     std::cout << "Number created from hex DEADBEEF:" << std::endl;
     std::cout << "Decimal: " << num.to_str(10) << std::endl;
     std::cout << "Binary:  " << num.to_bin() << std::endl;
     std::cout << "Octal:   " << num.to_str(8) << std::endl;
     std::cout << "Hex:     " << num.to_hex() << std::endl;
-    
+
     // Using std::format
     std::cout << "\nUsing std::format:" << std::endl;
     std::cout << std::format("Dec: {}", num) << std::endl;
     std::cout << std::format("Bin: {:2}", num) << std::endl;
     std::cout << std::format("Hex: {:16}", num) << std::endl;
-    
+
     return 0;
 }
 ```
@@ -1583,7 +1583,7 @@ This section provides a comprehensive reference for all 30 header files in the j
 The library consists of:
 - **9 core type headers**: basic_N, basic_Z, basic_Q with implementations
 - **2 mathematical function headers**: calc with implementation
-- **10 utility headers**: error, hash, literals, rand, formatter, scoped_timer with implementations  
+- **10 utility headers**: error, hash, literals, rand, formatter, scoped_timer with implementations
 - **9 supporting headers**: TMP, all, declarations, constants_and_types, def, sign_type, uint with implementations
 
 ### Header 1-2: TMP.hpp / all.hpp
@@ -1640,7 +1640,7 @@ The library consists of:
 - Template member function implementations
 - Type conversion functions
 
-### Headers 6-8: basic_Z (Signed Integers)  
+### Headers 6-8: basic_Z (Signed Integers)
 
 **basic_Z.hpp** - Class Definition
 - **Class**: `template <typename BaseInt, typename BaseIntBig, typename Allocator> class basic_Z : private basic_N, public sign_type`
@@ -1834,7 +1834,7 @@ The library consists of:
   - 50% positive, 50% negative (zero always positive)
 
 **rand_impl.hpp** - Random Generator Implementations
-- **N generation**: 
+- **N generation**:
   1. Calculate full digits needed
   2. Generate random value for each digit
   3. Generate partial digit for remaining bits
@@ -1893,11 +1893,11 @@ The library consists of:
 ## Implementation Quality Notes
 
 ### Complete Coverage
-✅ All 30 header files documented above  
-✅ Every major class, function, and utility covered  
-✅ Implementation details from both declaration and implementation files  
-✅ Template metaprogramming utilities fully explained  
-✅ Internal helpers and implementation details included  
+✅ All 30 header files documented above
+✅ Every major class, function, and utility covered
+✅ Implementation details from both declaration and implementation files
+✅ Template metaprogramming utilities fully explained
+✅ Internal helpers and implementation details included
 
 ### Documentation in Source
 Every header file contains extensive inline documentation with:

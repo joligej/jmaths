@@ -38,8 +38,8 @@ The `basic_N` class template implements arbitrary-precision unsigned integers. A
 ### Basic Arithmetic Operations
 
 #### Addition (basic_N_detail_impl.hpp)
-**Algorithm**: Multi-precision addition with carry propagation  
-**Complexity**: O(n) where n is the number of digits  
+**Algorithm**: Multi-precision addition with carry propagation
+**Complexity**: O(n) where n is the number of digits
 **Method**: Classic schoolbook addition
 
 The addition algorithm processes digits from least to most significant, propagating carries:
@@ -48,19 +48,19 @@ The addition algorithm processes digits from least to most significant, propagat
 1. **Phase 1**: Add corresponding digits from both operands with carry detection
    - For each position i: `sum[i] = lhs[i] + rhs[i] + carry`
    - Carry prediction: `carry = (lhs[i] >= radix - rhs[i] - carry)`
-   
+
 2. **Phase 2**: Propagate carry through remaining digits of longer operand
    - Continue until a digit is not at maximum value
    - If carry propagates past all digits, append 1
-   
+
 3. **Phase 3**: Copy remaining digits when no carry exists
 
 **Number Storage**: Little-endian order (least significant digit first) enables efficient left-to-right carry propagation.
 
 #### Subtraction (basic_N_detail_impl.hpp)
-**Algorithm**: Multi-precision subtraction with borrow propagation  
-**Complexity**: O(n)  
-**Precondition**: lhs ≥ rhs (caller must verify)  
+**Algorithm**: Multi-precision subtraction with borrow propagation
+**Complexity**: O(n)
+**Precondition**: lhs ≥ rhs (caller must verify)
 **Method**: Schoolbook subtraction with borrow
 
 The subtraction algorithm handles borrowing from higher-order digits:
@@ -70,7 +70,7 @@ The subtraction algorithm handles borrowing from higher-order digits:
    - If `lhs[i] < rhs[i]`, borrow from higher digits
    - Borrowing: Find next non-zero digit, decrement it, set intervening zeros to `max_digit`
    - Perform subtraction: `diff[i] = lhs[i] - rhs[i]`
-   
+
 2. **Phase 2**: Copy remaining digits from lhs
 
 **Post-processing**: Remove leading zeros to maintain canonical form.
@@ -79,7 +79,7 @@ The subtraction algorithm handles borrowing from higher-order digits:
 **Two Algorithm Options** (selected at compile-time):
 
 ##### 1. Schoolbook Multiplication (Default: JMATHS_KARATSUBA=0)
-**Complexity**: O(n²)  
+**Complexity**: O(n²)
 **Method**: Long multiplication (elementary school algorithm)
 
 Multiplies each digit of the first operand by the entire second operand, shifting appropriately:
@@ -104,7 +104,7 @@ Multiplies each digit of the first operand by the entire second operand, shiftin
 ```
 
 ##### 2. Karatsuba Multiplication (Work in Progress: JMATHS_KARATSUBA=1)
-**Complexity**: O(n^1.585) ≈ O(n^log₂3)  
+**Complexity**: O(n^1.585) ≈ O(n^log₂3)
 **Method**: Divide-and-conquer approach
 
 Reduces multiplication from 4 sub-multiplications to 3:
@@ -115,8 +115,8 @@ Reduces multiplication from 4 sub-multiplications to 3:
 **Status**: Currently under development
 
 #### Division (basic_N_detail_impl.hpp)
-**Algorithm**: Binary long division (restoring division)  
-**Complexity**: O(n × m) where n is dividend bits, m is divisor bits  
+**Algorithm**: Binary long division (restoring division)
+**Complexity**: O(n × m) where n is dividend bits, m is divisor bits
 **Method**: Bit-by-bit division algorithm
 
 Processes bits from most significant to least significant:
@@ -136,7 +136,7 @@ Processes bits from most significant to least significant:
 ### Bitwise Operations
 
 #### AND, OR, XOR (basic_N_detail_impl.hpp)
-**Complexity**: O(n) where n is number of digits  
+**Complexity**: O(n) where n is number of digits
 **Method**: Digit-by-digit bitwise operations
 
 **Operation Characteristics:**
@@ -147,7 +147,7 @@ Processes bits from most significant to least significant:
 **Post-processing**: AND and XOR remove leading zeros; OR never needs this.
 
 ### Comparison (basic_N_detail_impl.hpp)
-**Algorithm**: Three-way comparison (spaceship operator <=>)  
+**Algorithm**: Three-way comparison (spaceship operator <=>)
 **Complexity**: O(1) best case, O(n) worst case
 
 **Two-Step Strategy:**
@@ -159,14 +159,14 @@ This is optimal: most comparisons terminate in O(1) by checking sizes.
 ### Type Conversion (basic_N_impl.hpp)
 
 #### Integer to BigNum (handle_int_)
-**Algorithm**: Convert native integer to arbitrary-precision  
+**Algorithm**: Convert native integer to arbitrary-precision
 **Method**: Split integer into base_int_type chunks, store in little-endian order
 
 Supports integers up to 128 bits and beyond on supporting platforms.
 
 #### BigNum to Integer (fits_into_)
-**Algorithm**: Convert arbitrary-precision to native integer  
-**Method**: Extract bytes, assemble into target type  
+**Algorithm**: Convert arbitrary-precision to native integer
+**Method**: Extract bytes, assemble into target type
 **Returns**: `std::optional` — `std::nullopt` if value doesn't fit in target type
 
 ---
@@ -185,26 +185,26 @@ All signed operations decompose into unsigned operations plus sign management.
 **Four Cases Based on Signs:**
 1. **(+a) + (+b)** = +(|a| + |b|) — Add magnitudes, result positive
 2. **(+a) + (-b)** = ±(|a| - |b|) — Subtract magnitudes, sign of larger magnitude
-3. **(-a) + (+b)** = ±(|b| - |a|) — Subtract magnitudes, sign of larger magnitude  
+3. **(-a) + (+b)** = ±(|b| - |a|) — Subtract magnitudes, sign of larger magnitude
 4. **(-a) + (-b)** = -(|a| + |b|) — Add magnitudes, result negative
 
 **Implementation**: Uses underlying unsigned N operations, manages sign separately.
 
 #### Subtraction
-**Algorithm**: Signed integer subtraction (addition with negation)  
+**Algorithm**: Signed integer subtraction (addition with negation)
 **Insight**: `a - b = a + (-b)`
 
 Similar case analysis as addition, but with second operand's sign flipped.
 
 #### Multiplication
-**Algorithm**: Signed integer multiplication  
+**Algorithm**: Signed integer multiplication
 **Complexity**: Same as unsigned multiplication + O(1) sign handling
 
-**Sign Rule**: Result negative if signs differ, positive if same  
+**Sign Rule**: Result negative if signs differ, positive if same
 **Implementation**: XOR of sign bits: `result_sign = lhs.sign XOR rhs.sign`
 
 #### Division
-**Algorithm**: Signed integer division (truncated division)  
+**Algorithm**: Signed integer division (truncated division)
 **Complexity**: Same as unsigned division + O(1) sign handling
 
 **C++ Standard Behavior** (rounding toward zero):
@@ -230,7 +230,7 @@ The `basic_Q` class template implements arbitrary-precision rational numbers (fr
 ### Arithmetic Operations (basic_Q_detail_impl.hpp)
 
 #### Addition
-**Algorithm**: Rational number addition  
+**Algorithm**: Rational number addition
 **Formula**: `a/b + c/d = (a×d + b×c) / (b×d)`
 
 **Process:**
@@ -242,28 +242,28 @@ The `basic_Q` class template implements arbitrary-precision rational numbers (fr
 **Optimization**: Could use LCM for smaller intermediate values, but this is simpler.
 
 #### Subtraction
-**Algorithm**: Similar to addition, but subtract cross products  
+**Algorithm**: Similar to addition, but subtract cross products
 **Formula**: `a/b - c/d = (a×d - b×c) / (b×d)`
 
 #### Multiplication
-**Algorithm**: Rational number multiplication  
+**Algorithm**: Rational number multiplication
 **Formula**: `(a/b) × (c/d) = (a×c) / (b×d)`
 
-**Advantages**: Simpler than addition — no cross-multiplication needed!  
+**Advantages**: Simpler than addition — no cross-multiplication needed!
 **Sign Rule**: XOR of signs (same as integer multiplication)
 
 #### Division
-**Algorithm**: Invert and multiply  
+**Algorithm**: Invert and multiply
 **Formula**: `(a/b) ÷ (c/d) = (a/b) × (d/c) = (a×d) / (b×c)`
 
-**Process**: Multiply by reciprocal of second fraction  
+**Process**: Multiply by reciprocal of second fraction
 **Precondition**: Divisor numerator ≠ 0 (checked before operation)
 
 #### Comparison
-**Algorithm**: Cross-multiplication comparison  
+**Algorithm**: Cross-multiplication comparison
 **Method**: To compare `a/b` with `c/d`, compare `a×d` with `b×c`
 
-**Advantages**: Avoids actual division, uses only integer arithmetic  
+**Advantages**: Avoids actual division, uses only integer arithmetic
 **Sign Handling**: For negative numbers, reverse comparison direction
 
 ---
@@ -271,8 +271,8 @@ The `basic_Q` class template implements arbitrary-precision rational numbers (fr
 ## Mathematical Functions
 
 ### GCD (calc_impl.hpp)
-**Algorithm**: Binary GCD (Stein's algorithm)  
-**Complexity**: O(n log n) where n is number of bits  
+**Algorithm**: Binary GCD (Stein's algorithm)
+**Complexity**: O(n log n) where n is number of bits
 **Advantage**: Faster than Euclidean algorithm on binary computers
 
 Uses bit shifts and subtraction instead of expensive division:
@@ -293,8 +293,8 @@ Uses bit shifts and subtraction instead of expensive division:
 - `gcd(a, b) = gcd(|a - b|, min(a, b))` when both odd
 
 ### Square Root (calc_impl.hpp)
-**Algorithm**: Integer square root using binary search  
-**Complexity**: O(log n × n²) — log n iterations, each doing O(n²) multiplication  
+**Algorithm**: Integer square root using binary search
+**Complexity**: O(log n × n²) — log n iterations, each doing O(n²) multiplication
 **Goal**: Find largest integer x where x² ≤ num
 
 **Binary Search Process:**
@@ -311,8 +311,8 @@ Uses bit shifts and subtraction instead of expensive division:
 ### Exponentiation (calc_impl.hpp)
 
 #### Regular Power
-**Algorithm**: Exponentiation by squaring (binary exponentiation)  
-**Complexity**: O(log e × n²) where e is exponent, n is number size  
+**Algorithm**: Exponentiation by squaring (binary exponentiation)
+**Complexity**: O(log e × n²) where e is exponent, n is number size
 **Method**: Based on binary representation of exponent
 
 **Key Insight**: Use binary representation of exponent to reduce operations.
@@ -333,13 +333,13 @@ Uses bit shifts and subtraction instead of expensive division:
 **Benefit**: Computes huge powers efficiently (e.g., `2^1000000` in ~1000000 multiplications, not 10^6 - 1)
 
 #### Modular Power
-**Algorithm**: Modular exponentiation by squaring  
-**Complexity**: O(log e × n²) with bounded intermediate values  
+**Algorithm**: Modular exponentiation by squaring
+**Complexity**: O(log e × n²) with bounded intermediate values
 **Application**: Critical for cryptography (RSA, Diffie-Hellman, etc.)
 
 **Key Property**: `(a × b) mod m = ((a mod m) × (b mod m)) mod m`
 
-**Advantage**: Apply modulo after each multiplication to keep numbers bounded  
+**Advantage**: Apply modulo after each multiplication to keep numbers bounded
 **Result**: Intermediate values never exceed `mod²`, even for huge exponents
 
 **Example**: Computing `3^1000 mod 7` requires only small intermediate values.
@@ -351,7 +351,7 @@ Uses bit shifts and subtraction instead of expensive division:
 ### Random Number Generation (rand_impl.hpp)
 
 #### Unsigned Random (basic_N)
-**Algorithm**: Random arbitrary-precision unsigned integer generation  
+**Algorithm**: Random arbitrary-precision unsigned integer generation
 **Goal**: Generate number with at most N bits uniformly distributed
 
 **Strategy:**
@@ -378,7 +378,7 @@ Uses bit shifts and subtraction instead of expensive division:
 Good hash functions are essential for using arbitrary-precision types in hash-based containers (unordered_map, unordered_set).
 
 #### Hash for basic_N
-**Algorithm**: Byte-sequence hashing  
+**Algorithm**: Byte-sequence hashing
 **Method**: Treat digit array as byte sequence, use `std::hash<std::string_view>`
 
 **Properties:**
@@ -389,7 +389,7 @@ Good hash functions are essential for using arbitrary-precision types in hash-ba
 **Optimization**: Empty (zero) numbers get cached hash value.
 
 #### Hash for basic_Z
-**Algorithm**: Combine magnitude hash with sign  
+**Algorithm**: Combine magnitude hash with sign
 **Formula**: `hash(Z) = hash(magnitude) XOR (sign << offset)`
 
 **Offset Calculation**: `first_digit % (bits_per_size_t)` — adds entropy
@@ -397,7 +397,7 @@ Good hash functions are essential for using arbitrary-precision types in hash-ba
 **Guarantee**: Positive and negative of same value have different hashes.
 
 #### Hash for basic_Q
-**Algorithm**: Combine numerator, denominator, and sign hashes  
+**Algorithm**: Combine numerator, denominator, and sign hashes
 **Formula**: `hash(Q) = (hash(num) XOR hash(denom)) XOR (sign << offset)`
 
 **Offset**: Based on XOR of first digits of numerator and denominator
@@ -530,6 +530,6 @@ Good hash functions are essential for using arbitrary-precision types in hash-ba
 
 ---
 
-**Document Status**: Complete  
-**Last Updated**: October 12, 2025  
+**Document Status**: Complete
+**Last Updated**: October 12, 2025
 **Corresponds to**: jmaths library with full algorithm documentation in all source files

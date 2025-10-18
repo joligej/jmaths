@@ -26,7 +26,7 @@ This guide provides step-by-step instructions for configuring your GitHub reposi
 ### General Settings
 
 1. Navigate to **Settings** → **General**
-2. Update **Description**: 
+2. Update **Description**:
    ```
    A professional, high-performance C++23 library for arbitrary-precision arithmetic with unlimited-size integers, rational numbers, and advanced mathematical operations
    ```
@@ -146,13 +146,13 @@ Create professional releases for version management.
    **Description** (example):
    ```markdown
    # jmaths v1.0.0 - Initial Stable Release
-   
+
    ## 🎉 First Stable Release
-   
+
    We're proud to announce the first stable release of jmaths, a professional C++23 library for arbitrary-precision arithmetic.
-   
+
    ## ✨ Features
-   
+
    - ✅ Arbitrary-precision unsigned integers (N)
    - ✅ Arbitrary-precision signed integers (Z)
    - ✅ Arbitrary-precision rational numbers (Q)
@@ -163,30 +163,30 @@ Create professional releases for version management.
    - ✅ Full constexpr support
    - ✅ Exception safety guarantees
    - ✅ Complete API documentation
-   
+
    ## 📦 Installation
-   
+
    See [Installation Guide](https://github.com/joligej/jmaths#installation) in README.
-   
+
    ## 📖 Documentation
-   
+
    - [API Reference](doc/API_Reference.md)
    - [Quick Reference Guide](doc/QUICK_REFERENCE.md)
    - [Algorithm Documentation](doc/algorithm_documentation.md)
-   
+
    ## 🔧 Requirements
-   
+
    - GCC 15+ or Clang 18+
    - C++23 compatible compiler
    - CMake 3.28+
    - Boost 1.70+ (for testing only)
-   
+
    ## 🙏 Contributors
-   
+
    Thank you to everyone who contributed to this release!
-   
+
    ## 📝 Changelog
-   
+
    See [CHANGELOG.md](CHANGELOG.md) for detailed changes.
    ```
 
@@ -512,7 +512,7 @@ Regular maintenance tasks to keep your repository professional:
 - Merge approved pull requests
 - Check Actions workflow status
 
-### Monthly  
+### Monthly
 - Review Dependabot PRs
 - Update documentation if needed
 - Check security alerts
@@ -535,6 +535,6 @@ If you need assistance with any of these steps:
 
 ---
 
-**Last Updated:** January 2025  
-**Repository:** https://github.com/joligej/jmaths  
+**Last Updated:** January 2025
+**Repository:** https://github.com/joligej/jmaths
 **Maintainer:** Jasper de Smaele

@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(q_divide_fractions) {
     BOOST_TEST(result == Q("2/1"));  // (1/2) / (1/4) = 2
 }
 
-// Additional comparison tests  
+// Additional comparison tests
 BOOST_AUTO_TEST_CASE(q_compare_different_denominators) {
     Q a("1/2");  // 0.5
     Q b("2/3");  // 0.666...
@@ -225,20 +225,29 @@ BOOST_AUTO_TEST_CASE(q_compare_improper_fractions) {
 }
 
 // Member function tests
-BOOST_AUTO_TEST_CASE(q_to_string_basic) {
-    Q frac("5/7");
-    BOOST_TEST(frac.to_str() == "5/7");
-    BOOST_TEST(frac == Q("5/7"));
+BOOST_AUTO_TEST_CASE(q_to_string_various_fractions) {
+    // Test various fractions including basic, simple, and negative
+    Q frac1("5/7");
+    BOOST_TEST(frac1.to_str() == "5/7");
+    BOOST_TEST(frac1 == Q("5/7"));
+
+    Q frac2("3/4");
+    BOOST_TEST(frac2.to_str() == "3/4");
+
+    Q frac3("-5/6");
+    BOOST_TEST(frac3.to_str() == "-5/6");
 }
 
-BOOST_AUTO_TEST_CASE(q_to_string_simple) {
-    Q frac("3/4");
-    BOOST_TEST(frac.to_str() == "3/4");
-}
+BOOST_AUTO_TEST_CASE(q_to_string_improper_fractions) {
+    // Test improper fractions (numerator > denominator)
+    Q frac1("7/3");
+    BOOST_TEST(frac1.to_str() == "7/3");
 
-BOOST_AUTO_TEST_CASE(q_to_string_negative) {
-    Q frac("-5/6");
-    BOOST_TEST(frac.to_str() == "-5/6");
+    Q frac2("10/3");
+    BOOST_TEST(frac2.to_str() == "10/3");
+
+    Q frac3("-11/4");
+    BOOST_TEST(frac3.to_str() == "-11/4");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

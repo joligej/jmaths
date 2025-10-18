@@ -24,7 +24,7 @@ using namespace jmaths::literals;
 /**
  * @file test_literals.cpp
  * @brief Tests for user-defined literals (_N, _Z, _Q)
- * 
+ *
  * This file tests the user-defined literal operators that provide convenient
  * syntax for creating arbitrary-precision numbers: _N for unsigned, _Z for
  * signed, and _Q for rational numbers.
@@ -48,24 +48,21 @@ BOOST_AUTO_TEST_CASE(n_literal_large) {
     BOOST_TEST(num.to_str() == "123456789012345678901234567890");
 }
 
-BOOST_AUTO_TEST_CASE(n_literal_zero) {
-    auto num = 0_N;
-    BOOST_TEST(num == 0);
+BOOST_AUTO_TEST_CASE(n_literal_zero_and_one) {
+    auto zero = 0_N;
+    BOOST_TEST(zero == 0);
+
+    auto one = 1_N;
+    BOOST_TEST(one == N(1));
 }
 
-BOOST_AUTO_TEST_CASE(n_literal_one) {
-    auto num = 1_N;
-    BOOST_TEST(num == N(1));
-}
+BOOST_AUTO_TEST_CASE(n_literal_boundary_values) {
+    // Test power of 2 and max uint64
+    auto power = 1024_N;
+    BOOST_TEST(power == N(1024));
 
-BOOST_AUTO_TEST_CASE(n_literal_power_of_two) {
-    auto num = 1024_N;
-    BOOST_TEST(num == N(1024));
-}
-
-BOOST_AUTO_TEST_CASE(n_literal_max_uint64) {
-    auto num = 18446744073709551615_N;
-    BOOST_TEST(num.to_str() == "18446744073709551615");
+    auto max_val = 18446744073709551615_N;
+    BOOST_TEST(max_val.to_str() == "18446744073709551615");
 }
 
 BOOST_AUTO_TEST_CASE(n_literal_constexpr) {
@@ -98,31 +95,25 @@ BOOST_AUTO_TEST_CASE(z_literal_negative) {
     BOOST_TEST(num < 0);
 }
 
-BOOST_AUTO_TEST_CASE(z_literal_zero) {
-    auto num = 0_Z;
-    BOOST_TEST(num == 0);
+BOOST_AUTO_TEST_CASE(z_literal_zero_one_minus_one) {
+    auto zero = 0_Z;
+    BOOST_TEST(zero == 0);
+
+    auto one = 1_Z;
+    BOOST_TEST(one.is_positive());
+    BOOST_TEST(one == Z(1));
+
+    auto minus_one = -1_Z;
+    BOOST_TEST(minus_one.is_negative());
+    BOOST_TEST(minus_one == Z(-1));
 }
 
-BOOST_AUTO_TEST_CASE(z_literal_one) {
-    auto num = 1_Z;
-    BOOST_TEST(num.is_positive());
-    BOOST_TEST(num == Z(1));
-}
+BOOST_AUTO_TEST_CASE(z_literal_extreme_values) {
+    auto large_pos = 9999999999999999999_Z;
+    BOOST_TEST(large_pos > Z(0));
 
-BOOST_AUTO_TEST_CASE(z_literal_minus_one) {
-    auto num = -1_Z;
-    BOOST_TEST(num.is_negative());
-    BOOST_TEST(num == Z(-1));
-}
-
-BOOST_AUTO_TEST_CASE(z_literal_large_positive) {
-    auto num = 9999999999999999999_Z;
-    BOOST_TEST(num > Z(0));
-}
-
-BOOST_AUTO_TEST_CASE(z_literal_large_negative) {
-    auto num = -9999999999999999999_Z;
-    BOOST_TEST(num < Z(0));
+    auto large_neg = -9999999999999999999_Z;
+    BOOST_TEST(large_neg < Z(0));
 }
 
 BOOST_AUTO_TEST_CASE(z_literal_constexpr_operations) {
@@ -138,36 +129,29 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(q_literal_tests)
 
-BOOST_AUTO_TEST_CASE(q_literal_integer) {
-    auto num = 42_Q;
-    BOOST_TEST(num.to_str() == "42/1");
+BOOST_AUTO_TEST_CASE(q_literal_special_values) {
+    // Test zero, one, and basic integers
+    auto zero = 0_Q;
+    BOOST_TEST(zero == Q("0/1"));
+
+    auto one = 1_Q;
+    BOOST_TEST(one == Q("1/1"));
+
+    auto integer = 42_Q;
+    BOOST_TEST(integer.to_str() == "42/1");
+
+    auto negative = -42_Q;
+    BOOST_TEST(negative.to_str() == "-42/1");
 }
 
-BOOST_AUTO_TEST_CASE(q_literal_negative) {
-    auto num = -42_Q;
-    BOOST_TEST(num.to_str() == "-42/1");
-}
+BOOST_AUTO_TEST_CASE(q_literal_large_integers) {
+    auto large = 123456789_Q;
+    BOOST_TEST(large.to_str() == "123456789/1");
+    BOOST_TEST(large == Q("123456789/1"));
 
-BOOST_AUTO_TEST_CASE(q_literal_zero) {
-    auto num = 0_Q;
-    BOOST_TEST(num == Q("0/1"));
-}
-
-BOOST_AUTO_TEST_CASE(q_literal_one) {
-    auto num = 1_Q;
-    BOOST_TEST(num == Q("1/1"));
-}
-
-BOOST_AUTO_TEST_CASE(q_literal_large) {
-    auto num = 123456789_Q;
-    BOOST_TEST(num.to_str() == "123456789/1");
-    BOOST_TEST(num == Q("123456789/1"));
-}
-
-BOOST_AUTO_TEST_CASE(q_literal_negative_large) {
-    auto num = -987654321_Q;
-    BOOST_TEST(num.to_str() == "-987654321/1");
-    BOOST_TEST(num == Q("-987654321/1"));
+    auto negative_large = -987654321_Q;
+    BOOST_TEST(negative_large.to_str() == "-987654321/1");
+    BOOST_TEST(negative_large == Q("-987654321/1"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

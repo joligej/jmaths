@@ -37,13 +37,13 @@ namespace ut_detail {
 std::string normalize_test_case_name(basic_cstring<char const> name) {
     std::string result;
     result.reserve(name.size());
-    
+
     bool prev_is_lower = false;
     bool prev_is_upper = false;
-    
+
     for (size_t i = 0; i < name.size(); ++i) {
         char c = name[i];
-        
+
         if (c == '_') {
             if (!result.empty() && result.back() != '_') {
                 result += '_';
@@ -63,7 +63,7 @@ std::string normalize_test_case_name(basic_cstring<char const> name) {
             prev_is_upper = false;
         }
     }
-    
+
     return result;
 }
 

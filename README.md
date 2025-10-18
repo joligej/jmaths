@@ -48,25 +48,25 @@ int main() {
     // Arbitrary-precision unsigned integers
     N large = "123456789012345678901234567890"_N;
     N result = large * large;
-    
+
     // Signed integers
     Z negative = -42_Z;
     Z positive = 100_Z;
     Z sum = negative + positive;  // 58
-    
+
     // Rational numbers (fractions)
     Q half("1/2");
     Q third("1/3");
     Q sum_frac = half + third;  // 5/6
-    
+
     // Mathematical functions
     N base(2);
     N exponent(100);
     N power = calc::pow(base, exponent);  // 2^100
-    
+
     N a(48), b(18);
     N gcd = calc::gcd(a, b);  // 6
-    
+
     return 0;
 }
 ```

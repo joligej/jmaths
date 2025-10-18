@@ -1,6 +1,6 @@
 # Known Issues
 
-**Version:** 2.0.0  
+**Version:** 2.0.0
 **Last Updated:** January 2025
 
 Known bugs, limitations, and workarounds for the jmaths library.
@@ -11,8 +11,8 @@ Known bugs, limitations, and workarounds for the jmaths library.
 
 ### INT_MIN Handling in Z Constructor
 
-**Severity:** HIGH  
-**Impact:** Causes assertion failure and program abort  
+**Severity:** HIGH
+**Impact:** Causes assertion failure and program abort
 **Affected:** `basic_Z(std::integral auto num)` constructor
 
 The library cannot construct Z from INT_MIN values (INT8_MIN, INT16_MIN, INT32_MIN, INT64_MIN). The sign extraction logic attempts to negate INT_MIN, but INT_MIN negated equals INT_MIN due to two's complement overflow.
@@ -41,8 +41,8 @@ Z int32_min("-2147483648");
 
 ### Parametric Tests on macOS
 
-**Severity:** LOW (Test Framework Issue)  
-**Impact:** BOOST_DATA_TEST_CASE tests fail with memory alignment errors  
+**Severity:** LOW (Test Framework Issue)
+**Impact:** BOOST_DATA_TEST_CASE tests fail with memory alignment errors
 **Platform:** macOS with GCC 15
 
 Boost.Test's data-driven testing framework causes memory access violations on some macOS configurations. This is not a library bug—all equivalent non-parametric tests pass correctly.
@@ -59,7 +59,7 @@ Boost.Test's data-driven testing framework causes memory access violations on so
 
 ### Assertions vs Exceptions
 
-**Severity:** LOW  
+**Severity:** LOW
 **Impact:** Program aborts on invalid input instead of throwing catchable exceptions
 
 Invalid characters in string parsing trigger assertions rather than exceptions, causing program termination in debug builds.

@@ -114,10 +114,10 @@ BOOST_AUTO_TEST_SUITE(my_feature_tests)
 BOOST_AUTO_TEST_CASE(test_basic_functionality) {
     // Arrange
     jmaths::N value = 42_N;
-    
+
     // Act
     auto result = some_operation(value);
-    
+
     // Assert
     BOOST_TEST(result == expected);
 }

@@ -23,7 +23,7 @@ using namespace jmaths;
 /**
  * @file test_rand.cpp
  * @brief Tests for random number generation functions
- * 
+ *
  * This file tests the rand<T> class template which provides random number
  * generation for arbitrary-precision types N and Z with various bit counts
  * and ranges.
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(rand_n_generates_different) {
     N val1 = jmaths::rand<N>::generate(20);
     N val2 = jmaths::rand<N>::generate(20);
     bool found_diff = (val1 != val2);
-    
+
     for (int i = 0; i < 20 && !found_diff; ++i) {
         val2 = jmaths::rand<N>::generate(20);
         if (val1 != val2) found_diff = true;
@@ -138,14 +138,14 @@ BOOST_AUTO_TEST_CASE(rand_z_medium_bits) {
 BOOST_AUTO_TEST_CASE(rand_z_sign_varies) {
     bool found_positive = false;
     bool found_negative = false;
-    
+
     for (int i = 0; i < 50; ++i) {
         Z val = jmaths::rand<Z>::generate(8);
         if (val > Z(0)) found_positive = true;
         if (val < Z(0)) found_negative = true;
         if (found_positive && found_negative) break;
     }
-    
+
     BOOST_TEST(found_positive);
     BOOST_TEST(found_negative);
 }

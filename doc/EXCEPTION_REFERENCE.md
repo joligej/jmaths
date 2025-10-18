@@ -56,7 +56,7 @@ explicit division_by_zero(std::string_view message);  // Custom message
 ### Static Check Method
 
 ```cpp
-static constexpr void check(const auto & num, 
+static constexpr void check(const auto & num,
                            std::string_view message = default_message);
 ```
 
@@ -421,12 +421,12 @@ When performing multiple operations that might throw, use RAII principles:
 ```cpp
 class Calculator {
     N accumulator_;
-    
+
 public:
     void safe_divide(const N& divisor) {
         // Check before modifying state
         error::division_by_zero::check(divisor);
-        
+
         // Now safe to modify
         accumulator_ = accumulator_ / divisor;
     }
@@ -470,7 +470,7 @@ Always test that your code properly handles exceptions:
 BOOST_AUTO_TEST_CASE(test_division_by_zero) {
     N zero(0);
     N nonzero(42);
-    
+
     BOOST_CHECK_THROW(nonzero / zero, error::division_by_zero);
 }
 ```

@@ -88,7 +88,7 @@ This comprehensive guide provides step-by-step instructions for configuring the 
   - Set **Require approvals** dropdown to: `1`
   - ☑ Check **Dismiss stale pull request approvals when new commits are pushed**
   - ☑ Check **Require review from Code Owners** (only if you have a CODEOWNERS file)
-  
+
 **Require status checks to pass before merging:**
 - ☑ Check this box
 - ☑ Check **Require branches to be up to date before merging**
@@ -99,7 +99,7 @@ This comprehensive guide provides step-by-step instructions for configuring the 
   - Type `code-quality` and select it
   - Type `static-analysis` and select it
   - Type `CodeQL` and select it (from security.yml workflow)
-  
+
 **Additional protections:**
 - ☑ Check **Require conversation resolution before merging**
 - ☑ Check **Require linear history** (prevents merge commits)
@@ -203,7 +203,7 @@ Only follow this step if you use a `develop` branch for ongoing development.
 - You'll see three radio button options:
   - Select ● **Allow all actions and reusable workflows** (most permissive)
   - This allows your repository to use any GitHub Actions
-  
+
 **Workflow permissions:**
 - Scroll down to find this section
 - You'll see two radio button options:
@@ -219,7 +219,7 @@ Only follow this step if you use a `develop` branch for ongoing development.
 1. Navigate to the **Actions** tab at the top of the repository page (next to Pull requests)
 2. You should see a list of your workflows in the left sidebar:
    - CI
-   - Code Coverage  
+   - Code Coverage
    - Dependency Check
    - Documentation
    - Release
@@ -329,7 +329,7 @@ Thank you for your interest in jmaths - a professional, high-performance C++ lib
 
 ## How to Use Discussions
 - **Q&A**: Ask questions about using jmaths
-- **Show and Tell**: Share projects built with jmaths  
+- **Show and Tell**: Share projects built with jmaths
 - **Ideas**: Propose and discuss new features
 - **General**: Anything else related to jmaths
 
@@ -565,5 +565,5 @@ If you encounter issues:
 
 ---
 
-**Last Updated:** October 2025  
+**Last Updated:** October 2025
 **Maintainer:** Jasper de Smaele (@joligej)

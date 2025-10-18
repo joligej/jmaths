@@ -23,7 +23,7 @@ using namespace jmaths;
 /**
  * @file test_calc.cpp
  * @brief Tests for calc namespace mathematical functions
- * 
+ *
  * This file tests the calc namespace which provides mathematical operations
  * including GCD, square root, exponentiation, and modular arithmetic.
  */
@@ -57,11 +57,12 @@ BOOST_AUTO_TEST_CASE(gcd_one_zero) {
     BOOST_TEST(result == N(42));
 }
 
-BOOST_AUTO_TEST_CASE(gcd_both_same) {
-    N a(42);
-    N b(42);
-    N result = calc::gcd(a, b);
-    BOOST_TEST(result == N(42));
+BOOST_AUTO_TEST_CASE(gcd_fibonacci_sequence) {
+    // Test GCD with consecutive Fibonacci numbers (always 1)
+    N fib1(89);
+    N fib2(144);
+    N result = calc::gcd(fib1, fib2);
+    BOOST_TEST(result == N(1));
 }
 
 BOOST_AUTO_TEST_CASE(gcd_extended_cases) {
@@ -70,6 +71,7 @@ BOOST_AUTO_TEST_CASE(gcd_extended_cases) {
     BOOST_TEST(calc::gcd(N(7), N(13)) == 1);
     BOOST_TEST(calc::gcd(N(1), N(1)) == 1);
     BOOST_TEST(calc::gcd(N(100), N(100)) == 100);
+    BOOST_TEST(calc::gcd(N(42), N(42)) == 42);
 }
 
 BOOST_AUTO_TEST_CASE(gcd_with_large_numbers) {
@@ -79,11 +81,12 @@ BOOST_AUTO_TEST_CASE(gcd_with_large_numbers) {
     BOOST_TEST(result == 9);
 }
 
-BOOST_AUTO_TEST_CASE(gcd_large_numbers) {
-    N a("123456789012345678");
-    N b("987654321098765432");
-    N result = calc::gcd(a, b);
-    BOOST_TEST(result > N(0));
+BOOST_AUTO_TEST_CASE(gcd_very_large_primes) {
+    // Test with large primes - GCD should be 1
+    N prime1("1000000007");
+    N prime2("1000000009");
+    N result = calc::gcd(prime1, prime2);
+    BOOST_TEST(result == N(1));
 }
 
 BOOST_AUTO_TEST_CASE(gcd_power_of_two) {
@@ -143,7 +146,8 @@ BOOST_AUTO_TEST_CASE(sqrt_one) {
     BOOST_TEST(remainder == 0);
 }
 
-BOOST_AUTO_TEST_CASE(sqrt_more_cases) {
+BOOST_AUTO_TEST_CASE(sqrt_perfect_squares_sequence) {
+    // Test multiple perfect squares in sequence
     auto [root1, rem1] = calc::sqrt(N(1));
     BOOST_TEST(root1 == 1);
     BOOST_TEST(rem1 == 0);
@@ -151,6 +155,14 @@ BOOST_AUTO_TEST_CASE(sqrt_more_cases) {
     auto [root4, rem4] = calc::sqrt(N(4));
     BOOST_TEST(root4 == 2);
     BOOST_TEST(rem4 == 0);
+
+    auto [root9, rem9] = calc::sqrt(N(9));
+    BOOST_TEST(root9 == 3);
+    BOOST_TEST(rem9 == 0);
+
+    auto [root16, rem16] = calc::sqrt(N(16));
+    BOOST_TEST(root16 == 4);
+    BOOST_TEST(rem16 == 0);
 
     auto [root25, rem25] = calc::sqrt(N(25));
     BOOST_TEST(root25 == 5);
@@ -165,22 +177,27 @@ BOOST_AUTO_TEST_CASE(sqrt_more_cases) {
     BOOST_TEST(rem10000 == 0);
 }
 
-BOOST_AUTO_TEST_CASE(sqrt_non_perfect_squares) {
-    auto [root, rem] = calc::sqrt(N(2));
-    BOOST_TEST(root == 1);
-    BOOST_TEST(rem == 1);
+BOOST_AUTO_TEST_CASE(sqrt_prime_numbers) {
+    // Test sqrt of prime numbers (always have remainder)
+    auto [root2, rem2] = calc::sqrt(N(2));
+    BOOST_TEST(root2 == 1);
+    BOOST_TEST(rem2 == 1);
 
     auto [root3, rem3] = calc::sqrt(N(3));
     BOOST_TEST(root3 == 1);
     BOOST_TEST(rem3 == 2);
 
-    auto [root8, rem8] = calc::sqrt(N(8));
-    BOOST_TEST(root8 == 2);
-    BOOST_TEST(rem8 == 4);
+    auto [root5, rem5] = calc::sqrt(N(5));
+    BOOST_TEST(root5 == 2);
+    BOOST_TEST(rem5 == 1);
 
-    auto [root50, rem50] = calc::sqrt(N(50));
-    BOOST_TEST(root50 == 7);
-    BOOST_TEST(rem50 == 1);
+    auto [root7, rem7] = calc::sqrt(N(7));
+    BOOST_TEST(root7 == 2);
+    BOOST_TEST(rem7 == 3);
+
+    auto [root11, rem11] = calc::sqrt(N(11));
+    BOOST_TEST(root11 == 3);
+    BOOST_TEST(rem11 == 2);
 }
 
 BOOST_AUTO_TEST_CASE(sqrt_large_perfect_square) {
@@ -292,18 +309,23 @@ BOOST_AUTO_TEST_CASE(pow_one_exponent) {
     BOOST_TEST(result == 42);
 }
 
-BOOST_AUTO_TEST_CASE(pow_base_one_simple) {
+BOOST_AUTO_TEST_CASE(pow_base_one_exponent_range) {
+    // Test that 1^n always equals 1 for various exponents
     N base(1);
-    N exponent(100);
-    N result = calc::pow(base, exponent);
-    BOOST_TEST(result == 1);
+    for (unsigned exp = 0; exp <= 100; ++exp) {
+        N result = calc::pow(base, N(exp));
+        BOOST_TEST(result == N(1));
+    }
 }
 
-BOOST_AUTO_TEST_CASE(pow_large) {
-    N base(3);
-    N exponent(20);
-    N result = calc::pow(base, exponent);
-    BOOST_TEST(result.to_str() == "3486784401");
+BOOST_AUTO_TEST_CASE(pow_powers_of_three) {
+    // Test 3^n for various n
+    BOOST_TEST(calc::pow(N(3), N(0)) == N(1));
+    BOOST_TEST(calc::pow(N(3), N(1)) == N(3));
+    BOOST_TEST(calc::pow(N(3), N(2)) == N(9));
+    BOOST_TEST(calc::pow(N(3), N(3)) == N(27));
+    BOOST_TEST(calc::pow(N(3), N(4)) == N(81));
+    BOOST_TEST(calc::pow(N(3), N(20)) == N("3486784401"));
 }
 
 BOOST_AUTO_TEST_CASE(pow_edge_cases_comprehensive) {
@@ -320,14 +342,6 @@ BOOST_AUTO_TEST_CASE(pow_large_exponent) {
     N exponent(100);
     N result = calc::pow(base, exponent);
     BOOST_TEST(result.to_str() == "1267650600228229401496703205376");
-}
-
-BOOST_AUTO_TEST_CASE(pow_base_one_loop) {
-    N base(1);
-    for (unsigned exp = 0; exp <= 100; ++exp) {
-        N result = calc::pow(base, N(exp));
-        BOOST_TEST(result == N(1));
-    }
 }
 
 BOOST_AUTO_TEST_CASE(pow_base_ten) {

@@ -283,7 +283,7 @@ BOOST_AUTO_TEST_CASE(three_way_comparison_n) {
     N a(10);
     N b(20);
     N c(10);
-    
+
     // Use direct comparison operators instead of comparing <=> result with 0
     BOOST_TEST(a < b);
     BOOST_TEST(b > a);
@@ -293,7 +293,7 @@ BOOST_AUTO_TEST_CASE(three_way_comparison_n) {
 BOOST_AUTO_TEST_CASE(comparison_with_zero_n) {
     N zero(0);
     N nonzero(1);
-    
+
     BOOST_TEST(zero < nonzero);
     BOOST_TEST(nonzero > zero);
     BOOST_TEST(zero != nonzero);
@@ -302,7 +302,7 @@ BOOST_AUTO_TEST_CASE(comparison_with_zero_n) {
 BOOST_AUTO_TEST_CASE(comparison_large_numbers) {
     N a("999999999999999999");
     N b("1000000000000000000");
-    
+
     BOOST_TEST(a < b);
     BOOST_TEST(b > a);
     BOOST_TEST(a != b);
@@ -312,7 +312,7 @@ BOOST_AUTO_TEST_CASE(equality_same_value_different_construction) {
     N a(42);
     N b("42");
     N c = 42_N;
-    
+
     BOOST_TEST(a == b);
     BOOST_TEST(b == c);
     BOOST_TEST(a == c);
