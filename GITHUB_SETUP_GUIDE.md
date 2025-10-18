@@ -16,6 +16,7 @@ This comprehensive guide provides step-by-step instructions for configuring the 
 6. **THEN go back to Steps 4-5:** Set up branch protection with required checks
 
 **Why this order matters:**
+
 - Branch protection rules (Steps 4-5) require status checks to exist first
 - Status checks only appear after workflows run successfully (Step 9)
 - If you set up branch protection too early, all PRs (including Dependabot) will fail
@@ -110,6 +111,7 @@ This comprehensive guide provides step-by-step instructions for configuring the 
 4. Configure the following options:
 
 **Require a pull request before merging:**
+
 - ☑ Check this box
 - In the sub-options that appear:
   - Set **Require approvals** dropdown to: `1`
@@ -117,6 +119,7 @@ This comprehensive guide provides step-by-step instructions for configuring the 
   - ☑ Check **Require review from Code Owners** (only if you have a CODEOWNERS file)
 
 **Require status checks to pass before merging:**
+
 - ☑ Check this box
 - ☑ Check **Require branches to be up to date before merging**
 - In the **Search for status checks** field, type and select the following checks (they will appear after Step 9):
@@ -128,6 +131,7 @@ This comprehensive guide provides step-by-step instructions for configuring the 
   - Type `coverage` and select it (if using code coverage)
 
 **Additional protections:**
+
 - ☑ **Require conversation resolution before merging**
 - ☑ **Require signed commits** (highly recommended for security)
 - ☑ **Require linear history** (recommended for clean git history)
@@ -156,18 +160,22 @@ If you use a `develop` branch:
 2. Enable the following features:
 
 **Dependency graph:**
+
 - ☑ **Automatically enable for new private repositories**
 
 **Dependabot:**
+
 - ☑ **Dependabot alerts** - Get notified of vulnerable dependencies
 - ☑ **Dependabot security updates** - Automatically create PRs to fix vulnerabilities
 - ☑ **Dependabot version updates** - Keep dependencies up-to-date (uses .github/dependabot.yml)
 
 **Code scanning:**
+
 - ☑ **CodeQL analysis** - Advanced security analysis
   - Click **Set up** → **Default** (uses your .github/workflows/security.yml)
 
 **Secret scanning:**
+
 - ☑ **Secret scanning** - Detect accidentally committed secrets
 - ☑ **Push protection** - Block pushes that contain secrets
 
@@ -232,6 +240,7 @@ If your workflows require secrets (e.g., for Codecov):
    - Now you can go back to Step 4 and set up branch protection
 
 **Troubleshooting:**
+
 - If workflows don't run: Check Settings → Actions → General → Actions permissions
 - If workflows fail: Click on the failed run to see error details
 - Common issues: Missing secrets, permissions problems, configuration errors
@@ -441,15 +450,18 @@ For this repository specifically:
 ### Additional Features
 
 **Projects:**
+
 - Use GitHub Projects for planning and tracking work
 - Create a project board with columns: To Do, In Progress, Done
 - Link issues and PRs to project cards
 
 **Sponsors:**
+
 - Set up GitHub Sponsors if you want to accept donations
 - Configure sponsor tiers and benefits
 
 **Repository Insights:**
+
 - Monitor traffic, popular content, and community engagement
 - Use insights to improve documentation and features
 
@@ -480,33 +492,39 @@ Add status badges to show build status, coverage, etc.:
 Verify everything is configured correctly:
 
 **Repository Settings:**
+
 - ✅ Description and website updated
 - ✅ Issues, Discussions, Projects enabled
 - ✅ Pull request settings configured
 
 **Branch Protection:**
+
 - ✅ Main branch protected with required reviews
 - ✅ Required status checks enabled
 - ✅ Conversation resolution required
 - ✅ Linear history enforced (optional)
 
 **Security:**
+
 - ✅ Dependabot alerts enabled
 - ✅ Dependabot security/version updates enabled
 - ✅ CodeQL scanning enabled
 - ✅ Secret scanning enabled with push protection
 
 **Actions & Secrets:**
+
 - ✅ GitHub Actions enabled with correct permissions
 - ✅ All workflows run successfully
 - ✅ Required secrets configured (e.g., CODECOV_TOKEN)
 
 **Community:**
+
 - ✅ Labels organized
 - ✅ Discussions set up with welcome message
 - ✅ Topics added for discoverability
 
 **Documentation:**
+
 - ✅ GitHub Pages enabled (optional)
 - ✅ README badges added (optional)
 
