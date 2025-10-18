@@ -46,7 +46,7 @@ body:
       placeholder: |
         ```cpp
         #include <jmaths/all.hpp>
-        
+
         int main() {
             // Your code here
         }

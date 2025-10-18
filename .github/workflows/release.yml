@@ -27,7 +27,7 @@ jobs:
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo apt-get update
         sudo apt-get install -y g++-14 libboost-all-dev binutils
-        
+
     - name: Verify toolchain versions
       run: |
         g++-14 --version

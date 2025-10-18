@@ -38,7 +38,7 @@ jobs:
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo apt-get update
         sudo apt-get install -y g++-14 libboost-all-dev binutils
-        
+
     - name: Verify toolchain versions
       run: |
         g++-14 --version
@@ -51,7 +51,7 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
-      
+
   dependency-review:
     name: Dependency Review
     runs-on: ubuntu-latest
@@ -59,6 +59,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      
+
     - name: Dependency Review
       uses: actions/dependency-review-action@v3

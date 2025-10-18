@@ -44,7 +44,7 @@ jobs:
           fi
         done
         echo "All required documentation files present"
-        
+
     - name: Check documentation completeness
       run: |
         # Check that all public headers are documented
@@ -56,7 +56,7 @@ jobs:
             fi
           fi
         done
-        
+
     - name: Validate code examples in README
       run: |
         # Extract and validate C++ code blocks from README
@@ -67,21 +67,21 @@ jobs:
 
         with open('README.md', 'r') as f:
             content = f.read()
-            
+
         # Find C++ code blocks
         code_blocks = re.findall(r'```cpp\n(.*?)\n```', content, re.DOTALL)
-        
+
         if not code_blocks:
             print("Warning: No C++ code examples found in README")
         else:
             print(f"Found {len(code_blocks)} C++ code examples")
-            
+
         # Check for common issues
         for i, block in enumerate(code_blocks):
             if 'int main' in block and 'return' not in block:
                 print(f"Warning: Code block {i+1} may be missing return statement")
         EOF
-        
+
     - name: Check for outdated information
       run: |
         # Check if version numbers are consistent
@@ -89,17 +89,17 @@ jobs:
         if grep -q "v1\." README.md; then
           echo "Warning: README may contain outdated version references"
         fi
-        
+
   spell-check:
     name: Spell Check
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      
+
     - name: Install aspell
       run: sudo apt-get update && sudo apt-get install -y aspell aspell-en
-      
+
     - name: Run spell check on documentation
       run: |
         for file in *.md doc/*.md; do

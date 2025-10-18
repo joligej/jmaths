@@ -1,17 +1,17 @@
 # jmaths Repository Status
 
-**Date:** January 2025  
-**Version:** 2.0.0  
+**Date:** January 2025
+**Version:** 2.0.0
 **Status:** Production Ready
 
 ---
 
 ## Executive Summary
 
-✅ **Tests:** Comprehensive (507 test cases passing, 3 intentionally disabled)  
-✅ **Workflows:** Complete and functional (6 workflows configured)  
-✅ **Documentation:** Extensive and professional (21 documentation files)  
-✅ **Build System:** Fully functional with modern CMake  
+✅ **Tests:** Comprehensive (507 test cases passing, 3 intentionally disabled)
+✅ **Workflows:** Complete and functional (6 workflows configured)
+✅ **Documentation:** Extensive and professional (21 documentation files)
+✅ **Build System:** Fully functional with modern CMake
 ✅ **Code Quality:** Professional grade with automated quality checks
 
 ---
@@ -103,8 +103,8 @@ For detailed output:
 All 6 GitHub Actions workflows are properly configured and production-ready:
 
 ### 1. CI Workflow (`.github/workflows/ci.yml`)
-**Status:** ✅ Production Ready  
-**Purpose:** Continuous Integration — Build and test on every push/PR  
+**Status:** ✅ Production Ready
+**Purpose:** Continuous Integration — Build and test on every push/PR
 **Features:**
 - Multi-configuration testing (Release/Debug builds)
 - Ubuntu with GCC-14 (ready for GCC-15 when available)
@@ -118,8 +118,8 @@ All 6 GitHub Actions workflows are properly configured and production-ready:
 **Triggers:** Push to main/develop, PRs, weekly schedule, manual dispatch
 
 ### 2. Code Coverage Workflow (`.github/workflows/coverage.yml`)
-**Status:** ✅ Production Ready  
-**Purpose:** Generate and report code coverage metrics  
+**Status:** ✅ Production Ready
+**Purpose:** Generate and report code coverage metrics
 **Features:**
 - gcov/lcov/gcovr coverage generation
 - HTML coverage reports
@@ -130,8 +130,8 @@ All 6 GitHub Actions workflows are properly configured and production-ready:
 **Triggers:** Push to main/develop, PRs, manual dispatch
 
 ### 3. Security Workflow (`.github/workflows/security.yml`)
-**Status:** ✅ Production Ready  
-**Purpose:** Security scanning and vulnerability detection  
+**Status:** ✅ Production Ready
+**Purpose:** Security scanning and vulnerability detection
 **Features:**
 - CodeQL analysis for C++
 - Security vulnerability scanning
@@ -141,8 +141,8 @@ All 6 GitHub Actions workflows are properly configured and production-ready:
 **Triggers:** Push to main, PRs to main, weekly schedule, manual dispatch
 
 ### 4. Dependency Check Workflow (`.github/workflows/dependency-check.yml`)
-**Status:** ✅ Production Ready  
-**Purpose:** Monitor and update dependencies  
+**Status:** ✅ Production Ready
+**Purpose:** Monitor and update dependencies
 **Features:**
 - Boost version checking
 - CMake version verification
@@ -153,8 +153,8 @@ All 6 GitHub Actions workflows are properly configured and production-ready:
 **Triggers:** Weekly schedule, manual dispatch
 
 ### 5. Release Workflow (`.github/workflows/release.yml`)
-**Status:** ✅ Production Ready  
-**Purpose:** Automated release creation and artifact generation  
+**Status:** ✅ Production Ready
+**Purpose:** Automated release creation and artifact generation
 **Features:**
 - Multi-platform builds (Ubuntu, macOS, Windows)
 - Package generation (tar.gz, .deb, .rpm, .zip)
@@ -165,8 +165,8 @@ All 6 GitHub Actions workflows are properly configured and production-ready:
 **Triggers:** Tag creation (v*.*.*), manual dispatch
 
 ### 6. Documentation Workflow (`.github/workflows/documentation.yml`)
-**Status:** ✅ Production Ready  
-**Purpose:** Validate and deploy documentation  
+**Status:** ✅ Production Ready
+**Purpose:** Validate and deploy documentation
 **Features:**
 - Documentation link validation
 - Markdown linting
@@ -178,9 +178,9 @@ All 6 GitHub Actions workflows are properly configured and production-ready:
 
 ### Additional Configuration
 
-✅ **`.github/dependabot.yml`** — Automated dependency updates  
-✅ **`.github/CODEOWNERS`** — Code ownership for PR reviews  
-✅ **`.github/PULL_REQUEST_TEMPLATE.md`** — Standardized PR descriptions  
+✅ **`.github/dependabot.yml`** — Automated dependency updates
+✅ **`.github/CODEOWNERS`** — Code ownership for PR reviews
+✅ **`.github/PULL_REQUEST_TEMPLATE.md`** — Standardized PR descriptions
 ✅ **`.github/ISSUE_TEMPLATE/`** — Issue templates (bug, feature, question)
 
 ### Workflow Quality
@@ -370,7 +370,7 @@ All critical setup items are complete:
 
 ---
 
-**Last Updated:** January 2025  
-**Repository:** github.com/joligej/jmaths  
-**Version:** 2.0.0  
+**Last Updated:** January 2025
+**Repository:** github.com/joligej/jmaths
+**Version:** 2.0.0
 **Maintainer:** Jasper de Smaele

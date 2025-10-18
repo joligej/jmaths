@@ -53,13 +53,13 @@ jobs:
         echo "Checking for g++-14..."
         which g++-14
         g++-14 --version
-        
+
     - name: Configure GCC alternatives
       run: |
         # Set up alternatives for g++-14
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100 --slave /usr/bin/g++ g++ /usr/bin/g++-14 --slave /usr/bin/gcov gcov /usr/bin/gcov-14
         sudo update-alternatives --set gcc /usr/bin/gcc-14
-        
+
     - name: Verify toolchain versions
       run: |
         g++-14 --version
@@ -99,48 +99,48 @@ jobs:
         echo "Build Type: ${{ matrix.build_type }}"
         echo "Compiler: ${{ matrix.compiler }}"
         echo ""
-        
+
         # Run tests with detailed output
         ctest --output-on-failure --verbose --no-compress-output -T Test
-        
+
         # Display test summary
         echo ""
         echo "======================================"
         echo "Test Summary"
         echo "======================================"
         cat Testing/Temporary/LastTest.log | tail -20
-        
+
     - name: Generate JUnit test report
       if: always()
       working-directory: build
       run: |
         # Generate JUnit XML for GitHub Actions test reporting
         ctest --output-junit test-results.xml || true
-        
+
         # Also generate detailed test output
         ./test/jmaths_unit_test --report_level=detailed --log_level=all > test-detailed.log 2>&1 || true
-        
+
     - name: Generate test report
       if: always()
       working-directory: build
       run: |
         # Generate test reports in multiple formats
         ctest --output-junit test-results.xml || true
-        
+
         # Create test summary
         echo "# Test Results Summary" > test-summary.md
         echo "" >> test-summary.md
         echo "**Build Type:** ${{ matrix.build_type }}" >> test-summary.md
         echo "**OS:** ${{ matrix.os }}" >> test-summary.md
         echo "" >> test-summary.md
-        
+
         if [ -f Testing/Temporary/LastTest.log ]; then
           echo "## Test Execution Log" >> test-summary.md
           echo "\`\`\`" >> test-summary.md
           tail -50 Testing/Temporary/LastTest.log >> test-summary.md
           echo "\`\`\`" >> test-summary.md
         fi
-        
+
     - name: Upload test results
       if: always()
       uses: actions/upload-artifact@v4
@@ -155,16 +155,16 @@ jobs:
     - name: Install
       if: matrix.build_type == 'Release'
       run: sudo cmake --install build
-      
+
     - name: Fix permissions after install
       if: matrix.build_type == 'Release'
       run: sudo chown -R $(whoami) build/
-      
+
     - name: Create package
       if: matrix.build_type == 'Release'
       working-directory: build
       run: cpack -G TGZ
-      
+
     - name: Upload package
       if: matrix.build_type == 'Release'
       uses: actions/upload-artifact@v4
@@ -191,11 +191,11 @@ jobs:
         find src test samples \( -name '*.cpp' -o -name '*.hpp' -o -name '*.hh' \) -print0 | \
         xargs -0 clang-format --dry-run --Werror || echo "Format check had warnings"
       continue-on-error: true
-        
+
     - name: Check for trailing whitespace
       run: |
         ! find src test -name '*.cpp' -o -name '*.hpp' | xargs grep -n '[[:space:]]$'
-        
+
     - name: Check for tabs
       run: |
         ! find src test -name '*.cpp' -o -name '*.hpp' | xargs grep -P '\t'
@@ -211,13 +211,13 @@ jobs:
       uses: jwlawson/actions-setup-cmake@v2
       with:
         cmake-version: '3.28.1'
-      
+
     - name: Install dependencies
       run: |
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo apt-get update
         sudo apt-get install -y g++-14 libboost-all-dev cppcheck binutils
-        
+
     - name: Run cppcheck
       run: |
         cppcheck --enable=all --suppress=missingIncludeSystem \
@@ -225,7 +225,7 @@ jobs:
           --error-exitcode=1 --inline-suppr \
           -I src/headers src/ 2>&1 | tee cppcheck-report.txt
       continue-on-error: true
-      
+
     - name: Upload cppcheck report
       uses: actions/upload-artifact@v4
       with:
@@ -253,7 +253,7 @@ jobs:
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo apt-get update
         sudo apt-get install -y g++-14 libboost-all-dev binutils
-        
+
     - name: Verify toolchain versions
       run: |
         g++-14 --version
@@ -280,7 +280,7 @@ jobs:
       run: |
         echo "Running tests with ${{ matrix.sanitizer }} sanitizer..."
         ctest --output-on-failure --verbose
-        
+
   test-report:
     name: Test Results Summary
     runs-on: ubuntu-latest
@@ -290,19 +290,19 @@ jobs:
       contents: read
       checks: write
       pull-requests: write
-    
+
     steps:
     - name: Download all test results
       uses: actions/download-artifact@v4
       with:
         pattern: test-results-*
         path: test-results
-        
+
     - name: Display test structure
       run: |
         echo "Downloaded test results:"
         find test-results -type f
-        
+
     - name: Publish Test Report
       uses: mikepenz/action-junit-report@v4
       if: always()
@@ -312,7 +312,7 @@ jobs:
         detailed_summary: true
         include_passed: true
         fail_on_failure: true
-        
+
     - name: Create test summary comment
       if: github.event_name == 'pull_request'
       uses: actions/github-script@v7
@@ -320,23 +320,23 @@ jobs:
         script: |
           const fs = require('fs');
           const path = require('path');
-          
+
           let summary = '## 🧪 Test Results Summary\n\n';
           summary += '| Build Configuration | Status |\n';
           summary += '|---------------------|--------|\n';
-          
+
           // Check for test result files
           const testDirs = fs.readdirSync('test-results', { withFileTypes: true })
             .filter(dirent => dirent.isDirectory())
             .map(dirent => dirent.name);
-          
+
           for (const dir of testDirs) {
             const status = '✅ Passed'; // Simplified - would parse XML in real implementation
             summary += `| ${dir} | ${status} |\n`;
           }
-          
+
           summary += '\n📊 Full test reports available in workflow artifacts.';
-          
+
           github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
