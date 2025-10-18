@@ -68,6 +68,35 @@ Invalid characters in string parsing trigger assertions rather than exceptions, 
 
 ---
 
+## Planned Future Enhancements
+
+These items are documented in source code TODOs and represent planned improvements rather than bugs.
+
+### Q Type: Subnormal Float Handling
+
+**Location:** `src/headers/basic_Q_impl.hpp`
+**Status:** Incomplete implementation
+**Description:** Conversion from floating-point types with subnormal values needs enhanced handling for proper representation as rational numbers.
+
+### Random Number Generation: Signed Type Support
+
+**Location:** `src/headers/rand.hpp`
+**Status:** Under consideration
+**Description:** Random generation currently supports unsigned types. Evaluation needed for signed type support in `rand_generic` function.
+
+### uint Class: Expanded Functionality
+
+**Location:** `src/headers/uint.hpp`
+**Status:** Planned expansion
+**Description:** The `uint` class currently provides minimal functionality. Future enhancements may include:
+- Arithmetic operations
+- Configurable element types beyond `unsigned char`
+- Extended bit manipulation operations
+
+These enhancements are planned for future releases and do not impact current library functionality.
+
+---
+
 ## Reporting Issues
 
 To report new issues:
