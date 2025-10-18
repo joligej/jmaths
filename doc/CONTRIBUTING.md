@@ -46,10 +46,12 @@ When submitting a pull request, follow this process:
 When opening a pull request, please include:
 
 **Description:**
+
 - Clear and concise description of the changes
 - Link to related issues using GitHub keywords ("Fixes #123", "Closes #456", "Relates to #789")
 
 **Type of Change:** (Mark all that apply)
+
 - Bug fix (non-breaking change that resolves an issue)
 - New feature (non-breaking change that adds functionality)
 - Breaking change (modification that causes existing functionality to change)
@@ -60,6 +62,7 @@ When opening a pull request, please include:
 - Build system or CI/CD update
 
 **Testing Performed:**
+
 - All existing tests pass locally
 - New tests added to cover new functionality
 - Manual testing completed
@@ -67,6 +70,7 @@ When opening a pull request, please include:
 - Performance impact assessed (if applicable)
 
 **Code Quality:**
+
 - My code follows the project's style guidelines
 - I have performed a self-review of my code
 - I have commented my code, particularly in complex areas
@@ -77,6 +81,7 @@ When opening a pull request, please include:
 - Any dependent changes have been merged and published
 
 **Documentation:** (Check all that apply)
+
 - README.md updated (if user-facing changes)
 - API documentation updated (if API changes)
 - Algorithm documentation updated (if algorithm changes)
@@ -84,7 +89,9 @@ When opening a pull request, please include:
 - Code comments added for complex logic
 
 **Breaking Changes:**
+
 If this introduces breaking changes, describe:
+
 - What breaks
 - Migration path for users
 - Deprecation timeline (if applicable)
