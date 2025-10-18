@@ -52,11 +52,13 @@ This comprehensive guide provides step-by-step instructions for configuring the 
 ## 1. Initial Repository Setup
 
 ### Prerequisites
+
 - You must have admin access to the repository
 - The repository should already exist on GitHub (github.com/joligej/jmaths)
 
 ### Navigate to Repository
-1. Go to https://github.com/joligej/jmaths
+
+1. Go to <https://github.com/joligej/jmaths>
 2. Click on **Settings** tab (near the top right)
 
 ### Update General Settings
@@ -367,6 +369,7 @@ This will automatically trigger your Release workflow to build artifacts.
 ### Future Releases
 
 For future releases:
+
 1. Update version in relevant files
 2. Update CHANGELOG.md with changes
 3. Commit and push changes
@@ -379,7 +382,7 @@ For future releases:
 
 ### Step 14: GitHub Pages for Documentation
 
-**Option A: Simple Documentation (Recommended for Start)**
+#### Option A: Simple Documentation (Recommended for Start)
 
 1. Go to **Settings** → **Pages**
 2. Under **Source**, select **Deploy from a branch**
@@ -387,7 +390,7 @@ For future releases:
 4. Click **Save**
 5. Your docs will be available at: `https://joligej.github.io/jmaths/`
 
-**Option B: Professional Documentation with MkDocs or Doxygen**
+#### Option B: Professional Documentation with MkDocs or Doxygen
 
 If you want to generate professional API documentation:
 
@@ -411,6 +414,7 @@ Customize notifications to stay informed:
    - Configure which events trigger notifications
 
 For this repository specifically:
+
 1. Go to the jmaths repository
 2. Click **Watch** (top right)
 3. Select **Custom**
@@ -428,7 +432,8 @@ For this repository specifically:
 ### Code Quality Integrations (Optional but Recommended)
 
 **Codecov (Code Coverage Reports):**
-1. Visit https://codecov.io
+
+1. Visit <https://codecov.io>
 2. Sign in with GitHub
 3. Add the jmaths repository
 4. Copy the CODECOV_TOKEN
@@ -436,13 +441,15 @@ For this repository specifically:
 6. Your coverage workflow will now upload reports
 
 **Codacy (Code Quality Analysis):**
-1. Visit https://www.codacy.com
+
+1. Visit <https://www.codacy.com>
 2. Sign in with GitHub
 3. Add the jmaths repository
 4. Configure analysis settings
 
 **SonarCloud (Advanced Code Analysis):**
-1. Visit https://sonarcloud.io
+
+1. Visit <https://sonarcloud.io>
 2. Sign in with GitHub
 3. Add the jmaths repository
 4. Configure quality gates
@@ -474,6 +481,7 @@ Add status badges to show build status, coverage, etc.:
 ```
 
 **Social Preview Image:**
+
 1. Go to **Settings** → **Options**
 2. Scroll to **Social preview**
 3. Upload a custom image (1280x640px recommended)
@@ -551,6 +559,7 @@ Verify branch protection is working:
 
 **Problem:** Workflows don't trigger automatically
 **Solution:**
+
 1. Check **Settings** → **Actions** → **General**
 2. Ensure "Allow all actions" is selected
 3. Check workflow permissions are set to "Read and write"
@@ -561,6 +570,7 @@ Verify branch protection is working:
 **Problem:** Can't find status checks when setting up branch protection
 **Cause:** Status checks only appear after workflows run at least once
 **Solution:**
+
 1. Remove branch protection temporarily
 2. Push a commit to trigger workflows
 3. Wait for workflows to complete
@@ -571,12 +581,14 @@ Verify branch protection is working:
 **Problem:** Dependabot creates PRs but they immediately fail
 **Cause:** Branch protection set up before workflows ran
 **Solution 1 (Temporary):**
+
 1. **Settings** → **Branches** → Edit `main` protection rule
 2. Temporarily uncheck "Require status checks to pass"
 3. Let Dependabot PRs pass (they will still need review)
 4. After workflows run successfully, re-enable required checks
 
 **Solution 2 (Permanent Fix):**
+
 1. Close all Dependabot PRs
 2. Remove branch protection completely
 3. Manually push a commit to trigger workflows
@@ -588,6 +600,7 @@ Verify branch protection is working:
 
 **Problem:** Coverage workflow runs but doesn't upload to Codecov
 **Solution:**
+
 1. Verify CODECOV_TOKEN is set in repository secrets
 2. Check Codecov project is properly configured
 3. Review coverage workflow logs for errors
@@ -598,17 +611,20 @@ Verify branch protection is working:
 ## Maintenance Tasks
 
 ### Regular (Weekly)
+
 - Review and merge Dependabot PRs
 - Respond to new issues and discussions
 - Review incoming pull requests
 
 ### Periodic (Monthly)
+
 - Review and update documentation
 - Check security advisories
 - Update dependencies manually if needed
 - Review repository insights and metrics
 
 ### Release Process
+
 1. Update CHANGELOG.md with all changes
 2. Update version numbers in code
 3. Run full test suite locally
@@ -622,6 +638,7 @@ Verify branch protection is working:
 ## Summary Checklist
 
 ### Essential (Do These First)
+
 - ✅ Enable Issues and Discussions (Step 2)
 - ✅ Configure Pull Request settings (Step 3)
 - ✅ Enable all security features (Step 6)
@@ -631,12 +648,14 @@ Verify branch protection is working:
 - ✅ Add repository topics (Step 12)
 
 ### Recommended (Do These Soon)
+
 - ✅ Configure labels (Step 10)
 - ✅ Set up Discussions with welcome message (Step 11)
 - ✅ Create first release (Step 13)
 - ✅ Create test PR to verify protection (Step 17)
 
 ### Optional (Nice to Have)
+
 - ⭐ Enable GitHub Pages (Step 14)
 - ⭐ Configure notification preferences (Step 15)
 - ⭐ Set up third-party integrations (Step 16)
