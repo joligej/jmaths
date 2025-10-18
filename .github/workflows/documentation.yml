@@ -36,7 +36,7 @@ jobs:
 
     - name: Validate documentation structure
       run: |
-        required_files=("README.md" "CHANGELOG.md" "CONTRIBUTING.md" "CODE_OF_CONDUCT.md" "SECURITY.md" "doc/API_Reference.md" "doc/algorithm_documentation.md")
+        required_files=("README.md" "CHANGELOG.md" "CODE_OF_CONDUCT.md" "SECURITY.md" "GITHUB_SETUP_GUIDE.md" "doc/CONTRIBUTING.md" "doc/DOCUMENTATION_INDEX.md" "doc/API_Reference.md" "doc/algorithm_documentation.md" "doc/SAMPLES_GUIDE.md")
         for file in "${required_files[@]}"; do
           if [ ! -f "$file" ]; then
             echo "Error: Required documentation file $file is missing"
