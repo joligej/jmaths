@@ -12,7 +12,7 @@ A professional, high-performance C++23 library for arbitrary-precision arithmeti
 - **Arbitrary-Precision Integers** (`N`, `Z`) — Unlimited-size integers with complete arithmetic support
 - **Rational Numbers** (`Q`) — Arbitrary-precision fractions with automatic reduction to lowest terms
 - **Modern C++23** — Leverages latest language features for clean, efficient, and type-safe code
-- **Comprehensive Testing** — 530+ unit tests ensuring reliability and correctness
+- **Comprehensive Testing** — 510 test cases with 1,200 assertions ensuring reliability and correctness
 - **Constexpr Support** — Compile-time evaluation for most operations
 - **User-Defined Literals** — Natural syntax using `_N`, `_Z`, and `_Q` literals
 - **Rich Mathematical API** — GCD, square root, exponentiation, bitwise operations, and more
@@ -101,7 +101,7 @@ g++-15 -std=c++23 -O3 your_program.cpp -ljmaths -o your_program
 
 ## Testing
 
-The library includes a comprehensive test suite with over 530 test cases covering all major functionality:
+The library includes a comprehensive test suite with 510 test cases and 1,200 assertions covering all major functionality:
 
 ```bash
 cd build

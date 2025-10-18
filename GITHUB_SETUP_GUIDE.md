@@ -129,27 +129,27 @@ Topics help users discover your repository.
 
 Create professional releases for version management.
 
-### Creating Your First Release (v1.0.0)
+### Creating Your First Release (v2.0.0)
 
 1. Go to **Releases** (on the right sidebar of main page)
 2. Click **Create a new release** (or **Draft a new release**)
 3. Fill in the details:
 
    **Choose a tag:**
-   - Click **Choose a tag** → Type `v1.0.0` → Click **+ Create new tag: v1.0.0 on publish**
+   - Click **Choose a tag** → Type `v2.0.0` → Click **+ Create new tag: v2.0.0 on publish**
 
    **Release title:**
    ```
-   v1.0.0 - Initial Stable Release
+   v2.0.0 - Production Release
    ```
 
    **Description** (example):
    ```markdown
-   # jmaths v1.0.0 - Initial Stable Release
+   # jmaths v2.0.0 - Production Release
 
-   ## 🎉 First Stable Release
+   ## 🎉 Production-Ready Release
 
-   We're proud to announce the first stable release of jmaths, a professional C++23 library for arbitrary-precision arithmetic.
+   We're proud to announce version 2.0.0 of jmaths, a professional C++23 library for arbitrary-precision arithmetic with comprehensive testing and documentation.
 
    ## ✨ Features
 
@@ -157,12 +157,14 @@ Create professional releases for version management.
    - ✅ Arbitrary-precision signed integers (Z)
    - ✅ Arbitrary-precision rational numbers (Q)
    - ✅ User-defined literals (_N, _Z, _Q)
-   - ✅ Comprehensive mathematical functions (GCD, square root, power, etc.)
+   - ✅ Comprehensive mathematical functions (GCD, square root, power, modular exponentiation)
    - ✅ Bitwise operations
-   - ✅ 550+ comprehensive unit tests
+   - ✅ 510 test cases with 1,200 assertions (507 passing, 3 intentionally disabled)
    - ✅ Full constexpr support
    - ✅ Exception safety guarantees
    - ✅ Complete API documentation
+   - ✅ Benchmarking system
+   - ✅ 6 CI/CD workflows for quality assurance
 
    ## 📦 Installation
 
@@ -173,13 +175,16 @@ Create professional releases for version management.
    - [API Reference](doc/API_Reference.md)
    - [Quick Reference Guide](doc/QUICK_REFERENCE.md)
    - [Algorithm Documentation](doc/algorithm_documentation.md)
+   - [Exception Reference](doc/EXCEPTION_REFERENCE.md)
+   - [Benchmarking Guide](benchmarks/BENCHMARKING_GUIDE.md)
+   - [Complete Documentation Index](DOCUMENTATION_INDEX.md)
 
    ## 🔧 Requirements
 
-   - GCC 15+ or Clang 18+
-   - C++23 compatible compiler
-   - CMake 3.28+
+   - GCC 15+ with C++23 support
+   - CMake 3.28.1+
    - Boost 1.70+ (for testing only)
+   - binutils 2.43+ (for GCC 15)
 
    ## 🙏 Contributors
 
@@ -469,7 +474,7 @@ Use this checklist to track your progress:
 - [ ] Enable branch protection for `main`
 - [ ] Enable security features (Dependabot, secret scanning, CodeQL)
 - [ ] Configure workflow permissions
-- [ ] Create first release (v1.0.0)
+- [ ] Create first release (v2.0.0)
 - [ ] Verify all community standards are met
 
 ### Recommended (Do These Soon)
