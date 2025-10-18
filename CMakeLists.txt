@@ -81,6 +81,7 @@ install(FILES "LICENSE" DESTINATION lib/jmaths/)
 add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(doc)
+add_subdirectory(benchmarks)
 
 install(EXPORT jmathsTargets FILE jmathsTargets.cmake DESTINATION lib/cmake/jmaths/)
 

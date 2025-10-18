@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(shift_operations_large_values) {
     N num(1);
     num <<= 50;  // Very large shift
     BOOST_TEST(num == N("1125899906842624"));  // 2^50
-    
+
     num >>= 25;  // Shift back half way
     BOOST_TEST(num == N("33554432"));  // 2^25
 }

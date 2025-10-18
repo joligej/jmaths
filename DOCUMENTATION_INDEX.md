@@ -24,6 +24,11 @@ Documentation for using the jmaths library in your projects.
 ### Examples
 - **[samples/README.md](samples/README.md)** — Guide to example programs and sample code
 
+### Performance & Benchmarking
+- **[benchmarks/README.md](benchmarks/README.md)** — Benchmarking system overview
+- **[benchmarks/BENCHMARKING_GUIDE.md](benchmarks/BENCHMARKING_GUIDE.md)** — Complete benchmarking guide
+- **[benchmarks/QUICK_START.md](benchmarks/QUICK_START.md)** — Quick reference for running benchmarks
+
 ---
 
 ## 👥 For Contributors
@@ -81,6 +86,13 @@ jmaths/
 ├── samples/
 │   └── README.md                      # Sample programs guide
 │
+├── benchmarks/
+│   ├── README.md                      # Benchmarking overview
+│   ├── BENCHMARKING_GUIDE.md          # Complete benchmarking guide
+│   ├── QUICK_START.md                 # Benchmark quick reference
+│   ├── benchmark_comprehensive.cpp    # Benchmark program
+│   └── analyze_benchmark.py           # Analysis script
+│
 └── .github/
     ├── PULL_REQUEST_TEMPLATE.md       # PR template
     └── docs/
@@ -113,6 +125,7 @@ jmaths/
 ### Understanding the Library
 - [Algorithm Documentation](doc/algorithm_documentation.md)
 - [Performance Characteristics](doc/algorithm_documentation.md#performance-characteristics)
+- [Benchmarking System](benchmarks/README.md)
 
 ### CI/CD
 - [Workflow Overview](doc/WORKFLOWS.md)
