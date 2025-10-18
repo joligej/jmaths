@@ -58,28 +58,36 @@ Sample executables will be generated in `build/samples/`.
 ## Sample Descriptions
 
 ### my_little_sample.cpp
+
 Introduction to the jmaths library, covering:
+
 - Basic number creation and initialization
 - Arithmetic operations
 - String conversion and output
 - User-defined literals
 
 ### fig_terminal_comparison_example.cpp
+
 Comprehensive demonstration of comparison operations:
+
 - Equality and inequality testing
 - Relational comparisons (<, >, <=, >=)
 - Three-way comparison operator (<=>)
 - Cross-type comparisons
 
 ### fig_terminal_q_fits_into_example.cpp
+
 Type conversion examples including:
+
 - Converting between N, Z, and Q types
 - Checking if rational numbers represent integers
 - Extracting integer parts from fractions
 - Safe numeric conversions
 
 ### fig_terminal_z_random_example.cpp
+
 Random number generation features:
+
 - Generating random arbitrary-precision integers
 - Setting ranges for random values
 - Cryptographically secure random numbers
@@ -96,8 +104,8 @@ For newcomers to jmaths, we recommend exploring samples in this order:
 
 ## Additional Resources
 
-- **API Reference** — See [doc/API_Reference.md](../doc/API_Reference.md) for complete API documentation
-- **Algorithm Documentation** — See [doc/algorithm_documentation.md](../doc/algorithm_documentation.md) for implementation details
+- **API Reference** — See [API_Reference.md](API_Reference.md) for complete API documentation
+- **Algorithm Documentation** — See [algorithm_documentation.md](algorithm_documentation.md) for implementation details
 - **Main README** — See [README.md](../README.md) for general library information
 
 ## Compilation Notes
@@ -115,5 +123,5 @@ If you encounter compilation errors:
 3. Check that jmaths is properly installed (for Method 1)
 4. Verify include paths are correct (for Method 2)
 
-For additional help, see [CONTRIBUTING.md](../CONTRIBUTING.md) or the [GCC 15 Requirements Guide](../doc/GCC15_REQUIREMENTS.md).
+For additional help, see [CONTRIBUTING.md](../CONTRIBUTING.md) or the [GCC 15 Requirements Guide](GCC15_REQUIREMENTS.md).
 
