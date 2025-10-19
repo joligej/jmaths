@@ -53,6 +53,34 @@ Boost.Test's data-driven testing framework causes memory access violations on so
 ./jmaths_unit_test --run_test='!parametric_tests'
 ```
 
+### CLion Boost.Test Runner on macOS
+
+**Severity:** LOW (IDE Integration Issue)
+**Impact:** CLion's Boost.Test run configuration fails with "memory access violation at address: 0x0"
+**Platform:** macOS with CLion, GCC 15, and Homebrew Boost
+
+CLion's built-in Boost.Test runner is incompatible with GCC-compiled binaries linked against Clang-compiled Boost libraries. This causes test failures when using the "jmaths_unit_test" run configuration, even though the tests pass when run via CTest or directly from terminal.
+
+**Root Cause:** ABI mismatch between GCC (libstdc++) and Clang-compiled Boost (libc++). CLion's Boost.Test integration wrapper triggers incorrect symbol resolution.
+
+**Workaround:**
+
+In CLion, use the "All CTest" run configuration instead of the "jmaths_unit_test" Boost.Test configuration:
+
+1. **Run → Edit Configurations**
+2. Delete or ignore the "jmaths_unit_test" configuration
+3. Use only "All CTest" which works correctly
+
+Alternatively, run tests directly from terminal:
+```bash
+cd build
+ctest --verbose
+# or
+./test/jmaths_unit_test
+```
+
+**Note:** This issue is specific to CLion's Boost.Test runner. All other test execution methods (terminal, CTest, CMake Application configs) work correctly.
+
 ---
 
 ## Minor Issues
