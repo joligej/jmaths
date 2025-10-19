@@ -1317,7 +1317,7 @@ unsigned major_ver = jmaths::internal::metadata::version::major;  // 1
 RAII-based timer for performance profiling. Enabled with `JMATHS_BENCHMARKING` flag.
 
 ```bash
-g++ -DJMATHS_BENCHMARKING -std=c++20 program.cpp -ljmaths
+g++-15 -DJMATHS_BENCHMARKING -std=c++23 program.cpp -o program
 ```
 
 **Output Format:**
@@ -1490,16 +1490,32 @@ set_property(TARGET myprogram PROPERTY CXX_STANDARD 20)
 
 ### Manual Compilation
 
+Since jmaths is a header-only library, no linking is required. After installation, headers are located in `/usr/local/include/jmaths/` (or your CMAKE_INSTALL_PREFIX):
+
 ```bash
-# Compile with jmaths
-g++ -std=c++20 program.cpp -ljmaths -o program
+# If installed system-wide (to /usr/local/)
+g++-15 -std=c++23 program.cpp -o program
 
 # With optimization
-g++ -std=c++20 -O3 program.cpp -ljmaths -o program
+g++-15 -std=c++23 -O3 program.cpp -o program
 
 # With benchmarking
-g++ -std=c++20 -DJMATHS_BENCHMARKING program.cpp -ljmaths -o program
+g++-15 -std=c++23 -DJMATHS_BENCHMARKING program.cpp -o program
+
+# If installed to a custom location, specify include path
+g++-15 -std=c++23 -I/path/to/install/include program.cpp -o program
 ```
+
+### CMake Integration
+
+For CMake projects, use `find_package` to automatically configure include paths:
+
+```cmake
+find_package(jmaths REQUIRED)
+target_link_libraries(your_target jmaths)
+```
+
+Note: Despite the name `target_link_libraries`, this only adds the include directories for header-only libraries - no actual linking occurs.
 
 ---
 

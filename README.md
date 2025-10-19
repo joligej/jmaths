@@ -73,8 +73,21 @@ int main() {
 
 ### Compilation
 
+Since jmaths is a header-only library, no linking is required. After installation, the headers are in `/usr/local/include/jmaths/` (or your CMAKE_INSTALL_PREFIX):
+
 ```bash
-g++-15 -std=c++23 -O3 your_program.cpp -ljmaths -o your_program
+# If installed system-wide (to /usr/local/)
+g++-15 -std=c++23 -O3 your_program.cpp -o your_program
+
+# If installed to a custom location
+g++-15 -std=c++23 -O3 -I/path/to/install/include your_program.cpp -o your_program
+```
+
+Alternatively, use CMake's `find_package` to automatically configure include paths:
+
+```cmake
+find_package(jmaths REQUIRED)
+target_link_libraries(your_target jmaths)
 ```
 
 ## Requirements
