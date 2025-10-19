@@ -15,10 +15,10 @@ This directory contains example programs demonstrating various features and capa
 
 ### Method 1: Manual Compilation (After Installation)
 
-After installing jmaths system-wide, compile samples directly:
+After installing jmaths system-wide, compile samples directly. Since jmaths is a header-only library, no linking is required:
 
 ```bash
-g++-15 -std=c++23 -O3 my_little_sample.cpp -ljmaths -o my_little_sample
+g++-15 -std=c++23 -O3 my_little_sample.cpp -o my_little_sample
 ./my_little_sample
 ```
 
