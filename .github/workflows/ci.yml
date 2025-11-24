@@ -33,7 +33,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install CMake
       uses: jwlawson/actions-setup-cmake@v2
@@ -177,7 +177,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install clang-format
       run: |
@@ -205,7 +205,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install CMake
       uses: jwlawson/actions-setup-cmake@v2
@@ -241,7 +241,7 @@ jobs:
         sanitizer: [address, undefined, leak]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install CMake
       uses: jwlawson/actions-setup-cmake@v2
